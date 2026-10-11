@@ -323,8 +323,9 @@ export class Hud {
     this.resourceFill.style.transform = `scaleX(${p.resource / p.maxResource})`;
     this.resourceText.textContent = c.manaLocked && c.spec.resource === 'mana' ? `${fmt(p.maxResource)} (locked)`
       : `${fmt(Math.floor(p.resource))} / ${fmt(p.maxResource)}`;
-    this.healthBar.style.display = c.enemyAttacks.on ? '' : 'none';
-    if (c.enemyAttacks.on) {
+    const showHealth = c.enemyAttacks.on || !!c.spec.showHealth;
+    this.healthBar.style.display = showHealth ? '' : 'none';
+    if (showHealth) {
       this.healthFill.style.transform = `scaleX(${p.health / p.maxHealth})`;
       this.healthText.textContent = c.playerHealthLocked ? `${fmt(p.maxHealth)} (locked)` : `${fmt(p.health)} / ${fmt(p.maxHealth)}`;
     }
@@ -334,10 +335,14 @@ export class Hud {
       this.manaText.textContent = c.manaLocked ? `${fmt(p.maxMana)} (locked)` : `${fmt(Math.floor(p.mana))} / ${fmt(p.maxMana)}`;
     }
     const cast = c.casting;
-    this.castBar.classList.toggle('show', !!cast);
+    const channel = c.channeling;
+    this.castBar.classList.toggle('show', !!cast || !!channel);
     if (cast) {
       this.castFill.style.transform = `scaleX(${Math.min(1, (now - cast.start) / (cast.end - cast.start))})`;
       this.castText.textContent = `${c.ability(cast.id)?.name ?? ''}  ${Math.max(0, cast.end - now).toFixed(1)}`;
+    } else if (channel) {
+      this.castFill.style.transform = `scaleX(${Math.max(0, 1 - (now - channel.start) / (channel.end - channel.start))})`;
+      this.castText.textContent = `${c.ability(channel.id)?.name ?? ''}  ${Math.max(0, channel.end - now).toFixed(1)}`;
     }
     const cp = c.comboPointsOn(t);
     this.pips.forEach((pip, i) => pip.classList.toggle('on', i < cp));

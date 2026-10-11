@@ -6,6 +6,7 @@ import type { Spec, Unit } from '../src/engine/types';
 import { druidBalance, druidBear, druidCat } from '../src/specs/druid';
 import { hunterBm, hunterMm, hunterSv } from '../src/specs/hunter';
 import { paladinProt, paladinRet, paladinShock } from '../src/specs/paladin';
+import { priestShadow, priestSmite } from '../src/specs/priest';
 import { rogue } from '../src/specs/rogue';
 import { warrior } from '../src/specs/warrior';
 
@@ -234,6 +235,8 @@ function play(sp: Spec, opts: { build?: string; seconds?: number; seed?: number;
   c.targets = [dummy];
   c.target = dummy;
   c.player.x = 0; c.player.z = tank ? 2 : sp.startDistance ? -sp.startDistance * 0.9144 : -2; c.player.facing = tank ? Math.PI : 0;
+  // As in Settings: specs that show health play with it unlocked.
+  c.playerHealthLocked = !sp.showHealth;
   c.reset();
   if (tank) c.enemyAttacks = { ...c.enemyAttacks, on: true, damage: sp.tankDamage ?? 3000 };
   const used: Record<string, number> = {};
@@ -491,6 +494,44 @@ for (const sp of [hunterMm, hunterBm, hunterSv]) {
   console.log(`BM with locked mana: ${r.c.dps().toFixed(0)} DPS, pet and hawks ${((pet / r.c.meter.total) * 100).toFixed(0)}%, ${bites} Bites and ${claws} Claws in 5 min`);
   if (bites < 25 || bites > 31) failures.push(`pet used Bite ${bites} times in 5 min, expected about 29`);
   if (claws < 60) failures.push(`pet used Claw only ${claws} times in 5 min`);
+}
+
+// ----------------------------------------------------------------- priest
+console.log('Priest builds (5 min, own gear, priority list, default raid buffs):');
+const PRIEST_MUST_USE: Record<string, string[]> = {
+  shadow: ['mindFlay', 'mindBlast', 'shadowWordPain', 'devouringPlague', 'shadowWordDeath', 'innerFocus'],
+  'shadow-community': ['mindFlay', 'mindBlast', 'shadowWordPain', 'devouringPlague', 'shadowWordDeath'],
+  'shadow-fs': ['mindFlay', 'mindBlast', 'shadowWordPain', 'shadowWordDeath'],
+  smite: ['smite', 'holyFire', 'mindBlast', 'powerInfusion', 'innerFocus'],
+  'smite-launch': ['smite', 'holyFire', 'mindBlast'],
+  'smite-hybrid': ['smite', 'holyFire', 'mindBlast', 'shadowWordPain'],
+};
+for (const sp of [priestShadow, priestSmite]) {
+  for (const b of sp.builds ?? []) {
+    const r = play(sp, { build: b.id });
+    const missing = (PRIEST_MUST_USE[b.id] ?? []).filter((id) => !r.used[id]);
+    const review = (sp.review?.(r.c) ?? []).map((x) => `${x.label}: ${x.value}`).join(' | ');
+    console.log(`  ${b.label.padEnd(58)} ${r.c.dps().toFixed(0).padStart(4)} DPS  ${review}`);
+    if (missing.length) failures.push(`${b.label} never used ${missing.join(', ')}`);
+    if (!(r.c.dps() > 100)) failures.push(`${b.label}: ${r.c.dps().toFixed(0)} DPS`);
+  }
+}
+// Mind Flay: three ticks over 3 s, one hit roll; Shadow Weaving reaches 5 stacks; Death hurts you.
+{
+  const r = play(priestShadow, { build: 'shadow', options: { lockMana: true } });
+  const c = r.c;
+  const flay = c.meter.rows.get('mindFlay')!;
+  console.log(`Shadow with locked mana: ${c.dps().toFixed(0)} DPS, Mind Flay ${flay.hits} ticks (${flay.misses} resisted casts), ${c.counters['clipped:mindFlay'] ?? 0} clipped, Death backlash ${c.counters.deathBacklash ?? 0}`);
+  if ((c.aura(c.target, 'shadowWeaving')?.stacks ?? 0) !== 5) failures.push('Shadow Weaving is not at 5 stacks after 5 minutes');
+  if (!(c.counters.deathBacklash > 0)) failures.push('Shadow Word: Death never hurt the priest');
+  if (c.player.health < 0) failures.push('priest health went negative');
+}
+{
+  const r = play(priestSmite, { build: 'smite', options: { lockMana: true } });
+  const k = r.c.counters;
+  const hf = (k['uptime:target:holyFire'] ?? 0) / (k.combatTime ?? 1);
+  console.log(`Smite with locked mana: ${r.c.dps().toFixed(0)} DPS, Holy Fire uptime ${Math.round(hf * 100)}%, ${(r.c.meter.rows.get('penance')?.hits ?? 0)} Penance bolts`);
+  if (hf < 0.8) failures.push(`Holy Fire uptime ${Math.round(hf * 100)}%, expected 80%+ for Power in Light`);
 }
 
 // ----------------------------------------------------------- raid effects

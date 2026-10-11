@@ -153,6 +153,8 @@ export class Combat {
   queuedSwing: string | null = null;
   /** The cast in progress (Slam). */
   casting: { id: string; start: number; end: number; ev: Scheduled } | null = null;
+  /** The channel in progress (Mind Flay): ticks left and their events. */
+  channeling: { id: string; start: number; end: number; ticks: number; done: number; events: Scheduled[] } | null = null;
   /** Incoming swings from the attacking dummy (tank practice). */
   enemyAttacks = { on: false, speed: 2, damage: 3000, ap: 805, healing: 1500 };
   /** The player's health does not drop (damage still counts for rage). */
@@ -253,8 +255,9 @@ export class Combat {
     this.t = end;
     this.runQueued();
     const p = this.player;
-    // Moving interrupts a cast, and Auto Shot's windup (it tries again 0.5 s later).
+    // Moving interrupts a cast or a channel, and Auto Shot's windup (it tries again 0.5 s later).
     if (this.casting && p.moving) this.cancelCast(UI.interrupted);
+    if (this.channeling && p.moving) this.stopChannel(UI.interrupted);
     if (this.windup && p.moving) {
       this.windup.ev.cancel();
       this.windup = null;
@@ -309,6 +312,7 @@ export class Combat {
     this.queued = null;
     this.queuedSwing = null;
     this.casting = null;
+    this.channeling = null;
     this.t = 0;
     this.regenAt = 0;
     this.lastSpend = -Infinity;
@@ -333,7 +337,7 @@ export class Combat {
     this.trackedAuras = [];
     this.trackedTargetAuras = [];
     const tank = this.stats.tank;
-    this.player.maxHealth = this.player.health = tank?.health ?? 4000;
+    this.player.maxHealth = this.player.health = tank?.health ?? this.stats.health ?? 4000;
     this.clearMeter();
     this.spec.prepare(this);
     this.lastWindfury = -Infinity;
@@ -379,7 +383,7 @@ export class Combat {
     if (p.maxMana) p.mana = Math.min(p.maxMana, p.mana + (p.manaPerSecond + buffMana) * dt);
     else if (this.spec.resource === 'mana' && buffMana) this.addResource(buffMana * dt);
     // External healing while the dummy attacks and your health is not locked.
-    if (this.enemyAttacks.on && !this.playerHealthLocked && p.health > 0) {
+    if ((this.enemyAttacks.on || this.spec.showHealth) && !this.playerHealthLocked && p.health > 0) {
       p.health = Math.min(p.maxHealth, p.health + this.enemyAttacks.healing * dt);
     }
     this.regenAt = to;
@@ -452,7 +456,7 @@ export class Combat {
       if (a.needsFacing !== false && !this.facingTarget(u)) return UI.facingWrong;
     }
     const castTime = typeof a.castTime === 'function' ? a.castTime(this) : a.castTime ?? 0;
-    if (castTime > 0 && this.player.moving) return UI.cantWhileMoving;
+    if ((castTime > 0 || a.channel) && this.player.moving) return UI.cantWhileMoving;
     const r = a.requirements?.(this, u);
     if (r) return r;
     if (this.cost(a) > this.player.resource) return UI.notEnough(this.spec.resource);
@@ -481,6 +485,8 @@ export class Combat {
       this.emit('error', reason);
       return false;
     }
+    // A new spell after the GCD clips the channel in progress.
+    if (this.channeling && a.gcd > 0) this.stopChannel();
     const castTime = typeof a.castTime === 'function' ? a.castTime(this) : a.castTime ?? 0;
     if (castTime > 0) {
       // Classic rule: a cast started during Auto Shot's windup clips the shot.
@@ -506,6 +512,7 @@ export class Combat {
     if (cd) this.startCooldown(a.id, cd);
     if (!a.keepsStealth) this.breakStealth();
     a.use(this, u);
+    if (a.channel) this.startChannel(a, u);
     // Attacks start the auto attack (shots start Auto Shot); stealthy abilities (Premeditation) and spells do not.
     if (a.target === 'enemy' && u && !a.keepsStealth) {
       if (a.noAutoAttack) this.enterCombat(); else if (a.ranged) this.startAutoShot(); else this.startAutoAttack();
@@ -557,6 +564,39 @@ export class Combat {
     }
     this.emit('cast', { id: a.id, done: true });
     this.emit('ability', { id: a.id, animation: a.animation });
+  }
+
+  /** Starts a channel: ticks evenly spread over its duration (casting haste shortens it). */
+  private startChannel(a: Ability, u: Unit | null): void {
+    const ch = a.channel!;
+    if (ch.onStart && !ch.onStart(this, u)) return;
+    const duration = (typeof ch.duration === 'function' ? ch.duration(this) : ch.duration) / (ch.hasted ? this.castHaste() : 1);
+    // Ticks spread evenly; with tickAtStart the first one lands at once (Penance: 0, 1, 2 s).
+    const step = ch.tickAtStart ? duration / Math.max(1, ch.ticks - 1) : duration / ch.ticks;
+    const channel = { id: a.id, start: this.t, end: this.t + duration, ticks: ch.ticks, done: 0, events: [] as Scheduled[] };
+    this.channeling = channel;
+    for (let i = 1; i <= ch.ticks; i++) {
+      const at = this.t + step * (ch.tickAtStart ? i - 1 : i);
+      channel.events.push(this.schedule(at, () => {
+        if (this.channeling !== channel) return;
+        channel.done = i;
+        if (u && u.health <= 0) { this.stopChannel(); return; }
+        ch.onTick(this, u, i);
+        if (i === ch.ticks) { this.channeling = null; this.emit('cast', { id: a.id, done: true }); }
+      }));
+    }
+    this.emit('cast', { id: a.id, done: false });
+  }
+
+  /** Ends the channel early (moving, or clipping it with another spell). */
+  stopChannel(reason?: string): void {
+    const ch = this.channeling;
+    if (!ch) return;
+    for (const ev of ch.events) ev.cancel();
+    this.channeling = null;
+    if (ch.done < ch.ticks) this.count(`clipped:${ch.id}`);
+    this.emit('cast', { id: ch.id, done: true });
+    if (reason) this.emit('error', reason);
   }
 
   cancelCast(reason?: string): void {
@@ -1053,6 +1093,24 @@ export class Combat {
       this.windfuryCheck(h);
       for (const fn of this.onHit) fn(h);
     }
+  }
+
+  /** Adds a stack to an aura (or creates it) and refreshes its duration (Shadow Weaving). */
+  addStack(u: Unit | Player, data: Omit<Aura, 'start' | 'end'>, max: number): Aura {
+    const stacks = Math.min(max, (u.auras.get(data.id)?.stacks ?? 0) + 1);
+    return this.applyAura(u, { ...data, stacks });
+  }
+
+  /** Spell power for one school: general spell power plus school-only gear. */
+  spellPowerFor(school: Hit['school']): number {
+    return (this.stats.spellPower ?? 0) + (this.stats.spellPowerBySchool?.[school] ?? 0);
+  }
+
+  /** Flat bonus damage a target takes for a school, scaled by each spell's coefficient (Judgement of the Crusader). */
+  bonusTaken(u: Unit, school: Hit['school']): number {
+    let n = 0;
+    for (const a of u.auras.values()) n += a.schoolBonusTaken?.[school] ?? 0;
+    return n;
   }
 
   /** Puts the raid buffs and debuffs chosen in Settings on the player and the dummies. */

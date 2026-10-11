@@ -49,6 +49,11 @@ export const RAID_EFFECTS: RaidEffect[] = [
     apply: (c) => { for (const u of c.targets) c.applyAura(u, { id: 'judgementOfWisdom', name: 'Judgement of Wisdom', icon: 'judgementOfWisdom', ...forever(), manaOnHit: { chance: 50, mana: 59 } }); },
   },
   {
+    // Forever: 40 s, refreshed by melee; +161 Holy damage taken, times each spell's coefficient.
+    id: 'judgementOfTheCrusader', name: 'Judgement of the Crusader (+161 Holy damage taken, scaled by each spell)', from: 'paladin', side: 'debuff', icon: 'judgementOfTheCrusader',
+    apply: (c) => { for (const u of c.targets) c.applyAura(u, { id: 'judgementOfTheCrusader', name: 'Judgement of the Crusader', icon: 'judgementOfTheCrusader', ...forever(), schoolBonusTaken: { holy: 161 } }); },
+  },
+  {
     id: 'sunderArmor', name: 'Sunder Armor x5 (-2,250 armor)', from: 'warrior', side: 'debuff', icon: 'sunderArmor',
     apply: (c) => { for (const u of c.targets) c.applyAura(u, { id: 'raidSunder', name: 'Sunder Armor (raid)', icon: 'sunderArmor', ...forever(), stacks: 5, armor: 2250, armorSlot: 'major' }); },
   },

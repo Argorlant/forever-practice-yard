@@ -29,7 +29,7 @@ export function defaultPrefs(spec: Spec, move: MoveBindings): Prefs {
   return {
     stats: structuredClone(spec.stats),
     enemy: { health: 1_000_000, armor: 3731, locked: false, startPct: 100 },
-    tank: { attacks: !!spec.tank, speed: 2, damage: spec.tankDamage ?? 2500, lockHealth: true },
+    tank: { attacks: !!spec.tank, speed: 2, damage: spec.tankDamage ?? 2500, lockHealth: !spec.showHealth },
     raid: [...(spec.defaultRaid ?? [])],
     suggest: true,
     meter: true,
@@ -51,7 +51,7 @@ const h = (tag: string, cls = '', html = '') => {
 export type Change = 'stats' | 'enemy' | 'options' | 'keys' | 'bar' | 'defaults' | 'build';
 
 /** Other classes the player can switch to. */
-export interface ClassPicker { list: { id: string; name: string }[]; current: string; pick(id: string): void }
+export interface ClassPicker { list: { id: string; name: string; group?: string }[]; current: string; pick(id: string): void }
 
 const MOVE_LABELS: [keyof MoveBindings, string][] = [
   ['forward', UI.forward], ['back', UI.back], ['turnLeft', UI.turnLeft],
@@ -113,7 +113,15 @@ export class SettingsDialog {
       const sec = this.section('Class');
       const sel = document.createElement('select');
       sel.className = 'build-select';
-      for (const c of this.classes.list) sel.append(new Option(c.name, c.id, false, c.id === this.classes.current));
+      // One group per class: Druid → Feral Cat, Feral Bear, Balance.
+      const groups = new Map<string, HTMLOptGroupElement>();
+      for (const c of this.classes.list) {
+        const opt = new Option(c.name, c.id, false, c.id === this.classes.current);
+        if (!c.group) { sel.append(opt); continue; }
+        let g = groups.get(c.group);
+        if (!g) { g = document.createElement('optgroup'); g.label = c.group; groups.set(c.group, g); sel.append(g); }
+        g.append(opt);
+      }
       sel.addEventListener('change', () => this.classes!.pick(sel.value));
       sec.append(sel);
     }

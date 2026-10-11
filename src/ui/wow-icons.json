@@ -162,5 +162,20 @@
   "loneWolf": "ability_mount_whitedirewolf",
   "frenzy": "inv_misc_monsterclaw_03",
   "petClaw": "ability_druid_rake",
-  "petBite": "ability_racial_cannibalize"
+  "petBite": "ability_racial_cannibalize",
+  "judgementOfTheCrusader": "spell_holy_holysmite",
+  "mindBlast": "spell_shadow_unholyfrenzy",
+  "mindFlay": "spell_shadow_siphonmana",
+  "shadowWordPain": "spell_shadow_shadowwordpain",
+  "devouringPlague": "spell_shadow_devouringplague",
+  "shadowWordDeath": "spell_shadow_demonicfortitude",
+  "shadowform": "spell_shadow_shadowform",
+  "innerFocus": "spell_frost_windwalkon",
+  "powerInfusion": "spell_holy_powerinfusion",
+  "smite": "spell_holy_holysmite",
+  "holyFire": "spell_holy_searinglight",
+  "holyNova": "spell_holy_holynova",
+  "penance": "spell_holy_penance",
+  "shadowWeaving": "spell_shadow_blackplague",
+  "holyPurpose": "spell_holy_holynova"
 }

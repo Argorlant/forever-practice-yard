@@ -205,7 +205,7 @@ const settings = new SettingsDialog(app, spec, prefs, combat, (what) => {
 
 // Switching class reloads the page with ?class=.
 settings.classes = {
-  list: SPECS.map((s) => ({ id: s.id, name: `${s.className} (${s.specName})` })),
+  list: SPECS.map((s) => ({ id: s.id, name: s.specName === 'WoW Forever' ? s.className : s.specName, group: s.className })),
   current: spec.id,
   pick: (id) => {
     save(CLASS_KEY, id);
@@ -451,7 +451,7 @@ let elapsed = 0;
 function locomotion(moving: boolean, backwards: boolean, airborne: boolean): Locomotion {
   if (airborne) return 'air';
   if (combat.stealthed()) return moving ? 'sneakMove' : 'sneak';
-  if (!moving && combat.casting) return 'cast';
+  if (!moving && (combat.casting || combat.channeling)) return 'cast';
   if (!moving) return combat.player.inCombat || combat.player.autoAttacking ? 'ready' : 'idle';
   if (backwards) return 'back';
   // Sprint, Dash: the fast run.

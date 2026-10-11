@@ -80,6 +80,19 @@ By default Auto Shot keeps firing while you cast (Forever's intent); Settings ha
 Melee weaving is left for later as an optional advanced mode. In the beta a melee swing resets the Auto Shot timer
 (an open bug), and neither sim models weaving.
 
+The **Priest** comes as two damage specs (sources in [`research/priest_forever.md`](research/priest_forever.md)); pure healers are out of scope:
+
+- **Shadow** (`?class=priest-shadow`): Shadowform (+10% Shadow damage, half-cost Shadow spells, 2.0x Shadow crits)
+  and personal Shadow Weaving stacks (+2% of your Shadow damage, 5 stacks). Mind Flay is a channel with one hit
+  roll: the hint waits for two ticks before clipping. Also Shadow Word: Pain, Devouring Plague (baseline, 1 min),
+  and Shadow Word: Death, which costs you 10% of your health on a dummy (the health bar shows it).
+- **Smite (experimental)** (`?class=priest-smite`): Holy Fire kept burning for Power in Light, Smite, Penance (a
+  channel with a bolt at 0, 1 and 2 s), Mind Blast, Power Infusion and Inner Focus. Judgement of the Crusader is
+  on by default.
+
+Channeled spells are part of the engine: cost and GCD at the start, ticks over time, interrupted by moving and
+clipped by the next spell.
+
 **Raid buffs and debuffs** add what the rest of the raid brings, when it changes how a rotation
 plays. Pick them on the welcome screen or later in Settings:
 

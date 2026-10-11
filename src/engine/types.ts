@@ -34,10 +34,14 @@ export interface Stats {
   spellCrit: number; // spell crit % (poisons for rogues; gear and Intellect for casters)
   /** Spell power from gear (casters). */
   spellPower?: number;
+  /** Extra spell power for one school only (Shadow or Holy gear, Elixir of Shadow Power). */
+  spellPowerBySchool?: Partial<Record<School, number>>;
   mainHand: Weapon;
   offHand: Weapon | null;
   /** Only for tank specs: the sheet the attacking dummy rolls against. */
   tank?: TankStats;
+  /** Maximum health when it is not a tank sheet (self-damage, Life Tap). */
+  health?: number;
   /** A shield in the off hand (Protection). */
   shield?: boolean;
   /** Hunters: the ranged weapon, its ammo (DPS added per shot) and ranged attack power. */
@@ -212,6 +216,22 @@ export interface Ability {
   ranged?: boolean;
   /** Minimum range in yards (the hunter's dead zone). */
   minRange?: number;
+  /**
+   * A channeled spell: cost, GCD and cooldown are paid at the start, then
+   * `onTick` runs `ticks` times over `duration`. Moving interrupts it;
+   * another spell after the GCD clips it. `onStart` can roll the hit once
+   * and return false to stop the ticks (a resisted Mind Flay); `tickAtStart`
+   * puts the first tick at 0 s (Penance); `hasted` lets casting haste
+   * shorten it (off in the Forever sims).
+   */
+  channel?: {
+    duration: number | ((c: Combat) => number);
+    ticks: number;
+    onTick: (c: Combat, t: Unit | null, tick: number) => void;
+    onStart?: (c: Combat, t: Unit | null) => boolean;
+    tickAtStart?: boolean;
+    hasted?: boolean;
+  };
 }
 
 export interface Binding { id: string | null; key: string }
@@ -276,6 +296,8 @@ export interface Spec {
   defaultRaid?: string[];
   /** Casters: the mana the main spell costs; time below it counts as out of mana in counters.lowMana. */
   lowMana?: (c: Combat) => number;
+  /** Show the player's health bar even when the dummy does not attack (self-damage, Life Tap, Shadow Word: Death). */
+  showHealth?: boolean;
   /** Where the player starts, in yards behind the dummy (ranged specs stand back). */
   startDistance?: number;
   /** A pet: the animal model that fights next to the player (hunters). */

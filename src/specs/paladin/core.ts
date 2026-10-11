@@ -44,12 +44,6 @@ export function regen(c: Combat): number {
 
 // ------------------------------------------------------------ Holy damage
 const spellPower = (c: Combat) => c.stats.spellPower ?? 0;
-/** Judgement of the Crusader: flat Holy damage taken, scaled by the spell's coefficient. */
-function holyBonus(t: Unit): number {
-  let n = 0;
-  for (const a of t.auras.values()) n += a.schoolBonusTaken?.holy ?? 0;
-  return n;
-}
 
 /**
  * Holy damage: base plus spell power at `coeff`, Vengeance and talents
@@ -61,7 +55,7 @@ export function holyDamage(c: Combat, t: Unit, id: string, base: number, coeff: 
   opts: { spellTable?: boolean; binary?: boolean } = {}): number {
   if (!landed(outcome)) return 0;
   const crit = outcome === 'crit' ? (opts.spellTable ? c.rules.spellCritMultiplier : c.rules.critMultiplier) : 1;
-  const d = (base + coeff * (spellPower(c) + holyBonus(t))) * c.auraProduct('damageDone') * (c.mod.damageFor[id] ?? 1)
+  const d = (base + coeff * (spellPower(c) + c.bonusTaken(t, 'holy'))) * c.auraProduct('damageDone') * (c.mod.damageFor[id] ?? 1)
     * crit * (opts.binary ? 1 : D.partialResist);
   return Math.max(1, Math.round(d));
 }
