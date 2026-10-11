@@ -9,6 +9,7 @@ import { mageArcane, mageFire, mageFrost } from '../src/specs/mage';
 import { paladinProt, paladinRet, paladinShock } from '../src/specs/paladin';
 import { priestShadow, priestSmite } from '../src/specs/priest';
 import { rogue } from '../src/specs/rogue';
+import { warlockAffliction, warlockDemonology, warlockDestruction } from '../src/specs/warlock';
 import { warrior } from '../src/specs/warrior';
 
 function run(spec: Spec, seconds: number, seed: number, stats = spec.stats, options: Record<string, number | boolean | string> = {}) {
@@ -577,6 +578,57 @@ for (const sp of [mageArcane, mageFire, mageFrost]) {
   console.log(`Fire with locked mana: ${r.c.dps().toFixed(0)} DPS, Ignite ${Math.round(r.c.meter.rows.get('ignite')?.total ?? 0)}, ${k.pyroblasts ?? 0} Pyroblasts, Fire Vulnerability uptime ${Math.round(fv * 100)}%`);
   if (fv < 0.9) failures.push(`Fire Vulnerability uptime ${Math.round(fv * 100)}%`);
   if (!(k.pyroblasts > 5)) failures.push('Fire cast almost no Pyroblasts');
+}
+
+// ---------------------------------------------------------------- warlock
+console.log('Warlock builds (5 min, own gear, priority list, default raid buffs):');
+const WARLOCK_MUST_USE: Record<string, string[]> = {
+  affliction: ['shadowBolt', 'corruption', 'siphonLife', 'immolate', 'baneOfDoom', 'curseOfTheElements', 'lifeTap'],
+  'affliction-deep': ['shadowBolt', 'corruption', 'siphonLife', 'immolate', 'baneOfDoom', 'lifeTap'],
+  pact: ['shadowBolt', 'searingPain', 'corruption', 'immolate', 'baneOfDoom', 'lifeTap'],
+  'pact-fs': ['shadowBolt', 'searingPain', 'corruption', 'immolate', 'baneOfDoom'],
+  fire: ['incinerate', 'immolate', 'conflagrate', 'shadowburn', 'corruption', 'baneOfDoom', 'lifeTap'],
+  ruin: ['shadowBolt', 'corruption', 'immolate', 'baneOfDoom', 'lifeTap'],
+  'ruin-fs': ['shadowBolt', 'corruption', 'immolate', 'baneOfDoom'],
+};
+for (const sp of [warlockAffliction, warlockDemonology, warlockDestruction]) {
+  for (const b of sp.builds ?? []) {
+    const r = play(sp, { build: b.id });
+    const missing = (WARLOCK_MUST_USE[b.id] ?? []).filter((id) => !r.used[id]);
+    const review = (sp.review?.(r.c) ?? []).map((x) => `${x.label}: ${x.value}`).join(' | ');
+    console.log(`  ${b.label.padEnd(58)} ${r.c.dps().toFixed(0).padStart(4)} DPS  ${review}`);
+    if (missing.length) failures.push(`${b.label} never used ${missing.join(', ')}`);
+    if (!(r.c.dps() > 100)) failures.push(`${b.label}: ${r.c.dps().toFixed(0)} DPS`);
+    if (r.c.player.health <= 0) failures.push(`${b.label}: Life Tap killed the warlock`);
+  }
+}
+// Affliction: DoTs stay up, Nightfall procs get used, Doom lands every minute, Life Tap pays for it.
+{
+  const r = play(warlockAffliction, { build: 'affliction' });
+  const k = r.c.counters;
+  const time = k.combatTime ?? 1;
+  const up = (id: string) => (k[`uptime:target:${id}`] ?? 0) / time;
+  const doom = r.c.meter.rows.get('baneOfDoom');
+  console.log(`Affliction: Corruption ${Math.round(up('corruption') * 100)}%, Immolate ${Math.round(up('immolate') * 100)}%, Doom hits ${doom?.hits ?? 0}, Shadow Trance ${k.shadowTrance ?? 0}/${k.tranceUsed ?? 0}, ${k.lifeTaps ?? 0} Life Taps, health at the end ${Math.round(r.c.player.health)}`);
+  if (up('corruption') < 0.85) failures.push(`Corruption uptime ${Math.round(up('corruption') * 100)}%`);
+  if (!((doom?.hits ?? 0) >= 3)) failures.push('Bane of Doom landed fewer than 3 times in 5 minutes');
+  if (r.c.aura(r.dummy, 'baneOfAgony') && r.c.aura(r.dummy, 'baneOfDoom')) failures.push('two Banes on one target');
+  if (!(k.lifeTaps > 3)) failures.push('Affliction never needed Life Tap');
+  if (!((k.tranceUsed ?? 0) > 0)) failures.push('Shadow Trance never used');
+}
+// Demonic Pact: the Succubus attacks and Demonic Brand adds hits; Destruction keeps both Shadow and Flame buffs.
+{
+  const r = play(warlockDemonology, { build: 'pact', options: { lockMana: true } });
+  const pet = r.c.meter.rows.get('petMelee');
+  const brand = r.c.meter.rows.get('demonicBrand');
+  console.log(`Demonic Pact with locked mana: ${r.c.dps().toFixed(0)} DPS, Succubus ${pet?.hits ?? 0} swings (${Math.round(pet?.total ?? 0)}), Lash of Pain ${r.c.meter.rows.get('lashOfPain')?.hits ?? 0}, Brand ${brand?.hits ?? 0} hits`);
+  if (!((pet?.hits ?? 0) > 100)) failures.push('the Succubus barely attacked');
+  if (!((brand?.hits ?? 0) > 50)) failures.push('Demonic Brand barely fired');
+  const f = play(warlockDestruction, { build: 'fire', options: { lockMana: true } });
+  const k = f.c.counters;
+  const time = k.combatTime ?? 1;
+  console.log(`Shadow and Flame with locked mana: ${f.c.dps().toFixed(0)} DPS, Immolate ${Math.round((k['uptime:target:immolate'] ?? 0) / time * 100)}%, Flame buff ${Math.round((k['uptime:shadowFlameFire'] ?? 0) / time * 100)}%, Shadow buff ${Math.round((k['uptime:shadowFlameShadow'] ?? 0) / time * 100)}%`);
+  if ((k['uptime:target:immolate'] ?? 0) / time < 0.85) failures.push('Shadow and Flame let Immolate drop');
 }
 
 // ----------------------------------------------------------- raid effects

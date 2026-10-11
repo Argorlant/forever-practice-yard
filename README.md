@@ -102,6 +102,19 @@ The **Mage** comes as three specs, with the sims' hybrids as builds (sources in 
 
 Mage Armor and Arcane Meditation keep Spirit regen while casting; Evocation, Mana Ruby and potions are on the bar.
 
+The **Warlock** comes as three specs (sources in [`research/warlock_forever.md`](research/warlock_forever.md)). In WoW Forever
+Agony and Doom are Banes (one per target, apart from your Curse), Bane of Doom hits for 1742 + 4x spell power after 60 sec,
+and Curse of the Elements covers every magic school. Life Tap turns health into mana; your health bar is shown and raid
+healing (150 per second, in Settings) gives it back:
+
+- **Affliction** (`?class=warlock-affliction`): Corruption with Nightfall (Shadow Trance: an instant Shadow Bolt), Siphon
+  Life, Immolate, Pandemic crits at 2.0x and a personal Improved Shadow Bolt debuff. Wrack and Drain Life are on the bar.
+- **Demonology** (`?class=warlock-demonology`): Demonic Pact with a Succubus (melee swings and Lash of Pain), Demonic Brand
+  from Searing Pain, Soul Link, Master Demonologist and Soul Fire during Decimation. The demon is not drawn yet; its
+  attacks show in the meter.
+- **Destruction** (`?class=warlock-destruction`): Shadow and Flame (Conflagrate and Shadowburn keep a +10% buff up for
+  each school and keep Immolate burning), Incinerate as the filler; the DS/Ruin builds sacrifice the Imp and cast Shadow Bolt.
+
 Channeled spells are part of the engine: cost and GCD at the start, ticks over time, interrupted by moving and
 clipped by the next spell.
 
@@ -142,7 +155,7 @@ Then open http://127.0.0.1:5180.
 | Folder | What lives there |
 | --- | --- |
 | `src/engine` | The combat engine, shared by every class: event clock, smooth regeneration, GCD and spell queue, casts, cooldowns, auras, dual-wield auto attacks, attack and spell tables, armor, the attacking dummy, raid buffs and debuffs (`raid.ts`). |
-| `src/specs/<class>` | One class (`rogue`, `warrior`, `druid`, `paladin`, `hunter`): `data.ts` holds every number with its source; `talents.ts` the sims' builds; the spec files define abilities, procs and the priority list. |
+| `src/specs/<class>` | One class (`rogue`, `warrior`, `druid`, `paladin`, `hunter`, `priest`, `mage`, `warlock`): `data.ts` holds every number with its source; `talents.ts` the sims' builds; the spec files define abilities, procs and the priority list. |
 | `src/scene` | The 3D yard (three.js): world, dummy, character and WoW-style controls. |
 | `src/ui` | HUD, action bar, floating combat text, damage meter and settings. |
 | `research` | Sourced notes on each spec's WoW Forever mechanics. |
