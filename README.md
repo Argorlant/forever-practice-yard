@@ -115,6 +115,22 @@ healing (150 per second, in Settings) gives it back:
 - **Destruction** (`?class=warlock-destruction`): Shadow and Flame (Conflagrate and Shadowburn keep a +10% buff up for
   each school and keep Immolate burning), Incinerate as the filler; the DS/Ruin builds sacrifice the Imp and cast Shadow Bolt.
 
+The **Shaman** comes as two specs and an experiment (sources in [`research/shaman_forever.md`](research/shaman_forever.md)).
+Totems sit in four element slots (a new one replaces the old; Searing Totem attacks, buff totems last 5 min, a 1.0 s
+global cooldown), Earth, Flame and Frost Shock share one cooldown, and Clearcasting makes the next damage spell free:
+
+- **Elemental** (`?class=shaman-elemental`): Lightning Bolt (2.0 s), Lava Burst for 20% more on your own Flame Shock,
+  Chain Lightning on Clearcasting, Lightning Overload copies and 2.0x crits from Elemental Fury. Mana runs out, as in the
+  sims; the Stormcaller hybrids are builds of this spec.
+- **Enhancement** (`?class=shaman-enhancement`): one two-hander (no dual wield in Forever) with Windfury Weapon (two extra
+  attacks; it turns a raid Windfury Totem off for you) or Flametongue, Stormstrike's personal charge for your next Lightning
+  Bolt or Earth Shock, Maelstrom Weapon (5 stacks: an instant, free Lightning Bolt), Flurry, Fire Nova around your Searing
+  Totem and Rage of the Farseer. Weapon Mastery (+10%, disputed) is an option, off by default.
+- **Off-tank (experimental)** (`?class=shaman-tank`): Forever has no tank shaman; this is our 17/34/0 proposal with
+  Rockbiter, Lightning Shield orbs, Stoneskin Totem and Stormstrike resets on dodge and parry, against the attacking dummy.
+
+Totems are not drawn in the yard yet; your buff icons show them.
+
 Channeled spells are part of the engine: cost and GCD at the start, ticks over time, interrupted by moving and
 clipped by the next spell.
 
@@ -155,7 +171,7 @@ Then open http://127.0.0.1:5180.
 | Folder | What lives there |
 | --- | --- |
 | `src/engine` | The combat engine, shared by every class: event clock, smooth regeneration, GCD and spell queue, casts, cooldowns, auras, dual-wield auto attacks, attack and spell tables, armor, the attacking dummy, raid buffs and debuffs (`raid.ts`). |
-| `src/specs/<class>` | One class (`rogue`, `warrior`, `druid`, `paladin`, `hunter`, `priest`, `mage`, `warlock`): `data.ts` holds every number with its source; `talents.ts` the sims' builds; the spec files define abilities, procs and the priority list. |
+| `src/specs/<class>` | One class (`rogue`, `warrior`, `druid`, `paladin`, `hunter`, `priest`, `mage`, `warlock`, `shaman`): `data.ts` holds every number with its source; `talents.ts` the sims' builds; the spec files define abilities, procs and the priority list. |
 | `src/scene` | The 3D yard (three.js): world, dummy, character and WoW-style controls. |
 | `src/ui` | HUD, action bar, floating combat text, damage meter and settings. |
 | `research` | Sourced notes on each spec's WoW Forever mechanics. |

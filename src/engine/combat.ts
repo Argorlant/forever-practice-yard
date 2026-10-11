@@ -88,6 +88,8 @@ export interface Modifiers {
   arcaneDamage: number;
   /** Extra physical damage against a bleeding target (Rend and Tear), 0.1 = +10 %. */
   vsBleeding: number;
+  /** Your own Windfury Weapon (shamans): it turns the totem off for you and gives two extra main-hand attacks with this much extra AP. */
+  windfuryWeapon: { ap: number; source: string } | null;
 }
 
 export interface MeterRow {
@@ -123,6 +125,7 @@ const freshModifiers = (): Modifiers => ({
   hit: 0, crit: 0, critFor: {}, damageFor: {}, critMultiplierFor: {},
   physicalDamage: 1, natureDamage: 1, offHand: 1, expertise: 0, armorIgnoreFor: {}, armorIgnore: 0,
   threat: 1, threatFor: {}, hitOff: 0, damageTaken: 1, block: 0, spellCrit: 0, arcaneDamage: 1, vsBleeding: 0,
+  windfuryWeapon: null,
 });
 
 const SOURCE_NAMES: Record<string, string> = {
@@ -1128,14 +1131,29 @@ export class Combat {
     else if (this.spec.resource === 'mana') this.addResource(n);
   }
 
-  /** Windfury Totem: a landed main-hand attack (white or special, never the off hand) can give an extra main-hand attack with more AP. */
+  /**
+   * Windfury Totem: a landed main-hand attack (white or special, never the off hand) can give an extra main-hand attack with more AP.
+   * A shaman's own Windfury Weapon replaces it: the same chance and cooldown, two extra attacks.
+   */
   private windfuryCheck(h: Hit): void {
     if ((h.hand ?? 'main') !== 'main' || h.ranged || this.bonusAp) return;
-    if (![...this.player.auras.values()].some((a) => a.windfury)) return;
+    const weapon = this.mod.windfuryWeapon;
+    if (!weapon && ![...this.player.auras.values()].some((a) => a.windfury)) return;
     if (this.t - this.lastWindfury < WINDFURY.icd || this.random() * 100 >= WINDFURY.chance) return;
     this.lastWindfury = this.t;
     this.count('windfury');
     this.emit('note', { text: 'Windfury!', kind: 'proc' });
+    if (weapon) {
+      // gs: two attacks on the special table (no glancing) that keep the swing timer.
+      this.bonusAp = weapon.ap;
+      for (let i = 0; i < 2; i++) {
+        const outcome = this.rollSpecial(h.target, weapon.source);
+        const amount = this.physicalDamage(h.target, weapon.source, this.weaponDamage('main'), outcome);
+        this.deal({ target: h.target, source: weapon.source, outcome, school: 'physical', amount, white: false, hand: 'main', weaponStrike: true });
+      }
+      this.bonusAp = 0;
+      return;
+    }
     this.bonusAp = WINDFURY.ap;
     this.extraAttack(h.target);
     this.bonusAp = 0;

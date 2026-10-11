@@ -7,10 +7,11 @@ import { mageArcane, mageFire, mageFrost } from './mage';
 import { paladinProt, paladinRet, paladinShock } from './paladin';
 import { priestShadow, priestSmite } from './priest';
 import { rogue } from './rogue';
+import { shamanElemental, shamanEnhancement, shamanTank } from './shaman';
 import { warlockAffliction, warlockDemonology, warlockDestruction } from './warlock';
 import { warrior } from './warrior';
 
-export const SPECS: Spec[] = [rogue, warrior, druidCat, druidBear, druidBalance, paladinRet, paladinProt, paladinShock, hunterBm, hunterMm, hunterSv, priestShadow, priestSmite, mageArcane, mageFire, mageFrost, warlockAffliction, warlockDemonology, warlockDestruction];
+export const SPECS: Spec[] = [rogue, warrior, druidCat, druidBear, druidBalance, paladinRet, paladinProt, paladinShock, hunterBm, hunterMm, hunterSv, priestShadow, priestSmite, mageArcane, mageFire, mageFrost, warlockAffliction, warlockDemonology, warlockDestruction, shamanElemental, shamanEnhancement, shamanTank];
 
 export function specById(id: string | null | undefined): Spec {
   return SPECS.find((s) => s.id === id) ?? SPECS[0];

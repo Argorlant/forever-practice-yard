@@ -9,6 +9,7 @@ import { mageArcane, mageFire, mageFrost } from '../src/specs/mage';
 import { paladinProt, paladinRet, paladinShock } from '../src/specs/paladin';
 import { priestShadow, priestSmite } from '../src/specs/priest';
 import { rogue } from '../src/specs/rogue';
+import { shamanElemental, shamanEnhancement, shamanTank } from '../src/specs/shaman';
 import { warlockAffliction, warlockDemonology, warlockDestruction } from '../src/specs/warlock';
 import { warrior } from '../src/specs/warrior';
 
@@ -629,6 +630,60 @@ for (const sp of [warlockAffliction, warlockDemonology, warlockDestruction]) {
   const time = k.combatTime ?? 1;
   console.log(`Shadow and Flame with locked mana: ${f.c.dps().toFixed(0)} DPS, Immolate ${Math.round((k['uptime:target:immolate'] ?? 0) / time * 100)}%, Flame buff ${Math.round((k['uptime:shadowFlameFire'] ?? 0) / time * 100)}%, Shadow buff ${Math.round((k['uptime:shadowFlameShadow'] ?? 0) / time * 100)}%`);
   if ((k['uptime:target:immolate'] ?? 0) / time < 0.85) failures.push('Shadow and Flame let Immolate drop');
+}
+
+// ----------------------------------------------------------------- shaman
+console.log('Shaman builds (5 min, own gear, priority list, default raid buffs):');
+const SHAMAN_MUST_USE: Record<string, string[]> = {
+  elemental: ['lightningBolt', 'lavaBurst', 'flameShock', 'chainLightning', 'searingTotem', 'manaSpringTotem'],
+  'elemental-fs': ['lightningBolt', 'lavaBurst', 'flameShock', 'searingTotem'],
+  'elemental-60': ['lightningBolt', 'lavaBurst', 'flameShock', 'searingTotem'],
+  stormcaller: ['lightningBolt', 'flameShock', 'chainLightning', 'searingTotem'],
+  'stormcaller-fs': ['lightningBolt', 'flameShock', 'searingTotem'],
+  enhancement: ['stormstrike', 'earthShock', 'flameShock', 'fireNova', 'lightningBolt', 'searingTotem', 'strengthOfEarthTotem', 'graceOfAirTotem', 'rageOfTheFarseer'],
+  'enhancement-60': ['stormstrike', 'earthShock', 'flameShock', 'lightningBolt', 'searingTotem'],
+  'enhancement-fs': ['stormstrike', 'earthShock', 'lightningBolt', 'searingTotem'],
+  tank: ['stormstrike', 'earthShock', 'lightningShield', 'stoneskinTotem'],
+};
+for (const sp of [shamanElemental, shamanEnhancement, shamanTank]) {
+  for (const b of sp.builds ?? []) {
+    const r = play(sp, { build: b.id });
+    const missing = (SHAMAN_MUST_USE[b.id] ?? []).filter((id) => !r.used[id]);
+    const review = (sp.review?.(r.c) ?? []).map((x) => `${x.label}: ${x.value}`).join(' | ');
+    console.log(`  ${b.label.padEnd(58)} ${r.c.dps().toFixed(0).padStart(4)} DPS${sp.showThreat ? ` ${r.c.tps().toFixed(0).padStart(4)} TPS` : ''}  ${review}`);
+    if (missing.length) failures.push(`${b.label} never used ${missing.join(', ')}`);
+    if (!(r.c.dps() > 100)) failures.push(`${b.label}: ${r.c.dps().toFixed(0)} DPS`);
+  }
+}
+// Enhancement: Windfury Weapon replaces the raid totem, two attacks per proc; Maelstrom bolts; Stormstrike charges get spent.
+{
+  const r = play(shamanEnhancement, { build: 'enhancement', options: { lockMana: true }, raid: ['windfury'] });
+  const k = r.c.counters;
+  const wf = r.c.meter.rows.get('windfuryWeapon');
+  const totemSwings = r.c.meter.rows.get('melee_mh');
+  console.log(`Enhancement with locked mana: ${r.c.dps().toFixed(0)} DPS, ${k.windfury ?? 0} Windfury procs (${(wf?.hits ?? 0) + (wf?.misses ?? 0)} attacks), ${k.maelstromBolts ?? 0} 5-stack Lightning Bolts, ${k.stormstrikeCharges ?? 0} Stormstrike charges spent, ${k.clearcasting ?? 0} Clearcasting`);
+  if ((wf?.hits ?? 0) + (wf?.misses ?? 0) !== 2 * (k.windfury ?? 0)) failures.push('Windfury Weapon did not give two attacks per proc');
+  if (!(k.windfury > 20)) failures.push('Windfury Weapon barely procced');
+  if (!(k.maelstromBolts > 10)) failures.push('Enhancement cast few 5-stack Lightning Bolts');
+  if (!(k.stormstrikeCharges > 20)) failures.push('Stormstrike charges were rarely spent');
+  if (!totemSwings) failures.push('no melee swings');
+  const ft = play(shamanEnhancement, { build: 'enhancement', options: { lockMana: true, imbue: 'flametongue' }, raid: [] });
+  const ftRow = ft.c.meter.rows.get('flametongueWeapon');
+  console.log(`Enhancement with Flametongue and its own Windfury Totem: ${ft.c.dps().toFixed(0)} DPS, Flametongue ${ftRow?.hits ?? 0} hits, ${ft.c.counters.windfury ?? 0} totem procs`);
+  if (!((ftRow?.hits ?? 0) > 100)) failures.push('Flametongue Weapon barely hit');
+  if (!((ft.c.counters.windfury ?? 0) > 10)) failures.push('the own Windfury Totem never procced');
+}
+// Elemental: Lava Burst on Flame Shock, Searing Totem keeps attacking, Overload copies; mana runs out without a lock.
+{
+  const r = play(shamanElemental, { build: 'elemental', options: { lockMana: true } });
+  const k = r.c.counters;
+  const time = k.combatTime ?? 1;
+  console.log(`Elemental with locked mana: ${r.c.dps().toFixed(0)} DPS, Flame Shock ${Math.round((k['uptime:target:flameShock'] ?? 0) / time * 100)}%, Searing ${Math.round((k['uptime:searingTotem'] ?? 0) / time * 100)}%, ${r.c.meter.rows.get('lavaBurst')?.hits ?? 0} Lava Bursts, ${k.overloads ?? 0} Overloads`);
+  if ((k['uptime:searingTotem'] ?? 0) / time < 0.9) failures.push('Searing Totem was not kept up');
+  if (!((r.c.meter.rows.get('lavaBurst')?.hits ?? 0) > 20)) failures.push('few Lava Bursts');
+  const tank = play(shamanTank, { build: 'tank' });
+  console.log(`Off-tank: ${tank.c.dps().toFixed(0)} DPS, ${tank.c.tps().toFixed(0)} TPS, ${tank.c.meter.rows.get('lightningShield')?.hits ?? 0} Lightning Shield orbs, ${tank.c.counters.stormstrikeResets ?? 0} Stormstrike resets`);
+  if (!((tank.c.meter.rows.get('lightningShield')?.hits ?? 0) > 10)) failures.push('Lightning Shield orbs barely fired');
 }
 
 // ----------------------------------------------------------- raid effects
