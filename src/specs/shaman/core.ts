@@ -158,7 +158,12 @@ function totem(id: string, auraId: string, slot: Slot, name: string, mana: numbe
       let spots = totemSpots.get(c);
       if (!spots) totemSpots.set(c, (spots = {}));
       spots[slot] = { x: p.x, z: p.z };
-      c.applyAura(p, { id: auraId, name, icon: id, duration: 300, ...aura(c) });
+      // The scene draws the totem where you stand; it goes away with the aura.
+      c.applyAura(p, {
+        id: auraId, name, icon: id, duration: 300, ...aura(c),
+        onRemove: (cc) => cc.emit('totem', { slot, id: null, x: p.x, z: p.z, facing: p.facing }),
+      });
+      c.emit('totem', { slot, id, x: p.x, z: p.z, facing: p.facing });
       c.count(`casts:${id}`);
     },
     ...extra,
@@ -311,6 +316,8 @@ export const ABILITIES: Ability[] = [
     highlight: (c) => !!c.aura(c.player, 'clearcasting') && fireTotem(c),
     description: (c) => `Instant: ${D.fireNova.min}-${D.fireNova.max} Fire damage plus spell damage to every enemy within ${D.fireNova.radius} yards of your Fire totem. Needs a Searing or Magma Totem. ${D.fireNova.cooldown - 2 * T(c).improvedFireNova} sec cooldown.`,
     use: (c, t) => {
+      const spot = totemSpots.get(c)?.fire;
+      if (spot) c.emit('nova', { ...spot, radius: D.fireNova.radius, color: 0xff8a2a, totem: 'fire' });
       const hit = targetsNearFire(c, D.fireNova.radius);
       for (const u of hit) spellHit(c, u, 'fireNova', 'fire', between(c, D.fireNova.min, D.fireNova.max), D.fireNova.coeff);
       if (!hit.length) note(c, 'No enemy near your Fire totem');
@@ -338,14 +345,21 @@ export const ABILITIES: Ability[] = [
       onTick: (cc: Combat) => {
         const u = cc.target;
         const s = D.searingTotem;
-        if (u && u.health > 0 && nearFireTotem(cc, u, s.range)) totemAttack(cc, u, 'searingTotem', between(cc, s.min, s.max), s.coeff);
+        const spot = totemSpots.get(cc)?.fire;
+        if (!u || u.health <= 0 || !spot || !nearFireTotem(cc, u, s.range)) return;
+        cc.emit('bolt', { target: u, color: 0xff7a1a, speed: 25, from: { ...spot, totem: 'fire' } });
+        totemAttack(cc, u, 'searingTotem', between(cc, s.min, s.max), s.coeff);
       },
     })),
   totem('magmaTotem', 'magmaTotem', 'fire', 'Magma Totem', D.magmaTotem.mana,
     () => `For ${D.magmaTotem.duration} sec it burns every enemy within ${D.magmaTotem.radius} yards for ${D.magmaTotem.damage} Fire every ${D.magmaTotem.period} sec. For two or more targets.`,
     () => ({
       duration: D.magmaTotem.duration, period: D.magmaTotem.period,
-      onTick: (cc: Combat) => { for (const u of targetsNearFire(cc, D.magmaTotem.radius)) totemAttack(cc, u, 'magmaTotem', D.magmaTotem.damage, D.magmaTotem.coeff); },
+      onTick: (cc: Combat) => {
+        const spot = totemSpots.get(cc)?.fire;
+        if (spot) cc.emit('nova', { ...spot, radius: D.magmaTotem.radius, color: 0xff5a1a, totem: 'fire' });
+        for (const u of targetsNearFire(cc, D.magmaTotem.radius)) totemAttack(cc, u, 'magmaTotem', D.magmaTotem.damage, D.magmaTotem.coeff);
+      },
     })),
   totem('strengthOfEarthTotem', 'strengthOfEarthTotem', 'earth', 'Strength of Earth Totem', D.strengthOfEarthTotem.mana,
     () => '+53 Strength (+106 attack power) for 5 min.', () => ({ attackPower: D.strengthOfEarthTotem.ap })),

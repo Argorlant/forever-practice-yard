@@ -209,6 +209,8 @@ export class Character {
       });
     }
 
+    if (look.demon) this.dressDemon(look.demon, bone, attach, shadowed);
+
     for (const side of ['l', 'r'] as const) {
       const s = side === 'l' ? 1 : -1;
       attach(bone(`upperarm_${side}`), (g) => {
@@ -251,6 +253,61 @@ export class Character {
     this.attachToBone = attach;
     this.cloth = cloth;
     this.mats = { metal, grip: darkLeather, gold: new THREE.MeshStandardMaterial({ color: 0xc9a050, metalness: 0.8, roughness: 0.35 }) };
+  }
+
+  /** A demon's horns, bat wings, tail and glowing eyes. */
+  private dressDemon(d: NonNullable<CharacterLook['demon']>, bone: (name: string) => THREE.Object3D,
+    attach: (b: THREE.Object3D, build: (g: THREE.Group) => void, offsetWorld?: THREE.Vector3) => THREE.Group,
+    shadowed: (m: THREE.Mesh) => THREE.Mesh): void {
+    const horn = new THREE.MeshStandardMaterial({ color: d.horns, roughness: 0.5 });
+    const membrane = new THREE.MeshStandardMaterial({ color: d.wings, roughness: 0.8, side: THREE.DoubleSide });
+    attach(bone('Head'), (g) => {
+      // Horns sweep up and back from the brow.
+      for (const s of [-1, 1]) {
+        const h = shadowed(new THREE.Mesh(new THREE.ConeGeometry(0.022, 0.16, 8), horn));
+        h.position.set(s * 0.06, 0.2, -0.01);
+        h.rotation.set(-0.7, 0, -s * 0.35);
+        g.add(h);
+      }
+      const eyeMat = new THREE.MeshBasicMaterial({ color: d.eyes });
+      for (const s of [-1, 1]) {
+        const eye = new THREE.Mesh(new THREE.SphereGeometry(0.012, 6, 4), eyeMat);
+        eye.position.set(s * 0.034, 0.118, 0.1);
+        g.add(eye);
+      }
+    });
+    attach(bone('spine_03'), (g) => {
+      // Bat wings: a membrane with three scallops, folded half open behind the shoulders.
+      const shape = new THREE.Shape();
+      shape.moveTo(0, 0);
+      shape.lineTo(0.62, 0.3);
+      shape.quadraticCurveTo(0.5, 0.12, 0.56, -0.02);
+      shape.quadraticCurveTo(0.42, 0.02, 0.38, -0.14);
+      shape.quadraticCurveTo(0.26, -0.06, 0.18, -0.2);
+      shape.quadraticCurveTo(0.1, -0.08, 0, -0.06);
+      shape.closePath();
+      const geo = new THREE.ShapeGeometry(shape);
+      for (const s of [-1, 1]) {
+        const wing = shadowed(new THREE.Mesh(geo, membrane));
+        wing.scale.set(s, 1, 1);
+        wing.position.set(s * 0.05, 0.05, -0.13);
+        wing.rotation.y = s * 0.55;
+        g.add(wing);
+      }
+    });
+    if (d.tail) {
+      attach(bone('pelvis'), (g) => {
+        const curve = new THREE.CatmullRomCurve3([
+          new THREE.Vector3(0, 0, -0.1), new THREE.Vector3(0, -0.12, -0.28),
+          new THREE.Vector3(0.05, -0.38, -0.36), new THREE.Vector3(0.12, -0.6, -0.28),
+        ]);
+        g.add(shadowed(new THREE.Mesh(new THREE.TubeGeometry(curve, 16, 0.016, 6), horn)));
+        const tip = shadowed(new THREE.Mesh(new THREE.ConeGeometry(0.04, 0.09, 4), horn));
+        tip.position.set(0.14, -0.66, -0.26);
+        tip.rotation.z = Math.PI + 0.3;
+        g.add(tip);
+      });
+    }
   }
 
   /** Swaps the weapon models to match the gear in Settings. */

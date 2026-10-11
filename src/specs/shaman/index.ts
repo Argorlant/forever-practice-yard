@@ -183,7 +183,7 @@ const MELEE_OPTIONS = [
 ];
 const HELP_COMMON = `Spells have a cast bar; moving interrupts it, so use instants (shocks, totems) on the move. The global cooldown is 1.5 sec; totems have a 1.0 sec global cooldown.
     Mana is your resource. Spirit regeneration stops for 5 sec after you spend mana; Judgement of Wisdom and Blessing of Wisdom are on by default under Raid buffs and debuffs, your own Mana Spring Totem covers the rest, and you can lock your mana in Settings.
-    Totems: one per element (Fire, Earth, Air, Water); a new one replaces the old. Searing Totem attacks for 55 sec, buff totems last 5 min. Fire Nova needs a live Fire totem and hits around it. The totems are not drawn in the yard; your buffs show them.
+    Totems: one per element (Fire, Earth, Air, Water); a new one replaces the old. Searing Totem attacks for 55 sec, buff totems last 5 min. Fire Nova needs a live Fire totem and hits around it. Your totems stand around your feet where you dropped them; the buff icons show how long they last.
     Earth, Flame and Frost Shock share one cooldown. Clearcasting (10% after a damage spell) makes the next damage spell free.`;
 
 function specFor(spec: ShamanSpec, base: Omit<Spec, 'className' | 'resource' | 'abilities' | 'rules' | 'prepare' | 'chances' | 'regen' | 'builds' | 'bar' | 'sources' | 'defaultRaid'>): Spec {

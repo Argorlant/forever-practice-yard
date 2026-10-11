@@ -105,13 +105,13 @@ Mage Armor and Arcane Meditation keep Spirit regen while casting; Evocation, Man
 The **Warlock** comes as three specs (sources in [`research/warlock_forever.md`](research/warlock_forever.md)). In WoW Forever
 Agony and Doom are Banes (one per target, apart from your Curse), Bane of Doom hits for 1742 + 4x spell power after 60 sec,
 and Curse of the Elements covers every magic school. Life Tap turns health into mana; your health bar is shown and raid
-healing (150 per second, in Settings) gives it back:
+healers keep up with you (each second they heal 20% of the health you are missing, in Settings):
 
 - **Affliction** (`?class=warlock-affliction`): Corruption with Nightfall (Shadow Trance: an instant Shadow Bolt), Siphon
   Life, Immolate, Pandemic crits at 2.0x and a personal Improved Shadow Bolt debuff. Wrack and Drain Life are on the bar.
 - **Demonology** (`?class=warlock-demonology`): Demonic Pact with a Succubus (melee swings and Lash of Pain), Demonic Brand
-  from Searing Pain, Soul Link, Master Demonologist and Soul Fire during Decimation. The demon is not drawn yet; its
-  attacks show in the meter.
+  from Searing Pain, Soul Link, Master Demonologist and Soul Fire during Decimation. The Succubus fights next to the dummy
+  with you (horns, wings and a tail on the character model).
 - **Destruction** (`?class=warlock-destruction`): Shadow and Flame (Conflagrate and Shadowburn keep a +10% buff up for
   each school and keep Immolate burning), Incinerate as the filler; the DS/Ruin builds sacrifice the Imp and cast Shadow Bolt.
 
@@ -129,7 +129,8 @@ global cooldown), Earth, Flame and Frost Shock share one cooldown, and Clearcast
 - **Off-tank (experimental)** (`?class=shaman-tank`): Forever has no tank shaman; this is our 17/34/0 proposal with
   Rockbiter, Lightning Shield orbs, Stoneskin Totem and Stormstrike resets on dodge and parry, against the attacking dummy.
 
-Totems are not drawn in the yard yet; your buff icons show them.
+Totems stand where you dropped them (a carved post per element, with a flame, stones, wings or an orb on top); Searing
+Totem's bolts and Fire Nova's ring start from your Fire totem.
 
 Channeled spells are part of the engine: cost and GCD at the start, ticks over time, interrupted by moving and
 clipped by the next spell.

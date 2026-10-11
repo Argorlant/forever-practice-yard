@@ -304,6 +304,8 @@ export interface Spec {
   startDistance?: number;
   /** A pet: the animal model that fights next to the player (hunters). */
   pet?: BeastLookSpec;
+  /** A humanoid companion for the current build (a warlock's demon); it shows while `pet.out` is on. */
+  minion?: (c: Combat) => MinionLook | null;
   /** Raise it when the spec's defaults change, so settings saved in the browser start over. */
   prefsRevision?: number;
   look: CharacterLook;
@@ -334,4 +336,9 @@ export interface CharacterLook {
   plate?: boolean;
   /** A long robe from the waist (casters). */
   robe?: boolean;
+  /** A demon (a warlock's Succubus): horns, bat wings, a tail and glowing eyes; leatherColor is the skin. */
+  demon?: { horns: number; wings: number; tail: boolean; eyes: number };
 }
+
+/** A humanoid companion drawn with the character model (a warlock's demon). */
+export interface MinionLook { id: string; look: CharacterLook; scale: number }

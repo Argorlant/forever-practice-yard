@@ -209,6 +209,7 @@ function petThink(c: Combat): void {
       s.lashReady = c.t + D.pet.lashOfPain.cooldown;
       const l = D.pet.lashOfPain;
       petHit(c, u!, 'lashOfPain', (l.damage + l.coeff * petSp(c)) * (1 + 0.1 * T(c).improvedSayaad), 'spell', 'shadow');
+      c.emit('petAttack', { kind: 'lash' });
     }
   } else if (demon === 'imp' && c.t >= s.castEnd) {
     const f = D.pet.firebolt;
@@ -477,8 +478,17 @@ export function prepare(c: Combat): void {
   p.regenPerSecond = 0;
   c.manaLocked = !!c.options.lockMana;
   c.mod.hit = t.suppression;
-  // Raid healers give Life Tap's health back.
-  c.enemyAttacks = { ...c.enemyAttacks, healing: Number(c.options.raidHealing ?? D.raidHealing) };
+  // Raid healers keep up with you: each second they heal a share of the health you are missing,
+  // so a Life Tap is healed back in a few seconds and health never holds the rotation back.
+  c.enemyAttacks = { ...c.enemyAttacks, healing: 0 };
+  const share = Number(c.options.healingShare ?? D.healingShare) / 100;
+  c.applyAura(p, {
+    id: 'raidHealing', name: 'Raid healing', icon: 'lifeTap', duration: Infinity, period: 0.25, hidden: true,
+    onTick: (cc) => {
+      const me = cc.player;
+      if (!cc.playerHealthLocked && me.health > 0) me.health = Math.min(me.maxHealth, me.health + (me.maxHealth - me.health) * share * 0.25);
+    },
+  });
   // Demonic Sacrifice before the pull: the buff of the demon given up (Demonic Pact keeps it with another demon out).
   if (t.demonicSacrifice && b.sacrificed === 'imp') c.applyAura(p, { id: 'burningShadow', name: 'Burning Shadow (Imp sacrificed)', icon: 'demonicSacrifice', duration: Infinity });
   if (t.demonicSacrifice && b.sacrificed === 'succubus') c.applyAura(p, { id: 'touchOfFire', name: 'Touch of Fire', icon: 'demonicSacrifice', duration: Infinity });
@@ -527,7 +537,7 @@ export function chances(c: Combat): { title: string; rows: [string, string][] }[
       title: 'Mana and health',
       rows: [
         ['Life Tap', `${lifeTapAmount(c)} health into ${lifeTapAmount(c)} mana`],
-        ['Raid healing', `${Number(c.options.raidHealing ?? D.raidHealing)} health per second`],
+        ['Raid healing', `${Number(c.options.healingShare ?? D.healingShare)}% of your missing health per second`],
         ['Regeneration now', `${regen(c).toFixed(1)} mana per second`],
       ],
     },

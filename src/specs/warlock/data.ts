@@ -66,7 +66,7 @@ export const DATA = {
     firebolt: { cast: 2, gap: 0.2, min: 41.5, max: 46.5, coeff: 0.571 },
     brand: { min: 65, max: 68, coeff: 0.078 },
   },
-  raidHealing: 150,
+  healingShare: 20,        // our choice: raid healers keep up, healing 20 % of your missing health per second
   spirit: 132,
   mp5: 9,
 };

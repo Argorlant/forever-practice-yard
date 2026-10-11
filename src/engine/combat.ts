@@ -117,8 +117,12 @@ interface EventMap {
   shot: Unit;
   /** The pet attacks (a swing or one of its abilities). */
   petAttack: { kind: string };
-  /** A projectile to draw for one tick of a channel (each Arcane Missile). */
-  bolt: { target: Unit; color: number; speed?: number };
+  /** A projectile to draw for one tick of a channel (each Arcane Missile); `from` a point instead of your hands (a totem). */
+  bolt: { target: Unit; color: number; speed?: number; from?: { x: number; z: number; totem?: string } };
+  /** A totem goes down in an element slot (`id` null: the slot is empty again). `facing` is the player's at the drop. */
+  totem: { slot: string; id: string | null; x: number; z: number; facing: number };
+  /** A burst of flame around a point (Fire Nova, Magma Totem), radius in yards. */
+  nova: { x: number; z: number; radius: number; color: number; totem?: string };
 }
 
 const freshModifiers = (): Modifiers => ({

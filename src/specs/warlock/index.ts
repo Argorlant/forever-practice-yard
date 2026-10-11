@@ -5,7 +5,7 @@
 // raid healing gives it back. Shared rules in ./core.ts, numbers in ./data.ts,
 // builds in ./talents.ts.
 import type { Combat } from '../../engine/combat';
-import type { Spec } from '../../engine/types';
+import type { MinionLook, Spec } from '../../engine/types';
 import { BOSS_RULES, CONTROLS } from '../common';
 import { ABILITIES, D, SOURCES, T, baneOn, build, chances, execute, left, lifeTapAmount, prepare, regen } from './core';
 import { AFFLICTION_STATS, DESTRUCTION_STATS, PACT_STATS } from './data';
@@ -31,7 +31,8 @@ function common(c: Combat): string | null {
   if (!c.manaLocked) {
     const mana = p.resource / p.maxResource;
     const tap = lifeTapAmount(c);
-    const healthy = c.playerHealthLocked || p.health - tap >= 0.35 * p.maxHealth;
+    // Healers keep up with you: tap whenever it does not kill you.
+    const healthy = c.playerHealthLocked || p.health > tap;
     if (p.inCombat && p.resource <= p.maxResource - D.manaPotion.max && mana < 0.5 && ready('manaPotion')) return 'manaPotion';
     if ((mana < 0.15 || !afford('shadowBolt')) && healthy && p.resource + tap <= p.maxResource + 100) return 'lifeTap';
   }
@@ -103,15 +104,21 @@ function review(c: Combat): Row[] {
   return rows;
 }
 
+/** The Succubus at your side: purple skin, horns, bat wings and a tail. */
+const SUCCUBUS: MinionLook = {
+  id: 'succubus', scale: 0.95,
+  look: { clothColor: 0x2a0a2a, leatherColor: 0x7a3466, hood: false, demon: { horns: 0x2a1a1a, wings: 0x4a1a3a, tail: true, eyes: 0xff66dd } },
+};
+
 const HELP_COMMON = `Spells have a cast bar and channels drain one; moving interrupts both. The global cooldown is 1.5 sec, shorter with casting haste (1.0 sec floor).
-    Mana is your resource and Life Tap refills it from your health: (424 + Spirit) health into the same mana, instant, and it does not stop your Spirit regeneration. Raid healers give the health back (150 per second by default, in Settings); Life Tap is refused if it would kill you. Your health is unlocked by default so you see it; lock it in Settings to tap freely. Judgement of Wisdom, Blessing of Wisdom and Mana Spring Totem are on by default under Raid buffs and debuffs.
+    Mana is your resource and Life Tap refills it from your health: (424 + Spirit) health into the same mana, instant, and it does not stop your Spirit regeneration. Raid healers keep up with you: each second they heal 20% of the health you are missing (Settings), so a Life Tap is healed back within a few seconds. Life Tap is refused only if it would kill you; lock your health in Settings to hide it. Judgement of Wisdom, Blessing of Wisdom and Mana Spring Totem are on by default under Raid buffs and debuffs.
     One Curse and one Bane per target: Curse of the Elements (+10% magic damage; skip it when a raid warlock provides it under Raid buffs and debuffs) and Bane of Doom (one hit for 1742 + 4x spell power after 60 sec, on cooldown) or Bane of Agony when Doom is out. Refresh a DoT when it has no more time left than its cast.`;
 const OPTIONS = [
   { key: 'lockMana', name: 'Lock your mana (spells cost nothing)', kind: 'toggle' as const },
   { key: 'mana', name: 'Mana pool', kind: 'number' as const, step: 100 },
   { key: 'spirit', name: 'Spirit (regeneration and Life Tap)', kind: 'number' as const, step: 1 },
   { key: 'mp5', name: 'Mana per 5 sec from gear', kind: 'number' as const, step: 1 },
-  { key: 'raidHealing', name: 'Raid healing on you (health per second)', kind: 'number' as const, step: 10 },
+  { key: 'healingShare', name: 'Raid healing: % of your missing health healed each second', kind: 'number' as const, step: 5 },
 ];
 
 function specFor(spec: WarlockSpec, base: Omit<Spec, 'className' | 'resource' | 'abilities' | 'rules' | 'prepare' | 'chances' | 'regen' | 'builds' | 'bar' | 'sources' | 'suggest' | 'review' | 'showHealth' | 'options' | 'sheet'>): Spec {
@@ -132,12 +139,13 @@ function specFor(spec: WarlockSpec, base: Omit<Spec, 'className' | 'resource' | 
     options: OPTIONS,
     sheet: { attackPower: false, crit: false, spellCrit: 'Spell crit (gear + Intellect)', spellPower: 'Spell damage (every school)', mainHand: false, offHand: false },
     lowMana: (c) => c.cost(c.ability('shadowBolt')!),
+    minion: (c) => (build(c).demon === 'succubus' ? SUCCUBUS : null),
     defaultRaid: ['judgementOfWisdom', 'blessingOfWisdom', 'manaSpring'],
     ...base,
   };
 }
 
-const opts = (build: string, mana: number) => ({ build, mana, spirit: D.spirit, mp5: D.mp5, raidHealing: D.raidHealing, lockMana: false });
+const opts = (build: string, mana: number) => ({ build, mana, spirit: D.spirit, mp5: D.mp5, healingShare: D.healingShare, lockMana: false });
 
 export const warlockAffliction: Spec = specFor('affliction', {
   id: 'warlock-affliction',
@@ -161,7 +169,6 @@ export const warlockDemonology: Spec = specFor('demonology', {
   help: `${CONTROLS}
     ${HELP_COMMON}
     Demonology in WoW Forever: Demonic Pact keeps the buff of your sacrificed demon (Voidwalker: mana; or Imp: +15% Shadow) with the Succubus out. Demonic Knowledge adds spell power while she is out, Soul Link +3% damage, Master Demonologist +10% Shadow with a Succubus. Demonic Brand: Searing Pain gives 6 charges; each landed demon attack spends one for extra damage. Decimation: Shadow Bolt and Searing Pain on a target below 35% make Soul Fire faster with a shorter cooldown (start the dummy at 30% health in Settings to practice it).
-    The demon is not drawn in the yard; its attacks show in the meter.
     This is a practice tool: hit, crit and proc chances follow WoW Forever; damage numbers are an approximation.`,
   look: { clothColor: 0x3a5a2a, leatherColor: 0x2a2a1a, hood: true, robe: true },
 });
