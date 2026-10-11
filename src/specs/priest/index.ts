@@ -133,6 +133,8 @@ function smiteSuggest(c: Combat): string | null {
   if (!t || t.health <= 0) return null;
   const tl = T(c);
   const { p, ready, afford, mana, potion } = ctx(c);
+  // Let Penance fire all three bolts.
+  if (c.channeling?.id === 'penance') return null;
   const hf = c.aura(t, 'holyFire');
   if ((!hf || hf.end - c.t < 3) && afford('holyFire') && c.casting?.id !== 'holyFire') return 'holyFire';
   if (tl.powerInfusion && p.inCombat && ready('powerInfusion')) return 'powerInfusion';

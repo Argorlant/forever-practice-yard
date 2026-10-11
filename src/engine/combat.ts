@@ -115,6 +115,8 @@ interface EventMap {
   shot: Unit;
   /** The pet attacks (a swing or one of its abilities). */
   petAttack: { kind: string };
+  /** A projectile to draw for one tick of a channel (each Arcane Missile). */
+  bolt: { target: Unit; color: number; speed?: number };
 }
 
 const freshModifiers = (): Modifiers => ({
@@ -569,8 +571,9 @@ export class Combat {
   /** Starts a channel: ticks evenly spread over its duration (casting haste shortens it). */
   private startChannel(a: Ability, u: Unit | null): void {
     const ch = a.channel!;
-    if (ch.onStart && !ch.onStart(this, u)) return;
+    // The duration is read before onStart, which may spend what sets it (Missile Barrage).
     const duration = (typeof ch.duration === 'function' ? ch.duration(this) : ch.duration) / (ch.hasted ? this.castHaste() : 1);
+    if (ch.onStart && !ch.onStart(this, u)) return;
     // Ticks spread evenly; with tickAtStart the first one lands at once (Penance: 0, 1, 2 s).
     const step = ch.tickAtStart ? duration / Math.max(1, ch.ticks - 1) : duration / ch.ticks;
     const channel = { id: a.id, start: this.t, end: this.t + duration, ticks: ch.ticks, done: 0, events: [] as Scheduled[] };
@@ -1043,7 +1046,7 @@ export class Combat {
   deal(h: Hit): void {
     const u = h.target;
     // Magic damage taken debuffs (Curse of the Elements) apply to every non-physical hit.
-    if (h.school !== 'physical' && h.amount > 0) h.amount = Math.round(h.amount * this.schoolTaken(u, h.school));
+    if (h.school !== 'physical' && h.amount > 0 && !h.final) h.amount = Math.round(h.amount * this.schoolTaken(u, h.school));
     // Damage keeps you in combat but does not break stealth by itself: your
     // own bleeds and poisons tick on after Vanish. Attacking breaks it.
     this.player.inCombat = true;

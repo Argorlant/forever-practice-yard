@@ -5,6 +5,7 @@ import { Combat } from '../src/engine/combat';
 import type { Spec, Unit } from '../src/engine/types';
 import { druidBalance, druidBear, druidCat } from '../src/specs/druid';
 import { hunterBm, hunterMm, hunterSv } from '../src/specs/hunter';
+import { mageArcane, mageFire, mageFrost } from '../src/specs/mage';
 import { paladinProt, paladinRet, paladinShock } from '../src/specs/paladin';
 import { priestShadow, priestSmite } from '../src/specs/priest';
 import { rogue } from '../src/specs/rogue';
@@ -532,6 +533,50 @@ for (const sp of [priestShadow, priestSmite]) {
   const hf = (k['uptime:target:holyFire'] ?? 0) / (k.combatTime ?? 1);
   console.log(`Smite with locked mana: ${r.c.dps().toFixed(0)} DPS, Holy Fire uptime ${Math.round(hf * 100)}%, ${(r.c.meter.rows.get('penance')?.hits ?? 0)} Penance bolts`);
   if (hf < 0.8) failures.push(`Holy Fire uptime ${Math.round(hf * 100)}%, expected 80%+ for Power in Light`);
+}
+
+// ------------------------------------------------------------------- mage
+console.log('Mage builds (5 min, own gear, priority list, default raid buffs):');
+const MAGE_MUST_USE: Record<string, string[]> = {
+  arcane: ['arcaneBlast', 'frostbolt', 'arcaneMissiles', 'arcanePower', 'presenceOfMind'],
+  'arcane-fire': ['arcaneBlast', 'fireBlast', 'arcaneMissiles'],
+  'arcane-ms': ['arcaneBlast', 'arcaneMissiles'],
+  'arcane-fs': ['arcaneBlast', 'frostbolt'],
+  fire: ['scorch', 'fireBlast', 'pyroblast', 'combustion'],
+  'fire-fs': ['scorch', 'fireBlast', 'pyroblast', 'combustion'],
+  'fire-ms': ['scorch', 'fireBlast', 'pyroblast'],
+  'fire-frost': ['frostfireBolt', 'fireBlast', 'pyroblast'],
+  frost: ['frostbolt', 'iceLance'],
+  'arcane-frost': ['frostbolt', 'iceLance', 'arcaneMissiles'],
+  'frost-ms': ['frostbolt', 'iceLance', 'arcaneMissiles'],
+  'frost-p1': ['frostbolt'],
+};
+for (const sp of [mageArcane, mageFire, mageFrost]) {
+  for (const b of sp.builds ?? []) {
+    const r = play(sp, { build: b.id });
+    const missing = (MAGE_MUST_USE[b.id] ?? []).filter((id) => !r.used[id]);
+    const review = (sp.review?.(r.c) ?? []).map((x) => `${x.label}: ${x.value}`).join(' | ');
+    console.log(`  ${b.label.padEnd(58)} ${r.c.dps().toFixed(0).padStart(4)} DPS  ${review}`);
+    if (missing.length) failures.push(`${b.label} never used ${missing.join(', ')}`);
+    if (!(r.c.dps() > 100)) failures.push(`${b.label}: ${r.c.dps().toFixed(0)} DPS`);
+  }
+}
+// Arcane: Blast stacks raise its cost; Missiles fire 5 separate missiles; Evocation refills.
+{
+  const r = play(mageArcane, { build: 'arcane', options: { lockMana: true } });
+  const k = r.c.counters;
+  const missiles = r.c.meter.rows.get('arcaneMissiles');
+  console.log(`Arcane with locked mana: ${r.c.dps().toFixed(0)} DPS, ${missiles?.hits ?? 0} missiles hit, Barrage ${k.missileBarrage ?? 0}/${k.barrageUsed ?? 0}, stacks spent at 3: ${k['stacksSpent:3'] ?? 0}`);
+  if (!((k['stacksSpent:3'] ?? 0) > 20)) failures.push('Arcane rarely spent 3 Arcane Blast stacks');
+}
+// Fire: Ignite rolls, Fire Vulnerability stays at 5, Pyroblast only with Heating Up.
+{
+  const r = play(mageFire, { build: 'fire', options: { lockMana: true } });
+  const k = r.c.counters;
+  const fv = (k['uptime:target:fireVulnerability'] ?? 0) / (k.combatTime ?? 1);
+  console.log(`Fire with locked mana: ${r.c.dps().toFixed(0)} DPS, Ignite ${Math.round(r.c.meter.rows.get('ignite')?.total ?? 0)}, ${k.pyroblasts ?? 0} Pyroblasts, Fire Vulnerability uptime ${Math.round(fv * 100)}%`);
+  if (fv < 0.9) failures.push(`Fire Vulnerability uptime ${Math.round(fv * 100)}%`);
+  if (!(k.pyroblasts > 5)) failures.push('Fire cast almost no Pyroblasts');
 }
 
 // ----------------------------------------------------------- raid effects

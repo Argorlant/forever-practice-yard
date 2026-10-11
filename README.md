@@ -90,6 +90,18 @@ The **Priest** comes as two damage specs (sources in [`research/priest_forever.m
   channel with a bolt at 0, 1 and 2 s), Mind Blast, Power Infusion and Inner Focus. Judgement of the Crusader is
   on by default.
 
+The **Mage** comes as three specs, with the sims' hybrids as builds (sources in [`research/mage_forever.md`](research/mage_forever.md)):
+
+- **Arcane** (`?class=mage-arcane`): Arcane Blast stacks (+10% to your other spells, +175% to its own cost),
+  three Blasts then Frostbolt, Arcane Missiles on Missile Barrage (each missile rolls its own hit and crit),
+  Clearcasting, Arcane Power and Presence of Mind.
+- **Fire** (`?class=mage-fire`): Heating Up (direct crits make the next Pyroblast up to 1.5 s), rolling Ignite,
+  personal Fire Vulnerability from Scorch, Fire Blast and Combustion; Scorch, Fireball or Frostfire Bolt as the filler.
+- **Frost** (`?class=mage-frost`): Frostbolt, Fingers of Frost charges for Ice Lance x4 and Shatter, personal Winter's
+  Chill, and Arcane Missiles for the Arcane-Frost build.
+
+Mage Armor and Arcane Meditation keep Spirit regen while casting; Evocation, Mana Ruby and potions are on the bar.
+
 Channeled spells are part of the engine: cost and GCD at the start, ticks over time, interrupted by moving and
 clipped by the next spell.
 

@@ -374,6 +374,7 @@ combat.on('shot', (u) => {
   launch({ color: 0xd8c08a, speed: 40, size: 0.06 }, u);
 });
 combat.on('petAttack', () => pet?.swing());
+combat.on('bolt', ({ target, color, speed }) => launch({ color, speed: speed ?? 30, size: 0.1 }, target));
 
 combat.on('note', ({ text, kind }) => {
   floaters.note(text, playerPos().add(new THREE.Vector3(0, 2.1, 0)), kind === 'proc' ? 'ft-proc' : 'ft-note');

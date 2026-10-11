@@ -167,6 +167,8 @@ export interface Hit {
   spell?: boolean;
   /** A ranged attack (Auto Shot and shots): never Windfury. */
   ranged?: boolean;
+  /** The amount is final: damage-taken debuffs are already in it (Ignite comes from a crit that had them). */
+  final?: boolean;
 }
 
 export interface Ability {
