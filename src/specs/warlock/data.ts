@@ -56,7 +56,7 @@ export const DATA = {
   shadowTrance: { duration: 10 },
   shadowAndFlame: { duration: 20 },
   decimation: { threshold: 0.35, duration: 10 },
-  demonicSacrifice: { damage: 1.15, voidMana: 0.02, voidPeriod: 4 },
+  demonicSacrifice: { damage: 1.15, voidMana: 0.02, voidPeriod: 4, felhunterHealth: 0.03 },
   soulLink: 1.03,
   manaPotion: { min: 1350, max: 2250, cooldown: 120 },
   // Demons (gs model): melee demons Str 129 / Agi 85, AP 2 x Str - 20 + 10 % of your spell power

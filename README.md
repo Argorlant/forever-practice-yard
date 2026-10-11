@@ -109,11 +109,16 @@ healers keep up with you (each second they heal 20% of the health you are missin
 
 - **Affliction** (`?class=warlock-affliction`): Corruption with Nightfall (Shadow Trance: an instant Shadow Bolt), Siphon
   Life, Immolate, Pandemic crits at 2.0x and a personal Improved Shadow Bolt debuff. Wrack and Drain Life are on the bar.
-- **Demonology** (`?class=warlock-demonology`): Demonic Pact with a Succubus (melee swings and Lash of Pain), Demonic Brand
-  from Searing Pain, Soul Link, Master Demonologist and Soul Fire during Decimation. The Succubus fights next to the dummy
-  with you (horns, wings and a tail on the character model).
+- **Demonology** (`?class=warlock-demonology`): Demonic Pact keeps your Demonic Sacrifice buff while another demon fights
+  at your side (summoning the sacrificed one again cancels it). Demonic Brand from Searing Pain, Soul Link, Master
+  Demonologist and Soul Fire during Decimation. The Succubus runs to the dummy; the Imp stays by you and throws Firebolts
+  (both drawn on the character model with horns, wings and a tail).
 - **Destruction** (`?class=warlock-destruction`): Shadow and Flame (Conflagrate and Shadowburn keep a +10% buff up for
-  each school and keep Immolate burning), Incinerate as the filler; the DS/Ruin builds sacrifice the Imp and cast Shadow Bolt.
+  each school and keep Immolate burning), Incinerate as the filler; the DS/Ruin builds sacrifice a demon (the Imp in the
+  sims) and cast Shadow Bolt, with no demon left at your side.
+
+In Settings, every warlock picks the demon at their side (Succubus or Imp) and, with Demonic Sacrifice, the demon to give
+up: Imp (+15% Shadow), Succubus (+15% Fire), Voidwalker (2% mana every 4 sec) or Felhunter (3% health every 4 sec).
 
 The **Shaman** comes as two specs and an experiment (sources in [`research/shaman_forever.md`](research/shaman_forever.md)).
 Totems sit in four element slots (a new one replaces the old; Searing Totem attacks, buff totems last 5 min, a 1.0 s

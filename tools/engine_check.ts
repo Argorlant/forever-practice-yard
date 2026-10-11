@@ -631,6 +631,25 @@ for (const sp of [warlockAffliction, warlockDemonology, warlockDestruction]) {
   console.log(`Shadow and Flame with locked mana: ${f.c.dps().toFixed(0)} DPS, Immolate ${Math.round((k['uptime:target:immolate'] ?? 0) / time * 100)}%, Flame buff ${Math.round((k['uptime:shadowFlameFire'] ?? 0) / time * 100)}%, Shadow buff ${Math.round((k['uptime:shadowFlameShadow'] ?? 0) / time * 100)}%`);
   if ((k['uptime:target:immolate'] ?? 0) / time < 0.85) failures.push('Shadow and Flame let Immolate drop');
 }
+// Demonic Sacrifice: without Demonic Pact it leaves no demon; with it the buff stays beside another demon,
+// unless you summon the one you sacrificed. The Imp at your side throws Firebolts.
+{
+  const has = (r: ReturnType<typeof play>, id: string) => r.c.player.auras.has(id);
+  const ruin = play(warlockDestruction, { build: 'ruin', seconds: 20, options: { sacrifice: 'voidwalker', demon: 'succubus' } });
+  if (!has(ruin, 'felEnergy') || ruin.c.pet.out) failures.push('DS/Ruin with a Voidwalker sacrifice: expected Fel Energy and no demon out');
+  const pactImp = play(warlockDemonology, { build: 'pact', seconds: 60, options: { sacrifice: 'imp', demon: 'succubus' } });
+  if (!has(pactImp, 'burningShadow') || !pactImp.c.pet.out) failures.push('Demonic Pact did not keep Burning Shadow with the Succubus out');
+  const same = play(warlockDemonology, { build: 'pact', seconds: 20, options: { sacrifice: 'succubus', demon: 'succubus' } });
+  if (has(same, 'touchOfFire')) failures.push('Demonic Pact kept the buff of the demon summoned again');
+  const imp = play(warlockDemonology, { build: 'pact', seconds: 120, options: { sacrifice: 'voidwalker', demon: 'imp', lockMana: true } });
+  const fb = imp.c.meter.rows.get('firebolt');
+  console.log(`Demonic Pact with the Imp out: ${imp.c.dps().toFixed(0)} DPS, ${fb?.hits ?? 0} Firebolts (${Math.round(fb?.total ?? 0)})`);
+  if (!((fb?.hits ?? 0) > 40) || imp.c.meter.rows.get('petMelee')) failures.push('the Imp did not cast Firebolts (or the Succubus swung)');
+  const fel = play(warlockDestruction, { build: 'ruin', seconds: 20, options: { sacrifice: 'felhunter' } });
+  if (!has(fel, 'felStamina')) failures.push('Felhunter sacrifice did not give Fel Stamina');
+  const aff = play(warlockAffliction, { build: 'affliction', seconds: 20, options: { sacrifice: 'imp' } });
+  if (has(aff, 'burningShadow') || !aff.c.pet.out) failures.push('Affliction (no Demonic Sacrifice) got a sacrifice buff or lost its demon');
+}
 
 // ----------------------------------------------------------------- shaman
 console.log('Shaman builds (5 min, own gear, priority list, default raid buffs):');

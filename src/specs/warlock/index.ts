@@ -7,7 +7,7 @@
 import type { Combat } from '../../engine/combat';
 import type { MinionLook, Spec } from '../../engine/types';
 import { BOSS_RULES, CONTROLS } from '../common';
-import { ABILITIES, D, SOURCES, T, baneOn, build, chances, execute, left, lifeTapAmount, prepare, regen } from './core';
+import { ABILITIES, D, SOURCES, T, baneOn, build, chances, demons, execute, left, lifeTapAmount, prepare, regen } from './core';
 import { AFFLICTION_STATS, DESTRUCTION_STATS, PACT_STATS } from './data';
 import { buildLabel, buildsFor, summary, talentsFor, type WarlockSpec } from './talents';
 
@@ -109,6 +109,11 @@ const SUCCUBUS: MinionLook = {
   id: 'succubus', scale: 0.95,
   look: { clothColor: 0x2a0a2a, leatherColor: 0x7a3466, hood: false, demon: { horns: 0x2a1a1a, wings: 0x4a1a3a, tail: true, eyes: 0xff66dd } },
 };
+/** The Imp: small and red, it stays by you and throws Firebolts. */
+const IMP: MinionLook = {
+  id: 'imp', scale: 0.55, ranged: true,
+  look: { clothColor: 0x3a1a0a, leatherColor: 0xa83a1a, hood: false, demon: { horns: 0x2a1a10, wings: 0x6a2410, tail: true, eyes: 0xffd040 } },
+};
 
 const HELP_COMMON = `Spells have a cast bar and channels drain one; moving interrupts both. The global cooldown is 1.5 sec, shorter with casting haste (1.0 sec floor).
     Mana is your resource and Life Tap refills it from your health: (424 + Spirit) health into the same mana, instant, and it does not stop your Spirit regeneration. Raid healers keep up with you: each second they heal 20% of the health you are missing (Settings), so a Life Tap is healed back within a few seconds. Life Tap is refused only if it would kill you; lock your health in Settings to hide it. Judgement of Wisdom, Blessing of Wisdom and Mana Spring Totem are on by default under Raid buffs and debuffs.
@@ -119,9 +124,23 @@ const OPTIONS = [
   { key: 'spirit', name: 'Spirit (regeneration and Life Tap)', kind: 'number' as const, step: 1 },
   { key: 'mp5', name: 'Mana per 5 sec from gear', kind: 'number' as const, step: 1 },
   { key: 'healingShare', name: 'Raid healing: % of your missing health healed each second', kind: 'number' as const, step: 5 },
+  {
+    key: 'demon', name: 'Demon at your side (none after Demonic Sacrifice without Demonic Pact)', kind: 'choice' as const,
+    choices: [{ value: 'succubus', label: 'Succubus: melee and Lash of Pain (the sims)' }, { value: 'imp', label: 'Imp: Firebolt from range' }],
+  },
 ];
+/** Builds with Demonic Sacrifice pick the demon they give up; with Demonic Pact its buff stays while another demon is out. */
+const SACRIFICE = {
+  key: 'sacrifice', name: 'Demonic Sacrifice (builds with the talent): the demon you give up', kind: 'choice' as const,
+  choices: [
+    { value: 'imp', label: 'Imp: +15% Shadow damage' },
+    { value: 'succubus', label: 'Succubus: +15% Fire damage' },
+    { value: 'voidwalker', label: 'Voidwalker: 2% of your mana every 4 sec' },
+    { value: 'felhunter', label: 'Felhunter: 3% of your health every 4 sec' },
+  ],
+};
 
-function specFor(spec: WarlockSpec, base: Omit<Spec, 'className' | 'resource' | 'abilities' | 'rules' | 'prepare' | 'chances' | 'regen' | 'builds' | 'bar' | 'sources' | 'suggest' | 'review' | 'showHealth' | 'options' | 'sheet'>): Spec {
+function specFor(spec: WarlockSpec, base: Omit<Spec, 'className' | 'resource' | 'abilities' | 'rules' | 'prepare' | 'chances' | 'regen' | 'builds' | 'bar' | 'sources' | 'suggest' | 'review' | 'showHealth' | 'options' | 'sheet'>, sacrifice = false): Spec {
   return {
     className: 'Warlock',
     resource: 'mana',
@@ -136,16 +155,16 @@ function specFor(spec: WarlockSpec, base: Omit<Spec, 'className' | 'resource' | 
     suggest: rotationSuggest,
     review,
     showHealth: true,
-    options: OPTIONS,
+    options: sacrifice ? [...OPTIONS, SACRIFICE] : OPTIONS,
     sheet: { attackPower: false, crit: false, spellCrit: 'Spell crit (gear + Intellect)', spellPower: 'Spell damage (every school)', mainHand: false, offHand: false },
     lowMana: (c) => c.cost(c.ability('shadowBolt')!),
-    minion: (c) => (build(c).demon === 'succubus' ? SUCCUBUS : null),
+    minion: (c) => ({ succubus: SUCCUBUS, imp: IMP }[demons(c).out as 'succubus' | 'imp'] ?? null),
     defaultRaid: ['judgementOfWisdom', 'blessingOfWisdom', 'manaSpring'],
     ...base,
   };
 }
 
-const opts = (build: string, mana: number) => ({ build, mana, spirit: D.spirit, mp5: D.mp5, healingShare: D.healingShare, lockMana: false });
+const opts = (build: string, mana: number, sacrifice = 'imp') => ({ build, mana, spirit: D.spirit, mp5: D.mp5, healingShare: D.healingShare, lockMana: false, demon: 'succubus', sacrifice });
 
 export const warlockAffliction: Spec = specFor('affliction', {
   id: 'warlock-affliction',
@@ -164,14 +183,14 @@ export const warlockDemonology: Spec = specFor('demonology', {
   id: 'warlock-demonology',
   specName: 'Demonology',
   stats: PACT_STATS,
-  defaultOptions: opts('pact', 4638),
+  defaultOptions: opts('pact', 4638, 'voidwalker'),
   welcome: 'Welcome to the Demonology practice yard (Demonic Pact). Your Succubus fights with you; Searing Pain brands the target so her next attacks add Shadow damage. Keep the Brand up, Bane of Doom on cooldown, Corruption and Immolate ticking, and fill with Shadow Bolt. Below 35% health, Decimation makes Soul Fire fast.',
   help: `${CONTROLS}
     ${HELP_COMMON}
-    Demonology in WoW Forever: Demonic Pact keeps the buff of your sacrificed demon (Voidwalker: mana; or Imp: +15% Shadow) with the Succubus out. Demonic Knowledge adds spell power while she is out, Soul Link +3% damage, Master Demonologist +10% Shadow with a Succubus. Demonic Brand: Searing Pain gives 6 charges; each landed demon attack spends one for extra damage. Decimation: Shadow Bolt and Searing Pain on a target below 35% make Soul Fire faster with a shorter cooldown (start the dummy at 30% health in Settings to practice it).
+    Demonology in WoW Forever: Demonic Pact keeps the buff of your sacrificed demon while another demon is out; summoning the one you sacrificed again cancels it. Pick both in Settings: gunba sacrifices the Voidwalker (mana), foreversim the Imp (+15% Shadow), and both keep the Succubus out. Demonic Knowledge adds spell power while a demon is out, Soul Link +3% damage, Master Demonologist +10% damage with a Succubus. Demonic Brand: Searing Pain gives 6 charges; each landed demon attack spends one for extra damage. Decimation: Shadow Bolt and Searing Pain on a target below 35% make Soul Fire faster with a shorter cooldown (start the dummy at 30% health in Settings to practice it).
     This is a practice tool: hit, crit and proc chances follow WoW Forever; damage numbers are an approximation.`,
   look: { clothColor: 0x3a5a2a, leatherColor: 0x2a2a1a, hood: true, robe: true },
-});
+}, true);
 
 export const warlockDestruction: Spec = specFor('destruction', {
   id: 'warlock-destruction',
@@ -181,7 +200,7 @@ export const warlockDestruction: Spec = specFor('destruction', {
   welcome: 'Welcome to the Destruction practice yard (Shadow and Flame). Immolate, then Conflagrate and Shadowburn on cooldown: each keeps a +10% buff up for the other school, and Shadow and Flame keeps your Immolate burning. Corruption and Bane of Doom tick on the side; Incinerate is the filler. The DS/Ruin build plays Shadow Bolts instead.',
   help: `${CONTROLS}
     ${HELP_COMMON}
-    Destruction in WoW Forever: Ruin makes Destruction spells crit for 2.0x, Agonizing Flames adds 10% to them, Cataclysm cuts their cost. Shadow and Flame: Conflagrate gives +10% Shadow damage for 20 sec and keeps Immolate (100% at 5/5); Shadowburn gives +10% Fire damage. Incinerate's base damage is 25% higher while your Immolate burns. Fire and Brimstone adds 25% crit to Conflagrate. DS/Ruin sacrifices the Imp (+15% Shadow) and casts Shadow Bolt.
+    Destruction in WoW Forever: Ruin makes Destruction spells crit for 2.0x, Agonizing Flames adds 10% to them, Cataclysm cuts their cost. Shadow and Flame: Conflagrate gives +10% Shadow damage for 20 sec and keeps Immolate (100% at 5/5); Shadowburn gives +10% Fire damage. Incinerate's base damage is 25% higher while your Immolate burns. Fire and Brimstone adds 25% crit to Conflagrate. DS/Ruin sacrifices a demon before the pull (the Imp, +15% Shadow, in the sims; pick another in Settings) and casts Shadow Bolt; without Demonic Pact no demon stays at your side.
     This is a practice tool: hit, crit and proc chances follow WoW Forever; damage numbers are an approximation.`,
   look: { clothColor: 0x8a2a1a, leatherColor: 0x3a1a10, hood: true, robe: true },
-});
+}, true);

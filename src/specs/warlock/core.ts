@@ -5,9 +5,9 @@
 // demon (a melee swing plus Lash of Pain, or the Imp's Firebolts) with
 // Demonic Brand. Numbers in ./data.ts; sources in research/warlock_forever.md.
 import type { Combat } from '../../engine/combat';
-import type { Ability, Outcome, School, Unit } from '../../engine/types';
+import type { Ability, Aura, Outcome, School, Unit } from '../../engine/types';
 import { DATA } from './data';
-import { buildById, talentsFor, type Talents, type WarlockSpec } from './talents';
+import { buildById, talentsFor, type Demon, type Talents, type WarlockSpec } from './talents';
 
 export const D = DATA;
 const roll = (c: Combat, pct: number) => c.random() * 100 < pct;
@@ -18,6 +18,23 @@ const specOf = (c: Combat) => c.spec.id.replace('warlock-', '') as WarlockSpec;
 /** Talent ranks of the build chosen in Settings. */
 export const T = (c: Combat): Talents => talentsFor(c.options.build, specOf(c));
 export const build = (c: Combat) => buildById(c.options.build, specOf(c));
+
+/**
+ * The demon at your side and the one given to Demonic Sacrifice (both chosen in Settings).
+ * Without Demonic Pact a sacrifice leaves you with no demon: summoning one would cancel the buff.
+ * With Demonic Pact you keep the buff while another demon is out; resummoning the one you
+ * sacrificed cancels it (`lost`).
+ */
+export function demons(c: Combat): { out: Demon; sacrificed: Demon; lost: boolean } {
+  const tl = T(c);
+  const out = String(c.options.demon ?? 'succubus') as Demon;
+  if (!tl.demonicSacrifice) return { out, sacrificed: 'none', lost: false };
+  const sacrificed = String(c.options.sacrifice ?? 'imp') as Demon;
+  if (!tl.demonicPact) return { out: 'none', sacrificed, lost: false };
+  if (out === sacrificed) return { out, sacrificed: 'none', lost: true };
+  return { out, sacrificed, lost: false };
+}
+const DEMON_NAMES: Record<Demon, string> = { succubus: 'Succubus', imp: 'Imp', voidwalker: 'Voidwalker', felhunter: 'Felhunter', none: 'none' };
 
 // ------------------------------------------------------------------- mana
 /** Cataclysm: Destruction spells cost 3/6/10 % less. */
@@ -167,7 +184,7 @@ function petHit(c: Combat, u: Unit, source: string, base: number, kind: 'melee' 
   const brand = c.aura(u, 'demonicBrand');
   if (brand && amount > 0) {
     const b = D.pet.brand;
-    const fire = build(c).demon === 'imp';
+    const fire = demons(c).out === 'imp';
     const crit = roll(c, c.spellCritChance());
     const extra = Math.round((between(c, b.min, b.max) + b.coeff * c.spellPowerFor(fire ? 'fire' : 'shadow')) * (crit ? 1.5 : 1));
     c.deal({ target: u, source: 'demonicBrand', outcome: crit ? 'crit' : 'hit', school: fire ? 'fire' : 'shadow', amount: extra, white: false });
@@ -202,7 +219,7 @@ function petThink(c: Combat): void {
   const fighting = !!u && u.health > 0 && c.player.inCombat;
   c.pet.attacking = fighting;
   if (!fighting) { s.swing?.cancel(); s.swing = null; return; }
-  const demon = build(c).demon;
+  const demon = demons(c).out;
   if (demon === 'succubus') {
     if (!s.swing) s.swing = c.schedule(Math.max(c.t, s.next), () => petSwing(c));
     if (c.t >= s.lashReady) {
@@ -214,8 +231,11 @@ function petThink(c: Combat): void {
   } else if (demon === 'imp' && c.t >= s.castEnd) {
     const f = D.pet.firebolt;
     s.castEnd = c.t + f.cast + f.gap;
+    c.emit('petAttack', { kind: 'cast' });
     c.schedule(c.t + f.cast, () => {
-      if (c.pet.attacking && c.target) petHit(c, c.target, 'firebolt', (between(c, f.min, f.max) + f.coeff * petSp(c)) * (1 + 0.1 * T(c).improvedImp), 'spell', 'fire');
+      if (!c.pet.attacking || !c.target) return;
+      c.emit('petAttack', { kind: 'firebolt' });
+      petHit(c, c.target, 'firebolt', (between(c, f.min, f.max) + f.coeff * petSp(c)) * (1 + 0.1 * T(c).improvedImp), 'spell', 'fire');
     });
   }
 }
@@ -471,7 +491,6 @@ export const ABILITIES: Ability[] = [
 // ----------------------------------------------------------------- setup
 export function prepare(c: Combat): void {
   const t = T(c);
-  const b = build(c);
   const p = c.player;
   pets.set(c, { swing: null, next: 0, lashReady: 0, castEnd: 0 });
   p.maxResource = Math.max(1, Number(c.options.mana ?? 4000));
@@ -490,21 +509,27 @@ export function prepare(c: Combat): void {
     },
   });
   // Demonic Sacrifice before the pull: the buff of the demon given up (Demonic Pact keeps it with another demon out).
-  if (t.demonicSacrifice && b.sacrificed === 'imp') c.applyAura(p, { id: 'burningShadow', name: 'Burning Shadow (Imp sacrificed)', icon: 'demonicSacrifice', duration: Infinity });
-  if (t.demonicSacrifice && b.sacrificed === 'succubus') c.applyAura(p, { id: 'touchOfFire', name: 'Touch of Fire', icon: 'demonicSacrifice', duration: Infinity });
-  if (t.demonicSacrifice && b.sacrificed === 'voidwalker') {
-    c.applyAura(p, {
-      id: 'felEnergy', name: 'Fel Energy (Voidwalker sacrificed)', icon: 'demonicSacrifice', duration: Infinity, period: D.demonicSacrifice.voidPeriod,
-      onTick: (cc) => cc.gainMana(Math.round(cc.player.maxResource * D.demonicSacrifice.voidMana)),
+  const d = demons(c);
+  const sacrifice = (id: string, name: string, extra: Partial<Aura> = {}) =>
+    c.applyAura(p, { id, name: `${name} (${DEMON_NAMES[d.sacrificed]} sacrificed)`, icon: 'demonicSacrifice', duration: Infinity, ...extra });
+  if (d.sacrificed === 'imp') sacrifice('burningShadow', 'Burning Shadow');
+  if (d.sacrificed === 'succubus') sacrifice('touchOfFire', 'Touch of Fire');
+  if (d.sacrificed === 'voidwalker') {
+    sacrifice('felEnergy', 'Fel Energy', { period: D.demonicSacrifice.voidPeriod, onTick: (cc) => cc.gainMana(Math.round(cc.player.maxResource * D.demonicSacrifice.voidMana)) });
+  }
+  if (d.sacrificed === 'felhunter') {
+    sacrifice('felStamina', 'Fel Stamina', {
+      period: D.demonicSacrifice.voidPeriod,
+      onTick: (cc) => { const me = cc.player; if (!cc.playerHealthLocked) me.health = Math.min(me.maxHealth, me.health + me.maxHealth * D.demonicSacrifice.felhunterHealth); },
     });
   }
-  c.pet.out = b.demon !== 'none';
+  c.pet.out = d.out !== 'none';
   if (c.pet.out) {
     if (t.soulLink) c.applyAura(p, { id: 'soulLink', name: 'Soul Link', icon: 'soulLink', duration: Infinity });
-    if (t.masterDemonologist && b.demon === 'succubus') c.applyAura(p, { id: 'masterDemonologist', name: 'Master Demonologist', icon: 'masterDemonologist', duration: Infinity });
-    c.applyAura(p, { id: 'petAI', name: 'Demon', icon: 'summonSuccubus', duration: Infinity, period: 0.1, hidden: true, onTick: (cc) => petThink(cc) });
+    if (t.masterDemonologist && d.out === 'succubus') c.applyAura(p, { id: 'masterDemonologist', name: 'Master Demonologist', icon: 'masterDemonologist', duration: Infinity });
+    c.applyAura(p, { id: 'petAI', name: 'Demon', icon: d.out === 'imp' ? 'summonImp' : 'summonSuccubus', duration: Infinity, period: 0.1, hidden: true, onTick: (cc) => petThink(cc) });
   }
-  c.registerSource('petMelee', b.demon === 'imp' ? 'Imp' : 'Succubus', b.demon === 'imp' ? 'summonImp' : 'summonSuccubus');
+  c.registerSource('petMelee', 'Succubus', 'summonSuccubus');
   c.registerSource('lashOfPain', 'Succubus: Lash of Pain', 'lashOfPain');
   c.registerSource('firebolt', 'Imp: Firebolt', 'firebolt');
   c.registerSource('demonicBrand', 'Demonic Brand', 'demonicBrand');
@@ -533,6 +558,7 @@ export function chances(c: Combat): { title: string; rows: [string, string][] }[
       ],
     },
     { title: 'Procs', rows: procs },
+    { title: 'Demons', rows: demonRows(c) },
     {
       title: 'Mana and health',
       rows: [
@@ -542,6 +568,19 @@ export function chances(c: Combat): { title: string; rows: [string, string][] }[
       ],
     },
   ];
+}
+
+function demonRows(c: Combat): [string, string][] {
+  const tl = T(c);
+  const d = demons(c);
+  const buff: Record<Demon, string> = { imp: '+15% Shadow damage', succubus: '+15% Fire damage', voidwalker: '2% of your mana every 4 sec', felhunter: '3% of your health every 4 sec', none: '' };
+  const rows: [string, string][] = [['Demon at your side', d.out === 'none' ? 'none' : DEMON_NAMES[d.out]]];
+  if (tl.demonicSacrifice) {
+    const chosen = String(c.options.sacrifice ?? 'imp') as Demon;
+    rows.push(['Demonic Sacrifice', d.lost ? `${DEMON_NAMES[chosen]}: buff lost, you summoned the same demon again` : `${DEMON_NAMES[d.sacrificed]}: ${buff[d.sacrificed]}`]);
+    rows.push(['Demonic Pact', tl.demonicPact ? 'keeps the buff with another demon out' : 'not talented: the sacrifice leaves you without a demon']);
+  }
+  return rows;
 }
 
 export const SOURCES = [

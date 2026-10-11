@@ -341,4 +341,10 @@ export interface CharacterLook {
 }
 
 /** A humanoid companion drawn with the character model (a warlock's demon). */
-export interface MinionLook { id: string; look: CharacterLook; scale: number }
+export interface MinionLook {
+  id: string;
+  look: CharacterLook;
+  scale: number;
+  /** A caster (the Imp): it stays by you and throws its spells instead of running to the target. */
+  ranged?: boolean;
+}

@@ -76,6 +76,8 @@ const petPos = new THREE.Vector3(controls.x + 0.9, 0, controls.z - 0.6);
 interface Companion { root: THREE.Object3D; setLocomotion(state: Locomotion, speed?: number): void; update(dt: number): void; swing(): void; play?(name: string): void }
 let companion: Companion | null = pet;
 let minionId: string | null = null;
+/** A caster companion (the Imp) stays by you instead of running to the target. */
+let companionRanged = false;
 /** Loads the demon the build calls for (once per look); it shows while the pet is out. */
 function syncMinion(): void {
   const want = spec.minion?.(combat) ?? null;
@@ -88,6 +90,7 @@ function syncMinion(): void {
     if (companion && companion !== pet) world.scene.remove(companion.root);
     world.scene.add(ch.root);
     companion = ch;
+    companionRanged = !!want.ranged;
   }).catch((err) => console.error(err));
 }
 // Shaman totems, drawn where they were dropped.
@@ -398,7 +401,10 @@ combat.on('shot', (u) => {
 });
 combat.on('petAttack', ({ kind }) => {
   if (kind === 'lash') companion?.play?.('slash');
-  else companion?.swing();
+  else if (kind === 'cast') companion?.play?.('cast');
+  else if (kind === 'firebolt') {
+    if (companion && combat.target) launch({ color: 0xff7a1a, speed: 20, size: 0.08 }, combat.target, companion.root.position.clone().setY(0.7));
+  } else companion?.swing();
 });
 combat.on('bolt', ({ target, color, speed, from }) => {
   const origin = from ? (from.totem ? totems.head(from.totem, from.x, from.z) : new THREE.Vector3(from.x, 1, from.z)) : undefined;
@@ -563,7 +569,7 @@ function updatePet(dt: number): void {
   if (!combat.pet.out) return;
   const t = combat.target;
   const want = new THREE.Vector3();
-  if (combat.pet.attacking && t) want.set(t.x + 0.95, 0, t.z - 0.35);
+  if (combat.pet.attacking && t && !companionRanged) want.set(t.x + 0.95, 0, t.z - 0.35);
   else want.set(controls.x + Math.cos(controls.facing) * 0.9, 0, controls.z - Math.sin(controls.facing) * 0.9);
   const to = want.clone().sub(petPos);
   const dist = to.length();
