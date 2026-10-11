@@ -1,0 +1,26 @@
+{
+  "name": "forever-practice-yard",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Rotation practice yard for WoW Forever",
+  "type": "module",
+  "scripts": {
+    "dev": "vite --port 5180 --host 127.0.0.1",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview --port 5181",
+    "model": "node tools/build_model.mjs",
+    "icons": "node tools/icons.mjs && node tools/wow_icons.mjs",
+    "test": "esbuild tools/engine_check.ts --bundle --platform=node --format=esm --log-level=warning --outfile=node_modules/.cache/engine_check.mjs && node node_modules/.cache/engine_check.mjs"
+  },
+  "dependencies": {
+    "three": "^0.180.0"
+  },
+  "devDependencies": {
+    "@gltf-transform/core": "^4.5.1",
+    "@gltf-transform/functions": "^4.5.1",
+    "@types/node": "^22.20.5",
+    "@types/three": "^0.180.0",
+    "typescript": "^5.9.3",
+    "vite": "^6.4.4"
+  }
+}
