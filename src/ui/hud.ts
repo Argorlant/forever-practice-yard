@@ -89,6 +89,8 @@ export class Hud {
   private swingMH: HTMLElement;
   private swingOH: HTMLElement;
   private swingRanged: HTMLElement;
+  /** A movement cue (melee weaving: Step in, Raptor Strike, Step out). */
+  private cue: HTMLElement;
   private error: HTMLElement;
   private errorUntil = 0;
   private countdown: HTMLElement;
@@ -183,6 +185,7 @@ export class Hud {
     this.swingRanged = h('div', 'swing ranged');
     this.swingRanged.title = 'Auto Shot: red while the windup is on (stand still)';
     swings.append(this.swingMH, this.swingOH, this.swingRanged);
+    this.cue = h('div', 'cue');
 
     const barEl = h('div', 'action-bar');
     // Slots after the 16 of the action bar: the stance bar, above it on the left.
@@ -202,7 +205,7 @@ export class Hud {
       el.addEventListener('pointerenter', () => { this.tooltipSlot = i; });
       el.addEventListener('pointerleave', () => { if (this.tooltipSlot === i) this.tooltipSlot = -1; });
     });
-    bottom.append(this.castBar, this.playerAuras.el, this.combatState, this.healthBar, resource, pips, this.manaBar, swings);
+    bottom.append(this.cue, this.castBar, this.playerAuras.el, this.combatState, this.healthBar, resource, pips, this.manaBar, swings);
     if (bar.length > ACTION_BAR_SLOTS) bottom.append(stanceEl);
     bottom.append(barEl);
     this.root.append(bottom);
@@ -353,8 +356,13 @@ export class Hud {
     this.swingRanged.style.display = c.stats.ranged ? '' : 'none';
     this.swingRanged.style.setProperty('--p', rs.total ? String(rs.winding ? 1 : Math.max(0, 1 - rs.left / rs.total)) : '0');
     this.swingRanged.classList.toggle('winding', rs.winding);
-    this.swingMH.style.display = c.autoShooting ? 'none' : '';
-    this.swingOH.style.display = c.autoShooting || !c.stats.offHand ? 'none' : '';
+    // Weaving keeps both autos on: show both timers.
+    const shootingOnly = c.autoShooting && !p.autoAttacking;
+    this.swingMH.style.display = shootingOnly ? 'none' : '';
+    this.swingOH.style.display = shootingOnly || !c.stats.offHand ? 'none' : '';
+    const cue = c.spec.cue?.(c) ?? null;
+    this.cue.textContent = cue?.text ?? '';
+    this.cue.className = cue ? `cue show ${cue.tone}` : 'cue';
     this.swingMH.parentElement!.classList.toggle('active', p.autoAttacking || c.autoShooting);
 
     // Action bar.

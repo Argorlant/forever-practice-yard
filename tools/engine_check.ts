@@ -498,6 +498,36 @@ for (const sp of [hunterMm, hunterBm, hunterSv]) {
   if (bites < 25 || bites > 31) failures.push(`pet used Bite ${bites} times in 5 min, expected about 29`);
   if (claws < 60) failures.push(`pet used Claw only ${claws} times in 5 min`);
 }
+// Melee weaving: a scripted hunter follows the cues (step in, Raptor Strike, step out) at running speed.
+{
+  const weaveRun = (weave: boolean, rule: string) => {
+    const r = play(hunterMm, { build: 'mm', seconds: 0, options: { lockMana: true, meleeWeaving: weave, autoShotReset: rule } });
+    const c = r.c;
+    for (let t = 0; t < 180; t += 0.05) {
+      const cue = hunterMm.cue?.(c)?.text;
+      const dir = cue === 'Step in' ? 1 : cue === 'Step out' ? -1 : 0;
+      c.player.moving = dir !== 0;
+      c.player.z += dir * 7 * 0.9144 * 0.05;
+      const id = hunterMm.suggest?.(c);
+      if (id) c.use(id);
+      c.update(0.05);
+    }
+    return c;
+  };
+  const still = weaveRun(false, 'beta');
+  const line = (name: string, c: Combat) => {
+    const k = c.counters;
+    return `${name} ${c.dps().toFixed(0)} DPS (${k.weaveRaptor ?? 0} Raptor, ${k.weaveWhite ?? 0} white, Auto Shot lost ${((k.autoShotDelay ?? 0) + (k.autoShotHeld ?? 0)).toFixed(1)} s, dead zone ${(k.deadZone ?? 0).toFixed(1)} s)`;
+  };
+  const classic = weaveRun(true, 'classic');
+  const beta = weaveRun(true, 'beta');
+  console.log(`Melee weaving, MM Lone Wolf, 3 min, locked mana: no weaving ${still.dps().toFixed(0)} DPS | ${line('Classic rule', classic)} | ${line('beta rule', beta)}`);
+  // The rotation keeps casting, so windows are rare (Aimed, Quick Shots and Rapid Fire close them), as the research expects.
+  if (!((classic.counters.weaveRaptor ?? 0) >= 5)) failures.push('the weaving cues led to few Raptor Strikes under the Classic rule');
+  if ((classic.counters.autoShotHeld ?? 0) > 2) failures.push(`Classic weaving held Auto Shot ${(classic.counters.autoShotHeld ?? 0).toFixed(1)} s`);
+  if (!(beta.counters.autoShotResets > 0)) failures.push('the beta rule never reset Auto Shot');
+}
+
 // Pets as in WoW: they run to the target and hit only there; orders and modes decide when they go.
 {
   const PET_SOURCES = ['petMelee', 'petClaw', 'petBite', 'lashOfPain', 'firebolt'];

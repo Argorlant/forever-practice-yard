@@ -408,6 +408,34 @@ combat.on('bolt', ({ target, color, speed, from }) => {
 });
 combat.on('totem', ({ slot, id, x, z, facing }) => totems.set(slot, id, x, z, facing));
 
+// Range rings around the target (melee weaving: melee range and Auto Shot's minimum), rebuilt when their sizes change.
+const rings = new THREE.Group();
+world.scene.add(rings);
+let ringKey = '';
+function updateRings(): void {
+  const list = spec.rings?.(combat) ?? [];
+  const t = combat.target;
+  rings.visible = list.length > 0 && !!t;
+  if (!rings.visible || !t) return;
+  const key = list.map((r) => `${r.radius.toFixed(3)}:${r.color}`).join('|');
+  if (key !== ringKey) {
+    ringKey = key;
+    for (const m of [...rings.children] as THREE.Mesh[]) {
+      rings.remove(m);
+      m.geometry.dispose();
+      (m.material as THREE.Material).dispose();
+    }
+    for (const r of list) {
+      const m = new THREE.Mesh(new THREE.RingGeometry(r.radius - 0.04, r.radius + 0.04, 96),
+        new THREE.MeshBasicMaterial({ color: r.color, transparent: true, opacity: 0.6, side: THREE.DoubleSide, depthWrite: false }));
+      m.rotation.x = -Math.PI / 2;
+      m.position.y = 0.02;
+      rings.add(m);
+    }
+  }
+  rings.position.set(t.x, 0, t.z);
+}
+
 // Fire Nova and Magma Totem: a ring of flame that grows to the spell's radius.
 interface Nova { mesh: THREE.Mesh; t: number; radius: number }
 const novas: Nova[] = [];
@@ -548,6 +576,7 @@ function frame(): void {
   for (const d of dummies) d.dummy.update(dt, elapsed);
   updateBolts(dt);
   updateNovas(dt);
+  updateRings();
   totems.update(dt, elapsed);
   if (companion) updatePet(dt);
   world.update(dt, elapsed);

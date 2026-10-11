@@ -306,6 +306,10 @@ export interface Spec {
   startDistance?: number;
   /** A pet: the animal model that fights next to the player (hunters). */
   pet?: BeastLookSpec;
+  /** A movement cue shown above the action bar (melee weaving: step in, hit, step out). */
+  cue?: (c: Combat) => { text: string; tone: 'go' | 'hit' | 'back' } | null;
+  /** Range rings drawn on the ground around the target, radius in metres from its centre (weaving: melee and Auto Shot). */
+  rings?: (c: Combat) => { radius: number; color: number }[];
   /** A humanoid companion for the current build (a warlock's demon); it shows while `pet.out` is on. */
   minion?: (c: Combat) => MinionLook | null;
   /** Raise it when the spec's defaults change, so settings saved in the browser start over. */

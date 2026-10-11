@@ -203,6 +203,13 @@ export class Combat {
   windup: { start: number; end: number; ev: Scheduled } | null = null;
   /** Classic rule: Auto Shot and cast shots wait for each other (a cast clips the shot). Forever: autos fire during casts. */
   classicAutoShot = false;
+  /** Melee weaving (hunters): Auto Shot and the melee auto attack run together and the distance picks which one fires. */
+  weaving = false;
+  /**
+   * What a melee swing does to Auto Shot: 'beta' restarts its timer (Forever beta, bug #14),
+   * 'classic' leaves the two timers independent, 'wrath' links them both ways.
+   */
+  autoShotReset: 'beta' | 'classic' | 'wrath' = 'beta';
   /** The pet the spec controls; the scene reads it to draw the animal. */
   pet: Pet = newPet();
   private rangedEv: Scheduled | null = null;
@@ -357,6 +364,8 @@ export class Combat {
     this.rangedNextAt = 0;
     this.windupStartedAt = -Infinity;
     this.classicAutoShot = false;
+    this.weaving = false;
+    this.autoShotReset = 'beta';
     this.pet = newPet();
     this.player = this.newPlayer();
     // The scene owns the position: keep it.
@@ -823,7 +832,7 @@ export class Combat {
     const p = this.player;
     this.enterCombat();
     this.ownerAttacks(this.target);
-    if (this.autoShooting) this.stopAutoShot();
+    if (this.autoShooting && !this.weaving) this.stopAutoShot();
     if (p.autoAttacking) return;
     p.autoAttacking = true;
     // The main hand swings at once; the off hand half a swing later.
@@ -831,6 +840,8 @@ export class Combat {
     if (this.stats.offHand) {
       this.scheduleSwing('off', Math.max(this.t + this.weaponSpeed('off') / 2, this.nextSwing.off));
     }
+    // Weaving: both autos stay on.
+    if (this.weaving) this.startAutoShot();
   }
 
   stopAutoAttack(): void {
@@ -885,10 +896,28 @@ export class Combat {
     if (!this.stats.ranged) return;
     this.enterCombat();
     this.ownerAttacks(this.target);
-    if (this.player.autoAttacking) this.stopAutoAttack();
+    if (this.player.autoAttacking && !this.weaving) this.stopAutoAttack();
     if (this.autoShooting) return;
     this.autoShooting = true;
     this.scheduleRanged(Math.max(this.t, this.rangedNextAt));
+    if (this.weaving) this.startAutoAttack();
+  }
+
+  /**
+   * A melee swing landed while Auto Shot is on. Forever beta (and Wrath): the Auto Shot timer
+   * starts over, so the next shot leaves a full weapon speed after the swing.
+   */
+  private meleeSwung(): void {
+    const w = this.stats.ranged;
+    if (!this.autoShooting || !w || this.autoShotReset === 'classic') return;
+    const wind = 0.5 / this.rangedHaste();
+    // Only the delay the reset adds: a shot already held up (you stand in melee) is counted from now.
+    const planned = Math.max(this.t, this.windup ? this.windup.end : this.rangedNextAt + wind);
+    if (this.windup) { this.windup.ev.cancel(); this.windup = null; }
+    this.rangedNextAt = this.t + w.speed / this.rangedHaste() - wind;
+    this.scheduleRanged(Math.max(this.t, this.rangedNextAt));
+    this.count('autoShotResets');
+    this.count('autoShotDelay', Math.max(0, this.rangedNextAt + wind - planned));
   }
 
   stopAutoShot(): void {
@@ -919,6 +948,8 @@ export class Combat {
       this.scheduleRanged(this.t + retry);
       return;
     }
+    // Weaving: how long the windup waited past its time (you were in melee or the dead zone).
+    if (this.weaving && Number.isFinite(this.windupStartedAt)) this.count('autoShotHeld', Math.max(0, this.t - this.rangedNextAt));
     const wind = 0.5 / this.rangedHaste();
     this.windupStartedAt = this.t;
     this.windup = { start: this.t, end: this.t + wind, ev: this.schedule(this.t + wind, () => this.rangedFire()) };
@@ -938,6 +969,11 @@ export class Combat {
     this.deal({ target: u, source: 'autoShot', outcome, school: 'physical', amount, white: true, ranged: true, weaponStrike: true });
     this.rangedNextAt = this.windupStartedAt + w.speed / this.rangedHaste();
     if (this.autoShooting) this.scheduleRanged(Math.max(this.t, this.rangedNextAt));
+    // Wrath's rule: a shot also restarts the melee swing timer.
+    if (this.autoShotReset === 'wrath' && this.player.autoAttacking) {
+      this.swingMH?.cancel();
+      this.scheduleSwing('main', this.t + this.weaponSpeed('main'));
+    }
   }
 
   /** Ranged attacks: miss (8 % minus hit), then crit. */
@@ -994,6 +1030,7 @@ export class Combat {
     } else {
       this.whiteHit(hand, u);
     }
+    this.meleeSwung();
     const next = hand === 'main' ? this.swingMH : this.swingOH;
     if (!next && this.player.autoAttacking) this.scheduleSwing(hand, this.t + this.weaponSpeed(hand));
   }

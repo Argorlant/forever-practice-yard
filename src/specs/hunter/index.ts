@@ -1,7 +1,7 @@
 // Hunter for WoW Forever: Beast Mastery (pet and hawks), Marksmanship (Lone
 // Wolf or with a pet) and Survival (melee). Auto Shot lives in the engine
 // (its windup and the dead zone); shared rules in ./core.ts, numbers in
-// ./data.ts, builds in ./talents.ts. Melee weaving is left for later.
+// ./data.ts, builds in ./talents.ts. Melee weaving is an optional mode (./weave.ts).
 import type { Combat } from '../../engine/combat';
 import type { Spec } from '../../engine/types';
 import { BOSS_RULES, CONTROLS } from '../common';
@@ -9,6 +9,7 @@ import { PET_HELP, PET_MODE } from '../pet';
 import { ABILITIES, D, SOURCES, T, chances, hawkCount, oldestHawkLeft, onCooldown, prepare, regen } from './core';
 import { MELEE_STATS, RANGED_STATS } from './data';
 import { buildLabel, buildsFor, summary, talentsFor, type HunterSpec } from './talents';
+import { WEAVE_OPTIONS, weaveCue, weaveRings, weaveRows, weaveSuggest } from './weave';
 
 type Row = { label: string; value: string; good?: boolean };
 const pctOf = (n: number) => `${Math.round(n * 100)}%`;
@@ -53,6 +54,8 @@ function manaRows(c: Combat, rows: Row[]): void {
 const HELP_COMMON = `Auto Shot fires on its own every weapon swing (faster with the quiver, Quick Shots and Rapid Fire). Each shot has a 0.5 sec windup in which you must stand still: moving makes it try again 0.5 sec later. Ranged attacks work from 8 to 35 yards; closer is the dead zone.
     WoW Forever: Aimed Shot is baseline (2 sec cast, 6 sec cooldown shared with Multi-Shot), Arcane Shot and Serpent Sting scale with ranged attack power, and Auto Shot keeps firing while you cast (Settings has the Classic rule as an option). You cannot cast while moving; Arcane Shot and Serpent Sting are instant.
     Mana is your resource: shots drain it fast. Judgement of Wisdom, Blessing of Wisdom and Mana Spring Totem are on by default under Raid buffs and debuffs, and Major Mana Potions are on your bar; you can lock your mana in Settings.`;
+
+const WEAVE_HELP = `Melee weaving (an advanced option in Settings): Auto Shot and your melee swing (the two-handed glaive) run together, and the distance decides which one fires. Right after a shot leaves, step forward through the dead zone (the rings on the ground: inside the red one you hit in melee, outside the green one you shoot), take a swing or Raptor Strike, and step back out before the next windup. The cue above your bar says when: Step in, Raptor Strike, Step out. On the Forever beta a melee swing restarts the Auto Shot timer (bug #14), so a weave gains little; Settings lets you try the Classic rule (independent timers). Neither sim models weaving.`;
 
 const OPTIONS = [
   { key: 'classicAutoShot', name: 'Classic Auto Shot rule: a cast started in the windup clips the shot', kind: 'toggle' as const },
@@ -107,6 +110,7 @@ function rangedReview(c: Combat): Row[] {
   if (time < 1) return [];
   const rows: Row[] = [];
   autoShotRows(c, rows);
+  weaveRows(c, rows);
   rows.push(
     { label: 'Aimed Shot on cooldown', value: pctOf(onCooldown(c, 'aimedShot', D.aimedShot.cooldown)), good: onCooldown(c, 'aimedShot', D.aimedShot.cooldown) >= 0.7 },
     { label: 'Serpent Sting uptime', value: pctOf((k['uptime:target:serpentSting'] ?? 0) / time), good: (k['uptime:target:serpentSting'] ?? 0) / time >= 0.85 },
@@ -118,13 +122,13 @@ function rangedReview(c: Combat): Row[] {
 
 export const hunterMm: Spec = specFor('mm', {
   id: 'hunter-mm',
-  // 2: the pet bar (Attack, Follow, Stay) joined the default action bar.
-  prefsRevision: 2,
+  // 3: the pet bar and Raptor Strike (melee weaving) joined the default action bar.
+  prefsRevision: 3,
   specName: 'Marksmanship',
   stats: RANGED_STATS,
   startDistance: 12,
-  defaultOptions: { build: 'mm', mana: 4000, spirit: D.spirit, lockMana: false, classicAutoShot: false, trackable: true, petSpeed: '1.2', petMode: 'assist' },
-  options: [...OPTIONS, PET_OPTION, PET_MODE],
+  defaultOptions: { build: 'mm', mana: 4000, spirit: D.spirit, lockMana: false, classicAutoShot: false, trackable: true, petSpeed: '1.2', petMode: 'assist', meleeWeaving: false, autoShotReset: 'beta' },
+  options: [...OPTIONS, PET_OPTION, PET_MODE, ...WEAVE_OPTIONS],
   sheet: { attackPower: 'Melee attack power', spellCrit: false, offHand: false },
   lowMana: (c) => c.cost(c.ability('aimedShot')!),
   welcome: 'Welcome to the Marksmanship practice yard. You start 12 yards from the dummy: keep Auto Shot firing (stand still during its windup), Serpent Sting up, Aimed Shot on cooldown, Sniper Shot when Aimed is far, Arcane Shot with spare mana. The gunba build is Lone Wolf: no pet, +20% damage.',
@@ -132,9 +136,13 @@ export const hunterMm: Spec = specFor('mm', {
     ${PET_HELP}
     ${HELP_COMMON}
     Marksmanship: Lone Wolf gives +20% damage without a pet; Mortal Shots makes ranged crits 2.3x; Sniper Shot is a 4 sec cast for a big hit. The yellow glow follows the WoW Forever sims: Serpent Sting, Aimed Shot, Sniper Shot when Aimed has 3.5+ sec left, Arcane Shot above 15% mana. Multi-Shot shares Aimed's cooldown, so on one target it is a loss.
-    With the Classic rule on, start a cast right after a shot leaves: the glow waits until the cast fits before the next windup. Melee weaving is not part of this practice yet. This is a practice tool: hit, crit and proc chances follow WoW Forever; damage numbers are an approximation.`,
+    With the Classic rule on, start a cast right after a shot leaves: the glow waits until the cast fits before the next windup.
+    ${WEAVE_HELP}
+    This is a practice tool: hit, crit and proc chances follow WoW Forever; damage numbers are an approximation.`,
   look: { clothColor: 0x3d5a2a, leatherColor: 0x5a4630, hood: true },
-  suggest: mmSuggest,
+  suggest: (c) => weaveSuggest(c, mmSuggest),
+  cue: weaveCue,
+  rings: weaveRings,
   review: rangedReview,
 });
 
@@ -175,13 +183,13 @@ function bmReview(c: Combat): Row[] {
 
 export const hunterBm: Spec = specFor('bm', {
   id: 'hunter-bm',
-  // 2: the pet bar (Attack, Follow, Stay) joined the default action bar.
-  prefsRevision: 2,
+  // 3: the pet bar and Raptor Strike (melee weaving) joined the default action bar.
+  prefsRevision: 3,
   specName: 'Beast Mastery',
   stats: RANGED_STATS,
   startDistance: 12,
-  defaultOptions: { build: 'bm', mana: 4000, spirit: D.spirit, lockMana: false, classicAutoShot: false, trackable: true, petSpeed: '1.2', petMode: 'assist' },
-  options: [...OPTIONS, PET_OPTION, PET_MODE],
+  defaultOptions: { build: 'bm', mana: 4000, spirit: D.spirit, lockMana: false, classicAutoShot: false, trackable: true, petSpeed: '1.2', petMode: 'assist', meleeWeaving: false, autoShotReset: 'beta' },
+  options: [...OPTIONS, PET_OPTION, PET_MODE, ...WEAVE_OPTIONS],
   sheet: { attackPower: 'Melee attack power', spellCrit: false, offHand: false },
   lowMana: (c) => c.cost(c.ability('aimedShot')!),
   welcome: 'Welcome to the Beast Mastery practice yard. Your cat fights at the dummy while you shoot from 12 yards: keep two hawks out, Bestial Wrath and Rapid Fire together, Serpent Sting up and Aimed Shot on cooldown.',
@@ -189,9 +197,12 @@ export const hunterBm: Spec = specFor('bm', {
     ${PET_HELP}
     ${HELP_COMMON}
     Beast Mastery: your pet attacks when you do (one swing timer, Focus at 10 per second for Bite and Claw). Summon Hawk sends up to two hawks for 18 sec each and shares its cooldown with Arcane Shot. Bestial Wrath gives the pet +50% damage; Intimidation makes its next attack crit; Frenzy speeds it up after its crits.
+    ${WEAVE_HELP}
     This is a practice tool: hit, crit and proc chances follow WoW Forever; damage numbers are an approximation.`,
   look: { clothColor: 0x5a3a20, leatherColor: 0x4a3a28, hood: true },
-  suggest: bmSuggest,
+  suggest: (c) => weaveSuggest(c, bmSuggest),
+  cue: weaveCue,
+  rings: weaveRings,
   review: bmReview,
 });
 

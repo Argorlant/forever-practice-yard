@@ -7,6 +7,7 @@ import type { Ability, Hit, Outcome, Unit } from '../../engine/types';
 import { PET_COMMANDS } from '../pet';
 import { DATA } from './data';
 import { buildById, talentsFor, type HunterSpec, type Talents } from './talents';
+import { setupWeaving } from './weave';
 
 export const D = DATA;
 export const roll = (c: Combat, pct: number) => c.random() * 100 < pct;
@@ -451,6 +452,8 @@ export function prepare(c: Combat): void {
   p.maxResource = Math.max(1, Number(c.options.mana ?? 4000));
   p.regenPerSecond = 0;
   c.manaLocked = !!c.options.lockMana;
+  // Melee weaving (optional, ranged builds): both autos on, the Auto Shot reset rule from Settings.
+  setupWeaving(c, !!b.melee);
   c.classicAutoShot = !!c.options.classicAutoShot;
 
   c.mod.crit = t.lethalAttacks;

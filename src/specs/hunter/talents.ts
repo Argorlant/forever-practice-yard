@@ -61,9 +61,9 @@ const KEYS = ['Digit1', 'Digit2', 'Digit3', 'Digit4', 'Digit5', 'Digit6', 'Digit
 const bar = (ids: (string | null)[]): Binding[] => KEYS.map((key, i) => ({ id: ids[i] ?? null, key }));
 
 const MM_BAR = bar(['autoShot', 'aimedShot', 'arcaneShot', 'serpentSting', 'sniperShot', 'multiShot', 'rapidFire', 'huntersMark',
-  'aspectOfTheHawk', 'trueshotAura', 'manaPotion', 'petAttackOrder', 'petFollowOrder', 'petStayOrder']);
+  'aspectOfTheHawk', 'trueshotAura', 'manaPotion', 'petAttackOrder', 'petFollowOrder', 'petStayOrder', 'raptorStrike']);
 const BM_BAR = bar(['autoShot', 'aimedShot', 'arcaneShot', 'serpentSting', 'summonHawk', 'bestialWrath', 'intimidation', 'rapidFire',
-  'aspectOfTheHawk', 'huntersMark', 'multiShot', 'manaPotion', 'petAttackOrder', 'petFollowOrder', 'petStayOrder']);
+  'aspectOfTheHawk', 'huntersMark', 'multiShot', 'manaPotion', 'petAttackOrder', 'petFollowOrder', 'petStayOrder', 'raptorStrike']);
 const SV_BAR = bar(['raptorStrike', 'mongooseBite', 'striderKick', 'immolationTrap', 'wingClip', 'huntersMark', 'rapidFire', 'aspectOfTheBeast',
   'attack', 'summonHawk', 'serpentSting', 'manaPotion', 'petAttackOrder', 'petFollowOrder', 'petStayOrder']);
 
