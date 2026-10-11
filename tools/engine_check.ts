@@ -498,6 +498,55 @@ for (const sp of [hunterMm, hunterBm, hunterSv]) {
   if (bites < 25 || bites > 31) failures.push(`pet used Bite ${bites} times in 5 min, expected about 29`);
   if (claws < 60) failures.push(`pet used Claw only ${claws} times in 5 min`);
 }
+// Pets as in WoW: they run to the target and hit only there; orders and modes decide when they go.
+{
+  const PET_SOURCES = ['petMelee', 'petClaw', 'petBite', 'lashOfPain', 'firebolt'];
+  /** Plays a few seconds and returns when the owner and the pet first hit. */
+  const watch = (sp: Spec, opts: Parameters<typeof play>[1], extra?: (c: Combat) => void) => {
+    let owner = -1, pet = -1;
+    const r = play(sp, { ...opts, seconds: 0 });
+    r.c.on('damage', (h) => {
+      if (PET_SOURCES.includes(h.source)) { if (pet < 0) pet = r.c.t; } else if (owner < 0) owner = r.c.t;
+    });
+    extra?.(r.c);
+    for (let t = 0; t < (opts?.seconds ?? 20); t += 0.05) {
+      const id = sp.suggest?.(r.c);
+      if (id) r.c.use(id);
+      r.c.update(0.05);
+    }
+    return { ...r, owner, pet };
+  };
+  const bm = watch(hunterBm, { build: 'bm', seconds: 20 });
+  console.log(`Pet from 12 yards: you hit at ${bm.owner.toFixed(1)} s, the pet at ${bm.pet.toFixed(1)} s`);
+  // It leaves on your first attack (t = 0) and needs about 1 s to run into melee range.
+  if (!(bm.pet >= 0.9)) failures.push(`the pet hit at ${bm.pet.toFixed(2)} s, before it could run from 12 yards`);
+  const passive = watch(hunterBm, { build: 'bm', seconds: 10, options: { petMode: 'passive' } });
+  if (passive.pet >= 0) failures.push('a passive pet attacked without an order');
+  const ordered = watch(hunterBm, { build: 'bm', seconds: 10, options: { petMode: 'passive' } }, (c) => c.use('petAttackOrder'));
+  if (!(ordered.pet > 0)) failures.push('the Attack order did not send a passive pet');
+  const defensive = watch(hunterBm, { build: 'bm', seconds: 10, options: { petMode: 'defensive' } });
+  if (defensive.pet >= 0) failures.push('a defensive pet attacked a dummy that never hit you');
+  const back = play(hunterBm, { build: 'bm', seconds: 10, options: { petMode: 'defensive' } });
+  back.c.use('petAttackOrder');
+  for (let t = 0; t < 4; t += 0.05) back.c.update(0.05);
+  back.c.use('petFollowOrder');
+  for (let t = 0; t < 4; t += 0.05) back.c.update(0.05);
+  const home = Math.hypot(back.c.pet.x - back.c.player.x, back.c.pet.z - back.c.player.z);
+  if (back.c.pet.attacking || home > 1.5) failures.push(`Follow did not bring the pet back (${home.toFixed(1)} m from you)`);
+  // Assist: Follow sticks while Auto Shot keeps firing; your next shot sends the pet again.
+  const assist = play(hunterBm, { build: 'bm', seconds: 0 });
+  assist.c.use('autoShot');
+  for (let t = 0; t < 4; t += 0.05) assist.c.update(0.05);
+  assist.c.use('petFollowOrder');
+  for (let t = 0; t < 4; t += 0.05) assist.c.update(0.05);
+  if (assist.c.pet.order !== 'follow' || assist.c.pet.attacking) failures.push('Auto Shot alone sent the pet back after Follow');
+  assist.c.use('arcaneShot');
+  if (assist.c.pet.order !== 'attack') failures.push('an Arcane Shot did not send the assisting pet again');
+  const far = watch(warlockDemonology, { build: 'pact', seconds: 20, options: { demon: 'imp' } }, (c) => { c.player.z = -40 * 0.9144; c.use('petAttackOrder'); });
+  const impToDummy = Math.hypot(far.c.pet.x, far.c.pet.z) / 0.9144;
+  console.log(`Imp sent from 40 yards: it casts from ${impToDummy.toFixed(0)} yards, first Firebolt at ${far.pet.toFixed(1)} s`);
+  if (impToDummy > 30.5 || far.pet < 0) failures.push(`the Imp did not close to casting range (${impToDummy.toFixed(1)} yd)`);
+}
 
 // ----------------------------------------------------------------- priest
 console.log('Priest builds (5 min, own gear, priority list, default raid buffs):');

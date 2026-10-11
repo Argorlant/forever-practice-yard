@@ -195,6 +195,8 @@ export interface Ability {
   animation?: string;
   /** Does not break stealth when used. */
   keepsStealth?: boolean;
+  /** A pet order (the pet bar): it neither attacks nor starts combat or the auto attack. */
+  petCommand?: boolean;
   /** Values not yet confirmed for Forever. */
   provisional?: boolean;
   /**
@@ -345,6 +347,4 @@ export interface MinionLook {
   id: string;
   look: CharacterLook;
   scale: number;
-  /** A caster (the Imp): it stays by you and throws its spells instead of running to the target. */
-  ranged?: boolean;
 }

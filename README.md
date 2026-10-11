@@ -120,6 +120,11 @@ healers keep up with you (each second they heal 20% of the health you are missin
 In Settings, every warlock picks the demon at their side (Succubus or Imp) and, with Demonic Sacrifice, the demon to give
 up: Imp (+15% Shadow), Succubus (+15% Fire), Voidwalker (2% mana every 4 sec) or Felhunter (3% health every 4 sec).
 
+**Pets** (the hunter's beast, the warlock's demon) work as in WoW: they wait at your side, run to the dummy at running speed
+and only hit once they are in reach (melee, or 30 yards for the Imp). The pet bar has Attack, Follow and Stay, and the pet
+mode is in Settings: Assist (default: it joins in when you use an attack), Defensive (only on your order or when something
+hits you, the Classic default) or Passive (only on your order).
+
 The **Shaman** comes as two specs and an experiment (sources in [`research/shaman_forever.md`](research/shaman_forever.md)).
 Totems sit in four element slots (a new one replaces the old; Searing Totem attacks, buff totems last 5 min, a 1.0 s
 global cooldown), Earth, Flame and Frost Shock share one cooldown, and Clearcasting makes the next damage spell free:

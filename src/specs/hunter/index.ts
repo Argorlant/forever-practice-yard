@@ -5,6 +5,7 @@
 import type { Combat } from '../../engine/combat';
 import type { Spec } from '../../engine/types';
 import { BOSS_RULES, CONTROLS } from '../common';
+import { PET_HELP, PET_MODE } from '../pet';
 import { ABILITIES, D, SOURCES, T, chances, hawkCount, oldestHawkLeft, onCooldown, prepare, regen } from './core';
 import { MELEE_STATS, RANGED_STATS } from './data';
 import { buildLabel, buildsFor, summary, talentsFor, type HunterSpec } from './talents';
@@ -117,15 +118,18 @@ function rangedReview(c: Combat): Row[] {
 
 export const hunterMm: Spec = specFor('mm', {
   id: 'hunter-mm',
+  // 2: the pet bar (Attack, Follow, Stay) joined the default action bar.
+  prefsRevision: 2,
   specName: 'Marksmanship',
   stats: RANGED_STATS,
   startDistance: 12,
-  defaultOptions: { build: 'mm', mana: 4000, spirit: D.spirit, lockMana: false, classicAutoShot: false, trackable: true, petSpeed: '1.2' },
-  options: [...OPTIONS, PET_OPTION],
+  defaultOptions: { build: 'mm', mana: 4000, spirit: D.spirit, lockMana: false, classicAutoShot: false, trackable: true, petSpeed: '1.2', petMode: 'assist' },
+  options: [...OPTIONS, PET_OPTION, PET_MODE],
   sheet: { attackPower: 'Melee attack power', spellCrit: false, offHand: false },
   lowMana: (c) => c.cost(c.ability('aimedShot')!),
   welcome: 'Welcome to the Marksmanship practice yard. You start 12 yards from the dummy: keep Auto Shot firing (stand still during its windup), Serpent Sting up, Aimed Shot on cooldown, Sniper Shot when Aimed is far, Arcane Shot with spare mana. The gunba build is Lone Wolf: no pet, +20% damage.',
   help: `${CONTROLS}
+    ${PET_HELP}
     ${HELP_COMMON}
     Marksmanship: Lone Wolf gives +20% damage without a pet; Mortal Shots makes ranged crits 2.3x; Sniper Shot is a 4 sec cast for a big hit. The yellow glow follows the WoW Forever sims: Serpent Sting, Aimed Shot, Sniper Shot when Aimed has 3.5+ sec left, Arcane Shot above 15% mana. Multi-Shot shares Aimed's cooldown, so on one target it is a loss.
     With the Classic rule on, start a cast right after a shot leaves: the glow waits until the cast fits before the next windup. Melee weaving is not part of this practice yet. This is a practice tool: hit, crit and proc chances follow WoW Forever; damage numbers are an approximation.`,
@@ -171,15 +175,18 @@ function bmReview(c: Combat): Row[] {
 
 export const hunterBm: Spec = specFor('bm', {
   id: 'hunter-bm',
+  // 2: the pet bar (Attack, Follow, Stay) joined the default action bar.
+  prefsRevision: 2,
   specName: 'Beast Mastery',
   stats: RANGED_STATS,
   startDistance: 12,
-  defaultOptions: { build: 'bm', mana: 4000, spirit: D.spirit, lockMana: false, classicAutoShot: false, trackable: true, petSpeed: '1.2' },
-  options: [...OPTIONS, PET_OPTION],
+  defaultOptions: { build: 'bm', mana: 4000, spirit: D.spirit, lockMana: false, classicAutoShot: false, trackable: true, petSpeed: '1.2', petMode: 'assist' },
+  options: [...OPTIONS, PET_OPTION, PET_MODE],
   sheet: { attackPower: 'Melee attack power', spellCrit: false, offHand: false },
   lowMana: (c) => c.cost(c.ability('aimedShot')!),
   welcome: 'Welcome to the Beast Mastery practice yard. Your cat fights at the dummy while you shoot from 12 yards: keep two hawks out, Bestial Wrath and Rapid Fire together, Serpent Sting up and Aimed Shot on cooldown.',
   help: `${CONTROLS}
+    ${PET_HELP}
     ${HELP_COMMON}
     Beast Mastery: your pet attacks when you do (one swing timer, Focus at 10 per second for Bite and Claw). Summon Hawk sends up to two hawks for 18 sec each and shares its cooldown with Arcane Shot. Bestial Wrath gives the pet +50% damage; Intimidation makes its next attack crit; Frenzy speeds it up after its crits.
     This is a practice tool: hit, crit and proc chances follow WoW Forever; damage numbers are an approximation.`,
@@ -230,14 +237,17 @@ function svReview(c: Combat): Row[] {
 
 export const hunterSv: Spec = specFor('sv', {
   id: 'hunter-sv',
+  // 2: the pet bar (Attack, Follow, Stay) joined the default action bar.
+  prefsRevision: 2,
   specName: 'Survival',
   stats: MELEE_STATS,
-  defaultOptions: { build: 'sv', mana: 3500, spirit: D.spirit, lockMana: false, classicAutoShot: false, trackable: true, petSpeed: '1.2' },
-  options: [...OPTIONS.filter((o) => o.key !== 'classicAutoShot'), PET_OPTION],
+  defaultOptions: { build: 'sv', mana: 3500, spirit: D.spirit, lockMana: false, classicAutoShot: false, trackable: true, petSpeed: '1.2', petMode: 'assist' },
+  options: [...OPTIONS.filter((o) => o.key !== 'classicAutoShot'), PET_OPTION, PET_MODE],
   sheet: { attackPower: 'Melee attack power', spellCrit: false },
   lowMana: (c) => c.cost(c.ability('raptorStrike')!),
   welcome: 'Welcome to the Survival practice yard. In WoW Forever Survival is a melee spec: dual wield, Aspect of the Beast, Raptor Strike on cooldown, Strider Kick, Mongoose Bite when Expose Prey lights it on your marked target, and Immolation Trap at your feet.',
   help: `${CONTROLS}
+    ${PET_HELP}
     Survival fights in melee: two one-handers (Predator's Edge makes the off hand hit harder), Aspect of the Beast for melee attack power. Raptor Strike replaces your next swing (off the global cooldown); Strider Kick is a weapon kick on an 8 sec cooldown; Mongoose Bite lights up after a dodge or, with Expose Prey, after landed hits on the target you marked yourself; Lacerating Strikes makes it bleed.
     Immolation Trap is placed at your feet and usable in combat in WoW Forever. Wing Clip is the filler when you have mana to spare. Mana is your resource: Judgement of Wisdom gives a lot back to a melee hunter.
     This is a practice tool: hit, crit and proc chances follow WoW Forever; damage numbers are an approximation.`,

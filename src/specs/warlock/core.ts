@@ -6,6 +6,7 @@
 // Demonic Brand. Numbers in ./data.ts; sources in research/warlock_forever.md.
 import type { Combat } from '../../engine/combat';
 import type { Ability, Aura, Outcome, School, Unit } from '../../engine/types';
+import { PET_COMMANDS } from '../pet';
 import { DATA } from './data';
 import { buildById, talentsFor, type Demon, type Talents, type WarlockSpec } from './talents';
 
@@ -204,7 +205,7 @@ const petState = (c: Combat): PetState => {
 function petSwing(c: Combat): void {
   const s = petState(c);
   s.swing = null;
-  const u = c.target;
+  const u = c.pet.target;
   if (!c.pet.attacking || !u || u.health <= 0) return;
   petHit(c, u, 'petMelee', D.pet.base + petAp(c) / 7, 'melee', 'physical');
   c.emit('petAttack', { kind: 'melee' });
@@ -212,12 +213,15 @@ function petSwing(c: Combat): void {
   s.swing = c.schedule(s.next, () => petSwing(c));
 }
 
-/** The demon's mind, every 0.1 s: it attacks when you do. The Succubus swings and Lashes every 12 s; the Imp casts Firebolt back to back. */
+/**
+ * The demon's mind, every 0.1 s, once the engine says it reached its target (melee for the
+ * Succubus, casting range for the Imp): the Succubus swings and Lashes every 12 s; the Imp
+ * casts Firebolt back to back.
+ */
 function petThink(c: Combat): void {
   const s = petState(c);
-  const u = c.target;
-  const fighting = !!u && u.health > 0 && c.player.inCombat;
-  c.pet.attacking = fighting;
+  const u = c.pet.target;
+  const fighting = c.pet.attacking && !!u && u.health > 0;
   if (!fighting) { s.swing?.cancel(); s.swing = null; return; }
   const demon = demons(c).out;
   if (demon === 'succubus') {
@@ -233,9 +237,10 @@ function petThink(c: Combat): void {
     s.castEnd = c.t + f.cast + f.gap;
     c.emit('petAttack', { kind: 'cast' });
     c.schedule(c.t + f.cast, () => {
-      if (!c.pet.attacking || !c.target) return;
+      const t = c.pet.target;
+      if (!c.pet.attacking || !t) return;
       c.emit('petAttack', { kind: 'firebolt' });
-      petHit(c, c.target, 'firebolt', (between(c, f.min, f.max) + f.coeff * petSp(c)) * (1 + 0.1 * T(c).improvedImp), 'spell', 'fire');
+      petHit(c, t, 'firebolt', (between(c, f.min, f.max) + f.coeff * petSp(c)) * (1 + 0.1 * T(c).improvedImp), 'spell', 'fire');
     });
   }
 }
@@ -486,6 +491,7 @@ export const ABILITIES: Ability[] = [
       note(c, `+${n} Mana`, 'resource');
     },
   },
+  ...PET_COMMANDS,
 ];
 
 // ----------------------------------------------------------------- setup
@@ -524,6 +530,7 @@ export function prepare(c: Combat): void {
     });
   }
   c.pet.out = d.out !== 'none';
+  c.pet.ranged = d.out === 'imp';
   if (c.pet.out) {
     if (t.soulLink) c.applyAura(p, { id: 'soulLink', name: 'Soul Link', icon: 'soulLink', duration: Infinity });
     if (t.masterDemonologist && d.out === 'succubus') c.applyAura(p, { id: 'masterDemonologist', name: 'Master Demonologist', icon: 'masterDemonologist', duration: Infinity });

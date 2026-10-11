@@ -71,13 +71,10 @@ for (const kind of ['cat', 'bear'] as const) {
 // A hunter's pet: it waits beside you and runs to the dummy when you attack.
 const pet = spec.pet ? new Beast({ kind: 'cat', ...spec.pet }) : null;
 if (pet) { pet.root.scale.setScalar(0.85); world.scene.add(pet.root); }
-const petPos = new THREE.Vector3(controls.x + 0.9, 0, controls.z - 0.6);
 /** What fights beside you: the hunter's pet, or a warlock's demon drawn with the character model. */
 interface Companion { root: THREE.Object3D; setLocomotion(state: Locomotion, speed?: number): void; update(dt: number): void; swing(): void; play?(name: string): void }
 let companion: Companion | null = pet;
 let minionId: string | null = null;
-/** A caster companion (the Imp) stays by you instead of running to the target. */
-let companionRanged = false;
 /** Loads the demon the build calls for (once per look); it shows while the pet is out. */
 function syncMinion(): void {
   const want = spec.minion?.(combat) ?? null;
@@ -90,7 +87,6 @@ function syncMinion(): void {
     if (companion && companion !== pet) world.scene.remove(companion.root);
     world.scene.add(ch.root);
     companion = ch;
-    companionRanged = !!want.ranged;
   }).catch((err) => console.error(err));
 }
 // Shaman totems, drawn where they were dropped.
@@ -561,25 +557,17 @@ function frame(): void {
   requestAnimationFrame(frame);
 }
 
-/** The pet runs to the side of the target while it fights, else to your side. */
+/** The pet stands where the engine moved it: running to its target, fighting there, or at your side. */
 function updatePet(dt: number): void {
   const pet = companion;
   if (!pet) return;
-  pet.root.visible = combat.pet.out;
-  if (!combat.pet.out) return;
-  const t = combat.target;
-  const want = new THREE.Vector3();
-  if (combat.pet.attacking && t && !companionRanged) want.set(t.x + 0.95, 0, t.z - 0.35);
-  else want.set(controls.x + Math.cos(controls.facing) * 0.9, 0, controls.z - Math.sin(controls.facing) * 0.9);
-  const to = want.clone().sub(petPos);
-  const dist = to.length();
-  const step = Math.min(dist, 9 * dt);
-  const moving = dist > 0.05;
-  if (moving) petPos.add(to.multiplyScalar(step / dist));
-  pet.root.position.copy(petPos);
-  const look = combat.pet.attacking && t ? Math.atan2(t.x - petPos.x, t.z - petPos.z) : moving ? Math.atan2(to.x, to.z) : controls.facing;
-  pet.root.rotation.y = look;
-  pet.setLocomotion(moving && dist > 0.3 ? 'run' : combat.pet.attacking ? 'ready' : 'idle', moving ? 9 : 0);
+  const st = combat.pet;
+  pet.root.visible = st.out && Number.isFinite(st.x);
+  if (!pet.root.visible) return;
+  pet.root.position.set(st.x, 0, st.z);
+  pet.root.rotation.y = st.facing;
+  // 6.4 m/s is the run (7 yards per second); following a sprinting owner it runs faster.
+  pet.setLocomotion(st.moving ? 'run' : st.attacking ? 'ready' : 'idle', st.moving ? 6.4 * Math.max(1, combat.moveSpeed()) : 0);
   pet.update(dt);
 }
 

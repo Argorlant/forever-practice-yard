@@ -249,5 +249,8 @@
   "stoneskinTotem": "spell_nature_stoneskintotem",
   "graceOfAirTotem": "spell_nature_invisibilitytotem",
   "windfuryTotem": "spell_nature_windfury",
-  "manaSpringTotem": "spell_nature_manaregentotem"
+  "manaSpringTotem": "spell_nature_manaregentotem",
+  "petAttackOrder": "ability_ghoulfrenzy",
+  "petFollowOrder": "ability_tracking",
+  "petStayOrder": "spell_nature_timestop"
 }

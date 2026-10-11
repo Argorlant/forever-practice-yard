@@ -4,6 +4,7 @@
 // windup and the dead zone). Numbers in ./data.ts; sources in research/hunter_forever.md.
 import type { Combat } from '../../engine/combat';
 import type { Ability, Hit, Outcome, Unit } from '../../engine/types';
+import { PET_COMMANDS } from '../pet';
 import { DATA } from './data';
 import { buildById, talentsFor, type HunterSpec, type Talents } from './talents';
 
@@ -151,22 +152,21 @@ function petAttack(c: Combat, u: Unit, source: string, base: number, white: bool
 function petSwing(c: Combat): void {
   const s = state(c);
   s.petSwing = null;
-  const u = c.target;
+  const u = c.pet.target;
   if (!c.pet.attacking || !u || u.health <= 0) return;
   petAttack(c, u, 'petMelee', between(c, D.pet.min, D.pet.max) + petAp(c) / 7, true);
   s.petNext = c.t + petSpeed(c) / (c.aura(c.player, 'frenzy') ? D.pet.frenzy.speed : 1);
   s.petSwing = c.schedule(s.petNext, () => petSwing(c));
 }
 
-/** The pet's mind, every 0.1 s: Focus, starting and stopping, Bite on cooldown, Claw with spare Focus. */
+/** The pet's mind, every 0.1 s: Focus, and once it reached its target, Bite on cooldown and Claw with spare Focus. */
 function petThink(c: Combat): void {
   const s = state(c);
-  const p = c.player;
   const P = D.pet;
   s.focus = Math.min(P.focusCap, s.focus + P.focusPerSecond * (1 + 0.1 * T(c).bestialDiscipline) * 0.1);
-  const u = c.target;
-  const fighting = !!u && u.health > 0 && p.inCombat && (c.autoShooting || p.autoAttacking);
-  c.pet.attacking = fighting;
+  const u = c.pet.target;
+  // The engine moves the pet and says when it is in reach of its target.
+  const fighting = c.pet.attacking && !!u && u.health > 0;
   if (!fighting) {
     s.petSwing?.cancel();
     s.petSwing = null;
@@ -435,6 +435,7 @@ export const ABILITIES: Ability[] = [
       note(c, `+${n} Mana`, 'resource');
     },
   },
+  ...PET_COMMANDS,
 ];
 
 // ----------------------------------------------------------------- setup

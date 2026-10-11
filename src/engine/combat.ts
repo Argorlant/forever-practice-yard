@@ -21,6 +21,31 @@ export interface Incoming {
   absorbed: number;
 }
 
+/** Pet orders, as on WoW's pet bar. */
+export type PetOrder = 'follow' | 'attack' | 'stay';
+/**
+ * The pet the spec controls (a hunter's beast, a warlock's demon). The engine
+ * moves it, so it reaches the target before it hits; the scene draws it here.
+ * `attacking` is on only while it has an attack order and its target is in
+ * reach: melee range, or casting range for a caster (the Imp).
+ */
+export interface Pet {
+  out: boolean;
+  attacking: boolean;
+  /** A caster: it fights from casting range instead of running to melee. */
+  ranged: boolean;
+  x: number;
+  z: number;
+  facing: number;
+  moving: boolean;
+  order: PetOrder;
+  target: Unit | null;
+}
+const newPet = (): Pet => ({ out: false, attacking: false, ranged: false, x: NaN, z: NaN, facing: 0, moving: false, order: 'follow', target: null });
+/** Pets run at a player's speed (7 yards per second); a caster pet attacks from 30 yards. */
+const PET_SPEED = 7;
+const PET_CAST_RANGE = 30;
+
 export const YARD = 0.9144;
 /** Melee range between centers, as in the game (5 yards). */
 export const MELEE_RANGE = 5 * YARD;
@@ -179,7 +204,7 @@ export class Combat {
   /** Classic rule: Auto Shot and cast shots wait for each other (a cast clips the shot). Forever: autos fire during casts. */
   classicAutoShot = false;
   /** The pet the spec controls; the scene reads it to draw the animal. */
-  pet = { out: false, attacking: false };
+  pet: Pet = newPet();
   private rangedEv: Scheduled | null = null;
   private rangedNextAt = 0;
   private windupStartedAt = -Infinity;
@@ -251,6 +276,7 @@ export class Combat {
 
   /** Advances the clock dt seconds, running each event at its exact time. */
   update(dt: number): void {
+    this.movePet(dt);
     const end = this.t + dt;
     while (this.queue.length && this.queue[0].t <= end) {
       const ev = this.queue.shift()!;
@@ -331,7 +357,7 @@ export class Combat {
     this.rangedNextAt = 0;
     this.windupStartedAt = -Infinity;
     this.classicAutoShot = false;
-    this.pet = { out: false, attacking: false };
+    this.pet = newPet();
     this.player = this.newPlayer();
     // The scene owns the position: keep it.
     Object.assign(this.player, { x: prev.x, z: prev.z, facing: prev.facing });
@@ -442,6 +468,83 @@ export class Combat {
     const max = range === 'melee' ? MELEE_RANGE + u.radius * 0.5 : range * YARD + u.radius;
     return this.distance(u) <= max;
   }
+  // -------------------------------------------------------------------- pet
+  /** How the pet joins a fight (Settings): 'assist' attacks what you attack, 'defensive' only what attacks you, 'passive' only on orders. */
+  petMode(): 'assist' | 'defensive' | 'passive' {
+    const m = String(this.options.petMode ?? 'assist');
+    return m === 'defensive' || m === 'passive' ? m : 'assist';
+  }
+
+  /** The pet bar: attack a unit, come back to you, or hold where it stands. */
+  commandPet(order: PetOrder, u: Unit | null = null): void {
+    const pet = this.pet;
+    if (!pet.out) return;
+    pet.order = order;
+    // Stay keeps its target and fights it only if it is already in reach.
+    if (order === 'attack') pet.target = u;
+    if (order === 'follow') pet.target = null;
+    if (!pet.target) pet.attacking = false;
+  }
+
+  /** You used an attack or started your auto attack: an assisting pet goes for that unit (a pet holding still only switches target). */
+  private ownerAttacks(u: Unit | null): void {
+    const pet = this.pet;
+    if (!u || u.health <= 0 || !pet.out || this.petMode() !== 'assist') return;
+    if (pet.order === 'stay') pet.target = u;
+    else if (pet.order !== 'attack' || pet.target !== u) this.commandPet('attack', u);
+  }
+
+  /** Pet distance to a unit's edge, in metres. */
+  private petDistance(u: Unit): number {
+    return Math.hypot(u.x - this.pet.x, u.z - this.pet.z) - u.radius;
+  }
+
+  /**
+   * Moves the pet: to the target's side (a caster only until it is in casting
+   * range), back to your side when following, nowhere when told to stay.
+   * It attacks once its target is in reach.
+   */
+  private movePet(dt: number): void {
+    const pet = this.pet;
+    const p = this.player;
+    if (!pet.out) { pet.attacking = false; pet.moving = false; return; }
+    const side = { x: p.x + Math.cos(p.facing) * 0.9, z: p.z - Math.sin(p.facing) * 0.9 };
+    if (!Number.isFinite(pet.x)) { pet.x = side.x; pet.z = side.z; pet.facing = p.facing; }
+    if (pet.target && pet.target.health <= 0) this.commandPet('follow');
+    let want = { x: pet.x, z: pet.z };
+    let speed = PET_SPEED * YARD;
+    if (pet.order === 'attack' && pet.target) {
+      const t = pet.target;
+      if (!pet.ranged) want = { x: t.x + 0.95, z: t.z - 0.35 };
+      else if (this.petDistance(t) > (PET_CAST_RANGE - 2) * YARD) {
+        // Close in along the line to the target until it is inside casting range.
+        const d = Math.hypot(t.x - pet.x, t.z - pet.z);
+        const stop = (PET_CAST_RANGE - 3) * YARD + t.radius;
+        want = { x: t.x + ((pet.x - t.x) / d) * stop, z: t.z + ((pet.z - t.z) / d) * stop };
+      }
+    } else if (pet.order === 'follow') {
+      want = side;
+      // Following, it keeps up with you even when you run faster (Sprint, Aspect of the Cheetah).
+      speed *= Math.max(1, this.moveSpeed()) * 1.15;
+    }
+    const dx = want.x - pet.x, dz = want.z - pet.z;
+    const dist = Math.hypot(dx, dz);
+    pet.moving = dist > 0.05;
+    if (pet.moving) {
+      const step = Math.min(dist, speed * dt);
+      pet.x += (dx / dist) * step;
+      pet.z += (dz / dist) * step;
+    }
+    const t = pet.target;
+    const inReach = !!t && t.health > 0 && (pet.ranged
+      ? this.petDistance(t) <= PET_CAST_RANGE * YARD && !pet.moving
+      : this.petDistance(t) <= MELEE_RANGE - t.radius * 0.5);
+    pet.attacking = !!t && pet.order !== 'follow' && inReach;
+    if (pet.attacking && t) pet.facing = Math.atan2(t.x - pet.x, t.z - pet.z);
+    else if (pet.moving) pet.facing = Math.atan2(dx, dz);
+    else if (pet.order === 'follow') pet.facing = p.facing;
+  }
+
   /** The target is inside the player's front 180° arc. */
   facingTarget(u: Unit): boolean {
     const p = this.player;
@@ -522,9 +625,10 @@ export class Combat {
     if (!a.keepsStealth) this.breakStealth();
     a.use(this, u);
     if (a.channel) this.startChannel(a, u);
-    // Attacks start the auto attack (shots start Auto Shot); stealthy abilities (Premeditation) and spells do not.
-    if (a.target === 'enemy' && u && !a.keepsStealth) {
+    // Attacks start the auto attack (shots start Auto Shot); stealthy abilities (Premeditation), spells and pet orders do not.
+    if (a.target === 'enemy' && u && !a.keepsStealth && !a.petCommand) {
       if (a.noAutoAttack) this.enterCombat(); else if (a.ranged) this.startAutoShot(); else this.startAutoAttack();
+      this.ownerAttacks(u);
     }
     this.emit('ability', { id: a.id, animation: a.animation });
     return true;
@@ -570,6 +674,7 @@ export class Combat {
     }
     if (a.target === 'enemy' && u) {
       if (a.noAutoAttack) this.enterCombat(); else if (a.ranged) this.startAutoShot(); else this.startAutoAttack();
+      this.ownerAttacks(u);
     }
     this.emit('cast', { id: a.id, done: true });
     this.emit('ability', { id: a.id, animation: a.animation });
@@ -717,6 +822,7 @@ export class Combat {
   startAutoAttack(): void {
     const p = this.player;
     this.enterCombat();
+    this.ownerAttacks(this.target);
     if (this.autoShooting) this.stopAutoShot();
     if (p.autoAttacking) return;
     p.autoAttacking = true;
@@ -778,6 +884,7 @@ export class Combat {
   startAutoShot(): void {
     if (!this.stats.ranged) return;
     this.enterCombat();
+    this.ownerAttacks(this.target);
     if (this.player.autoAttacking) this.stopAutoAttack();
     if (this.autoShooting) return;
     this.autoShooting = true;
@@ -1237,6 +1344,8 @@ export class Combat {
       this.scheduleEnemySwing(this.t + 0.2);
       return;
     }
+    // It attacks you: a pet that is not passive defends you.
+    if (this.pet.out && !this.pet.target && this.petMode() !== 'passive') this.commandPet('attack', u);
     // A single roll: miss, dodge, parry, block, crit, crushing blow, hit.
     const tbl = this.enemyTable(u);
     let x = this.random() * 100;

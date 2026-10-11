@@ -7,6 +7,7 @@
 import type { Combat } from '../../engine/combat';
 import type { MinionLook, Spec } from '../../engine/types';
 import { BOSS_RULES, CONTROLS } from '../common';
+import { PET_HELP, PET_MODE } from '../pet';
 import { ABILITIES, D, SOURCES, T, baneOn, build, chances, demons, execute, left, lifeTapAmount, prepare, regen } from './core';
 import { AFFLICTION_STATS, DESTRUCTION_STATS, PACT_STATS } from './data';
 import { buildLabel, buildsFor, summary, talentsFor, type WarlockSpec } from './talents';
@@ -111,7 +112,7 @@ const SUCCUBUS: MinionLook = {
 };
 /** The Imp: small and red, it stays by you and throws Firebolts. */
 const IMP: MinionLook = {
-  id: 'imp', scale: 0.55, ranged: true,
+  id: 'imp', scale: 0.55,
   look: { clothColor: 0x3a1a0a, leatherColor: 0xa83a1a, hood: false, demon: { horns: 0x2a1a10, wings: 0x6a2410, tail: true, eyes: 0xffd040 } },
 };
 
@@ -124,6 +125,7 @@ const OPTIONS = [
   { key: 'spirit', name: 'Spirit (regeneration and Life Tap)', kind: 'number' as const, step: 1 },
   { key: 'mp5', name: 'Mana per 5 sec from gear', kind: 'number' as const, step: 1 },
   { key: 'healingShare', name: 'Raid healing: % of your missing health healed each second', kind: 'number' as const, step: 5 },
+  PET_MODE,
   {
     key: 'demon', name: 'Demon at your side (none after Demonic Sacrifice without Demonic Pact)', kind: 'choice' as const,
     choices: [{ value: 'succubus', label: 'Succubus: melee and Lash of Pain (the sims)' }, { value: 'imp', label: 'Imp: Firebolt from range' }],
@@ -164,15 +166,18 @@ function specFor(spec: WarlockSpec, base: Omit<Spec, 'className' | 'resource' | 
   };
 }
 
-const opts = (build: string, mana: number, sacrifice = 'imp') => ({ build, mana, spirit: D.spirit, mp5: D.mp5, healingShare: D.healingShare, lockMana: false, demon: 'succubus', sacrifice });
+const opts = (build: string, mana: number, sacrifice = 'imp') => ({ build, mana, spirit: D.spirit, mp5: D.mp5, healingShare: D.healingShare, lockMana: false, demon: 'succubus', sacrifice, petMode: 'assist' });
 
 export const warlockAffliction: Spec = specFor('affliction', {
   id: 'warlock-affliction',
+  // 2: the pet bar (Attack, Follow, Stay) joined the default action bar.
+  prefsRevision: 2,
   specName: 'Affliction',
   stats: AFFLICTION_STATS,
   defaultOptions: opts('affliction', 4033),
   welcome: 'Welcome to the Affliction practice yard. Curse of the Elements, Bane of Doom on cooldown, then keep Corruption, Siphon Life and Immolate ticking and fill with Shadow Bolt. Shadow Trance (Nightfall) makes the next one instant. Life Tap turns health into mana; raid healing gives it back.',
   help: `${CONTROLS}
+    ${PET_HELP}
     ${HELP_COMMON}
     Affliction in WoW Forever: Pandemic makes your DoTs and drains crit for 2.0x, Malevolence adds Shadow crit, Malediction periodic damage. Nightfall gives each Corruption and Drain Life tick a chance for Shadow Trance (instant Shadow Bolt). Improved Shadow Bolt is personal: a Shadow Bolt crit gives +20% to your Shadow damage for 12 sec. Amplify Curse only helps Bane of Agony. Wrack is on the bar; no sim casts it yet.
     This is a practice tool: hit, crit and proc chances follow WoW Forever; damage numbers are an approximation.`,
@@ -181,11 +186,14 @@ export const warlockAffliction: Spec = specFor('affliction', {
 
 export const warlockDemonology: Spec = specFor('demonology', {
   id: 'warlock-demonology',
+  // 2: the pet bar (Attack, Follow, Stay) joined the default action bar.
+  prefsRevision: 2,
   specName: 'Demonology',
   stats: PACT_STATS,
   defaultOptions: opts('pact', 4638, 'voidwalker'),
   welcome: 'Welcome to the Demonology practice yard (Demonic Pact). Your Succubus fights with you; Searing Pain brands the target so her next attacks add Shadow damage. Keep the Brand up, Bane of Doom on cooldown, Corruption and Immolate ticking, and fill with Shadow Bolt. Below 35% health, Decimation makes Soul Fire fast.',
   help: `${CONTROLS}
+    ${PET_HELP}
     ${HELP_COMMON}
     Demonology in WoW Forever: Demonic Pact keeps the buff of your sacrificed demon while another demon is out; summoning the one you sacrificed again cancels it. Pick both in Settings: gunba sacrifices the Voidwalker (mana), foreversim the Imp (+15% Shadow), and both keep the Succubus out. Demonic Knowledge adds spell power while a demon is out, Soul Link +3% damage, Master Demonologist +10% damage with a Succubus. Demonic Brand: Searing Pain gives 6 charges; each landed demon attack spends one for extra damage. Decimation: Shadow Bolt and Searing Pain on a target below 35% make Soul Fire faster with a shorter cooldown (start the dummy at 30% health in Settings to practice it).
     This is a practice tool: hit, crit and proc chances follow WoW Forever; damage numbers are an approximation.`,
@@ -194,11 +202,14 @@ export const warlockDemonology: Spec = specFor('demonology', {
 
 export const warlockDestruction: Spec = specFor('destruction', {
   id: 'warlock-destruction',
+  // 2: the pet bar (Attack, Follow, Stay) joined the default action bar.
+  prefsRevision: 2,
   specName: 'Destruction',
   stats: DESTRUCTION_STATS,
   defaultOptions: opts('fire', 4153),
   welcome: 'Welcome to the Destruction practice yard (Shadow and Flame). Immolate, then Conflagrate and Shadowburn on cooldown: each keeps a +10% buff up for the other school, and Shadow and Flame keeps your Immolate burning. Corruption and Bane of Doom tick on the side; Incinerate is the filler. The DS/Ruin build plays Shadow Bolts instead.',
   help: `${CONTROLS}
+    ${PET_HELP}
     ${HELP_COMMON}
     Destruction in WoW Forever: Ruin makes Destruction spells crit for 2.0x, Agonizing Flames adds 10% to them, Cataclysm cuts their cost. Shadow and Flame: Conflagrate gives +10% Shadow damage for 20 sec and keeps Immolate (100% at 5/5); Shadowburn gives +10% Fire damage. Incinerate's base damage is 25% higher while your Immolate burns. Fire and Brimstone adds 25% crit to Conflagrate. DS/Ruin sacrifices a demon before the pull (the Imp, +15% Shadow, in the sims; pick another in Settings) and casts Shadow Bolt; without Demonic Pact no demon stays at your side.
     This is a practice tool: hit, crit and proc chances follow WoW Forever; damage numbers are an approximation.`,

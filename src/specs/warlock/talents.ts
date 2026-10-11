@@ -29,13 +29,13 @@ const KEYS = ['Digit1', 'Digit2', 'Digit3', 'Digit4', 'Digit5', 'Digit6', 'Digit
 const bar = (ids: (string | null)[]): Binding[] => KEYS.map((key, i) => ({ id: ids[i] ?? null, key }));
 
 const AFFLICTION_BAR = bar(['shadowBolt', 'corruption', 'siphonLife', 'immolate', 'baneOfDoom', 'baneOfAgony', 'curseOfTheElements', 'lifeTap',
-  'drainLife', 'amplifyCurse', 'wrack', 'manaPotion', 'deathCoil']);
+  'drainLife', 'amplifyCurse', 'wrack', 'manaPotion', 'deathCoil', 'petAttackOrder', 'petFollowOrder', 'petStayOrder']);
 const FIRE_BAR = bar(['incinerate', 'immolate', 'conflagrate', 'shadowburn', 'corruption', 'baneOfDoom', 'curseOfTheElements', 'lifeTap',
-  'shadowBolt', 'baneOfAgony', 'searingPain', 'manaPotion', 'deathCoil']);
+  'shadowBolt', 'baneOfAgony', 'searingPain', 'manaPotion', 'deathCoil', 'petAttackOrder', 'petFollowOrder', 'petStayOrder']);
 const RUIN_BAR = bar(['shadowBolt', 'corruption', 'immolate', 'baneOfDoom', 'baneOfAgony', 'curseOfTheElements', 'lifeTap', 'shadowburn',
   'amplifyCurse', 'manaPotion', 'deathCoil']);
 const PACT_BAR = bar(['shadowBolt', 'searingPain', 'corruption', 'immolate', 'baneOfDoom', 'baneOfAgony', 'curseOfTheElements', 'lifeTap',
-  'soulFire', 'manaPotion', 'deathCoil']);
+  'soulFire', 'manaPotion', 'deathCoil', 'petAttackOrder', 'petFollowOrder', 'petStayOrder']);
 
 const GS = 'gunba/wow-forever-sim';
 const FS = 'foreversim';
