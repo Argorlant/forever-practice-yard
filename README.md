@@ -2,15 +2,16 @@
 
 A browser practice yard for **World of Warcraft: Forever** rotations. You stand next to a
 training dummy and play your class with real keybinds: energy, combo points, the global
-cooldown, positional requirements, procs and auras follow the game rules, and every hit shows
-a damage number. It works with keyboard and mouse or on a phone.
+cooldown, positional requirements, procs and auras follow the game rules, and a rotation panel
+counts your hits and crits and reviews your habits. There is no DPS meter on purpose: with the game
+in beta, a DPS number would only mislead. It works with keyboard and mouse or on a phone.
 
 **Play it online:** https://argorlant.github.io/forever-practice-yard/
 > **Speculative, built on the sims.** WoW Forever is still in beta. The talents, builds, rotations and numbers here follow the
 > community sims ([wow-forever-sim](https://github.com/gunba/wow-forever-sim) and [foreversim](https://github.com/laurencestokes/foreversim))
 > and our own reading of the beta, so they may not match the live game, and classes can change a lot before launch and before
 > anyone reaches level 60. Use it as a practice tool: learn a rotation's rhythm and get a feel for how a class might play at max
-> level. Don't read anything into the damage or DPS numbers. Spotted something wrong? Feedback is very welcome in the
+> level. That's why the yard shows no DPS: the damage in the floating combat text is only a rough guide. Spotted something wrong? Feedback is very welcome in the
 > [issues](https://github.com/Argorlant/forever-practice-yard/issues).
 
 The first class is the **Combat Rogue**, with WoW Forever's numbers and rules: smooth energy
@@ -35,8 +36,8 @@ are in. Sources in [`research/warrior_forever.md`](research/warrior_forever.md).
 
 For **Protection** the dummy hits back (Settings → "The dummy attacks you"): it turns to face you
 and rolls miss, dodge, parry, block, crit and crushing blows against your tank sheet, like the sims'
-level 63 boss. Its hits give rage, blocks and dodges open Revenge, Shield Block works, and the
-meter shows threat per second. Your health is locked by default; unlock it to practice Shield Wall
+level 63 boss. Its hits give rage, blocks and dodges open Revenge, and Shield Block works.
+Your health is locked by default; unlock it to practice Shield Wall
 and Last Stand. To practice Execute, start the dummy at 15 % health and lock it.
 
 The **Druid** comes as three specs (sources in [`research/druid_forever.md`](research/druid_forever.md)):
@@ -209,7 +210,7 @@ Then open http://127.0.0.1:5180.
 | `src/engine` | The combat engine, shared by every class: event clock, smooth regeneration, GCD and spell queue, casts, cooldowns, auras, dual-wield auto attacks, attack and spell tables, armor, the attacking dummy, raid buffs and debuffs (`raid.ts`). |
 | `src/specs/<class>` | One class (`rogue`, `warrior`, `druid`, `paladin`, `hunter`, `priest`, `mage`, `warlock`, `shaman`): `data.ts` holds every number with its source; `talents.ts` the sims' builds; the spec files define abilities, procs and the priority list. |
 | `src/scene` | The 3D yard (three.js): world, dummy, character and WoW-style controls. |
-| `src/ui` | HUD, action bar, floating combat text, damage meter and settings. |
+| `src/ui` | HUD, action bar, floating combat text, rotation panel and settings. |
 | `research` | Sourced notes on each spec's WoW Forever mechanics. |
 
 ### Adding a spec

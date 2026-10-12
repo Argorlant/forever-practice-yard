@@ -17,10 +17,10 @@ export const DISCLAIMER_HTML = `
   the community sims (gunba's wow-forever-sim and foreversim) and our own reading of the beta, so they may not match the live game,
   and classes can change a lot before launch and before anyone reaches level 60.
   Use it as a practice tool: learn a rotation's rhythm and get a feel for how a class might play at max level.
-  <b>Don't read anything into the damage or DPS numbers.</b>
+  <b>That's why the yard shows no DPS:</b> the damage in the floating combat text is only a rough guide.
   Spotted something wrong? Feedback is very welcome: ${feedback}.`;
 
 /** The short version, for each class's welcome screen. */
 export const DISCLAIMER_SHORT_HTML = `
   A practice tool, not a simulator: it follows the WoW Forever sims while the game is in beta, so builds and numbers may change
-  before level 60. Practise the rhythm and ignore the damage and DPS numbers. Found a mistake? ${feedback}.`;
+  before level 60. Practise the rhythm: there's no DPS meter, and the damage you see is only a rough guide. Found a mistake? ${feedback}.`;

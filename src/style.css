@@ -100,7 +100,6 @@ a { color: var(--gold); }
 .cue.back { color: #ff6a5a; }
 .cast-fill { position: absolute; inset: 0; background: linear-gradient(#ffd25a, #c8901a); transform-origin: left; }
 .cast-text { position: absolute; inset: 0; display: grid; place-items: center; font-size: 11px; font-weight: 700; text-shadow: 0 1px 2px #000; }
-.meter-head .tps { margin-left: 0; color: #ff9a6a; font-size: 12px; }
 .resource-text { position: absolute; inset: 0; display: grid; place-items: center; font-size: 12px; font-weight: 800; color: #fff; text-shadow: 0 1px 2px #000, 0 0 3px #000; }
 .combo { display: grid; grid-template-columns: repeat(5, 1fr); gap: 4px; height: 10px; }
 .pip { border-radius: 3px; background: #2b0d0a; border: 1px solid #000; }
@@ -186,7 +185,7 @@ img.wow-icon { width: 100%; height: 100%; display: block; object-fit: cover; tra
 .countdown.go { color: #8aff7a; }
 @keyframes count { 0% { opacity: 0; transform: translate(-50%, -50%) scale(1.6); } 15% { opacity: 1; transform: translate(-50%, -50%) scale(1); } 80% { opacity: 1; } 100% { opacity: 0; } }
 
-/* Damage meter */
+/* Rotation panel: hits, crits and the review (no damage numbers) */
 .meter { position: absolute; right: 14px; top: 60px; width: 250px; background: var(--panel); border: 1px solid #3b3024; border-radius: 8px; overflow: hidden; font-size: 12px; }
 .meter-head { display: flex; align-items: baseline; gap: 8px; padding: 6px 8px; background: rgba(255,255,255,.04); border-bottom: 1px solid #3b3024; }
 .meter-head span { font-family: Georgia, serif; color: var(--gold); }
@@ -194,7 +193,6 @@ img.wow-icon { width: 100%; height: 100%; display: block; object-fit: cover; tra
 .meter-head small { color: var(--muted); }
 .meter-rows { max-height: 40vh; overflow: auto; }
 .meter-row { position: relative; display: flex; align-items: center; gap: 6px; height: 22px; padding: 0 6px 0 2px; }
-.meter-fill { position: absolute; inset: 1px 0; background: linear-gradient(90deg, rgba(255, 213, 74, .35), rgba(255, 213, 74, .12)); transform-origin: left; }
 .meter-icon { position: relative; width: 18px; height: 18px; flex: none; border-radius: 3px; overflow: hidden; }
 .meter-icon svg { width: 100%; height: 100%; display: block; }
 .meter-name { position: relative; flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; text-shadow: 0 1px 1px #000; }

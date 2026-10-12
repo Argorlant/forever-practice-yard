@@ -853,7 +853,7 @@ export const rogue: Spec = {
     Builders award combo points on your target; finishers spend them. An avoided builder refunds 80% of its energy; an avoided finisher keeps its combo points.
     Attacking from the front can be parried; stay behind. Rupture, Garrote and Deadly Poison can crit, as in Forever.
     The yellow glow marks the next ability of the build's priority list. Procs call themselves out next to your character.
-    Under the damage meter, a short review tracks the habits that matter: Slice and Dice uptime, energy wasted at full, Eviscerates at the right combo points and your procs.
+    In the rotation panel, a short review tracks the habits that matter: Slice and Dice uptime, energy wasted at full, Eviscerates at the right combo points and your procs.
     This is a practice tool: crit and proc chances follow WoW Forever; damage numbers are an approximation.`,
   look: { clothColor: 0x3a2a58, leatherColor: 0x36302c, hood: true },
   sources: [

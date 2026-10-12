@@ -1,5 +1,5 @@
 // Heads-up display: target frame, buffs, resource and combo points, action
-// bar, error text, pull countdown and damage meter. Built once, then updated
+// bar, error text, pull countdown and rotation panel. Built once, then updated
 // every frame without rebuilding the DOM.
 import type { Combat } from '../engine/combat';
 import type { Aura, Binding, Unit } from '../engine/types';
@@ -231,10 +231,10 @@ export class Hud {
     bottom.append(this.extraRows[1], this.extraRows[0], barEl);
     this.root.append(bottom);
 
-    // Damage meter.
+    // Rotation panel: what landed and how the habits went. No damage or DPS: those would be guesses while WoW Forever is in beta.
     this.meter = h('div', 'meter');
     this.meterHead = h('div', 'meter-head');
-    this.meterHead.title = 'Approximate: the formulas of the sims with default gear while WoW Forever is in beta. Practise the rotation, not the numbers.';
+    this.meterHead.title = 'Hits and crits per ability, and a review of your rotation. No damage or DPS numbers: with the game in beta they would only be guesses.';
     this.meterRows = h('div', 'meter-rows');
     this.meterReview = h('div', 'meter-review');
     this.meter.append(this.meterHead, this.meterRows, this.meterReview);
@@ -458,7 +458,7 @@ export class Hud {
       const cd = st.cooldown;
       s.cd.style.setProperty('--p', cd.total ? String(cd.left / cd.total) : '0');
       s.cdText.textContent = cd.left > 1.5 && cd.total > 1.6 ? shortTime(cd.left) : '';
-      s.cost.textContent = st.cost ? String(st.cost) : '';
+      s.cost.textContent = st.cost ? String(Math.round(st.cost)) : '';
       s.el.classList.toggle('no-resource', st.noResource);
       s.el.classList.toggle('unusable', !st.usable);
       s.el.classList.toggle('out-of-range', st.outOfRange);
@@ -504,20 +504,15 @@ export class Hud {
     const c = this.combat;
     const m = c.meter;
     const dur = m.start === null ? 0 : Math.max(0, m.end - m.start);
-    const threat = c.spec.showThreat || c.enemyAttacks.on ? `<b class="tps">${fmt(c.tps(), 0)} TPS</b>` : '';
-    this.meterHead.innerHTML = `<span>${UI.damage}</span><b>≈ ${fmt(c.dps(), 1)} ${UI.dps}</b>${threat}
-      <small>${fmt(m.total)} · ${Math.floor(dur / 60)}:${String(Math.floor(dur % 60)).padStart(2, '0')}</small>`;
-    const rows = [...m.rows.values()].filter((r) => r.total > 0).sort((a, b) => b.total - a.total);
-    const max = rows[0]?.total ?? 1;
+    this.meterHead.innerHTML = `<span>${UI.rotation}</span><b>${Math.floor(dur / 60)}:${String(Math.floor(dur % 60)).padStart(2, '0')}</b>`;
+    const rows = [...m.rows.values()].filter((r) => r.hits + r.misses > 0).sort((a, b) => b.hits + b.misses - (a.hits + a.misses));
     this.meterRows.innerHTML = rows.map((r) => {
-      const share = m.total ? (r.total / m.total) * 100 : 0;
       const landed = r.hits + r.misses;
       const crit = r.hits ? (r.crits / r.hits) * 100 : 0;
       return `<div class="meter-row" title="${r.name}: ${landed} attempts, ${crit.toFixed(1)}% crit, ${r.misses} missed or dodged${r.glances ? `, ${r.glances} glancing` : ''}">
-        <div class="meter-fill" style="transform: scaleX(${r.total / max})"></div>
         <div class="meter-icon">${iconHtml(r.icon)}</div>
         <span class="meter-name">${r.name}</span>
-        <span class="meter-val">${fmt(r.total)} <small>${share.toFixed(1)}%</small></span>
+        <span class="meter-val">${r.hits} <small>${r.hits === 1 ? 'hit' : 'hits'} · ${crit.toFixed(0)}% crit${r.misses ? ` · ${r.misses} missed` : ''}</small></span>
       </div>`;
     }).join('');
     // How the rotation went: the habits matter more than the exact damage.

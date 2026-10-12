@@ -368,7 +368,6 @@ export const druidBear: Spec = {
   className: 'Druid',
   specName: 'Feral Bear',
   resource: 'rage',
-  showThreat: true,
   tank: true,
   tankDamage: 3000,
   form: () => 'bear',
@@ -388,7 +387,7 @@ export const druidBear: Spec = {
   help: `${CONTROLS}
     Bear rage in WoW Forever is normalized: each landed white swing gives 11.25 rage (22.5 on a crit), every 2.5 sec. Misses, dodges, parries and the swing a Maul replaces give none. Hits you take give rage from their unmitigated damage (before armor and Barkskin): about 6 for a normal hit, 12 for a crit, 9 for a crushing blow; a dodge gives none, except Natural Reaction's 5.
     Maul replaces your next swing: press once to queue, again to cancel. Primal Bite has a 6 sec cooldown (none during Berserk). Lacerate stacks 5 times and its hit grows with the stacks.
-    The dummy attacks you: bears cannot parry or block, so dodge is your avoidance and crushing blows land 15% of the time. Your health is locked by default; unlock it to practice Frenzied Regeneration and Barkskin. The meter shows threat per second (x1.5 in Bear Form).
+    The dummy attacks you: bears cannot parry or block, so dodge is your avoidance and crushing blows land 15% of the time. Your health is locked by default; unlock it to practice Frenzied Regeneration and Barkskin. Bear Form makes your damage cause 50% more threat.
     Clearcasting (Omen of Clarity) makes your next ability free. Blood Frenzy gives 5 rage on a crit, Natural Reaction 5 rage on a dodge.
     This is a practice tool: crit, proc and rage numbers follow WoW Forever; damage and threat are an approximation.`,
   look: { clothColor: 0x2f4a2a, leatherColor: 0x4a3a28, hood: false },

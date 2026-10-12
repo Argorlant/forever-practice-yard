@@ -259,8 +259,6 @@ export interface Spec {
   className: string;
   specName: string;
   resource: 'energy' | 'rage' | 'mana';
-  /** Show threat per second in the meter (tanks). */
-  showThreat?: boolean;
   /** Draw the combo point pips (rogues). */
   comboPoints?: boolean;
   /** Druid forms: which animal model to show right now (null: the humanoid). */
@@ -287,7 +285,7 @@ export interface Spec {
   suggest?: (c: Combat) => string | null;
   /** Live chances shown in Settings, so the player learns how often things happen. */
   chances?: (c: Combat) => { title: string; rows: [string, string][] }[];
-  /** Short rotation review under the damage meter. `good` colors the value. */
+  /** Short rotation review in the rotation panel. `good` colors the value. */
   review?: (c: Combat) => { label: string; value: string; good?: boolean }[];
   /** Extra class options (talents that can be toggled, poisons…). */
   options?: SettingField[];

@@ -845,7 +845,6 @@ export const warrior: Spec = {
   className: 'Warrior',
   specName: 'WoW Forever',
   resource: 'rage',
-  showThreat: true,
   tankDamage: 3000,
   abilities,
   stats: FURY_STATS,
@@ -868,7 +867,7 @@ export const warrior: Spec = {
     Rage in WoW Forever is normalized: each landed white swing gives a fixed amount from your weapon's speed (3.46 per second of speed with a one-hander, 4.5 with a two-hander, half for the off hand), doubled on a crit. Misses, dodges, parries and Heroic Strike swings give none. Abilities do not give rage.
     Heroic Strike and Cleave replace your next main-hand swing: press once to queue, again to cancel. Slam has a cast and restarts your swing. Changing stance keeps up to 10 rage (25 with Improved Tactical Mastery).
     Overpower opens for 5 sec after the dummy dodges; Revenge for 5 sec after you block, dodge or parry. Execute only works below 20% health: in Settings, start the dummy at 15% and lock its health to practice it.
-    For Protection the dummy attacks you: its hits give you rage from their unmitigated damage, before armor, blocks and stances (about 6 per hit, 12 on a crit, 9 on a crushing blow; nothing when it misses or you dodge or parry), blocks open Revenge and Shield Block gives 2 sure blocks. Your health is locked by default; unlock it to practice Shield Wall and Last Stand. The meter shows threat per second.
+    For Protection the dummy attacks you: its hits give you rage from their unmitigated damage, before armor, blocks and stances (about 6 per hit, 12 on a crit, 9 on a crushing blow; nothing when it misses or you dodge or parry), blocks open Revenge and Shield Block gives 2 sure blocks. Your health is locked by default; unlock it to practice Shield Wall and Last Stand.
     This is a practice tool: crit, proc and rage numbers follow WoW Forever; damage is an approximation.`,
   look: { clothColor: 0x7a1f1f, leatherColor: 0x4a4f57, hood: false, plate: true },
   sources: [

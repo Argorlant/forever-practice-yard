@@ -120,7 +120,7 @@ export const paladinRet: Spec = specFor('ret', {
   help: `${CONTROLS}
     ${HELP_COMMON}
     Retribution swings a slow two-hander: Seal of Command procs 7 times per minute (about 44% per swing at 3.8 sec) and Seal of Righteousness adds Holy damage to every swing. With Twist of Light, replacing a seal leaves an Echo of it that your next landed swing also applies; the yellow glow follows the WoW Forever sims' loop: Holy Strike, Judgement, then swap to the other seal once per swing (when no Echo is banked), Consecration with spare mana.
-    Vengeance (after any crit) and Vindication (every landed hit) raise your damage. The review under the meter counts swings that carried both seals.
+    Vengeance (after any crit) and Vindication (every landed hit) raise your damage. The review in the rotation panel counts swings that carried both seals.
     This is a practice tool: hit, crit and proc chances follow WoW Forever; damage numbers are an approximation.`,
   look: { clothColor: 0xb8902e, leatherColor: 0x9aa0a8, hood: false, plate: true },
   suggest: retSuggest,
@@ -179,7 +179,6 @@ function protReview(c: Combat): Row[] {
 export const paladinProt: Spec = specFor('prot', {
   id: 'paladin-prot',
   specName: 'Protection',
-  showThreat: true,
   tank: true,
   tankDamage: 3000,
   stats: PROT_STATS,
@@ -191,7 +190,7 @@ export const paladinProt: Spec = specFor('prot', {
   help: `${CONTROLS}
     ${HELP_COMMON}
     The dummy attacks you and rolls miss, dodge, parry, block, crit and crushing blows against your sheet. Holy Shield adds 30% block for 10 sec or 4 blocks and deals Holy damage on each block; Redoubt raises your block after hits taken; Shield Specialization gives back 6% of your mana on a block; Reckoning gives an extra swing after a block or a crit taken.
-    Righteous Fury makes your Holy damage cause 60% more threat (Holy Shield and Holy Strike more still). The meter shows threat per second. Your health is locked by default; unlock it to practice Templar's Bulwark and Lay on Hands.
+    Righteous Fury makes your Holy damage cause 60% more threat (Holy Shield and Holy Strike more still). Your health is locked by default; unlock it to practice Templar's Bulwark and Lay on Hands.
     This is a practice tool: hit, crit, block and proc chances follow WoW Forever; damage and threat are an approximation.`,
   look: { clothColor: 0x2f4f8a, leatherColor: 0x9aa0a8, hood: false, plate: true },
   suggest: protSuggest,

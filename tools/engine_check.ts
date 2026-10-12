@@ -268,7 +268,7 @@ for (const sp of [druidCat, druidBear, druidBalance]) {
     const r = play(sp, { build: b.id });
     const missing = (DRUID_MUST_USE[b.id] ?? []).filter((id) => !r.used[id]);
     const review = (sp.review?.(r.c) ?? []).map((x) => `${x.label}: ${x.value}`).join(' | ');
-    console.log(`  ${b.label.padEnd(58)} ${r.c.dps().toFixed(0).padStart(4)} DPS${sp.showThreat ? ` ${r.c.tps().toFixed(0).padStart(4)} TPS` : ''}  ${review}`);
+    console.log(`  ${b.label.padEnd(58)} ${r.c.dps().toFixed(0).padStart(4)} DPS${sp.tank || r.c.enemyAttacks.on ? ` ${r.c.tps().toFixed(0).padStart(4)} TPS` : ''}  ${review}`);
     if (missing.length) failures.push(`${b.label} never used ${missing.join(', ')}`);
     if (!(r.c.dps() > 100)) failures.push(`${b.label}: ${r.c.dps().toFixed(0)} DPS`);
   }
@@ -381,7 +381,7 @@ for (const sp of [paladinRet, paladinProt, paladinShock]) {
     const r = play(sp, { build: b.id });
     const missing = (PALADIN_MUST_USE[b.id] ?? []).filter((id) => !r.used[id]);
     const review = (sp.review?.(r.c) ?? []).map((x) => `${x.label}: ${x.value}`).join(' | ');
-    console.log(`  ${b.label.padEnd(58)} ${r.c.dps().toFixed(0).padStart(4)} DPS${sp.showThreat ? ` ${r.c.tps().toFixed(0).padStart(4)} TPS` : ''}  ${review}`);
+    console.log(`  ${b.label.padEnd(58)} ${r.c.dps().toFixed(0).padStart(4)} DPS${sp.tank || r.c.enemyAttacks.on ? ` ${r.c.tps().toFixed(0).padStart(4)} TPS` : ''}  ${review}`);
     if (missing.length) failures.push(`${b.label} never used ${missing.join(', ')}`);
     if (!(r.c.dps() > 100)) failures.push(`${b.label}: ${r.c.dps().toFixed(0)} DPS`);
     if (r.c.player.resource < -1e-6) failures.push(`${b.label}: mana went negative`);
@@ -759,7 +759,7 @@ for (const sp of [shamanElemental, shamanEnhancement, shamanTank]) {
     const r = play(sp, { build: b.id });
     const missing = (SHAMAN_MUST_USE[b.id] ?? []).filter((id) => !r.used[id]);
     const review = (sp.review?.(r.c) ?? []).map((x) => `${x.label}: ${x.value}`).join(' | ');
-    console.log(`  ${b.label.padEnd(58)} ${r.c.dps().toFixed(0).padStart(4)} DPS${sp.showThreat ? ` ${r.c.tps().toFixed(0).padStart(4)} TPS` : ''}  ${review}`);
+    console.log(`  ${b.label.padEnd(58)} ${r.c.dps().toFixed(0).padStart(4)} DPS${sp.tank || r.c.enemyAttacks.on ? ` ${r.c.tps().toFixed(0).padStart(4)} TPS` : ''}  ${review}`);
     if (missing.length) failures.push(`${b.label} never used ${missing.join(', ')}`);
     if (!(r.c.dps() > 100)) failures.push(`${b.label}: ${r.c.dps().toFixed(0)} DPS`);
   }

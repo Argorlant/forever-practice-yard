@@ -246,7 +246,6 @@ export const shamanTank: Spec = specFor('tank', {
   id: 'shaman-tank',
   specName: 'Off-tank (experimental)',
   tank: true,
-  showThreat: true,
   stats: OFFTANK_STATS,
   defaultOptions: { build: 'tank', mana: 2900, spirit: D.spirit.enhancement, mp5: D.mp5.enhancement, lockMana: false, weaponMastery: false },
   options: MELEE_OPTIONS,
