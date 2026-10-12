@@ -234,6 +234,7 @@ export class Hud {
     // Damage meter.
     this.meter = h('div', 'meter');
     this.meterHead = h('div', 'meter-head');
+    this.meterHead.title = 'Approximate: the formulas of the sims with default gear while WoW Forever is in beta. Practise the rotation, not the numbers.';
     this.meterRows = h('div', 'meter-rows');
     this.meterReview = h('div', 'meter-review');
     this.meter.append(this.meterHead, this.meterRows, this.meterReview);
@@ -504,7 +505,7 @@ export class Hud {
     const m = c.meter;
     const dur = m.start === null ? 0 : Math.max(0, m.end - m.start);
     const threat = c.spec.showThreat || c.enemyAttacks.on ? `<b class="tps">${fmt(c.tps(), 0)} TPS</b>` : '';
-    this.meterHead.innerHTML = `<span>${UI.damage}</span><b>${fmt(c.dps(), 1)} ${UI.dps}</b>${threat}
+    this.meterHead.innerHTML = `<span>${UI.damage}</span><b>≈ ${fmt(c.dps(), 1)} ${UI.dps}</b>${threat}
       <small>${fmt(m.total)} · ${Math.floor(dur / 60)}:${String(Math.floor(dur % 60)).padStart(2, '0')}</small>`;
     const rows = [...m.rows.values()].filter((r) => r.total > 0).sort((a, b) => b.total - a.total);
     const max = rows[0]?.total ?? 1;

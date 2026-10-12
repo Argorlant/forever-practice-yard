@@ -6,6 +6,12 @@ cooldown, positional requirements, procs and auras follow the game rules, and ev
 a damage number. It works with keyboard and mouse or on a phone.
 
 **Play it online:** https://argorlant.github.io/forever-practice-yard/
+> **Speculative, built on the sims.** WoW Forever is still in beta. The talents, builds, rotations and numbers here follow the
+> community sims ([wow-forever-sim](https://github.com/gunba/wow-forever-sim) and [foreversim](https://github.com/laurencestokes/foreversim))
+> and our own reading of the beta, so they may not match the live game, and classes can change a lot before launch and before
+> anyone reaches level 60. Use it as a practice tool: learn a rotation's rhythm and get a feel for how a class might play at max
+> level. Don't read anything into the damage or DPS numbers. Spotted something wrong? Feedback is very welcome in the
+> [issues](https://github.com/Argorlant/forever-practice-yard/issues).
 
 The first class is the **Combat Rogue**, with WoW Forever's numbers and rules: smooth energy
 regeneration (10 per second), the attack table measured on the beta, bleeds and poisons that

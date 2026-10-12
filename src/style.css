@@ -354,3 +354,7 @@ img.wow-icon { width: 100%; height: 100%; display: block; object-fit: cover; tra
 .talent-list { margin-top: 8px; }
 .talent-list summary { cursor: pointer; color: var(--muted); font-size: 12px; }
 @media (max-width: 600px) { .talent-graphic { --tal: 30px; gap: 6px; } .build-card { grid-template-columns: 1fr; } }
+/* What the tool is and is not: speculative, built on the sims. */
+.disclaimer-box { max-width: 760px; margin: 0 auto 24px; padding: 12px 16px; border: 1px solid var(--gold-dim); border-radius: 8px;
+  background: rgba(40, 30, 12, .55); color: var(--muted); font-size: 13px; line-height: 1.5; }
+.disclaimer-box b, .disclaimer b { color: var(--ink); }

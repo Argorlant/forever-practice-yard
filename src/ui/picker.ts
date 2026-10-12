@@ -3,6 +3,7 @@
 // at ?class=<spec>&build=<build>.
 import type { Spec, SpecBuild } from '../engine/types';
 import { SPECS } from '../specs';
+import { DISCLAIMER_HTML } from './disclaimer';
 import { iconHtml } from './icon';
 import { load } from './storage';
 import { talentTreesHtml } from './talent-tree';
@@ -54,7 +55,8 @@ export function showPicker(app: HTMLElement): void {
   const showClasses = () => {
     root.innerHTML = '';
     root.append(h('h1', 'picker-title', 'Forever Practice Yard'),
-      h('p', 'picker-sub', 'Practise your WoW Forever rotation against a training dummy. Choose your class.'));
+      h('p', 'picker-sub', 'Practise your WoW Forever rotation against a training dummy. Choose your class.'),
+      h('div', 'disclaimer-box', DISCLAIMER_HTML));
     const grid = h('div', 'class-grid');
     for (const c of CLASSES) {
       const count = SPECS.filter((s) => s.className === c.name).reduce((n, s) => n + (s.builds?.length ?? 0), 0);
@@ -70,7 +72,7 @@ export function showPicker(app: HTMLElement): void {
       again.href = `?class=${lastSpec.id}`;
       root.append(again);
     }
-    root.append(h('p', 'picker-note', 'Fan-made practice tool, free to use. Not affiliated with or endorsed by Blizzard Entertainment. Builds and numbers come from the WoW Forever sims.'));
+    root.append(h('p', 'picker-note', 'Fan-made practice tool, free to use. Not affiliated with or endorsed by Blizzard Entertainment.'));
   };
 
   const showBuilds = (className: string, color: string) => {

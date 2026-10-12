@@ -16,6 +16,7 @@ import { expandBar, fillExtraRows, slotShown } from './ui/bars';
 import { Hud } from './ui/hud';
 import { SettingsDialog, defaultPrefs, type Prefs } from './ui/settings';
 import { raidPicker } from './ui/raid-picker';
+import { DISCLAIMER_SHORT_HTML } from './ui/disclaimer';
 import { bindingFor, load, save } from './ui/storage';
 
 // The class comes from the URL (?class=warrior), else the last one played; ?build= picks a build.
@@ -551,9 +552,7 @@ function showWelcome(): void {
   overlay.innerHTML = `<div class="modal welcome"><div class="modal-body">
     <h2>${spec.className} · ${spec.specName}</h2>
     <p>${spec.welcome}</p>
-    <p class="note">Not a full damage simulator: numbers follow WoWSims formulas with the default gear below,
-    against a level 63 boss with ${prefs.enemy.armor} armor. Change stats, armor and keys in Settings.
-    Values marked provisional are still being confirmed for WoW Forever.</p>
+    <p class="note disclaimer">${DISCLAIMER_SHORT_HTML} The dummy is a level 63 boss with ${prefs.enemy.armor} armor; change stats, armor and keys in Settings.</p>
     <div class="welcome-raid"><h3>What your raid brings</h3>
     <p class="note">Pick the buffs and dummy debuffs you will have. You can change them later in Settings.</p></div>
     <button class="hud-btn">${UI.start}</button></div></div>`;
