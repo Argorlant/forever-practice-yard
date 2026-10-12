@@ -5,6 +5,8 @@ training dummy and play your class with real keybinds: energy, combo points, the
 cooldown, positional requirements, procs and auras follow the game rules, and every hit shows
 a damage number. It works with keyboard and mouse or on a phone.
 
+**Play it online:** https://argorlant.github.io/forever-practice-yard/
+
 The first class is the **Combat Rogue**, with WoW Forever's numbers and rules: smooth energy
 regeneration (10 per second), the attack table measured on the beta, bleeds and poisons that
 can crit, the Forever talent build (Hack and Slash, Flawless Execution) and Forever's ability
@@ -213,6 +215,11 @@ Then open http://127.0.0.1:5180.
 - Combat formulas follow [WoWSims](https://github.com/wowsims/classic) (MIT) and its WoW Forever
   forks [foreversim](https://github.com/laurencestokes/foreversim) and
   [wow-forever-sim](https://github.com/gunba/wow-forever-sim).
+
+## License
+
+The code is MIT licensed (see [LICENSE](LICENSE)). The ability icons, the character model and the dummy portrait keep
+their own terms (above).
 
 Fan-made practice tool. Not affiliated with or endorsed by Blizzard Entertainment. World of
 Warcraft is a trademark of Blizzard Entertainment, Inc.
