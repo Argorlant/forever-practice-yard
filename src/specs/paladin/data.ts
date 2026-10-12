@@ -71,6 +71,8 @@ export const DATA = {
   templarsBulwark: { mana: 110, cooldown: 300, duration: 8, absorb: 1, forbearance: 60 },
   swiftJudgement: { cooldown: 60 },
   holyShock: { mana: 325, cooldown: 10, min: 334, max: 362, coeff: 0.429, range: 20 },
+  // Holy 31 (rank 3 at 60). Provisional: gunba adds the strike to Holy Shock's damage, foreversim replaces it.
+  lightsVigil: { mana: 1340, cast: 1.5, cooldown: 6, mark: 30, min: 380, max: 410, coeff: 0.429, refund: 0.75, range: 20 },
   divineFavor: { mana: Math.round(BASE_MANA * 0.04), cooldown: 120 },
   layOnHands: { cooldown: 1200 },
   manaPotion: { min: 1350, max: 2250, cooldown: 120 },

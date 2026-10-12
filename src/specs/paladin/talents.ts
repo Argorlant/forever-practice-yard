@@ -64,7 +64,7 @@ const RET_BAR = bar(['holyStrike', 'judgement', 'sealOfCommand', 'sealOfRighteou
 const PROT_BAR = bar(['holyStrike', 'judgement', 'holyShield', 'consecration', 'sealOfRighteousness', 'sealOfFury', 'righteousFury', 'templarsBulwark',
   'attack', 'swiftJudgement', 'hammerOfWrath', 'layOnHands', 'exorcism', 'manaPotion']);
 const SHOCK_BAR = bar(['holyShock', 'holyStrike', 'judgement', 'sealOfCommand', 'divineFavor', 'consecration', 'exorcism', 'hammerOfWrath',
-  'attack', 'sealOfRighteousness', 'manaPotion', 'layOnHands']);
+  'attack', 'sealOfRighteousness', 'manaPotion', 'layOnHands', 'lightsVigil']);
 
 const GS = 'gunba/wow-forever-sim';
 const FS = 'foreversim';
@@ -78,7 +78,7 @@ export const BUILDS: Build[] = [
   { id: 'prot-dwarf', spec: 'prot', name: 'Protection (Dwarf)', talentString: '-5520513321301551-15003', source: GS, stats: PROT_STATS, bar: PROT_BAR, tank: true },
   { id: 'prot-fs', spec: 'prot', name: 'Protection, Holy dip', talentString: '55003-5530513321301501', source: FS, stats: PROT_STATS, bar: PROT_BAR, tank: true },
   { id: 'prot-deep', spec: 'prot', name: 'Protection, deep', talentString: '-5532513321301551-15', source: FS, stats: PROT_STATS, bar: PROT_BAR, tank: true },
-  { id: 'shock', spec: 'shock', name: 'Shockadin', talentString: '5500301320013125--05223331001', source: 'our proposal', stats: SHOCK_STATS, bar: SHOCK_BAR },
+  { id: 'shock', spec: 'shock', name: 'Shockadin', talentString: '55003003200131251--05223331001', source: 'our proposal', stats: SHOCK_STATS, bar: SHOCK_BAR },
   { id: 'shock-ret', spec: 'shock', name: 'Shock-Ret hybrid', talentString: '55003013200101--0522513100133031', source: 'our proposal', stats: RET_STATS, bar: SHOCK_BAR },
 ];
 

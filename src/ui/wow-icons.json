@@ -261,5 +261,6 @@
   "class_shaman": "classicon_shaman",
   "class_mage": "classicon_mage",
   "class_warlock": "classicon_warlock",
-  "class_druid": "classicon_druid"
+  "class_druid": "classicon_druid",
+  "lightsVigil": "ability_paladin_judgementofthepure"
 }

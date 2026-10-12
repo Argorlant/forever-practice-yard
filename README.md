@@ -68,8 +68,9 @@ baseline Holy Strike roll on the melee table:
 - **Protection** (`?class=paladin-prot`): the dummy attacks you. Righteous Fury (Holy threat x1.6), Holy Shield
   (+30 % block, 4 charges, Holy damage per block), Redoubt, Reckoning, Shield Specialization mana on blocks,
   Templar's Bulwark (an absorb shield) and Swift Judgement.
-- **Shockadin** (`?class=paladin-shock`): a melee paladin with Holy Shock on a 10 s cooldown, Divine Favor and
-  Divine Precision. No sim models it yet, so the build (31/0/20) is our proposal.
+- **Shockadin** (`?class=paladin-shock`): a melee paladin with Holy Shock on a 10 s cooldown, Divine Favor,
+  Divine Precision and Light's Vigil (the marked Holy Shock triggers no cooldown, so you Shock twice). No sim
+  models it yet, so the build (31/0/20) is our proposal.
 
 Exorcism needs an Undead or Demon dummy (Settings → Options); Hammer of Wrath works below 20 % health.
 

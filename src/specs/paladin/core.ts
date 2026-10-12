@@ -342,7 +342,7 @@ export const ABILITIES: Ability[] = [
     projectile: { color: 0xffe680, speed: 40 },
     cost: instant(D.holyShock.mana), cooldown: D.holyShock.cooldown,
     ...talent('holyShock', 'Holy Shock'),
-    highlight: (c) => !!c.aura(c.player, 'divineFavor'),
+    highlight: (c) => !!c.aura(c.player, 'divineFavor') || !!c.aura(c.target, 'lightsVigil'),
     description: (c) => `Blasts the enemy for ${D.holyShock.min}-${D.holyShock.max} Holy damage plus spell power. Spell table${T(c).divinePrecision ? ` (Divine Precision +${6 * T(c).divinePrecision}% hit)` : ''}; crits for 1.5x. ${D.holyShock.cooldown} sec cooldown in WoW Forever (30 in Classic).`,
     use: (c, t) => {
       const h = D.holyShock;
@@ -351,6 +351,31 @@ export const ABILITIES: Ability[] = [
       const outcome = spellRoll(c, { extraHit: 6 * T(c).divinePrecision, extraCrit: 2 * T(c).holyPower, forceCrit: favor });
       const amount = holyDamage(c, t!, 'holyShock', between(c, h.min, h.max), h.coeff, outcome, { spellTable: true });
       c.deal({ target: t!, source: 'holyShock', outcome, school: 'holy', amount, white: false, spell: true });
+      // Light's Vigil: a marked Holy Shock that lands triggers no cooldown, strikes again and refunds most of the Vigil's mana.
+      if (outcome !== 'resist' && c.aura(t!, 'lightsVigil')) {
+        const v = D.lightsVigil;
+        c.removeAura(t!, 'lightsVigil');
+        c.clearCooldown('holyShock');
+        const extra = holyDamage(c, t!, 'lightsVigil', between(c, v.min, v.max), v.coeff, outcome, { spellTable: true });
+        c.deal({ target: t!, source: 'lightsVigil', outcome, school: 'holy', amount: extra, white: false, spell: true });
+        c.gainMana(Math.round(v.mana * v.refund));
+        c.count('vigilShocks');
+      }
+    },
+  },
+  {
+    id: 'lightsVigil', name: "Light's Vigil", icon: 'lightsVigil', gcd: D.gcd, target: 'enemy', range: D.lightsVigil.range, noAutoAttack: true,
+    animation: 'cast',
+    cost: () => D.lightsVigil.mana, cooldown: D.lightsVigil.cooldown,
+    castTime: (c) => D.lightsVigil.cast / c.castHaste(),
+    ...talent('lightsVigil', "Light's Vigil"),
+    description: () => {
+      const v = D.lightsVigil;
+      return `A ${v.cast} sec cast that marks the enemy for ${v.mark} sec. Your next Holy Shock on it triggers no cooldown, deals ${v.min}-${v.max} more Holy damage plus spell power and refunds ${v.refund * 100}% of this spell's mana. Values are provisional.`;
+    },
+    use: (c, t) => {
+      c.applyAura(t!, { id: 'lightsVigil', name: "Light's Vigil", icon: 'lightsVigil', duration: D.lightsVigil.mark });
+      c.count('vigils');
     },
   },
   {

@@ -210,6 +210,10 @@ function shockSuggest(c: Combat): string | null {
   if (!seal) return primary;
   if (!p.autoAttacking && c.inRange(t)) return 'attack';
   if (ready('judgement') && c.inRange(t, D.judgement.range)) return 'judgement';
+  // Light's Vigil just before Holy Shock comes back: the marked Shock leaves Holy Shock ready for a second one.
+  const marked = !!c.aura(t, 'lightsVigil');
+  const shockSoon = c.cooldownLeft('holyShock').left <= D.lightsVigil.cast + D.gcd;
+  if (tl.lightsVigil && !marked && shockSoon && ready('lightsVigil') && afford('lightsVigil') && mana >= 0.5) return 'lightsVigil';
   if (tl.divineFavor && ready('divineFavor') && ready('holyShock')) return 'divineFavor';
   if (ready('holyShock') && afford('holyShock') && c.inRange(t, D.holyShock.range)) return 'holyShock';
   if (ready('holyStrike') && afford('holyStrike')) return 'holyStrike';
@@ -233,6 +237,7 @@ function shockReview(c: Combat): Row[] {
     { label: 'Judgement on cooldown', value: pctOf(judgementUse), good: judgementUse >= 0.85 },
   ];
   if (tl.divineFavor) rows.push({ label: 'Holy Shocks with Divine Favor', value: String(k.divineFavorShocks ?? 0) });
+  if (tl.lightsVigil) rows.push({ label: "Light's Vigils spent by Holy Shock", value: `${k.vigilShocks ?? 0} of ${k.vigils ?? 0}`, good: (k.vigilShocks ?? 0) >= (k.vigils ?? 0) - 1 });
   manaRows(c, rows);
   return rows;
 }
@@ -245,10 +250,11 @@ export const paladinShock: Spec = specFor('shock', {
   options: MANA_OPTIONS,
   sheet: { spellCrit: 'Spell crit (gear + Intellect)', spellPower: 'Spell power (Holy)' },
   lowMana: (c) => c.cost(c.ability('holyShock')!),
-  welcome: 'Welcome to the Shockadin practice yard: a melee paladin with Holy Shock on a 10 sec cooldown. No WoW Forever sim models this build yet, so its talents and priority list are our proposal. Keep Seal of Command up, Judgement, Holy Shock and Holy Strike on cooldown, and save Divine Favor for a sure Holy Shock crit.',
+  welcome: 'Welcome to the Shockadin practice yard: a melee paladin with Holy Shock on a 10 sec cooldown. No WoW Forever sim models this build yet, so its talents and priority list are our proposal. Keep Seal of Command up, Judgement, Holy Shock and Holy Strike on cooldown, and save Divine Favor for a sure Holy Shock crit. Light\'s Vigil marks the dummy so your next Holy Shock hits twice and comes back at once.',
   help: `${CONTROLS}
     ${HELP_COMMON}
     Holy Shock is a 21-point Holy talent with a 10 sec cooldown in WoW Forever (30 in Classic). Divine Precision gives it 18% hit, Holy Power 15% crit, and Divine Favor makes the next one crit. It costs a lot of mana: practice it as a burst on top of your melee.
+    Light's Vigil (the 31-point Holy talent) is a 1.5 sec cast that marks the target: your next Holy Shock on it triggers no cooldown, deals extra Holy damage and refunds 75% of the Vigil's mana. Cast it while Holy Shock is ready, then Shock twice. Its damage is provisional: the sims disagree on whether it adds to Holy Shock or replaces it.
     The build is our proposal (31/0/20); no sim has one yet. Expect changes, in particular to Infusion of Light (bug #260) and Light's Vigil.
     This is a practice tool: hit, crit and proc chances follow WoW Forever; damage numbers are an approximation.`,
   look: { clothColor: 0xe8e0c8, leatherColor: 0xb8902e, hood: false, plate: true },

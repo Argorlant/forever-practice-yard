@@ -373,7 +373,7 @@ const PALADIN_MUST_USE: Record<string, string[]> = {
   'prot-dwarf': ['judgement', 'holyShield', 'consecration', 'holyStrike'],
   'prot-fs': ['judgement', 'holyShield', 'holyStrike'],
   'prot-deep': ['judgement', 'holyShield', 'holyStrike'],
-  shock: ['sealOfCommand', 'judgement', 'holyShock', 'divineFavor', 'holyStrike'],
+  shock: ['sealOfCommand', 'judgement', 'holyShock', 'divineFavor', 'holyStrike', 'lightsVigil'],
   'shock-ret': ['sealOfCommand', 'judgement', 'holyShock', 'holyStrike'],
 };
 for (const sp of [paladinRet, paladinProt, paladinShock]) {
@@ -428,8 +428,13 @@ for (const sp of [paladinRet, paladinProt, paladinShock]) {
 {
   const r = play(paladinShock, { build: 'shock', options: { lockMana: true } });
   const shocks = r.used.holyShock ?? 0;
-  console.log(`Shockadin with locked mana: ${r.c.dps().toFixed(0)} DPS, ${shocks} Holy Shocks in 5 min`);
+  const vigils = r.c.counters.vigils ?? 0;
+  const spent = r.c.counters.vigilShocks ?? 0;
+  console.log(`Shockadin with locked mana: ${r.c.dps().toFixed(0)} DPS, ${shocks} Holy Shocks in 5 min, ${spent} of ${vigils} Light's Vigils spent`);
   if (shocks < 25) failures.push(`only ${shocks} Holy Shocks in 5 minutes`);
+  // A Vigil'd Shock leaves Holy Shock ready, so each Vigil brings a second Shock right after it.
+  if (vigils < 20 || spent < vigils - 1) failures.push(`Light's Vigil: ${spent} of ${vigils} spent`);
+  if (shocks < 2 * spent - 1) failures.push(`Light's Vigil should double the Holy Shocks: ${shocks} with ${spent} Vigils`);
 }
 
 // ----------------------------------------------------------------- hunter
