@@ -231,7 +231,8 @@ Then open http://127.0.0.1:5180.
 ## Support
 
 The practice yard is free and fan-made, and it stays complete for everyone. If it helped your rotation, you can buy me a
-coffee on PayPal: [paypal.me/argorlant](https://paypal.me/argorlant).
+coffee on Ko-fi: [ko-fi.com/argorlant](https://ko-fi.com/argorlant) (or directly on PayPal:
+[paypal.me/argorlant](https://paypal.me/argorlant)).
 
 ## License
 
