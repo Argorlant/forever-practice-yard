@@ -3,7 +3,7 @@
 // at ?class=<spec>&build=<build>.
 import type { Spec, SpecBuild } from '../engine/types';
 import { SPECS } from '../specs';
-import { DISCLAIMER_HTML } from './disclaimer';
+import { DISCLAIMER_HTML, SUPPORT_HTML } from './disclaimer';
 import { iconHtml } from './icon';
 import { load } from './storage';
 import { talentTreesHtml } from './talent-tree';
@@ -72,7 +72,7 @@ export function showPicker(app: HTMLElement): void {
       again.href = `?class=${lastSpec.id}`;
       root.append(again);
     }
-    root.append(h('p', 'picker-note', 'Fan-made practice tool, free to use. Not affiliated with or endorsed by Blizzard Entertainment.'));
+    root.append(h('p', 'picker-note', `${SUPPORT_HTML}<br>Not affiliated with or endorsed by Blizzard Entertainment.`));
   };
 
   const showBuilds = (className: string, color: string) => {

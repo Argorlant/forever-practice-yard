@@ -8,7 +8,7 @@ import { ACTION_SLOTS, MAX_ROWS, ROW, expandBar } from './bars';
 import { iconHtml } from './icon';
 import { ICON_AUTHORS } from './icons.gen';
 import { bindingFor, keyLabel } from './storage';
-import { DISCLAIMER_HTML } from './disclaimer';
+import { DISCLAIMER_HTML, SUPPORT_HTML } from './disclaimer';
 import { raidPicker } from './raid-picker';
 import { talentTreesHtml } from './talent-tree';
 import { classKey } from './talents-data';
@@ -300,7 +300,7 @@ export class SettingsDialog {
 
     // Credits.
     const ab2 = this.section('About this tool');
-    ab2.append(h('p', 'note disclaimer', DISCLAIMER_HTML));
+    ab2.append(h('p', 'note disclaimer', DISCLAIMER_HTML), h('p', 'note', SUPPORT_HTML));
 
     const cr = this.section(UI.credits);
     cr.append(h('p', 'note', `

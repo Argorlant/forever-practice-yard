@@ -1,6 +1,9 @@
 // What the yard is and is not, said the same way on every screen: a practice
 // tool built on the community sims while WoW Forever is still in beta.
 export const FEEDBACK_URL = 'https://github.com/Argorlant/forever-practice-yard/issues';
+/** Voluntary support: the tool stays free and complete either way. */
+export const SUPPORT_URL = 'https://paypal.me/argorlant';
+export const SUPPORT_HTML = `Free and fan-made. If it helped your rotation, you can <a href="${SUPPORT_URL}" target="_blank" rel="noopener">buy me a coffee on PayPal</a> ☕`;
 
 const feedback = `<a href="${FEEDBACK_URL}" target="_blank" rel="noopener">tell us on GitHub</a>`;
 

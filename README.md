@@ -228,6 +228,11 @@ Then open http://127.0.0.1:5180.
   forks [foreversim](https://github.com/laurencestokes/foreversim) and
   [wow-forever-sim](https://github.com/gunba/wow-forever-sim).
 
+## Support
+
+The practice yard is free and fan-made, and it stays complete for everyone. If it helped your rotation, you can buy me a
+coffee on PayPal: [paypal.me/argorlant](https://paypal.me/argorlant).
+
 ## License
 
 The code is MIT licensed (see [LICENSE](LICENSE)). The ability icons, the character model and the dummy portrait keep
