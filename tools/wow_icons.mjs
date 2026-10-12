@@ -7,9 +7,13 @@
 import fs from 'node:fs';
 
 const map = JSON.parse(fs.readFileSync('src/ui/wow-icons.json', 'utf8'));
+// Talent and talent-tab icons from src/ui/talent-layout.json (tools/talent_layout.mjs).
+const layout = fs.existsSync('src/ui/talent-layout.json') ? JSON.parse(fs.readFileSync('src/ui/talent-layout.json', 'utf8')) : {};
+const talentIcons = Object.values(layout).flat().flatMap((tree) => [tree.icon, ...tree.talents.map((t) => t.icon)]).filter(Boolean);
 fs.mkdirSync('public/icons', { recursive: true });
 let bytes = 0;
-for (const name of new Set(Object.values(map))) {
+const names = new Set([...Object.values(map), ...talentIcons]);
+for (const name of names) {
   const file = `public/icons/${name}.jpg`;
   if (fs.existsSync(file)) continue;
   const res = await fetch(`https://wow.zamimg.com/images/wow/icons/large/${name}.jpg`);
@@ -19,4 +23,4 @@ for (const name of new Set(Object.values(map))) {
   bytes += buf.length;
   process.stdout.write('.');
 }
-console.log(`\n${new Set(Object.values(map)).size} icons in public/icons (${(bytes / 1024).toFixed(0)} KB downloaded now)`);
+console.log(`\n${names.size} icons in public/icons (${(bytes / 1024).toFixed(0)} KB downloaded now)`);

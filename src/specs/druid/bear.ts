@@ -376,7 +376,7 @@ export const druidBear: Spec = {
   abilities,
   stats: BEAR_STATS,
   rules: BOSS_RULES,
-  builds: buildsFor('bear').map((b) => ({ id: b.id, label: buildLabel(b), stats: b.stats, bar: b.bar, tank: b.tank, trees: summary(talentsFor(b.id, 'bear')) })),
+  builds: buildsFor('bear').map((b) => ({ id: b.id, label: buildLabel(b), name: b.name, source: 'gunba/wow-forever-sim', talentString: b.talentString, stats: b.stats, bar: b.bar, tank: b.tank, trees: summary(talentsFor(b.id, 'bear')) })),
   defaultOptions: { build: 'bear', wolfshead: true, incomingRage: INCOMING.coefficient },
   options: [
     { key: 'wolfshead', name: 'Wolfshead Helm (+5 rage from Enrage)', kind: 'toggle' },

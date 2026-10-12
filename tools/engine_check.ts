@@ -12,6 +12,8 @@ import { rogue } from '../src/specs/rogue';
 import { shamanElemental, shamanEnhancement, shamanTank } from '../src/specs/shaman';
 import { warlockAffliction, warlockDemonology, warlockDestruction } from '../src/specs/warlock';
 import { warrior } from '../src/specs/warrior';
+import { SPECS } from '../src/specs';
+import { classKey, decode, pointsPerTree, treesOf } from '../src/ui/talents-data';
 
 function run(spec: Spec, seconds: number, seed: number, stats = spec.stats, options: Record<string, number | boolean | string> = {}) {
   let s = seed;
@@ -848,6 +850,22 @@ for (const sp of [shamanElemental, shamanEnhancement, shamanTank]) {
   if (!((cat.c.counters.windfury ?? 0) > 20)) failures.push('Windfury Totem barely procced for a cat');
 }
 
+// The talent trees drawn in the UI (gunba's layout) read every build's talent string the same way the specs do.
+for (const sp of SPECS) {
+  const cls = classKey(sp.className);
+  if (!treesOf(cls).length) { failures.push(`no talent layout for ${cls}`); continue; }
+  for (const b of sp.builds ?? []) {
+    if (!b.talentString) { failures.push(`${sp.id}/${b.id}: no talent string`); continue; }
+    const drawn = pointsPerTree(cls, b.talentString);
+    const decoded = b.trees.map((t) => t.points);
+    if (drawn.join('/') !== decoded.join('/')) failures.push(`${sp.id}/${b.id}: the drawn trees show ${drawn.join('/')}, the spec reads ${decoded.join('/')}`);
+    decode(cls, b.talentString).forEach((tree, i) => tree.forEach((r, j) => {
+      const t = treesOf(cls)[i].talents[j];
+      if (r > t.max) failures.push(`${sp.id}/${b.id}: ${t.name} at ${r}/${t.max}`);
+    }));
+  }
+}
+console.log(`Talent layouts checked for ${SPECS.reduce((n, s) => n + (s.builds?.length ?? 0), 0)} builds`);
 if (failures.length) {
   console.error(`FAILED:\n  ${failures.join('\n  ')}`);
   process.exit(1);

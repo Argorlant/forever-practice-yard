@@ -252,5 +252,14 @@
   "manaSpringTotem": "spell_nature_manaregentotem",
   "petAttackOrder": "ability_ghoulfrenzy",
   "petFollowOrder": "ability_tracking",
-  "petStayOrder": "spell_nature_timestop"
+  "petStayOrder": "spell_nature_timestop",
+  "class_warrior": "classicon_warrior",
+  "class_paladin": "classicon_paladin",
+  "class_hunter": "classicon_hunter",
+  "class_rogue": "classicon_rogue",
+  "class_priest": "classicon_priest",
+  "class_shaman": "classicon_shaman",
+  "class_mage": "classicon_mage",
+  "class_warlock": "classicon_warlock",
+  "class_druid": "classicon_druid"
 }

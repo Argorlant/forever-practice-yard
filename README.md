@@ -164,7 +164,10 @@ plays. Pick them on the welcome screen or later in Settings:
 - Armor debuffs in the same slot do not stack (Sunder and Expose Armor share one); different slots
   add up.
 
-Pick the class in Settings (or open the page with `?class=warrior`).
+The first screen picks the class (WoW's class icons) and then a build, grouped by spec, with its three talent trees drawn
+like the game's talent frame (hover a talent for what it does). `?class=warrior` opens a class directly; Settings shows the
+current build's trees and links back to the first screen. `npm run talents` rebuilds the tree layouts from gunba's sim
+(`tools/talent_layout.mjs`), and `npm run icons` fetches their icons.
 
 **Action bars and keys.** Up to four rows of 8 buttons (2 to 4 shown, in Settings or the Spellbook). Rows 3 and 4 start with
 the build's abilities that have no other button (Charge and Intercept for a warrior), row 3 on Shift+1-8. The Spellbook lists

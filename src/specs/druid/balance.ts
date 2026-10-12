@@ -313,7 +313,7 @@ export const druidBalance: Spec = {
   abilities,
   stats: BALANCE_STATS,
   rules: BOSS_RULES,
-  builds: buildsFor('balance').map((b) => ({ id: b.id, label: buildLabel(b), stats: b.stats, bar: b.bar, trees: summary(talentsFor(b.id, 'balance')) })),
+  builds: buildsFor('balance').map((b) => ({ id: b.id, label: buildLabel(b), name: b.name, source: 'gunba/wow-forever-sim', talentString: b.talentString, stats: b.stats, bar: b.bar, trees: summary(talentsFor(b.id, 'balance')) })),
   defaultOptions: { build: 'moonkin', mana: 4024, spirit: 123, mp5: 9, lockMana: false },
   // Running out of mana is part of Balance: play with the raid's mana buffs on.
   defaultRaid: ['judgementOfWisdom', 'blessingOfWisdom', 'manaSpring'],

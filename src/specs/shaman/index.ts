@@ -192,7 +192,7 @@ function specFor(spec: ShamanSpec, base: Omit<Spec, 'className' | 'resource' | '
     resource: 'mana',
     abilities: ABILITIES,
     rules: BOSS_RULES,
-    builds: buildsFor(spec).map((b) => ({ id: b.id, label: buildLabel(b), stats: b.stats, bar: b.bar, options: b.options, tank: b.tank, trees: summary(talentsFor(b.id, spec)) })),
+    builds: buildsFor(spec).map((b) => ({ id: b.id, label: buildLabel(b), name: b.name, source: b.source, talentString: b.talentString, stats: b.stats, bar: b.bar, options: b.options, tank: b.tank, trees: summary(talentsFor(b.id, spec)) })),
     bar: buildsFor(spec)[0].bar,
     sources: SOURCES,
     prepare,

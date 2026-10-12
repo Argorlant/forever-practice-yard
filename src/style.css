@@ -297,3 +297,60 @@ img.wow-icon { width: 100%; height: 100%; display: block; object-fit: cover; tra
   :root { --slot: 38px; }
   .bottom { bottom: 8px; }
 }
+
+/* ------------------------------------------------------------ first screen */
+.picker { position: fixed; inset: 0; overflow-y: auto; padding: 32px 16px 48px;
+  background: radial-gradient(ellipse at top, #2a1f14 0%, #0b0908 70%); }
+.picker > * { max-width: 980px; margin-left: auto; margin-right: auto; }
+.picker-title { display: flex; align-items: center; justify-content: center; gap: 12px; margin: 8px auto 4px; text-align: center;
+  font-family: Georgia, 'Palatino Linotype', serif; color: var(--gold); font-size: clamp(24px, 4vw, 36px); letter-spacing: .03em; }
+.picker-title .wow-icon { width: 44px; height: 44px; border-radius: 6px; border: 1px solid var(--gold-dim); }
+.picker-sub { text-align: center; color: var(--muted); margin-bottom: 24px; }
+.picker-note { text-align: center; color: var(--muted); font-size: 12px; margin-top: 32px; }
+.picker-back { display: block; margin-bottom: 8px; }
+.picker-last { display: block; width: fit-content; margin: 20px auto 0; text-decoration: none; }
+.picker-link { display: inline-block; margin-left: 8px; text-decoration: none; vertical-align: middle; }
+.class-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px; }
+.class-card { display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 16px 8px; cursor: pointer;
+  background: rgba(20, 16, 12, .85); border: 1px solid var(--gold-dim); border-radius: 10px; transition: transform .12s, border-color .12s; }
+.class-card:hover, .class-card:focus-visible { border-color: var(--gold); transform: translateY(-2px); outline: none; }
+.class-card .wow-icon { width: 64px; height: 64px; border-radius: 8px; box-shadow: 0 0 0 1px #000, 0 2px 8px rgba(0,0,0,.6); }
+.class-card b { font-size: 17px; font-family: Georgia, 'Palatino Linotype', serif; }
+.class-card small { color: var(--muted); }
+.build-group { margin-top: 24px; }
+.build-group h2 { display: flex; align-items: center; gap: 10px; font-family: Georgia, 'Palatino Linotype', serif; color: var(--gold);
+  font-size: 20px; margin: 0 0 8px; padding-bottom: 6px; border-bottom: 1px solid var(--gold-dim); }
+.build-group h2 .wow-icon { width: 30px; height: 30px; border-radius: 4px; }
+.build-card { display: grid; grid-template-columns: 1fr auto; gap: 8px 12px; align-items: center; padding: 10px 12px; margin-bottom: 8px;
+  background: rgba(20, 16, 12, .85); border: 1px solid rgba(138, 109, 51, .5); border-radius: 8px; }
+.build-info { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 10px; }
+.build-info b { font-size: 15px; }
+.build-info span { color: var(--gold); font-variant-numeric: tabular-nums; }
+.build-info small { color: var(--muted); }
+.build-actions { display: flex; gap: 6px; }
+.build-actions .hud-btn { text-decoration: none; }
+.build-actions .play { border-color: var(--gold); color: #fff; background: #4a3a1e; }
+.build-actions .active { border-color: var(--gold); }
+.build-trees { grid-column: 1 / -1; overflow-x: auto; }
+.build-trees.hidden { display: none; }
+
+/* -------------------------------------------------------- talent trees, drawn */
+.talent-graphic { --tal: 34px; display: grid; grid-template-columns: repeat(3, minmax(170px, 1fr)); gap: 8px; min-width: 540px; }
+.tt-tree { position: relative; padding: 6px 8px 10px; border: 1px solid #3a2f22; border-radius: 6px; overflow: hidden;
+  background: #120f0c center / cover no-repeat; box-shadow: inset 0 0 0 2000px rgba(0, 0, 0, .35); }
+.tt-head { display: flex; align-items: center; gap: 6px; margin-bottom: 6px; text-shadow: 0 1px 2px #000; }
+.tt-head img { width: 22px; height: 22px; border-radius: 3px; }
+.tt-head span { margin-left: auto; color: var(--gold); font-weight: 700; }
+.tt-grid { display: grid; grid-template-columns: repeat(4, var(--tal)); gap: 8px; justify-content: center; }
+.tal { position: relative; width: var(--tal); height: var(--tal); border-radius: 4px; box-shadow: 0 0 0 1px #000; cursor: help; }
+.tal img { width: 100%; height: 100%; display: block; border-radius: 4px; }
+.tal.off img { filter: grayscale(1) brightness(.35); }
+.tal.part { box-shadow: 0 0 0 2px #3fbf3f; }
+.tal.max { box-shadow: 0 0 0 2px #e8c33a; }
+.tal-rank { position: absolute; right: -6px; bottom: -6px; padding: 0 3px; border-radius: 3px; background: #0b0908; font-size: 10px; font-weight: 700;
+  line-height: 13px; color: #8a8a8a; border: 1px solid #333; }
+.tal.part .tal-rank { color: #6fef6f; border-color: #2f7f2f; }
+.tal.max .tal-rank { color: #ffd84a; border-color: #8a6d33; }
+.talent-list { margin-top: 8px; }
+.talent-list summary { cursor: pointer; color: var(--muted); font-size: 12px; }
+@media (max-width: 600px) { .talent-graphic { --tal: 30px; gap: 6px; } .build-card { grid-template-columns: 1fr; } }

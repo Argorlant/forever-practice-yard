@@ -9,6 +9,8 @@ import { iconHtml } from './icon';
 import { ICON_AUTHORS } from './icons.gen';
 import { bindingFor, keyLabel } from './storage';
 import { raidPicker } from './raid-picker';
+import { talentTreesHtml } from './talent-tree';
+import { classKey } from './talents-data';
 
 export interface Prefs {
   stats: Stats;
@@ -127,7 +129,10 @@ export class SettingsDialog {
         g.append(opt);
       }
       sel.addEventListener('change', () => this.classes!.pick(sel.value));
-      sec.append(sel);
+      // Back to the first screen: every class with its builds and talent trees.
+      const all = h('a', 'hud-btn small picker-link', 'All classes and builds…') as HTMLAnchorElement;
+      all.href = location.pathname;
+      sec.append(sel, all);
     }
 
     b.append(h('p', 'help', this.spec.help));
@@ -145,11 +150,15 @@ export class SettingsDialog {
       });
       sec.append(sel);
       const current = this.spec.builds.find((x) => x.id === p.options.build) ?? this.spec.builds[0];
+      // The talent frame, drawn; the same talents as a list (with what is new in Forever) underneath.
+      if (current.talentString) sec.append(h('div', 'build-trees', talentTreesHtml(classKey(this.spec.className), current.talentString)));
+      const list = h('details', 'talent-list', '<summary>Talents as a list (★ new in WoW Forever)</summary>');
       const trees = h('div', 'talent-trees');
       for (const t of current.trees) {
         trees.append(h('div', 'talent-tree', `<b>${t.tree} <span>${t.points}</span></b>${t.talents.map((x) => `<div>${x}</div>`).join('') || '<div class="none">-</div>'}`));
       }
-      sec.append(trees, h('p', 'note', '★ new in WoW Forever. Picking a build loads its talents, its weapons and its action bar; your keys stay. The yellow glow follows that build\'s priority list.'));
+      list.append(trees);
+      sec.append(list, h('p', 'note', 'Picking a build loads its talents, its weapons and its action bar; your keys stay. The yellow glow follows that build\'s priority list. Hover a talent for what it does.'));
     }
 
     // Character.

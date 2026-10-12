@@ -321,6 +321,10 @@ export interface Spec {
 export interface SpecBuild {
   id: string;
   label: string;
+  /** Short name (Fury, dual wield), the sim it comes from, and its talent string (gunba's tree order) for the talent trees drawn in the UI. */
+  name?: string;
+  source?: string;
+  talentString?: string;
   /** Gear that suits the build (e.g. daggers for Backstab). */
   stats: Stats;
   bar: Binding[];

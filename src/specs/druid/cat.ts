@@ -372,7 +372,7 @@ export const druidCat: Spec = {
   abilities,
   stats: CAT_STATS,
   rules: BOSS_RULES,
-  builds: buildsFor('cat').map((b) => ({ id: b.id, label: buildLabel(b), stats: b.stats, bar: b.bar, trees: summary(talentsFor(b.id, 'cat')) })),
+  builds: buildsFor('cat').map((b) => ({ id: b.id, label: buildLabel(b), name: b.name, source: 'gunba/wow-forever-sim', talentString: b.talentString, stats: b.stats, bar: b.bar, trees: summary(talentsFor(b.id, 'cat')) })),
   defaultOptions: {
     build: 'cat', mana: 3000, manaRegen: 8, lockMana: false,
     wolfshead: true, howlingIdol: true, idolOfTheDream: false, thistleTea: true, faerieFire: true,

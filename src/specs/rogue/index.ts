@@ -835,7 +835,7 @@ export const rogue: Spec = {
     { name: 'Daggers, unbuffed', stats: BUILDS.find((b) => b.rotation === 'backstab')!.stats },
     { name: 'Raid-buffed, PvP swords', stats: RAID_STATS },
   ],
-  builds: BUILDS.map((b) => ({ id: b.id, label: buildLabel(b), stats: b.stats, bar: b.bar, options: b.options, trees: summary(talentsFor(b.id)) })),
+  builds: BUILDS.map((b) => ({ id: b.id, label: buildLabel(b), name: b.name, source: b.source, talentString: b.talentString, stats: b.stats, bar: b.bar, options: b.options, trees: summary(talentsFor(b.id)) })),
   defaultOptions: { build: BUILDS[0].id, poisonMH: 'instant', poisonOH: 'deadly', exposeArmorDuty: false, thistleTea: true },
   options: [
     { key: 'exposeArmorDuty', name: 'You keep Expose Armor up (no warrior Sunder Armor in the raid)', kind: 'toggle' },

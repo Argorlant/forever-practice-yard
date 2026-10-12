@@ -855,7 +855,7 @@ export const warrior: Spec = {
     { name: 'Arms: two-handed polearm', stats: ARMS_STATS },
     { name: 'Protection: sword and shield', stats: PROT_STATS },
   ],
-  builds: BUILDS.map((b) => ({ id: b.id, label: buildLabel(b), stats: b.stats, bar: b.bar, options: b.options, tank: b.tank, trees: summary(talentsFor(b.id)) })),
+  builds: BUILDS.map((b) => ({ id: b.id, label: buildLabel(b), name: b.name, source: 'gunba/wow-forever-sim', talentString: b.talentString, stats: b.stats, bar: b.bar, options: b.options, tank: b.tank, trees: summary(talentsFor(b.id)) })),
   defaultOptions: { build: BUILDS[0].id, sunderDuty: false, incomingRage: D.rage.incomingCoefficient },
   options: [
     { key: 'sunderDuty', name: 'You keep 5 Sunder Armors up', kind: 'toggle' },
