@@ -164,6 +164,12 @@ plays. Pick them on the welcome screen or later in Settings:
 
 Pick the class in Settings (or open the page with `?class=warrior`).
 
+**Action bars and keys.** Up to four rows of 8 buttons (2 to 4 shown, in Settings or the Spellbook). Rows 3 and 4 start with
+the build's abilities that have no other button (Charge and Intercept for a warrior), row 3 on Shift+1-8. The Spellbook lists
+every ability to drag onto a button; dragging a button off the bar clears it. The Keys button turns on key binding: hover a
+button and press a key (Backspace clears it). On-next-swing attacks (Heroic Strike, Cleave, Maul, Raptor Strike) stay lit
+from the press until the swing lands.
+
 The engine is shared, so more specs plug in as data.
 
 ## Run it

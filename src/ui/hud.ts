@@ -2,10 +2,11 @@
 // bar, error text, pull countdown and damage meter. Built once, then updated
 // every frame without rebuilding the DOM.
 import type { Combat } from '../engine/combat';
-import { ACTION_BAR_SLOTS, type Aura, type Binding, type Unit } from '../engine/types';
+import type { Aura, Binding, Unit } from '../engine/types';
 import { UI, fmt } from '../strings';
+import { ACTION_SLOTS, ROW } from './bars';
 import { iconHtml } from './icon';
-import { keyLabel } from './storage';
+import { bindingFor, keyLabel } from './storage';
 
 const h = <K extends keyof HTMLElementTagNameMap>(tag: K, cls = '', html = ''): HTMLElementTagNameMap[K] => {
   const el = document.createElement(tag);
@@ -61,6 +62,14 @@ export interface HudCallbacks {
   targets(n: number): void;
   press(slot: number): void;
   swap(a: number, b: number): void;
+  /** An ability dragged from the spellbook onto a slot. */
+  place(slot: number, id: string): void;
+  /** A button dragged off the bar. */
+  clear(slot: number): void;
+  /** A key pressed over a slot in key binding mode (null clears it); false if the key cannot be used. */
+  bindKey(slot: number, code: string | null): boolean;
+  /** Action bar rows shown. */
+  rows(n: number): void;
 }
 
 export class Hud {
@@ -101,6 +110,14 @@ export class Hud {
   private targetButtons: HTMLButtonElement[] = [];
   private tooltip: HTMLElement;
   private tooltipSlot = -1;
+  /** What the tooltip describes: a hovered button or spellbook entry. */
+  private tip: { id: string; el: HTMLElement } | null = null;
+  private extraRows: HTMLElement[] = [];
+  private spellbook: HTMLElement;
+  private spellList: HTMLElement;
+  private bindBanner: HTMLElement;
+  /** Key binding mode: a key pressed over a button binds it. */
+  bindMode = false;
   suggestions = true;
 
   constructor(parent: HTMLElement, private combat: Combat, private bar: Binding[], private cb: HudCallbacks) {
@@ -118,6 +135,9 @@ export class Hud {
     btn(UI.settings, () => cb.settings());
     btn(UI.reset, () => cb.reset());
     btn(UI.pull, () => cb.pull());
+    btn(UI.spellbook, () => this.toggleSpellbook());
+    const keysBtn = btn(UI.keys, () => this.setBindMode(!this.bindMode));
+    keysBtn.classList.add('keys-btn');
     this.root.append(left);
 
     // Top right: number of dummies.
@@ -188,7 +208,8 @@ export class Hud {
     this.cue = h('div', 'cue');
 
     const barEl = h('div', 'action-bar');
-    // Slots after the 16 of the action bar: the stance bar, above it on the left.
+    // Rows 3 and 4 sit above the main two; slots after the action rows form the stance bar.
+    this.extraRows = [h('div', 'action-bar extra'), h('div', 'action-bar extra')];
     const stanceEl = h('div', 'stance-bar');
     bar.forEach((_b, i) => {
       const el = h('button', 'slot');
@@ -199,15 +220,15 @@ export class Hud {
       const key = h('div', 'slot-key');
       const cost = h('div', 'slot-cost');
       el.append(icon, cd, cdText, key, cost);
-      if (i >= ACTION_BAR_SLOTS) { el.classList.add('stance-slot'); stanceEl.append(el); } else barEl.append(el);
+      if (i >= ACTION_SLOTS) { el.classList.add('stance-slot'); stanceEl.append(el); } else if (i < 2 * ROW) barEl.append(el); else this.extraRows[Math.floor(i / ROW) - 2].append(el);
       this.slots.push({ el, icon, key, cost, cd, cdText, id: null, lastIcon: null });
-      el.addEventListener('pointerdown', (e) => this.startDrag(e, i));
-      el.addEventListener('pointerenter', () => { this.tooltipSlot = i; });
-      el.addEventListener('pointerleave', () => { if (this.tooltipSlot === i) this.tooltipSlot = -1; });
+      el.addEventListener('pointerdown', (e) => this.startDrag(e, { slot: i }));
+      el.addEventListener('pointerenter', () => { this.tooltipSlot = i; this.tip = this.slots[i].id ? { id: this.slots[i].id!, el } : null; });
+      el.addEventListener('pointerleave', () => { if (this.tooltipSlot === i) { this.tooltipSlot = -1; this.tip = null; } });
     });
     bottom.append(this.cue, this.castBar, this.playerAuras.el, this.combatState, this.healthBar, resource, pips, this.manaBar, swings);
-    if (bar.length > ACTION_BAR_SLOTS) bottom.append(stanceEl);
-    bottom.append(barEl);
+    if (bar.length > ACTION_SLOTS) bottom.append(stanceEl);
+    bottom.append(this.extraRows[1], this.extraRows[0], barEl);
     this.root.append(bottom);
 
     // Damage meter.
@@ -218,6 +239,25 @@ export class Hud {
     this.meter.append(this.meterHead, this.meterRows, this.meterReview);
     this.root.append(this.meter);
 
+    // Spellbook: every ability of the class, to drag onto the bar.
+    this.spellbook = h('div', 'spellbook hidden');
+    const sbHead = h('div', 'spellbook-head', `<b>${UI.spellbook}</b><span>Drag an ability onto your bar</span>`);
+    const rowsPick = h('div', 'spellbook-rows', '<span>Rows</span>');
+    for (const n of [2, 3, 4]) {
+      const b = h('button', 'hud-num', String(n));
+      b.addEventListener('click', () => cb.rows(n));
+      rowsPick.append(b);
+    }
+    const sbClose = h('button', 'modal-close', '×');
+    sbClose.setAttribute('aria-label', UI.close);
+    sbClose.addEventListener('click', () => this.toggleSpellbook(false));
+    sbHead.append(rowsPick, sbClose);
+    this.spellList = h('div', 'spellbook-list');
+    this.spellbook.append(sbHead, this.spellList);
+    this.root.append(this.spellbook);
+    this.bindBanner = h('div', 'bind-banner', UI.bindHelp);
+    this.root.append(this.bindBanner);
+
     this.tooltip = h('div', 'tooltip');
     this.root.append(this.tooltip);
 
@@ -226,6 +266,47 @@ export class Hud {
   }
 
   setMeterVisible(on: boolean): void { this.meter.style.display = on ? '' : 'none'; }
+
+  /** Shows action bar rows 3 and 4 when asked for. */
+  setRows(n: number): void {
+    this.extraRows.forEach((r, i) => { r.style.display = n >= i + 3 ? '' : 'none'; });
+    this.spellbook.querySelectorAll('.spellbook-rows .hud-num').forEach((b, i) => b.classList.toggle('active', i + 2 === n));
+  }
+
+  toggleSpellbook(open = this.spellbook.classList.contains('hidden')): void {
+    this.spellbook.classList.toggle('hidden', !open);
+    if (!open) return;
+    // Rebuilt on opening: what the build can use changes with the talents.
+    const c = this.combat;
+    this.spellList.innerHTML = '';
+    for (const a of c.spec.abilities) {
+      const usable = a.usable?.(c) ?? true;
+      const entry = h('div', `spell${usable ? '' : ' unusable'}`);
+      entry.innerHTML = `<div class="spell-icon">${iconHtml(a.icon)}</div><span>${a.name}</span>`;
+      entry.addEventListener('pointerdown', (e) => this.startDrag(e, { ability: a.id }));
+      entry.addEventListener('pointerenter', () => { this.tip = { id: a.id, el: entry }; });
+      entry.addEventListener('pointerleave', () => { if (this.tip?.el === entry) this.tip = null; });
+      this.spellList.append(entry);
+    }
+  }
+
+  setBindMode(on: boolean): void {
+    this.bindMode = on;
+    this.root.classList.toggle('binding', on);
+  }
+
+  /** Key binding mode: the key goes to the hovered button. Returns true when it used the key. */
+  handleKey(e: KeyboardEvent): boolean {
+    if (!this.bindMode) return false;
+    e.preventDefault();
+    if (e.code === 'Escape') { this.setBindMode(false); return true; }
+    const code = bindingFor(e);
+    if (code === null || this.tooltipSlot < 0) return true;
+    const clear = e.code === 'Backspace' || e.code === 'Delete';
+    if (this.cb.bindKey(this.tooltipSlot, clear ? null : code)) this.refreshBar();
+    else this.showError('That key moves you: combine it with Shift, Ctrl or Alt');
+    return true;
+  }
   setTargetCount(n: number): void {
     this.targetButtons.forEach((b, i) => b.classList.toggle('active', i + 1 === n));
   }
@@ -271,15 +352,16 @@ export class Hud {
     });
   }
 
-  // Drag a button onto another to swap them.
-  private startDrag(e: PointerEvent, from: number): void {
+  // Drag a button onto another to swap them, off the bar to clear it, or an ability from the spellbook onto a button.
+  private startDrag(e: PointerEvent, from: { slot: number } | { ability: string }): void {
     const startX = e.clientX, startY = e.clientY;
     let dragging = false;
     let ghost: HTMLElement | null = null;
+    const icon = 'slot' in from ? (this.slots[from.slot].id ? this.slots[from.slot].icon.innerHTML : '') : iconHtml(this.combat.ability(from.ability)?.icon ?? 'melee');
     const move = (ev: PointerEvent) => {
-      if (!dragging && Math.hypot(ev.clientX - startX, ev.clientY - startY) > 8 && this.slots[from].id) {
+      if (!dragging && Math.hypot(ev.clientX - startX, ev.clientY - startY) > 8 && icon) {
         dragging = true;
-        ghost = h('div', 'drag-ghost', this.slots[from].icon.innerHTML);
+        ghost = h('div', 'drag-ghost', icon);
         document.body.append(ghost);
       }
       if (ghost) { ghost.style.left = `${ev.clientX}px`; ghost.style.top = `${ev.clientY}px`; }
@@ -289,12 +371,14 @@ export class Hud {
       window.removeEventListener('pointerup', up);
       ghost?.remove();
       if (!dragging) {
-        if (ev.target instanceof Node && this.slots[from].el.contains(ev.target)) this.cb.press(from);
+        if ('slot' in from && ev.target instanceof Node && this.slots[from.slot].el.contains(ev.target) && !this.bindMode) this.cb.press(from.slot);
         return;
       }
       const over = document.elementFromPoint(ev.clientX, ev.clientY)?.closest('.slot') as HTMLElement | null;
       const to = over ? Number(over.dataset.slot) : -1;
-      if (to >= 0 && to !== from) this.cb.swap(from, to);
+      if ('ability' in from) { if (to >= 0) this.cb.place(to, from.ability); return; }
+      if (to >= 0 && to !== from.slot) this.cb.swap(from.slot, to);
+      else if (to < 0) this.cb.clear(from.slot);
     };
     window.addEventListener('pointermove', move);
     window.addEventListener('pointerup', up);
@@ -379,12 +463,13 @@ export class Hud {
       s.el.classList.toggle('out-of-range', st.outOfRange);
       s.el.classList.toggle('glow', st.highlight);
       s.el.classList.toggle('suggest', suggested === s.id);
+      // Heroic Strike, Cleave, Maul, Raptor Strike: lit from the press until the swing lands.
+      s.el.classList.toggle('queued', !!s.id && c.queuedSwing === s.id);
     }
 
     // Tooltip.
-    if (this.tooltipSlot >= 0 && this.slots[this.tooltipSlot].id) {
-      const s = this.slots[this.tooltipSlot];
-      const a = c.ability(s.id!)!;
+    if (this.tip && c.ability(this.tip.id)) {
+      const a = c.ability(this.tip.id)!;
       const cost = c.cost(a);
       const mana = a.manaCost ? Math.round(a.manaCost(c)) : 0;
       const cd = typeof a.cooldown === 'function' ? a.cooldown(c) : a.cooldown;
@@ -397,7 +482,7 @@ export class Hud {
         `<span class="tt-desc">${a.description(c)}</span>`,
       ];
       this.tooltip.innerHTML = lines.filter(Boolean).join('');
-      const r = s.el.getBoundingClientRect();
+      const r = this.tip.el.getBoundingClientRect();
       this.tooltip.style.left = `${Math.min(innerWidth - 300, Math.max(8, r.left + r.width / 2 - 140))}px`;
       this.tooltip.style.top = `${r.top - 10}px`;
       this.tooltip.classList.add('show');

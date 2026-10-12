@@ -38,7 +38,8 @@ export function decodeTalents<K extends string>(trees: readonly (readonly K[])[]
 export const CONTROLS = `You start behind the dummy. W and S move along your facing, A and D turn, Q and E strafe; all six can be rebound below. Space jumps.
     Hold the left mouse button to orbit the camera; hold the right button to steer; hold both to run forward. Scroll to zoom.
     Click a dummy to target it, right-click to target and start attacking, Tab cycles targets, Esc clears it.
-    On a phone, use the joystick to move and drag the screen to steer.`;
+    On a phone, use the joystick to move and drag the screen to steer.
+    Action bars: up to four rows of 8 (Settings or the Spellbook); rows 3 and 4 start with the abilities that have no other button, row 3 on Shift+1-8. Spellbook: drag an ability onto a button; drag a button off the bar to clear it. Keys: hover a button and press a key to bind it. Heroic Strike, Cleave, Maul and Raptor Strike stay lit from the press until the swing lands.`;
 
 /** "18/33/0" from a talent string. */
 export function talentSplit(talentString: string): string {

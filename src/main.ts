@@ -11,6 +11,7 @@ import { createWorld } from './scene/world';
 import { SPECS, specById } from './specs';
 import { UI, fmt } from './strings';
 import { Floaters } from './ui/floaters';
+import { expandBar, fillExtraRows, slotShown } from './ui/bars';
 import { Hud } from './ui/hud';
 import { SettingsDialog, defaultPrefs, type Prefs } from './ui/settings';
 import { raidPicker } from './ui/raid-picker';
@@ -21,8 +22,8 @@ const CLASS_KEY = 'fpy.class';
 const spec = specById(new URLSearchParams(location.search).get('class') ?? load<string>(CLASS_KEY));
 save(CLASS_KEY, spec.id);
 document.title = `${spec.className} Practice Yard · WoW Forever`;
-// v4: warriors got a stance bar (stats are gear only since v3).
-const PREFS_KEY = `fpy.${spec.id}.v4${spec.prefsRevision ? `.r${spec.prefsRevision}` : ''}`;
+// v5: four action bar rows before the stance bar (v4: warriors got a stance bar; stats are gear only since v3).
+const PREFS_KEY = `fpy.${spec.id}.v5${spec.prefsRevision ? `.r${spec.prefsRevision}` : ''}`;
 const MODEL_URL = `${import.meta.env.BASE_URL}models/human.glb`;
 
 const app = document.getElementById('app')!;
@@ -46,6 +47,8 @@ function loadPrefs(): Prefs {
     bar,
   };
 }
+/** First visit with this layout: rows 3 and 4 get filled once the build is known. */
+const freshPrefs = !load(PREFS_KEY);
 let prefs = loadPrefs();
 const persist = () => save(PREFS_KEY, prefs);
 
@@ -161,6 +164,7 @@ layoutDummies(prefs.targets);
 applyEnemy();
 applyStats();
 combat.reset();
+if (freshPrefs) fillExtraRows(prefs.bar, combat);
 syncMinion();
 combat.on('reset', () => { totems.clear(); syncMinion(); });
 
@@ -182,10 +186,27 @@ const hud = new Hud(app, combat, prefs.bar, {
     const tmp = prefs.bar[a].id;
     prefs.bar[a].id = prefs.bar[b].id;
     prefs.bar[b].id = tmp;
-    persist();
-    hud.refreshBar();
+    barChanged();
   },
+  place: (slot, id) => { prefs.bar[slot].id = id; barChanged(); },
+  clear: (slot) => { prefs.bar[slot].id = null; barChanged(); },
+  bindKey: (slot, code) => {
+    // A plain movement key stays a movement key; with Shift, Ctrl or Alt it can be bound.
+    if (code && !code.includes('+') && Object.values(prefs.move).includes(code)) return false;
+    if (code) for (const other of prefs.bar) if (other.key === code) other.key = '';
+    prefs.bar[slot].key = code ?? '';
+    barChanged();
+    return true;
+  },
+  rows: (n) => { prefs.barRows = n; hud.setRows(n); barChanged(); },
 });
+/** The bar changed on the screen (drag, spellbook, Keys): save it and keep Settings in step. */
+function barChanged(): void {
+  persist();
+  hud.refreshBar();
+  settings.setPrefs(prefs);
+}
+hud.setRows(prefs.barRows);
 hud.setTargetCount(prefs.targets);
 hud.setMeterVisible(prefs.meter);
 hud.suggestions = prefs.suggest;
@@ -203,6 +224,8 @@ const settings = new SettingsDialog(app, spec, prefs, combat, (what) => {
     rebuildHudBindings();
     applyStats();
     applyEnemy();
+    combat.reset();
+    fillExtraRows(prefs.bar, combat);
   }
   if (what === 'build') {
     const build = spec.builds?.find((b) => b.id === prefs.options.build);
@@ -213,11 +236,15 @@ const settings = new SettingsDialog(app, spec, prefs, combat, (what) => {
       prefs.tank.attacks = !!build.tank;
       applyEnemy();
       // The bar follows the build; the keys stay where the player put them.
-      prefs.bar.forEach((slot, i) => { slot.id = build.bar[i]?.id ?? null; });
+      const full = expandBar(build.bar);
+      prefs.bar.forEach((slot, i) => { slot.id = full[i]?.id ?? null; });
     }
   }
   if (what === 'stats' || what === 'options' || what === 'build') { applyStats(); combat.reset(); }
+  // Rows 3 and 4 take what the new build can use and has no button for.
+  if (what === 'build') fillExtraRows(prefs.bar, combat);
   if (what === 'enemy') applyEnemy();
+  hud.setRows(prefs.barRows);
   hud.setMeterVisible(prefs.meter);
   hud.suggestions = prefs.suggest;
   controls.bindings = prefs.move;
@@ -260,13 +287,14 @@ function startPull(): void {
 // --------------------------------------------------------------- input
 function pressSlot(slot: number): void {
   const id = prefs.bar[slot]?.id;
-  if (!id) return;
+  if (!id || !slotShown(slot, prefs.barRows)) return;
   hud.flash(slot);
   combat.use(id);
 }
 
 window.addEventListener('keydown', (e) => {
   if (settings.handleKey(e)) return;
+  if (!settings.open && hud.handleKey(e)) return;
   const tag = (e.target as HTMLElement)?.tagName;
   if (tag === 'INPUT' || tag === 'SELECT' || tag === 'TEXTAREA') return;
   if (e.code === 'Escape') {
@@ -284,7 +312,7 @@ window.addEventListener('keydown', (e) => {
   }
   const binding = bindingFor(e);
   if (binding) {
-    const slot = prefs.bar.findIndex((b) => b.key === binding);
+    const slot = prefs.bar.findIndex((b, i) => b.key === binding && slotShown(i, prefs.barRows));
     if (slot >= 0) {
       e.preventDefault();
       if (!e.repeat) pressSlot(slot);

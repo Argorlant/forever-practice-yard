@@ -1,9 +1,10 @@
 // Settings dialog: how to play, character stats, enemy, options, keybinds
 // and credits. Every change applies at once and is saved in the browser.
 import type { Combat } from '../engine/combat';
-import { ACTION_BAR_SLOTS, type Binding, type Spec, type Stats, type WeaponType } from '../engine/types';
+import type { Binding, Spec, Stats, WeaponType } from '../engine/types';
 import type { MoveBindings } from '../scene/controls';
 import { UI } from '../strings';
+import { ACTION_SLOTS, MAX_ROWS, ROW, expandBar } from './bars';
 import { iconHtml } from './icon';
 import { ICON_AUTHORS } from './icons.gen';
 import { bindingFor, keyLabel } from './storage';
@@ -21,6 +22,8 @@ export interface Prefs {
   options: Record<string, number | boolean | string>;
   move: MoveBindings;
   bar: Binding[];
+  /** Action bar rows shown (2 to 4); keys on hidden rows do nothing. */
+  barRows: number;
   targets: number;
   seenWelcome: boolean;
 }
@@ -35,7 +38,8 @@ export function defaultPrefs(spec: Spec, move: MoveBindings): Prefs {
     meter: true,
     options: { ...(spec.defaultOptions ?? {}) },
     move: { ...move },
-    bar: spec.bar.map((b) => ({ ...b })),
+    bar: expandBar(spec.bar),
+    barRows: 3,
     targets: 1,
     seenWelcome: false,
   };
@@ -239,7 +243,8 @@ export class SettingsDialog {
 
     // Keybinds.
     const kb = this.section(UI.keybinds);
-    kb.append(h('p', 'note', 'Click a key, then press the new one. Shift, Ctrl and Alt combine with other keys. Backspace clears an ability key. Esc cancels. You can also drag buttons on the action bar to swap them.'));
+    kb.append(h('p', 'note', 'Click a key, then press the new one. Shift, Ctrl and Alt combine with other keys. Backspace clears an ability key. Esc cancels. On the screen you can also use the Keys button (hover a button, press a key) and the Spellbook (drag abilities onto the bar; drag a button off the bar to clear it).'));
+    this.choice(kb, 'Action bar rows', [2, 3, 4].map((n) => ({ value: String(n), label: `${n} rows of ${ROW}` })), () => String(p.barRows), (v) => { p.barRows = Number(v); }, 'bar');
     const mv = h('div', 'keys-grid');
     for (const [k, label] of MOVE_LABELS) {
       this.keyRow(mv, label, () => p.move[k], (code) => {
@@ -249,7 +254,7 @@ export class SettingsDialog {
       });
     }
     kb.append(h('h4', '', UI.movement), mv);
-    const ab = h('div', 'keys-grid bar-grid');
+    const rows = Array.from({ length: MAX_ROWS }, () => h('div', 'keys-grid bar-grid'));
     const sb = h('div', 'keys-grid bar-grid');
     p.bar.forEach((slot, i) => {
       const row = h('div', 'key-row slot-row');
@@ -272,10 +277,10 @@ export class SettingsDialog {
         slot.key = code ?? '';
         return true;
       }, i);
-      (i >= ACTION_BAR_SLOTS ? sb : ab).append(row);
+      (i >= ACTION_SLOTS ? sb : rows[Math.floor(i / ROW)]).append(row);
     });
-    kb.append(h('h4', '', 'Action bar'), ab);
-    if (p.bar.length > ACTION_BAR_SLOTS) kb.append(h('h4', '', 'Stance bar'), sb);
+    rows.forEach((r, n) => kb.append(h('h4', '', `Action bar, row ${n + 1}${n >= p.barRows ? ' (hidden)' : ''}`), r));
+    if (p.bar.length > ACTION_SLOTS) kb.append(h('h4', '', 'Stance bar'), sb);
 
     const reset = h('button', 'hud-btn wide', UI.restoreDefaults);
     reset.addEventListener('click', () => this.onChange('defaults'));
@@ -338,12 +343,13 @@ export class SettingsDialog {
     parent.append(row);
   }
 
-  private choice(parent: HTMLElement, label: string, choices: { value: string; label: string }[], get: () => string, set: (v: string) => void): void {
+  private choice(parent: HTMLElement, label: string, choices: { value: string; label: string }[], get: () => string, set: (v: string) => void,
+    what: 'options' | 'bar' = 'options'): void {
     const row = h('label', 'field');
     row.append(h('span', '', label));
     const sel = document.createElement('select');
     for (const c of choices) sel.append(new Option(c.label, c.value, false, c.value === get()));
-    sel.addEventListener('change', () => { set(sel.value); this.onChange('options'); });
+    sel.addEventListener('change', () => { set(sel.value); this.onChange(what); if (what === 'bar') this.render(); });
     row.append(sel);
     parent.append(row);
   }
