@@ -8,7 +8,7 @@ import { ACTION_SLOTS, MAX_ROWS, ROW, expandBar } from './bars';
 import { iconHtml } from './icon';
 import { ICON_AUTHORS } from './icons.gen';
 import { bindingFor, keyLabel } from './storage';
-import { DISCLAIMER_HTML, SUPPORT_HTML } from './disclaimer';
+import { DISCLAIMER_HTML, INSPIRATION_HTML, SUPPORT_HTML } from './disclaimer';
 import { raidPicker } from './raid-picker';
 import { talentTreesHtml } from './talent-tree';
 import { classKey } from './talents-data';
@@ -303,6 +303,7 @@ export class SettingsDialog {
     ab2.append(h('p', 'note disclaimer', DISCLAIMER_HTML), h('p', 'note', SUPPORT_HTML));
 
     const cr = this.section(UI.credits);
+    cr.append(h('p', 'note', INSPIRATION_HTML));
     cr.append(h('p', 'note', `
       Character model and animations: <a href="https://quaternius.com" target="_blank" rel="noopener">Quaternius</a>, Universal Animation Library 1 and 2 (CC0).
       Ability icons © Blizzard Entertainment, used in this fan tool so the buttons look as they do in the game.

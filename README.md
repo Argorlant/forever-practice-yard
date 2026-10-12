@@ -220,6 +220,8 @@ Then open http://127.0.0.1:5180.
 
 ## Credits
 
+- Inspired by the practice tools at [miao.tips/practice](https://www.miao.tips/practice): the feral practice by Elspeth
+  (elspethbado), where the idea for this yard came from, and the hunter practice by Neteyes.
 - Character model and animations: [Quaternius](https://quaternius.com), Universal Animation
   Library 1 and 2 (CC0).
 - Ability icons © Blizzard Entertainment, used so the buttons look as they do in the game.

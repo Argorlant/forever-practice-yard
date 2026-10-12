@@ -5,6 +5,10 @@ export const FEEDBACK_URL = 'https://github.com/Argorlant/forever-practice-yard/
 export const SUPPORT_URL = 'https://ko-fi.com/argorlant';
 export const SUPPORT_HTML = `Free and fan-made. If it helped your rotation, you can <a href="${SUPPORT_URL}" target="_blank" rel="noopener">buy me a coffee on Ko-fi</a> ☕`;
 
+/** Where the idea came from: the feral practice by Elspeth, and Neteyes's hunter practice. */
+export const INSPIRATION_HTML = `Inspired by the practice tools at <a href="https://www.miao.tips/practice" target="_blank" rel="noopener">miao.tips/practice</a>:
+  the feral practice by Elspeth (elspethbado), where the idea for this yard came from, and the hunter practice by Neteyes.`;
+
 const feedback = `<a href="${FEEDBACK_URL}" target="_blank" rel="noopener">tell us on GitHub</a>`;
 
 /** The full notice, for the first screen and Settings. */
