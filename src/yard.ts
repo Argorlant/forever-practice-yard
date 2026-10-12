@@ -14,7 +14,7 @@ import { UI, fmt } from './strings';
 import { Floaters } from './ui/floaters';
 import { expandBar, fillExtraRows, slotShown } from './ui/bars';
 import { Hud } from './ui/hud';
-import { SettingsDialog, defaultPrefs, type Prefs } from './ui/settings';
+import { SettingsDialog, claimKey, defaultPrefs, type Prefs } from './ui/settings';
 import { raidPicker } from './ui/raid-picker';
 import { DISCLAIMER_SHORT_HTML } from './ui/disclaimer';
 import { bindingFor, load, save } from './ui/storage';
@@ -216,12 +216,10 @@ const hud = new Hud(app, combat, prefs.bar, {
   place: (slot, id) => { prefs.bar[slot].id = id; barChanged(); },
   clear: (slot) => { prefs.bar[slot].id = null; barChanged(); },
   bindKey: (slot, code) => {
-    // A plain movement key stays a movement key; with Shift, Ctrl or Alt it can be bound.
-    if (code && !code.includes('+') && Object.values(prefs.move).includes(code)) return false;
-    if (code) for (const other of prefs.bar) if (other.key === code) other.key = '';
+    // As in WoW, a movement key bound to a button stops moving you.
+    if (code) claimKey(prefs, code);
     prefs.bar[slot].key = code ?? '';
     barChanged();
-    return true;
   },
   rows: (n) => { prefs.barRows = n; hud.setRows(n); barChanged(); },
 });

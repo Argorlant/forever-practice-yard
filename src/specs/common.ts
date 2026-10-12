@@ -35,7 +35,7 @@ export function decodeTalents<K extends string>(trees: readonly (readonly K[])[]
 }
 
 /** The controls paragraph every help page starts with. */
-export const CONTROLS = `You start behind the dummy. W and S move along your facing, A and D turn, Q and E strafe; all six can be rebound below. Space jumps.
+export const CONTROLS = `You start behind the dummy. W and S move along your facing, A and D turn, Q and E strafe; all six can be rebound or unbound below (a key does one thing, so binding A and D to strafe stops them turning). Space jumps.
     Hold the left mouse button to orbit the camera; hold the right button to steer; hold both to run forward. Scroll to zoom.
     Click a dummy to target it, right-click to target and start attacking, Tab cycles targets, Esc clears it.
     On a phone, use the joystick to move and drag the screen to steer.

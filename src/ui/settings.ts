@@ -60,6 +60,12 @@ export type Change = 'stats' | 'enemy' | 'options' | 'keys' | 'bar' | 'defaults'
 /** Other classes the player can switch to. */
 export interface ClassPicker { list: { id: string; name: string; group?: string }[]; current: string; pick(id: string): void }
 
+/** A key does one thing, as in WoW: binding it somewhere unbinds it from every other action and button. */
+export function claimKey(p: Prefs, code: string): void {
+  for (const k of Object.keys(p.move) as (keyof MoveBindings)[]) if (p.move[k] === code) p.move[k] = '';
+  for (const slot of p.bar) if (slot.key === code) slot.key = '';
+}
+
 const MOVE_LABELS: [keyof MoveBindings, string][] = [
   ['forward', UI.forward], ['back', UI.back], ['turnLeft', UI.turnLeft],
   ['turnRight', UI.turnRight], ['strafeLeft', UI.strafeLeft], ['strafeRight', UI.strafeRight],
@@ -255,13 +261,15 @@ export class SettingsDialog {
 
     // Keybinds.
     const kb = this.section(UI.keybinds);
-    kb.append(h('p', 'note', 'Click a key, then press the new one. Shift, Ctrl and Alt combine with other keys. Backspace clears an ability key. Esc cancels. On the screen you can also use the Keys button (hover a button, press a key) and the Spellbook (drag abilities onto the bar; drag a button off the bar to clear it).'));
+    kb.append(h('p', 'note', 'Click a key, then press the new one. Shift, Ctrl and Alt combine with ability keys. A key does one thing: binding it here unbinds it elsewhere. × or Backspace unbinds a key. Esc cancels. On the screen you can also use the Keys button (hover a button, press a key) and the Spellbook (drag abilities onto the bar; drag a button off the bar to clear it).'));
     this.choice(kb, 'Action bar rows', [2, 3, 4].map((n) => ({ value: String(n), label: `${n} rows of ${ROW}` })), () => String(p.barRows), (v) => { p.barRows = Number(v); }, 'bar');
     const mv = h('div', 'keys-grid');
     for (const [k, label] of MOVE_LABELS) {
       this.keyRow(mv, label, () => p.move[k], (code) => {
-        if (!code) return false;
-        p.move[k] = code;
+        // Movement reads plain keys: Shift+Q moves like Q.
+        const key = code?.split('+').pop() ?? '';
+        if (key) claimKey(p, key);
+        p.move[k] = key;
         return true;
       });
     }
@@ -281,14 +289,10 @@ export class SettingsDialog {
       });
       row.append(icon, sel);
       this.keyButton(row, () => slot.key, (code) => {
-        if (code && Object.values(p.move).includes(code.split('+').pop()!) && !code.includes('+')) {
-          return false;
-        }
-        // A key belongs to one slot only.
-        if (code) for (const other of p.bar) if (other !== slot && other.key === code) other.key = '';
+        if (code) claimKey(p, code);
         slot.key = code ?? '';
         return true;
-      }, i);
+      });
       (i >= ACTION_SLOTS ? sb : rows[Math.floor(i / ROW)]).append(row);
     });
     rows.forEach((r, n) => kb.append(h('h4', '', `Action bar, row ${n + 1}${n >= p.barRows ? ' (hidden)' : ''}`), r));
@@ -415,8 +419,15 @@ export class SettingsDialog {
     parent.append(row);
   }
 
-  private keyButton(row: HTMLElement, get: () => string, set: (code: string | null) => boolean, _slot?: number): void {
+  private keyButton(row: HTMLElement, get: () => string, set: (code: string | null) => boolean): void {
     const btn = h('button', 'key-btn', keyLabel(get()) || '—') as HTMLButtonElement;
+    const unbind = h('button', 'key-clear', '×') as HTMLButtonElement;
+    unbind.title = 'Unbind';
+    unbind.disabled = !get();
+    unbind.addEventListener('click', () => {
+      if (set(null)) this.onChange('keys');
+      this.render();
+    });
     btn.addEventListener('click', () => {
       btn.textContent = UI.pressKey;
       btn.classList.add('capturing');
@@ -424,12 +435,14 @@ export class SettingsDialog {
         btn.classList.remove('capturing');
         this.capturing = null;
         if (e.code === 'Escape') { btn.textContent = keyLabel(get()) || '—'; return; }
-        const value = e.code === 'Backspace' ? null : code;
+        const value = e.code === 'Backspace' || e.code === 'Delete' ? null : code;
         if (set(value)) this.onChange('keys');
         this.render();
       };
     });
-    row.append(btn);
+    const keys = h('span', 'key-pair');
+    keys.append(btn, unbind);
+    row.append(keys);
   }
 
   /** Feeds a keydown to the dialog while capturing. Returns true if used. */

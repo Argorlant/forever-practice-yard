@@ -66,8 +66,8 @@ export interface HudCallbacks {
   place(slot: number, id: string): void;
   /** A button dragged off the bar. */
   clear(slot: number): void;
-  /** A key pressed over a slot in key binding mode (null clears it); false if the key cannot be used. */
-  bindKey(slot: number, code: string | null): boolean;
+  /** A key pressed over a slot in key binding mode (null clears it). */
+  bindKey(slot: number, code: string | null): void;
   /** Action bar rows shown. */
   rows(n: number): void;
 }
@@ -304,8 +304,8 @@ export class Hud {
     const code = bindingFor(e);
     if (code === null || this.tooltipSlot < 0) return true;
     const clear = e.code === 'Backspace' || e.code === 'Delete';
-    if (this.cb.bindKey(this.tooltipSlot, clear ? null : code)) this.refreshBar();
-    else this.showError('That key moves you: combine it with Shift, Ctrl or Alt');
+    this.cb.bindKey(this.tooltipSlot, clear ? null : code);
+    this.refreshBar();
     return true;
   }
   setTargetCount(n: number): void {

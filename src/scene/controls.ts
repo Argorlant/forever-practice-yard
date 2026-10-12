@@ -41,6 +41,8 @@ export class Controls {
   private lmb = false;
   private rmb = false;
   private dragged = 0;
+  /** Both buttons were held during this press: running, not a click. */
+  private chord = false;
   private touchSteer: { id: number; x: number; y: number } | null = null;
   private joy = { x: 0, y: 0 };
   bindings: MoveBindings = { ...DEFAULT_MOVE };
@@ -83,13 +85,26 @@ export class Controls {
       this.touchSteer = { id: e.pointerId, x: e.clientX, y: e.clientY };
       return;
     }
-    if (e.button === 0) this.lmb = true;
-    if (e.button === 2) {
-      this.rmb = true;
+    this.chord = false;
+    this.syncButtons(e);
+  }
+
+  /**
+   * The mouse buttons held right now. A second button pressed while the first
+   * is down fires no pointerdown, only a pointermove with new `buttons`, so
+   * every mouse event reads the whole set.
+   */
+  private syncButtons(e: PointerEvent): void {
+    const lmb = (e.buttons & 1) !== 0;
+    const rmb = (e.buttons & 2) !== 0;
+    if (rmb && !this.rmb) {
       // The character snaps to where the camera looks.
       this.facing += this.camYaw;
       this.camYaw = 0;
     }
+    this.lmb = lmb;
+    this.rmb = rmb;
+    if (lmb && rmb) this.chord = true;
   }
 
   private move(e: PointerEvent): void {
@@ -103,6 +118,7 @@ export class Controls {
       this.camPitch = THREE.MathUtils.clamp(this.camPitch + dy * k, -0.3, 1.35);
       return;
     }
+    this.syncButtons(e);
     if (!this.lmb && !this.rmb) return;
     this.dragged += Math.abs(e.movementX) + Math.abs(e.movementY);
     if (this.rmb) this.facing -= e.movementX * k;
@@ -111,10 +127,9 @@ export class Controls {
   }
 
   private up(e: PointerEvent): void {
-    if (this.dragged < 6) this.onClick(e.clientX, e.clientY, e.pointerType === 'touch' ? 0 : e.button);
+    if (this.dragged < 6 && !this.chord) this.onClick(e.clientX, e.clientY, e.pointerType === 'touch' ? 0 : e.button);
     if (e.pointerType === 'touch') { this.touchSteer = null; return; }
-    if (e.button === 0) this.lmb = false;
-    if (e.button === 2) this.rmb = false;
+    this.syncButtons(e);
   }
 
   update(dt: number): MoveState {
