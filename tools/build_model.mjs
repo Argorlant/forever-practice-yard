@@ -3,13 +3,13 @@
 // few clips from UAL2 (same skeleton, same bone names).
 //
 // Usage: node tools/build_model.mjs [folder with the Quaternius downloads]
+// (or set QUATERNIUS_DIR; the default is ./downloads).
 import { NodeIO } from '@gltf-transform/core';
 import { prune, resample, dedup } from '@gltf-transform/functions';
 import path from 'node:path';
 import fs from 'node:fs';
 
-const downloads = process.argv[2]
-  ?? 'C:/Users/56978/Documents/VIDEOPJ/edrik_3d/descargas';
+const downloads = process.argv[2] ?? process.env.QUATERNIUS_DIR ?? 'downloads';
 const ual1 = path.join(downloads, 'Universal Animation Library[Standard]/Unreal-Godot/UAL1_Standard.glb');
 const ual2 = path.join(downloads, 'Universal Animation Library 2 [Standard]/Unreal-Godot/UAL2_Standard.glb');
 const output = path.resolve('public/models/human.glb');

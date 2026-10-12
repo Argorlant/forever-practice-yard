@@ -183,7 +183,7 @@ Then open http://127.0.0.1:5180.
 
 - `npm run build`: type-checks and builds the static site into `dist/`.
 - `npm test`: plays the suggested rotation headless for 5 minutes and prints DPS and a breakdown.
-- `npm run model`: rebuilds `public/models/human.glb` from the Quaternius downloads.
+- `npm run model -- <folder>`: rebuilds `public/models/human.glb` from the Quaternius downloads (or set `QUATERNIUS_DIR`; default `./downloads`).
 - `npm run icons`: downloads the ability icons into `public/icons` (names in `src/ui/wow-icons.json`,
   taken from Wowhead's WoW Forever tooltips) and the dummy portrait into `src/ui/icons.gen.ts`.
 
