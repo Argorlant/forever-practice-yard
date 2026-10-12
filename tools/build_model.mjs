@@ -20,6 +20,8 @@ const FROM_UAL1 = [
   'Crouch_Idle_Loop', 'Crouch_Fwd_Loop',
   'Sword_Attack', 'Sword_Idle', 'Punch_Jab', 'Punch_Cross',
   'Death01', 'Hit_Chest', 'Spell_Simple_Shoot', 'Spell_Simple_Enter', 'Spell_Simple_Idle_Loop', 'Interact',
+  // Hunters aim and fire their bow, gun or crossbow with the pistol clips (no bow clips in the library).
+  'Pistol_Aim_Neutral', 'Pistol_Shoot',
 ];
 const FROM_UAL2 = [
   'Sword_Regular_A', 'Sword_Regular_B', 'Sword_Regular_C', 'Sword_Regular_A_Rec',

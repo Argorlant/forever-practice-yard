@@ -195,6 +195,8 @@ export class SettingsDialog {
     if (mh) this.weapon(ch, mh, 'mainHand');
     const oh = label('offHand', 'Off hand');
     if (oh) this.weapon(ch, oh, 'offHand');
+    // Hunters: the bow, gun or crossbow (what it looks like in your hands, and its damage and speed).
+    if (p.stats.ranged) this.weapon(ch, 'Ranged weapon', 'ranged');
 
     // How often things happen, from the engine with the current gear.
     if (this.spec.chances) {
@@ -363,7 +365,7 @@ export class SettingsDialog {
     parent.append(row);
   }
 
-  private weapon(parent: HTMLElement, label: string, hand: 'mainHand' | 'offHand'): void {
+  private weapon(parent: HTMLElement, label: string, hand: 'mainHand' | 'offHand' | 'ranged'): void {
     const w = this.prefs.stats[hand];
     if (!w) return;
     const row = h('div', 'field weapon');
@@ -388,7 +390,7 @@ export class SettingsDialog {
     num('max', 'Max', 1);
     num('speed', 'Speed', 0.1);
     const type = document.createElement('select');
-    const types: WeaponType[] = ['sword', 'dagger', 'mace', 'fist', 'axe'];
+    const types: WeaponType[] = hand === 'ranged' ? ['bow', 'gun', 'crossbow'] : ['sword', 'dagger', 'mace', 'fist', 'axe'];
     if (!types.includes(w.type)) types.push(w.type);
     for (const t of types) {
       type.append(new Option(t[0].toUpperCase() + t.slice(1), t, false, t === w.type));

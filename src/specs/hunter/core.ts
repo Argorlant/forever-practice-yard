@@ -218,7 +218,7 @@ export const ABILITIES: Ability[] = [
   },
   {
     id: 'aimedShot', name: 'Aimed Shot', icon: 'aimedShot', gcd: D.gcd, target: 'enemy', range: 35, minRange: 8, ranged: true,
-    animation: 'cast',
+    animation: 'shoot',
     cost: shotCost(D.aimedShot.mana), cooldown: D.aimedShot.cooldown, cooldownGroup: 'aimedMulti',
     castTime: castTime(D.aimedShot.cast),
     description: (c) => `A ${castTime(D.aimedShot.cast)(c).toFixed(2)} sec cast (ranged haste speeds it up): normalized weapon damage plus ${D.aimedShot.bonus}. Baseline in WoW Forever; shares a ${D.aimedShot.cooldown} sec cooldown with Multi-Shot.`,
@@ -226,7 +226,7 @@ export const ABILITIES: Ability[] = [
   },
   {
     id: 'multiShot', name: 'Multi-Shot', icon: 'multiShot', gcd: D.gcd, target: 'enemy', range: 35, minRange: 8, ranged: true,
-    animation: 'cast',
+    animation: 'shoot',
     cost: shotCost(D.multiShot.mana), cooldown: D.multiShot.cooldown, cooldownGroup: 'aimedMulti',
     castTime: castTime(D.multiShot.cast),
     description: () => `A ${D.multiShot.cast} sec cast: normalized weapon damage to up to ${D.multiShot.targets} targets. Shares its cooldown with Aimed Shot, so on one target Aimed Shot is better.`,
@@ -238,7 +238,7 @@ export const ABILITIES: Ability[] = [
   },
   {
     id: 'arcaneShot', name: 'Arcane Shot', icon: 'arcaneShot', gcd: D.gcd, target: 'enemy', range: 35, minRange: 8, ranged: true,
-    animation: 'throw',
+    animation: 'shoot',
     projectile: { color: 0xe9a8ff, speed: 40 },
     cost: shotCost(D.arcaneShot.mana), cooldownGroup: 'arcaneHawk',
     cooldown: (c) => D.arcaneShot.cooldown - 0.3 * T(c).improvedArcaneShot,
@@ -253,7 +253,7 @@ export const ABILITIES: Ability[] = [
   },
   {
     id: 'serpentSting', name: 'Serpent Sting', icon: 'serpentSting', gcd: D.gcd, target: 'enemy', range: 35, minRange: 8, ranged: true,
-    animation: 'throw',
+    animation: 'shoot',
     cost: shotCost(D.serpentSting.mana),
     description: (c) => `Stings the target for ${D.serpentSting.tick * D.serpentSting.ticks} Nature damage over ${D.serpentSting.ticks * D.serpentSting.period} sec, plus ranged attack power each tick. The ticks can crit.${T(c).rapidRecuperation ? ' A landed sting gives Rapid Recuperation (mana regen while casting).' : ''}`,
     use: (c, t) => {
@@ -278,7 +278,7 @@ export const ABILITIES: Ability[] = [
   },
   {
     id: 'sniperShot', name: 'Sniper Shot', icon: 'sniperShot', gcd: D.gcd, target: 'enemy', range: D.sniperShot.range, minRange: 8, ranged: true,
-    animation: 'cast',
+    animation: 'shoot',
     cost: () => D.sniperShot.mana, cooldown: D.sniperShot.cooldown,
     castTime: castTime(D.sniperShot.cast),
     ...talent('sniperShot', 'Sniper Shot'),

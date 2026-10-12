@@ -173,6 +173,7 @@ function applyStats(): void {
 function equip(): void {
   const st = prefs.stats;
   character.setWeapons(st.mainHand.type, st.offHand?.type ?? null, { twoHand: st.mainHand.twoHand, shield: st.shield });
+  character.setRanged(st.ranged?.type ?? null);
 }
 
 function fullReset(): void {
@@ -431,7 +432,7 @@ function updateBolts(dt: number): void {
   }
 }
 combat.on('shot', (u) => {
-  avatar().play('throw');
+  avatar().play('shoot');
   launch({ color: 0xd8c08a, speed: 40, size: 0.06 }, u);
 });
 combat.on('petAttack', ({ kind }) => {
@@ -575,11 +576,19 @@ function showWelcome(): void {
 const clock = new THREE.Clock();
 let elapsed = 0;
 
-function locomotion(moving: boolean, backwards: boolean, airborne: boolean): Locomotion {
+/** Shooting (hunters): Auto Shot on and not swinging in melee (weaving), or casting a shot. The bow, gun or crossbow comes out. */
+function shooting(): boolean {
+  if (!combat.stats.ranged) return false;
+  const t = combat.target;
+  const meleeNow = combat.player.autoAttacking && !!t && combat.inRange(t);
+  return (combat.autoShooting && !meleeNow) || (!!combat.casting && !!combat.ability(combat.casting.id)?.ranged);
+}
+
+function locomotion(moving: boolean, backwards: boolean, airborne: boolean, aiming: boolean): Locomotion {
   if (airborne) return 'air';
   if (combat.stealthed()) return moving ? 'sneakMove' : 'sneak';
-  if (!moving && (combat.casting || combat.channeling)) return 'cast';
-  if (!moving) return combat.player.inCombat || combat.player.autoAttacking ? 'ready' : 'idle';
+  if (!moving && (combat.casting || combat.channeling)) return aiming ? 'aim' : 'cast';
+  if (!moving) return aiming ? 'aim' : combat.player.inCombat || combat.player.autoAttacking ? 'ready' : 'idle';
   if (backwards) return 'back';
   // Sprint, Dash: the fast run.
   return combat.moveSpeed() > 1.25 ? 'sprint' : 'run';
@@ -610,7 +619,9 @@ function frame(): void {
   active.root.position.set(controls.x, controls.y, controls.z);
   active.root.rotation.y = controls.facing;
   active.setBodyYaw(move.moving ? move.bodyYaw : 0);
-  active.setLocomotion(locomotion(move.moving, move.backwards, move.airborne), move.backwards ? -move.speed : move.speed);
+  const aiming = shooting();
+  character.setRangedMode(aiming);
+  active.setLocomotion(locomotion(move.moving, move.backwards, move.airborne, aiming), move.backwards ? -move.speed : move.speed);
   active.update(dt);
   for (const d of dummies) d.dummy.update(dt, elapsed);
   updateBolts(dt);

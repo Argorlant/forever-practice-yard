@@ -72,6 +72,9 @@ Shot fires every weapon swing, divided by ranged haste (quiver, Quick Shots, Rap
 which you must stand still; the HUD bar turns red during it. Ranged attacks work from 8 to 35 yards, and closer is the dead zone.
 By default Auto Shot keeps firing while you cast (Forever's intent); Settings has the Classic rule, where a cast clips the shot:
 
+The hunter carries a bow, gun or crossbow (Settings → Character → Ranged weapon): slung on the back, it comes out to aim and
+fire while Auto Shot is on or a shot is cast, and the melee weapon is put away.
+
 - **Marksmanship** (`?class=hunter-mm`): gunba's petless Lone Wolf build (+20% damage), Aimed Shot (baseline, 2 s
   cast), Sniper Shot, Arcane Shot and Serpent Sting with ranged AP scaling, Mortal Shots. You start 12 yards back.
 - **Beast Mastery** (`?class=hunter-bm`): a cat pet with its own swing timer and Focus (Bite on cooldown, Claw with

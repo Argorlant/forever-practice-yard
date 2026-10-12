@@ -8,7 +8,7 @@ import type { CharacterLook, WeaponType } from '../engine/types';
 /** Bones that belong to the upper-body layer. */
 const UPPER = /^(spine_0[1-3]|neck_01|Head|clavicle_|upperarm_|lowerarm_|hand_|index_|middle_|pinky_|ring_|thumb_)/;
 
-export type Locomotion = 'idle' | 'ready' | 'walk' | 'run' | 'back' | 'sprint' | 'sneak' | 'sneakMove' | 'air' | 'cast';
+export type Locomotion = 'idle' | 'ready' | 'walk' | 'run' | 'back' | 'sprint' | 'sneak' | 'sneakMove' | 'air' | 'cast' | 'aim';
 
 /** Clip and natural ground speed (m/s) of each locomotion state. */
 const LOCOMOTION: Record<Locomotion, { clip: string; speed?: number }> = {
@@ -22,6 +22,8 @@ const LOCOMOTION: Record<Locomotion, { clip: string; speed?: number }> = {
   sneakMove: { clip: 'Crouch_Fwd_Loop', speed: 1.6 },
   air: { clip: 'Jump_Loop' },
   cast: { clip: 'Spell_Simple_Idle_Loop' },
+  // A hunter standing with the bow, gun or crossbow raised (the library's pistol stance).
+  aim: { clip: 'Pistol_Aim_Neutral' },
 };
 
 /** Upper-body one-shots: clip, playback rate, and where to cut it (s). */
@@ -38,6 +40,7 @@ export const ACTIONS = {
   block: { clip: 'Sword_Block', rate: 1.7 },
   hitReact: { clip: 'Hit_Chest', rate: 1.1 },
   cast: { clip: 'Spell_Simple_Shoot', rate: 1.0 },
+  shoot: { clip: 'Pistol_Shoot', rate: 1.6 },
 } satisfies Record<string, { clip: string; rate: number; end?: number }>;
 export type ActionName = keyof typeof ACTIONS;
 
@@ -70,6 +73,10 @@ export class Character {
   private weapons: THREE.Group[] = [];
   private mats!: { metal: THREE.Material; grip: THREE.Material; gold: THREE.Material };
   private forearmL: THREE.Object3D | null = null;
+  private spine: THREE.Object3D | null = null;
+  /** The ranged weapon (hunters): one copy slung on the back, one in the right hand while shooting. */
+  private ranged: { back: THREE.Group; hand: THREE.Group } | null = null;
+  private rangedMode = false;
   private cloth: THREE.Material | null = null;
   private attachToBone: ((b: THREE.Object3D, build: (g: THREE.Group) => void) => THREE.Group) | null = null;
 
@@ -250,6 +257,7 @@ export class Character {
     this.handR = bone('hand_r');
     this.handL = bone('hand_l');
     this.forearmL = bone('lowerarm_l');
+    this.spine = bone('spine_03');
     this.attachToBone = attach;
     this.cloth = cloth;
     this.mats = { metal, grip: darkLeather, gold: new THREE.MeshStandardMaterial({ color: 0xc9a050, metalness: 0.8, roughness: 0.35 }) };
@@ -310,6 +318,99 @@ export class Character {
     }
   }
 
+  /** The ranged weapon (a hunter's bow, gun or crossbow): on the back, or in hand while shooting. */
+  setRanged(kind: WeaponType | null): void {
+    if (this.ranged) {
+      this.ranged.back.removeFromParent();
+      this.ranged.hand.removeFromParent();
+      this.ranged = null;
+    }
+    if (!kind || !this.handR || !this.spine || !this.attachToBone) return;
+    const back = this.attachToBone(this.spine, (g) => {
+      // Slung diagonally across the back, the long end over the left shoulder.
+      const tilt = new THREE.Group();
+      tilt.rotation.z = kind === 'bow' ? -0.6 : 0.7;
+      tilt.position.set(0, -0.02, -0.17);
+      const model = this.buildRanged(kind);
+      if (kind !== 'bow') model.rotation.x = -Math.PI / 2;
+      tilt.add(model);
+      g.add(tilt);
+    });
+    const hand = this.holdRanged(this.handR, 'r', this.buildRanged(kind));
+    this.ranged = { back, hand };
+    this.setRangedMode(this.rangedMode);
+  }
+
+  /** Shooting: the ranged weapon in hand, the melee weapons put away. */
+  setRangedMode(on: boolean): void {
+    this.rangedMode = on;
+    if (!this.ranged) return;
+    this.ranged.hand.visible = on;
+    this.ranged.back.visible = !on;
+    for (const w of this.weapons) w.visible = !on;
+  }
+
+  /** In the right hand like a pistol grip: the barrel along the fingers, up along the knuckles. */
+  private holdRanged(hand: THREE.Object3D, side: 'l' | 'r', model: THREE.Object3D): THREE.Group {
+    const pos = (name: string) => (hand.getObjectByName(`${name}_${side}`) as THREE.Object3D).position.clone();
+    const index = pos('index_01'), pinky = pos('pinky_01'), middle = pos('middle_01');
+    const forward = middle.clone().normalize();
+    const up = index.clone().sub(pinky);
+    up.sub(forward.clone().multiplyScalar(up.dot(forward))).normalize();
+    const right = new THREE.Vector3().crossVectors(up, forward).normalize();
+    const g = new THREE.Group();
+    g.add(model);
+    g.quaternion.setFromRotationMatrix(new THREE.Matrix4().makeBasis(right, up, forward));
+    g.position.copy(index.clone().add(pinky).multiplyScalar(0.5));
+    hand.add(g);
+    return g;
+  }
+
+  /** A bow, gun or crossbow, built with the grip at the origin, shooting along +Z, up along +Y. */
+  private buildRanged(kind: WeaponType): THREE.Group {
+    const { metal, grip } = this.mats;
+    const wood = new THREE.MeshStandardMaterial({ color: 0x6a4423, roughness: 0.8 });
+    const string = new THREE.MeshBasicMaterial({ color: 0xe8e0c8 });
+    const w = new THREE.Group();
+    const add = (m: THREE.Mesh, x: number, y: number, z: number) => { m.position.set(x, y, z); m.castShadow = true; w.add(m); return m; };
+    const along = (from: THREE.Vector3, to: THREE.Vector3, r: number, mat: THREE.Material) => {
+      // A thin rod between two points (a bowstring).
+      const len = from.distanceTo(to);
+      const rod = new THREE.Mesh(new THREE.CylinderGeometry(r, r, len, 4), mat);
+      rod.position.copy(from.clone().add(to).multiplyScalar(0.5));
+      rod.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), to.clone().sub(from).normalize());
+      w.add(rod);
+    };
+    if (kind === 'bow') {
+      const curve = new THREE.CatmullRomCurve3([
+        new THREE.Vector3(0, -0.62, -0.13), new THREE.Vector3(0, -0.32, 0), new THREE.Vector3(0, 0, 0.03),
+        new THREE.Vector3(0, 0.32, 0), new THREE.Vector3(0, 0.62, -0.13),
+      ]);
+      add(new THREE.Mesh(new THREE.TubeGeometry(curve, 24, 0.014, 6), wood), 0, 0, 0);
+      add(new THREE.Mesh(new THREE.CylinderGeometry(0.021, 0.021, 0.12, 8), grip), 0, 0, 0.02);
+      along(new THREE.Vector3(0, -0.62, -0.13), new THREE.Vector3(0, 0.62, -0.13), 0.003, string);
+    } else if (kind === 'crossbow') {
+      add(new THREE.Mesh(new THREE.BoxGeometry(0.05, 0.06, 0.6), wood), 0, 0.04, 0.12);
+      add(new THREE.Mesh(new THREE.BoxGeometry(0.035, 0.08, 0.05), grip), 0, -0.02, 0);
+      const limbs = new THREE.CatmullRomCurve3([
+        new THREE.Vector3(-0.3, 0.05, 0.3), new THREE.Vector3(-0.15, 0.05, 0.39), new THREE.Vector3(0, 0.05, 0.42),
+        new THREE.Vector3(0.15, 0.05, 0.39), new THREE.Vector3(0.3, 0.05, 0.3),
+      ]);
+      add(new THREE.Mesh(new THREE.TubeGeometry(limbs, 20, 0.016, 6), metal), 0, 0, 0);
+      along(new THREE.Vector3(-0.3, 0.05, 0.3), new THREE.Vector3(0.3, 0.05, 0.3), 0.003, string);
+    } else {
+      // A long gun: stock, wooden body, steel barrel and a scope.
+      add(new THREE.Mesh(new THREE.BoxGeometry(0.05, 0.1, 0.3), wood), 0, 0.01, -0.2);
+      add(new THREE.Mesh(new THREE.BoxGeometry(0.05, 0.06, 0.32), wood), 0, 0.04, 0.1);
+      add(new THREE.Mesh(new THREE.BoxGeometry(0.035, 0.08, 0.05), grip), 0, -0.02, 0);
+      const barrel = add(new THREE.Mesh(new THREE.CylinderGeometry(0.016, 0.018, 0.55, 10), metal), 0, 0.055, 0.5);
+      barrel.rotation.x = Math.PI / 2;
+      const scope = add(new THREE.Mesh(new THREE.CylinderGeometry(0.017, 0.017, 0.16, 10), metal), 0, 0.1, 0.08);
+      scope.rotation.x = Math.PI / 2;
+    }
+    return w;
+  }
+
   /** Swaps the weapon models to match the gear in Settings. */
   setWeapons(main: WeaponType, off: WeaponType | null, opts: { twoHand?: boolean; shield?: boolean } = {}): void {
     for (const w of this.weapons) w.removeFromParent();
@@ -321,6 +422,8 @@ export class Character {
     } else if (off && this.handL) {
       this.weapons.push(this.buildWeapon(this.handL, 'l', off));
     }
+    // Put away while shooting.
+    for (const w of this.weapons) w.visible = !this.rangedMode;
   }
 
   /** A kite shield strapped to the left forearm, its face out of the back of the arm. */
