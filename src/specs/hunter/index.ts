@@ -55,7 +55,7 @@ const HELP_COMMON = `Auto Shot fires on its own every weapon swing (faster with 
     WoW Forever: Aimed Shot is baseline (2 sec cast, 6 sec cooldown shared with Multi-Shot), Arcane Shot and Serpent Sting scale with ranged attack power, and Auto Shot keeps firing while you cast (Settings has the Classic rule as an option). You cannot cast while moving; Arcane Shot and Serpent Sting are instant.
     Mana is your resource: shots drain it fast. Judgement of Wisdom, Blessing of Wisdom and Mana Spring Totem are on by default under Raid buffs and debuffs, and Major Mana Potions are on your bar; you can lock your mana in Settings.`;
 
-const WEAVE_HELP = `Melee weaving (an advanced option in Settings): Auto Shot and your melee swing (the two-handed glaive) run together, and the distance decides which one fires. Right after a shot leaves, step forward through the dead zone (the rings on the ground: inside the red one you hit in melee, outside the green one you shoot), take a swing or Raptor Strike, and step back out before the next windup. The cue above your bar says when: Step in, Raptor Strike, Step out. On the Forever beta a melee swing restarts the Auto Shot timer (bug #14), so a weave gains little; Settings lets you try the Classic rule (independent timers). Neither sim models weaving.`;
+const WEAVE_HELP = `Melee weaving (an advanced option in Settings): Auto Shot and your melee swing (the two-handed glaive) run together, and the distance decides which one fires. Right after a shot leaves, step forward through the dead zone (the rings on the ground: inside the red one you hit in melee, outside the green one you shoot), take a swing or Raptor Strike, and step back out before the next windup. The cue above your bar says when: Step in, Raptor Strike, Step out. The default is the Classic rule: the two timers are independent. On the Forever beta a melee swing restarts the Auto Shot timer, which is reported as a bug (#14) and makes a weave gain little; pick that rule in Settings to practice what the beta does today. Neither sim models weaving.`;
 
 const OPTIONS = [
   { key: 'classicAutoShot', name: 'Classic Auto Shot rule: a cast started in the windup clips the shot', kind: 'toggle' as const },
@@ -122,12 +122,12 @@ function rangedReview(c: Combat): Row[] {
 
 export const hunterMm: Spec = specFor('mm', {
   id: 'hunter-mm',
-  // 3: the pet bar and Raptor Strike (melee weaving) joined the default action bar.
-  prefsRevision: 3,
+  // 4: melee weaving defaults to the Classic rule (the beta reset is reported as a bug).
+  prefsRevision: 4,
   specName: 'Marksmanship',
   stats: RANGED_STATS,
   startDistance: 12,
-  defaultOptions: { build: 'mm', mana: 4000, spirit: D.spirit, lockMana: false, classicAutoShot: false, trackable: true, petSpeed: '1.2', petMode: 'assist', meleeWeaving: false, autoShotReset: 'beta' },
+  defaultOptions: { build: 'mm', mana: 4000, spirit: D.spirit, lockMana: false, classicAutoShot: false, trackable: true, petSpeed: '1.2', petMode: 'assist', meleeWeaving: false, autoShotReset: 'classic' },
   options: [...OPTIONS, PET_OPTION, PET_MODE, ...WEAVE_OPTIONS],
   sheet: { attackPower: 'Melee attack power', spellCrit: false, offHand: false },
   lowMana: (c) => c.cost(c.ability('aimedShot')!),
@@ -183,12 +183,12 @@ function bmReview(c: Combat): Row[] {
 
 export const hunterBm: Spec = specFor('bm', {
   id: 'hunter-bm',
-  // 3: the pet bar and Raptor Strike (melee weaving) joined the default action bar.
-  prefsRevision: 3,
+  // 4: melee weaving defaults to the Classic rule (the beta reset is reported as a bug).
+  prefsRevision: 4,
   specName: 'Beast Mastery',
   stats: RANGED_STATS,
   startDistance: 12,
-  defaultOptions: { build: 'bm', mana: 4000, spirit: D.spirit, lockMana: false, classicAutoShot: false, trackable: true, petSpeed: '1.2', petMode: 'assist', meleeWeaving: false, autoShotReset: 'beta' },
+  defaultOptions: { build: 'bm', mana: 4000, spirit: D.spirit, lockMana: false, classicAutoShot: false, trackable: true, petSpeed: '1.2', petMode: 'assist', meleeWeaving: false, autoShotReset: 'classic' },
   options: [...OPTIONS, PET_OPTION, PET_MODE, ...WEAVE_OPTIONS],
   sheet: { attackPower: 'Melee attack power', spellCrit: false, offHand: false },
   lowMana: (c) => c.cost(c.ability('aimedShot')!),

@@ -24,8 +24,8 @@ export const WEAVE_OPTIONS: SettingField[] = [
   {
     key: 'autoShotReset', name: 'Melee weaving: what a melee swing does to Auto Shot', kind: 'choice',
     choices: [
-      { value: 'beta', label: 'Forever beta: it restarts the Auto Shot timer (bug #14, still open)' },
-      { value: 'classic', label: 'Classic: the two timers are independent' },
+      { value: 'classic', label: 'Classic: the two timers are independent (default)' },
+      { value: 'beta', label: 'Forever beta today: it restarts the Auto Shot timer (reported as bug #14)' },
       { value: 'wrath', label: 'Wrath: each one restarts the other' },
     ],
   },
@@ -35,8 +35,8 @@ export const WEAVE_OPTIONS: SettingField[] = [
 export function setupWeaving(c: Combat, melee: boolean): void {
   states.set(c, { lastShot: -Infinity, lastMelee: -Infinity });
   c.weaving = !melee && !!c.options.meleeWeaving;
-  const rule = String(c.options.autoShotReset ?? 'beta');
-  c.autoShotReset = rule === 'classic' || rule === 'wrath' ? rule : 'beta';
+  const rule = String(c.options.autoShotReset ?? 'classic');
+  c.autoShotReset = rule === 'beta' || rule === 'wrath' ? rule : 'classic';
   if (!c.weaving) return;
   c.afterDamage.push((h: Hit) => {
     const s = state(c);

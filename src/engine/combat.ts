@@ -206,10 +206,10 @@ export class Combat {
   /** Melee weaving (hunters): Auto Shot and the melee auto attack run together and the distance picks which one fires. */
   weaving = false;
   /**
-   * What a melee swing does to Auto Shot: 'beta' restarts its timer (Forever beta, bug #14),
-   * 'classic' leaves the two timers independent, 'wrath' links them both ways.
+   * What a melee swing does to Auto Shot: 'classic' leaves the two timers independent, 'beta' restarts
+   * Auto Shot (the Forever beta today, reported as bug #14), 'wrath' links them both ways.
    */
-  autoShotReset: 'beta' | 'classic' | 'wrath' = 'beta';
+  autoShotReset: 'beta' | 'classic' | 'wrath' = 'classic';
   /** The pet the spec controls; the scene reads it to draw the animal. */
   pet: Pet = newPet();
   private rangedEv: Scheduled | null = null;
@@ -365,7 +365,7 @@ export class Combat {
     this.windupStartedAt = -Infinity;
     this.classicAutoShot = false;
     this.weaving = false;
-    this.autoShotReset = 'beta';
+    this.autoShotReset = 'classic';
     this.pet = newPet();
     this.player = this.newPlayer();
     // The scene owns the position: keep it.

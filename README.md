@@ -80,8 +80,8 @@ By default Auto Shot keeps firing while you cast (Forever's intent); Settings ha
 **Melee weaving** is an advanced option for Marksmanship and Beast Mastery (Settings, off by default): Auto Shot and the
 melee swing of your two-handed glaive run together, and the distance decides which one fires. Rings on the ground mark
 melee range and Auto Shot's minimum range, and a cue above the bar says when to step in, Raptor Strike and step out. A
-third setting picks what a melee swing does to Auto Shot: the Forever beta restarts its timer (an open bug, the default),
-Classic keeps the two independent, Wrath links them both ways. The review counts weaves, the Auto Shot time they cost and
+third setting picks what a melee swing does to Auto Shot: Classic keeps the two timers independent (the default), the Forever
+beta restarts Auto Shot (what it does today, reported as a bug), Wrath links them both ways. The review counts weaves, the Auto Shot time they cost and
 the net damage. Neither sim models weaving, and with the beta rule it gains little.
 
 The **Priest** comes as two damage specs (sources in [`research/priest_forever.md`](research/priest_forever.md)); pure healers are out of scope:

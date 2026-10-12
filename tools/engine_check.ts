@@ -500,8 +500,8 @@ for (const sp of [hunterMm, hunterBm, hunterSv]) {
 }
 // Melee weaving: a scripted hunter follows the cues (step in, Raptor Strike, step out) at running speed.
 {
-  const weaveRun = (weave: boolean, rule: string) => {
-    const r = play(hunterMm, { build: 'mm', seconds: 0, options: { lockMana: true, meleeWeaving: weave, autoShotReset: rule } });
+  const weaveRun = (weave: boolean, rule: string, build = 'mm') => {
+    const r = play(hunterMm, { build, seconds: 0, options: { lockMana: true, meleeWeaving: weave, autoShotReset: rule } });
     const c = r.c;
     for (let t = 0; t < 180; t += 0.05) {
       const cue = hunterMm.cue?.(c)?.text;
@@ -526,6 +526,10 @@ for (const sp of [hunterMm, hunterBm, hunterSv]) {
   if (!((classic.counters.weaveRaptor ?? 0) >= 5)) failures.push('the weaving cues led to few Raptor Strikes under the Classic rule');
   if ((classic.counters.autoShotHeld ?? 0) > 2) failures.push(`Classic weaving held Auto Shot ${(classic.counters.autoShotHeld ?? 0).toFixed(1)} s`);
   if (!(beta.counters.autoShotResets > 0)) failures.push('the beta rule never reset Auto Shot');
+  // foreversim's ranged build with Survival talents: no Quick Shots to close windows, Raptor crits 2.3x and costs 75% less.
+  const svStill = weaveRun(false, 'classic', 'sv-ranged');
+  const svWeave = weaveRun(true, 'classic', 'sv-ranged');
+  console.log(`  Survival talents, ranged rotation (foreversim): no weaving ${svStill.dps().toFixed(0)} DPS | ${line('Classic rule', svWeave)}`);
 }
 
 // Pets as in WoW: they run to the target and hit only there; orders and modes decide when they go.
