@@ -141,9 +141,28 @@ img.wow-icon { width: 100%; height: 100%; display: block; object-fit: cover; tra
 .drag-ghost svg, .drag-ghost img { width: 100%; height: 100%; }
 /* Rows 3 and 4 of the action bar, above the main two. */
 .action-bar.extra { margin-top: 0; }
-/* Heroic Strike, Cleave, Maul, Raptor Strike: lit from the press until the swing lands. */
-.slot.queued { box-shadow: inset 0 0 0 3px #ffd84a, 0 0 8px 2px rgba(255, 216, 74, .65); }
-.slot.queued .slot-icon { filter: brightness(1.25); }
+/*
+ * Heroic Strike, Cleave, Maul, Raptor Strike: lit from the press until the swing
+ * lands, like the game's checked button, and stronger than the suggestion's glow.
+ */
+.slot-key, .slot-cost, .slot-cdtext { z-index: 2; }
+.slot.queued { box-shadow: 0 0 0 1px #000, 0 0 14px 5px rgba(255, 176, 40, .95); }
+.slot.queued.suggest { animation: none; }
+.slot.queued .slot-icon { filter: brightness(1.45) saturate(1.15); }
+/* A thick gold frame with a light running around it. */
+@property --queued-angle { syntax: '<angle>'; initial-value: 0deg; inherits: false; }
+.slot.queued::after {
+  content: ''; position: absolute; inset: 0; z-index: 1; pointer-events: none;
+  border: 4px solid #ffc83a;
+  border-image: conic-gradient(from var(--queued-angle), #fff8d8, #ffb020 25%, #ff8a10 45%, #ffb020 65%, #fff8d8) 1;
+  box-shadow: inset 0 0 14px 5px rgba(255, 170, 40, .8);
+  background: linear-gradient(180deg, rgba(255, 255, 255, .2), rgba(255, 190, 60, .08));
+  animation: queued 0.9s linear infinite;
+}
+@keyframes queued { to { --queued-angle: 360deg; } }
+/* The queued swing lands: a burst on the button. */
+.slot.swung { animation: swung .35s ease-out; }
+@keyframes swung { 0% { filter: brightness(2.2); transform: scale(1.12); } 100% { filter: none; transform: none; } }
 /* Spellbook: every ability, to drag onto the bar. */
 .spellbook { position: absolute; left: 128px; top: 14px; width: min(340px, calc(100vw - 32px)); max-height: 62vh; display: flex; flex-direction: column;
   background: rgba(16, 13, 10, .94); border: 1px solid var(--gold-dim); border-radius: 8px; box-shadow: 0 6px 24px rgba(0,0,0,.6); z-index: 20; }

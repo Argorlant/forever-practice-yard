@@ -120,9 +120,14 @@ export class Hud {
   bindMode = false;
   suggestions = true;
 
+  /** The on-next-swing attack shown as queued, and the one whose swing just landed. */
+  private queuedShown: string | null = null;
+  private landed: string | null = null;
+
   constructor(parent: HTMLElement, private combat: Combat, private bar: Binding[], private cb: HudCallbacks) {
     this.root = h('div', 'hud');
     parent.append(this.root);
+    combat.on('damage', (hit) => { if (hit.source === this.queuedShown) this.landed = hit.source; });
 
     // Top left: settings, reset, pull.
     const left = h('div', 'hud-left');
@@ -464,9 +469,17 @@ export class Hud {
       s.el.classList.toggle('out-of-range', st.outOfRange);
       s.el.classList.toggle('glow', st.highlight);
       s.el.classList.toggle('suggest', suggested === s.id);
-      // Heroic Strike, Cleave, Maul, Raptor Strike: lit from the press until the swing lands.
-      s.el.classList.toggle('queued', !!s.id && c.queuedSwing === s.id);
+      // Heroic Strike, Cleave, Maul, Raptor Strike: lit from the press until the swing lands, then a burst.
+      const queued = c.queuedSwing === s.id;
+      if (!queued && this.landed === s.id && s.el.classList.contains('queued')) {
+        s.el.classList.remove('swung');
+        void s.el.offsetWidth;
+        s.el.classList.add('swung');
+      }
+      s.el.classList.toggle('queued', queued);
     }
+    this.queuedShown = c.queuedSwing;
+    this.landed = null;
 
     // Tooltip.
     if (this.tip && c.ability(this.tip.id)) {
