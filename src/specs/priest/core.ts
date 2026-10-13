@@ -127,7 +127,7 @@ const healPlayer = (c: Combat, n: number) => { if (!c.playerHealthLocked) c.play
 export const ABILITIES: Ability[] = [
   spell({
     id: 'mindBlast', name: 'Mind Blast', icon: 'mindBlast',
-    projectile: { color: 0xb07cff, speed: 40 },
+    projectile: { color: 0xb07cff, speed: 40, style: 'shadow' },
     cost: cost(D.mindBlast.mana, 'shadow'),
     cooldown: (c) => D.mindBlast.cooldown - 0.5 * T(c).improvedMindBlast,
     castTime: (c) => D.mindBlast.cast / c.castHaste(),
@@ -247,7 +247,7 @@ export const ABILITIES: Ability[] = [
   },
   spell({
     id: 'smite', name: 'Smite', icon: 'smite',
-    projectile: { color: 0xffe680, fromSky: true },
+    projectile: { color: 0xffe680, fromSky: true, style: 'holy' },
     cost: cost(D.smite.mana, 'holy', { agility: true }),
     castTime: (c) => (D.smite.cast - 0.1 * T(c).divineFury) / c.castHaste(),
     description: (c) => `A ${(D.smite.cast - 0.1 * T(c).divineFury).toFixed(1)} sec cast: ${D.smite.min}-${D.smite.max} Holy damage plus ${Math.round(D.smite.coeff * 100)}% of spell power.${T(c).powerInLight ? ` Power in Light: +${2 * T(c).powerInLight}% while your Holy Fire burns on the target.` : ''}`,
@@ -261,7 +261,7 @@ export const ABILITIES: Ability[] = [
   }),
   spell({
     id: 'holyFire', name: 'Holy Fire', icon: 'holyFire',
-    projectile: { color: 0xffa040, fromSky: true },
+    projectile: { color: 0xffa040, fromSky: true, style: 'fire' },
     cost: cost(D.holyFire.mana, 'holy', { agility: true }),
     castTime: (c) => (D.holyFire.cast - 0.1 * T(c).divineFury) / c.castHaste(),
     description: (c) => `A ${(D.holyFire.cast - 0.1 * T(c).divineFury).toFixed(1)} sec cast: ${D.holyFire.min}-${D.holyFire.max} Holy damage plus spell power, then ${D.holyFire.ticks} ticks of ${D.holyFire.tick} over ${D.holyFire.ticks * D.holyFire.period} sec. Keep it burning for Power in Light: recast when less than 3 sec are left.`,

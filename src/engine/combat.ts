@@ -5,7 +5,7 @@
 import { UI } from '../strings';
 import { RAID_EFFECTS, WINDFURY } from './raid';
 import type {
-  Ability, AttackRules, Aura, Hand, Hit, Outcome, Spec, Stats, Unit,
+  Ability, AttackRules, Aura, Hand, Hit, Outcome, Spec, Stats, Unit, VfxStyle,
 } from './types';
 
 /** A swing of the attacking dummy against the player. */
@@ -143,7 +143,7 @@ interface EventMap {
   /** The pet attacks (a swing or one of its abilities). */
   petAttack: { kind: string };
   /** A projectile to draw for one tick of a channel (each Arcane Missile); `from` a point instead of your hands (a totem). */
-  bolt: { target: Unit; color: number; speed?: number; from?: { x: number; z: number; totem?: string } };
+  bolt: { target: Unit; color: number; speed?: number; style?: VfxStyle; from?: { x: number; z: number; totem?: string } };
   /** A totem goes down in an element slot (`id` null: the slot is empty again). `facing` is the player's at the drop. */
   totem: { slot: string; id: string | null; x: number; z: number; facing: number };
   /** A burst of flame around a point (Fire Nova, Magma Totem), radius in yards. */

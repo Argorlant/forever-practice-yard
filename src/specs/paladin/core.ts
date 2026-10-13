@@ -339,7 +339,7 @@ export const ABILITIES: Ability[] = [
   {
     id: 'holyShock', name: 'Holy Shock', icon: 'holyShock', gcd: D.gcd, target: 'enemy', range: D.holyShock.range, noAutoAttack: true,
     animation: 'cast',
-    projectile: { color: 0xffe680, speed: 40 },
+    projectile: { color: 0xffe680, speed: 40, style: 'holy' },
     cost: instant(D.holyShock.mana), cooldown: D.holyShock.cooldown,
     ...talent('holyShock', 'Holy Shock'),
     highlight: (c) => !!c.aura(c.player, 'divineFavor') || !!c.aura(c.target, 'lightsVigil'),

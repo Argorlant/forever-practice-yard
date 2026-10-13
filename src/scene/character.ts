@@ -318,6 +318,12 @@ export class Character {
     }
   }
 
+  /** Where a hand is in the world (spell glows), or null before the model is loaded. */
+  handPosition(side: 'l' | 'r', out = new THREE.Vector3()): THREE.Vector3 | null {
+    const hand = side === 'r' ? this.handR : this.handL;
+    return hand ? hand.getWorldPosition(out) : null;
+  }
+
   /** The ranged weapon (a hunter's bow, gun or crossbow): on the back, or in hand while shooting. */
   setRanged(kind: WeaponType | null): void {
     if (this.ranged) {

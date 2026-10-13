@@ -102,7 +102,7 @@ const spell = (a: Omit<Ability, 'gcd' | 'target' | 'range' | 'hastedGcd' | 'noAu
 const abilities: Ability[] = [
   spell({
     id: 'wrath', name: 'Wrath', icon: 'wrath', animation: 'cast',
-    projectile: { color: 0x8ef05a, speed: 20 },
+    projectile: { color: 0x8ef05a, speed: 20, style: 'nature' },
     cost: wrathMana,
     castTime: wrathCast,
     description: (c) => `A ${wrathCast(c).toFixed(2)} sec cast: ${D.wrath.min}-${D.wrath.max} Nature damage plus ${Math.round(D.wrath.coeff * 100)}% of spell power.${T(c).eclipse ? ` Grants ${D.wrath.eclipseCharges} Eclipse charges (max ${D.eclipse.maxCharges}).` : ''} Never uses Clearcasting.`,
@@ -120,7 +120,7 @@ const abilities: Ability[] = [
   }),
   spell({
     id: 'starfire', name: 'Starfire', icon: 'starfire', animation: 'cast',
-    projectile: { color: 0xe9a8ff, fromSky: true },
+    projectile: { color: 0xe9a8ff, fromSky: true, style: 'arcane' },
     cost: balanceMana(D.starfire.mana),
     castTime: starfireCast,
     highlight: (c) => eclipseCharges(c) > 0,
@@ -141,7 +141,7 @@ const abilities: Ability[] = [
   }),
   spell({
     id: 'moonfire', name: 'Moonfire', icon: 'moonfire', animation: 'cast',
-    projectile: { color: 0x9fd8ff, fromSky: true },
+    projectile: { color: 0x9fd8ff, fromSky: true, style: 'frost' },
     cost: balanceMana(D.moonfire.mana),
     description: (c) => `${D.moonfire.min}-${D.moonfire.max} Arcane damage, then ${D.moonfire.tick} every ${D.moonfire.period} sec for ${(D.moonfire.ticks + splendor(c)) * D.moonfire.period} sec, both with spell power. The ticks can crit.`,
     use: (c, t) => {

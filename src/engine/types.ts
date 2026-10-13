@@ -1,6 +1,8 @@
 import type { Combat } from './combat';
 
 export type School = 'physical' | 'nature' | 'fire' | 'frost' | 'arcane' | 'shadow' | 'holy';
+/** How a spell looks in the yard (src/scene/vfx.ts): a school, or a look of its own. */
+export type VfxStyle = 'fire' | 'frost' | 'shadow' | 'arcane' | 'holy' | 'nature' | 'lightning' | 'arrow' | 'earth' | 'physical' | 'bleed' | 'poison';
 export type Outcome = 'hit' | 'crit' | 'miss' | 'dodge' | 'parry' | 'glance' | 'resist' | 'block' | 'crush';
 export type WeaponType = 'dagger' | 'sword' | 'mace' | 'fist' | 'axe' | 'polearm' | 'staff' | 'bow' | 'gun' | 'crossbow';
 export type Hand = 'main' | 'off';
@@ -212,8 +214,11 @@ export interface Ability {
   manaCost?: (c: Combat) => number;
   /** A spell: its global cooldown shrinks with casting haste, down to 1 s. */
   hastedGcd?: boolean;
-  /** A visible spell flying from the player (or falling from the sky) to the target; speed in yards per second. */
-  projectile?: { color: number; fromSky?: boolean; speed?: number };
+  /**
+   * A visible spell flying from the player (or falling from the sky) to the
+   * target; speed in yards per second. `style` is how it looks (src/scene/vfx.ts).
+   */
+  projectile?: { color: number; fromSky?: boolean; speed?: number; style?: VfxStyle };
   /** Casting it at an enemy does not start the auto attack (spells). */
   noAutoAttack?: boolean;
   /** A ranged shot: it starts Auto Shot instead of the melee auto attack. */

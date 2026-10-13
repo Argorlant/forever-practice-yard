@@ -239,7 +239,7 @@ export const ABILITIES: Ability[] = [
   {
     id: 'arcaneShot', name: 'Arcane Shot', icon: 'arcaneShot', gcd: D.gcd, target: 'enemy', range: 35, minRange: 8, ranged: true,
     animation: 'shoot',
-    projectile: { color: 0xe9a8ff, speed: 40 },
+    projectile: { color: 0xe9a8ff, speed: 40, style: 'arcane' },
     cost: shotCost(D.arcaneShot.mana), cooldownGroup: 'arcaneHawk',
     cooldown: (c) => D.arcaneShot.cooldown - 0.3 * T(c).improvedArcaneShot,
     description: (c) => `An instant shot for ${D.arcaneShot.damage} Arcane damage plus ${D.arcaneShot.rap * 100}% of ranged attack power (${Math.round(D.arcaneShot.damage + D.arcaneShot.rap * c.rangedAttackPower())}). Ignores armor; you can fire it while moving. Shares its cooldown with Summon Hawk.`,

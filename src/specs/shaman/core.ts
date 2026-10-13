@@ -122,7 +122,7 @@ function overload(c: Combat, t: Unit, base: number, coeff: number): void {
   const lo = T(c).lightningOverload;
   if (!lo || !roll(c, [0, 3, 7, 10][lo])) return;
   c.count('overloads');
-  c.emit('bolt', { target: t, color: 0x9ad8ff, speed: D.lightningBolt.speed });
+  c.emit('bolt', { target: t, color: 0x9ad8ff, speed: D.lightningBolt.speed, style: 'lightning' });
   spellHit(c, t, 'lightningOverload', 'nature', base, coeff, { scale: D.lightningOverload.damage, direct: false });
 }
 
@@ -193,7 +193,7 @@ const shock = { cooldown: shockCd, cooldownGroup: 'shock' };
 export const ABILITIES: Ability[] = [
   spell({
     id: 'lightningBolt', name: 'Lightning Bolt', icon: 'lightningBolt',
-    projectile: { color: 0x9ad8ff, speed: D.lightningBolt.speed },
+    projectile: { color: 0x9ad8ff, speed: D.lightningBolt.speed, style: 'lightning' },
     cost: cost('lightningBolt', D.lightningBolt.mana),
     castTime: castTime((c) => (D.lightningBolt.cast - alacrity(c)) * (1 - maelstromCut(c))),
     resetsSwing: true,
@@ -214,7 +214,7 @@ export const ABILITIES: Ability[] = [
   }),
   spell({
     id: 'chainLightning', name: 'Chain Lightning', icon: 'chainLightning',
-    projectile: { color: 0x9ad8ff, speed: 30 },
+    projectile: { color: 0x9ad8ff, speed: 30, style: 'lightning' },
     cost: cost('chainLightning', D.chainLightning.mana), cooldown: D.chainLightning.cooldown,
     castTime: castTime((c) => D.chainLightning.cast - alacrity(c)),
     resetsSwing: true,
@@ -227,7 +227,7 @@ export const ABILITIES: Ability[] = [
       [u, ...others].slice(0, k.targets).forEach((x, i) => {
         const base = between(c, k.min, k.max);
         spellHit(c, x, 'chainLightning', 'nature', base, k.coeff, { charge: i === 0, scale: k.jump ** i });
-        if (i > 0) c.emit('bolt', { target: x, color: 0x9ad8ff, speed: 30 });
+        if (i > 0) c.emit('bolt', { target: x, color: 0x9ad8ff, speed: 30, style: 'lightning' });
         overload(c, x, base * k.jump ** i, k.coeff * k.jump ** i);
       });
       afterCast(c, 'chainLightning');
@@ -235,7 +235,7 @@ export const ABILITIES: Ability[] = [
   }),
   spell({
     id: 'lavaBurst', name: 'Lava Burst', icon: 'lavaBurst',
-    projectile: { color: 0xff6a1a, speed: 24 },
+    projectile: { color: 0xff6a1a, speed: 24, style: 'fire' },
     cost: cost('lavaBurst', D.lavaBurst.mana), cooldown: D.lavaBurst.cooldown,
     castTime: castTime((c) => D.lavaBurst.cast - alacrity(c)),
     resetsSwing: true,
@@ -248,7 +248,7 @@ export const ABILITIES: Ability[] = [
   }),
   spell({
     id: 'earthShock', name: 'Earth Shock', icon: 'earthShock', range: D.earthShock.range,
-    projectile: { color: 0xc89a4a, speed: 40 },
+    projectile: { color: 0xc89a4a, speed: 40, style: 'earth' },
     cost: cost('earthShock', D.earthShock.mana), ...shock,
     description: (c) => `Instant: ${D.earthShock.min}-${D.earthShock.max} Nature damage plus spell damage, double threat. All or nothing. Shares a ${shockCd(c).toFixed(1)} sec cooldown with your other shocks.`,
     use: (c, t) => {
@@ -281,7 +281,7 @@ export const ABILITIES: Ability[] = [
   }),
   spell({
     id: 'frostShock', name: 'Frost Shock', icon: 'frostShock', range: D.frostShock.range,
-    projectile: { color: 0x8ad0ff, speed: 40 },
+    projectile: { color: 0x8ad0ff, speed: 40, style: 'frost' },
     cost: cost('frostShock', D.frostShock.mana), ...shock,
     description: () => `Instant: ${D.frostShock.min}-${D.frostShock.max} Frost damage plus spell damage and a slow. Shares the shock cooldown; the sims do not use it on a boss.`,
     use: (c, t) => {
@@ -347,7 +347,7 @@ export const ABILITIES: Ability[] = [
         const s = D.searingTotem;
         const spot = totemSpots.get(cc)?.fire;
         if (!u || u.health <= 0 || !spot || !nearFireTotem(cc, u, s.range)) return;
-        cc.emit('bolt', { target: u, color: 0xff7a1a, speed: 25, from: { ...spot, totem: 'fire' } });
+        cc.emit('bolt', { target: u, color: 0xff7a1a, speed: 25, style: 'fire', from: { ...spot, totem: 'fire' } });
         totemAttack(cc, u, 'searingTotem', between(cc, s.min, s.max), s.coeff);
       },
     })),

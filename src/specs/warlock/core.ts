@@ -249,7 +249,7 @@ function petThink(c: Combat): void {
 export const ABILITIES: Ability[] = [
   spell({
     id: 'shadowBolt', name: 'Shadow Bolt', icon: 'shadowBolt',
-    projectile: { color: 0x9a4aff, speed: D.shadowBolt.speed },
+    projectile: { color: 0x9a4aff, speed: D.shadowBolt.speed, style: 'shadow' },
     cost: cost('shadowBolt', D.shadowBolt.mana),
     castTime: (c) => (c.aura(c.player, 'shadowTrance') ? 0 : castTime((cc) => D.shadowBolt.cast - 0.1 * T(cc).bane)(c)),
     highlight: (c) => !!c.aura(c.player, 'shadowTrance'),
@@ -414,7 +414,7 @@ export const ABILITIES: Ability[] = [
   }),
   spell({
     id: 'incinerate', name: 'Incinerate', icon: 'incinerate',
-    projectile: { color: 0xff7a2a, speed: 30 },
+    projectile: { color: 0xff7a2a, speed: 30, style: 'fire' },
     cost: cost('incinerate', D.incinerate.mana),
     castTime: castTime((c) => D.incinerate.cast - 0.1 * T(c).bane),
     ...talent('incinerate', 'Incinerate'),
@@ -451,7 +451,7 @@ export const ABILITIES: Ability[] = [
   }),
   spell({
     id: 'deathCoil', name: 'Death Coil', icon: 'deathCoil',
-    projectile: { color: 0x7a2aff, speed: 24 },
+    projectile: { color: 0x7a2aff, speed: 24, style: 'shadow' },
     cost: () => D.deathCoil.mana, cooldown: D.deathCoil.cooldown,
     description: () => `Instant: ${D.deathCoil.damage} Shadow damage plus spell power; heals you for all of it. 2 min cooldown.`,
     use: (c, t) => {

@@ -8,6 +8,8 @@ import { Character, type Locomotion } from './scene/character';
 import { Controls, DEFAULT_MOVE } from './scene/controls';
 import { Dummy } from './scene/dummy';
 import { Totems } from './scene/totems';
+import { Vfx } from './scene/vfx';
+import { wireVfx } from './combat-vfx';
 import { createWorld } from './scene/world';
 import { SPECS, specById } from './specs';
 import { UI, fmt } from './strings';
@@ -393,57 +395,37 @@ combat.on('damage', (hit) => {
   }
 });
 combat.on('swing', () => avatar().swing());
-combat.on('ability', ({ id, animation }) => {
+combat.on('ability', ({ animation }) => {
   if (animation) avatar().play(animation);
-  const bolt = combat.ability(id)?.projectile;
-  if (bolt && combat.target) launch(bolt, combat.target);
 });
-
-// Spells you can see: a missile from your hands (Wrath) or a bolt from the sky (Starfire, Moonfire).
-interface Bolt { mesh: THREE.Mesh; from: THREE.Vector3; to: () => THREE.Vector3; t: number; duration: number }
-const bolts: Bolt[] = [];
-const boltGeometry = new THREE.SphereGeometry(1, 14, 10);
-function launch(p: { color: number; fromSky?: boolean; speed?: number; size?: number }, target: Unit, origin?: THREE.Vector3): void {
-  const d = dummyOf(target);
-  if (!d) return;
-  const mesh = new THREE.Mesh(boltGeometry, new THREE.MeshBasicMaterial({ color: p.color, transparent: true, opacity: 0.9 }));
-  mesh.scale.setScalar(p.size ?? (p.fromSky ? 0.22 : 0.13));
-  if (p.fromSky) mesh.scale.y = 0.7;
-  const to = () => d.headPosition.clone().add(new THREE.Vector3(0, -0.45, 0));
-  const hand = new THREE.Vector3(Math.sin(controls.facing) * 0.45, 1.35, Math.cos(controls.facing) * 0.45);
-  const from = origin ?? (p.fromSky ? to().add(new THREE.Vector3(0, 7, 0)) : playerPos().add(hand));
-  const yards = from.distanceTo(to()) / 0.9144;
-  mesh.position.copy(from);
-  world.scene.add(mesh);
-  bolts.push({ mesh, from, to, t: 0, duration: p.fromSky ? 0.22 : yards / (p.speed ?? 30) });
-}
-function updateBolts(dt: number): void {
-  for (let i = bolts.length - 1; i >= 0; i--) {
-    const b = bolts[i];
-    b.t += dt;
-    const k = Math.min(1, b.t / Math.max(0.05, b.duration));
-    b.mesh.position.lerpVectors(b.from, b.to(), k);
-    if (k >= 1) {
-      world.scene.remove(b.mesh);
-      (b.mesh.material as THREE.Material).dispose();
-      bolts.splice(i, 1);
-    }
-  }
-}
-combat.on('shot', (u) => {
-  avatar().play('shoot');
-  launch({ color: 0xd8c08a, speed: 40, size: 0.06 }, u);
-});
+combat.on('shot', () => avatar().play('shoot'));
 combat.on('petAttack', ({ kind }) => {
   if (kind === 'lash') companion?.play?.('slash');
   else if (kind === 'cast') companion?.play?.('cast');
-  else if (kind === 'firebolt') {
-    if (companion && combat.target) launch({ color: 0xff7a1a, speed: 20, size: 0.08 }, combat.target, companion.root.position.clone().setY(0.7));
-  } else companion?.swing();
+  else if (kind !== 'firebolt') companion?.swing();
 });
-combat.on('bolt', ({ target, color, speed, from }) => {
-  const origin = from ? (from.totem ? totems.head(from.totem, from.x, from.z) : new THREE.Vector3(from.x, 1, from.z)) : undefined;
-  launch({ color, speed: speed ?? 30, size: 0.1 }, target, origin);
+
+// Spell and weapon effects (src/combat-vfx.ts).
+const vfx = new Vfx(world.scene);
+const fx = wireVfx(combat, vfx, {
+  // On the dummy's side that faces you, not inside it.
+  chest: (u) => {
+    const d = dummyOf(u);
+    if (!d) return null;
+    const c = d.headPosition.add(new THREE.Vector3(0, -0.75, 0));
+    const toward = playerPos().setY(c.y).sub(c);
+    if (toward.lengthSq() > 0.01) c.add(toward.normalize().multiplyScalar(0.4));
+    return c;
+  },
+  feet: playerPos,
+  hand: (side) => {
+    const p = avatar() === character ? character.handPosition(side) : null;
+    if (p) return p;
+    // Animal forms: in front of the chest.
+    return playerPos().add(new THREE.Vector3(Math.sin(controls.facing) * 0.5, 1.1, Math.cos(controls.facing) * 0.5));
+  },
+  totemHead: (slot, x, z) => totems.head(slot, x, z),
+  pet: () => (companion?.root.visible ? companion.root.position.clone() : null),
 });
 combat.on('totem', ({ slot, id, x, z, facing }) => totems.set(slot, id, x, z, facing));
 
@@ -473,33 +455,6 @@ function updateRings(): void {
     }
   }
   rings.position.set(t.x, 0, t.z);
-}
-
-// Fire Nova and Magma Totem: a ring of flame that grows to the spell's radius.
-interface Nova { mesh: THREE.Mesh; t: number; radius: number }
-const novas: Nova[] = [];
-const novaGeometry = new THREE.RingGeometry(0.82, 1, 40);
-combat.on('nova', ({ x, z, radius, color, totem }) => {
-  const at = totem ? totems.head(totem, x, z) : new THREE.Vector3(x, 0, z);
-  const mesh = new THREE.Mesh(novaGeometry, new THREE.MeshBasicMaterial({ color, transparent: true, opacity: 0.85, side: THREE.DoubleSide, depthWrite: false }));
-  mesh.rotation.x = -Math.PI / 2;
-  mesh.position.set(at.x, 0.15, at.z);
-  mesh.scale.setScalar(0.3);
-  world.scene.add(mesh);
-  novas.push({ mesh, t: 0, radius: radius * 0.9144 });
-});
-function updateNovas(dt: number): void {
-  for (let i = novas.length - 1; i >= 0; i--) {
-    const n = novas[i];
-    n.t += dt / 0.4;
-    n.mesh.scale.setScalar(0.3 + (n.radius - 0.3) * Math.min(1, n.t));
-    (n.mesh.material as THREE.MeshBasicMaterial).opacity = 0.85 * Math.max(0, 1 - n.t);
-    if (n.t >= 1) {
-      world.scene.remove(n.mesh);
-      (n.mesh.material as THREE.Material).dispose();
-      novas.splice(i, 1);
-    }
-  }
 }
 
 combat.on('note', ({ text, kind }) => {
@@ -621,8 +576,8 @@ function frame(): void {
   active.setLocomotion(locomotion(move.moving, move.backwards, move.airborne, aiming), move.backwards ? -move.speed : move.speed);
   active.update(dt);
   for (const d of dummies) d.dummy.update(dt, elapsed);
-  updateBolts(dt);
-  updateNovas(dt);
+  fx.update(dt, elapsed);
+  vfx.update(dt, world.camera, world.renderer.domElement.height);
   updateRings();
   totems.update(dt, elapsed);
   if (companion) updatePet(dt);
@@ -660,4 +615,4 @@ character.load(MODEL_URL, spec.look).then(() => {
 });
 
 // Debug handle for automated checks.
-(window as unknown as { yard: unknown }).yard = { combat, controls, character, world, prefs: () => prefs };
+(window as unknown as { yard: unknown }).yard = { combat, controls, character, world, vfx, prefs: () => prefs };

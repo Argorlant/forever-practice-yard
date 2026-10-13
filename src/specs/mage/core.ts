@@ -236,7 +236,7 @@ const missilesUseStacks = (c: Combat) => !!c.options.missilesUseStacks;
 export const ABILITIES: Ability[] = [
   spell({
     id: 'frostbolt', name: 'Frostbolt', icon: 'frostbolt',
-    projectile: { color: 0x8fd8ff, speed: D.frostbolt.speed },
+    projectile: { color: 0x8fd8ff, speed: D.frostbolt.speed, style: 'frost' },
     cost: cost(D.frostbolt.mana, { frost: true }),
     castTime: castTime((c) => D.frostbolt.cast - 0.1 * T(c).improvedFrostbolt),
     description: (c) => `A ${(D.frostbolt.cast - 0.1 * T(c).improvedFrostbolt).toFixed(1)} sec cast: ${D.frostbolt.min}-${D.frostbolt.max} Frost damage plus ${Math.round(D.frostbolt.coeff * 100)}% of spell power. All or nothing (no partial resists).`,
@@ -249,7 +249,7 @@ export const ABILITIES: Ability[] = [
   }),
   spell({
     id: 'fireball', name: 'Fireball', icon: 'fireball', range: 35,
-    projectile: { color: 0xff7a2a, speed: D.fireball.speed },
+    projectile: { color: 0xff7a2a, speed: D.fireball.speed, style: 'fire' },
     cost: cost(D.fireball.mana),
     castTime: castTime((c) => D.fireball.cast - 0.1 * T(c).improvedFireball),
     description: (c) => `A ${(D.fireball.cast - 0.1 * T(c).improvedFireball).toFixed(1)} sec cast: ${D.fireball.min}-${D.fireball.max} Fire damage plus spell power, then ${D.fireball.dot * D.fireball.dotTicks} over ${D.fireball.dotTicks * D.fireball.dotPeriod} sec.`,
@@ -286,7 +286,7 @@ export const ABILITIES: Ability[] = [
   }),
   spell({
     id: 'pyroblast', name: 'Pyroblast', icon: 'pyroblast', range: D.pyroblast.range,
-    projectile: { color: 0xff4a1a, speed: 24 },
+    projectile: { color: 0xff4a1a, speed: 24, style: 'fire' },
     cost: cost(D.pyroblast.mana),
     castTime: castTime((c) => D.pyroblast.cast * (1 - D.heatingUp.cut * stacksOf(c, c.player, 'heatingUp'))),
     highlight: (c) => stacksOf(c, c.player, 'heatingUp') >= D.heatingUp.stacks,
@@ -321,7 +321,7 @@ export const ABILITIES: Ability[] = [
       },
       onTick: (c, t) => {
         const u = t!;
-        c.emit('bolt', { target: u, color: 0xe9a8ff, speed: 20 });
+        c.emit('bolt', { target: u, color: 0xe9a8ff, speed: 20, style: 'arcane' });
         const noStacks = !missilesUseStacks(c);
         resolve(c, u, 'arcaneMissiles', 'arcane', D.arcaneMissiles.damage, D.arcaneMissiles.coeff, { noStacks });
       },
@@ -329,7 +329,7 @@ export const ABILITIES: Ability[] = [
   },
   spell({
     id: 'arcaneBlast', name: 'Arcane Blast', icon: 'arcaneBlast',
-    projectile: { color: 0xe9a8ff, speed: 40 },
+    projectile: { color: 0xe9a8ff, speed: 40, style: 'arcane' },
     cost: arcaneBlastCost,
     castTime: castTime(() => D.arcaneBlast.cast),
     ...talent('arcaneBlast', 'Arcane Blast'),
@@ -343,7 +343,7 @@ export const ABILITIES: Ability[] = [
   }),
   spell({
     id: 'iceLance', name: 'Ice Lance', icon: 'iceLance',
-    projectile: { color: 0xb0e8ff, speed: 38 },
+    projectile: { color: 0xb0e8ff, speed: 38, style: 'frost' },
     cost: cost(D.iceLance.mana, { frost: true }),
     ...talent('iceLance', 'Ice Lance'),
     highlight: (c) => !!c.aura(c.player, 'fingersOfFrost'),
@@ -356,7 +356,7 @@ export const ABILITIES: Ability[] = [
   }),
   spell({
     id: 'frostfireBolt', name: 'Frostfire Bolt', icon: 'frostfireBolt',
-    projectile: { color: 0xc080ff, speed: 26 },
+    projectile: { color: 0xc080ff, speed: 26, style: 'frost' },
     cost: cost(D.frostfireBolt.mana),
     castTime: castTime((c) => D.frostfireBolt.cast - 0.1 * T(c).improvedFireball),
     description: () => `A ${D.frostfireBolt.cast} sec cast: ${D.frostfireBolt.min}-${D.frostfireBolt.max} Fire and Frost damage plus spell power (your higher one), then ${D.frostfireBolt.dot * D.frostfireBolt.dotTicks} over ${D.frostfireBolt.dotTicks * D.frostfireBolt.dotPeriod} sec. New and baseline in WoW Forever: both schools' talents apply.`,

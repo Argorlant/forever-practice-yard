@@ -188,6 +188,12 @@ as in WoW: binding it somewhere unbinds it elsewhere (bind A and D to strafe and
 buttons runs forward. On-next-swing attacks (Heroic Strike, Cleave, Maul, Raptor Strike) stay lit from the press until
 the swing lands.
 
+**Spell effects.** Spells and blows have their own look: fire, frost, shadow, arcane, holy and nature missiles
+with trails and impacts that show the crit, Lightning Bolt as a real bolt, arrows and gun tracers, weapon trails
+(claws for cats and bears), Thunder Clap, shouts, Whirlwind, Consecration on the ground, light gathering in your
+hands while you cast, the Drain Life and Mind Flay streams, and the auras you wear (Lightning Shield's orbs, Holy
+Shield, Shadowform). It is all particles (`src/scene/vfx.ts`) driven by the engine's events (`src/combat-vfx.ts`).
+
 The engine is shared, so more specs plug in as data.
 
 ## Run it
@@ -211,7 +217,7 @@ Then open http://127.0.0.1:5180.
 | --- | --- |
 | `src/engine` | The combat engine, shared by every class: event clock, smooth regeneration, GCD and spell queue, casts, cooldowns, auras, dual-wield auto attacks, attack and spell tables, armor, the attacking dummy, raid buffs and debuffs (`raid.ts`). |
 | `src/specs/<class>` | One class (`rogue`, `warrior`, `druid`, `paladin`, `hunter`, `priest`, `mage`, `warlock`, `shaman`): `data.ts` holds every number with its source; `talents.ts` the sims' builds; the spec files define abilities, procs and the priority list. |
-| `src/scene` | The 3D yard (three.js): world, dummy, character and WoW-style controls. |
+| `src/scene` | The 3D yard (three.js): world, dummy, character, WoW-style controls and spell effects. |
 | `src/ui` | HUD, action bar, floating combat text, rotation panel and settings. |
 | `research` | Sourced notes on each spec's WoW Forever mechanics. |
 
