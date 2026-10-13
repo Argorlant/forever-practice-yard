@@ -319,11 +319,14 @@ export const ABILITIES: Ability[] = [
         if (c.aura(c.player, 'missileBarrage')) { c.removeAura(c.player, 'missileBarrage'); c.count('barrageUsed'); }
         return true;
       },
-      onTick: (c, t) => {
+      onTick: (c, t, tick) => {
         const u = t!;
         c.emit('bolt', { target: u, color: 0xe9a8ff, speed: 20, style: 'arcane' });
-        const noStacks = !missilesUseStacks(c);
-        resolve(c, u, 'arcaneMissiles', 'arcane', D.arcaneMissiles.damage, D.arcaneMissiles.coeff, { noStacks });
+        // Client rule: Missiles neither use nor spend the Arcane Blast stacks. gs: every missile
+        // uses them and the channel spends them when it ends.
+        const useStacks = missilesUseStacks(c);
+        resolve(c, u, 'arcaneMissiles', 'arcane', D.arcaneMissiles.damage, D.arcaneMissiles.coeff, { noStacks: !useStacks });
+        if (useStacks && tick === D.arcaneMissiles.missiles) spendStacks(c, 'arcaneMissiles');
       },
     },
   },
@@ -456,7 +459,7 @@ export function chances(c: Combat): { title: string; rows: [string, string][] }[
     ['Partial resists', `-${Math.round((1 - D.partialResist) * 100)}% on average; Frostbolt and Ice Lance are all or nothing`],
   ];
   const procs: [string, string][] = [];
-  if (tl.arcaneConcentration) procs.push(['Clearcasting per landed damage spell', `${2 * tl.arcaneConcentration}%, 1 s cooldown`]);
+  if (tl.arcaneConcentration) procs.push(['Clearcasting per landed damage spell (each missile rolls)', `${2 * tl.arcaneConcentration}%, 1 s cooldown`]);
   if (tl.missileBarrage) procs.push(['Missile Barrage', '40% per Arcane Blast, 20% per Fireball, Frostbolt or Frostfire Bolt']);
   if (tl.hotStreak) procs.push(['Heating Up per direct Fire crit', '-25% Pyroblast cast, 3 stacks, 20 s']);
   if (tl.ignite) procs.push(['Ignite', `${8 * tl.ignite}% of a Fire crit over 4 s, rolling`]);

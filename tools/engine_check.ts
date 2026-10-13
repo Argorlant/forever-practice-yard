@@ -661,6 +661,46 @@ for (const sp of [mageArcane, mageFire, mageFrost]) {
   console.log(`Arcane with locked mana: ${r.c.dps().toFixed(0)} DPS, ${missiles?.hits ?? 0} missiles hit, Barrage ${k.missileBarrage ?? 0}/${k.barrageUsed ?? 0}, stacks spent at 3: ${k['stacksSpent:3'] ?? 0}`);
   if (!((k['stacksSpent:3'] ?? 0) > 20)) failures.push('Arcane rarely spent 3 Arcane Blast stacks');
 }
+// Arcane Missiles keep the Arcane Blast stacks (the client rule; gs spends them), and every missile
+// that lands can proc Clearcasting, so one Missiles cast has five chances.
+for (const useStacks of [false, true]) {
+  let s = 2024;
+  const c = new Combat(mageArcane, { ...(mageArcane.defaultOptions ?? {}), lockMana: true, missilesUseStacks: useStacks });
+  c.random = () => { s = (s * 16807) % 2147483647; return (s - 1) / 2147483646; };
+  c.stats = structuredClone(mageArcane.builds?.find((b) => b.id === 'arcane')?.stats ?? mageArcane.stats);
+  const dummy: Unit = { id: 0, name: 'Dummy', level: 63, health: 1e9, maxHealth: 1e9, armor: 3731, auras: new Map(), x: 0, z: 0, facing: 0, radius: 0.5 };
+  c.targets = [dummy];
+  c.target = dummy;
+  c.player.x = 0; c.player.z = -2; c.player.facing = 0;
+  c.reset();
+  const step = () => c.update(0.05);
+  const cast = (id: string) => {
+    c.use(id);
+    step();
+    while (c.casting || c.channeling || c.player.gcdEnd > c.t) step();
+  };
+  for (let i = 0; i < 3; i++) cast('arcaneBlast');
+  const before = c.aura(c.player, 'arcaneBlast')?.stacks ?? 0;
+  cast('arcaneMissiles');
+  const after = c.aura(c.player, 'arcaneBlast')?.stacks ?? 0;
+  const expected = useStacks ? 0 : before;
+  if (before !== 3 || after !== expected) failures.push(`Arcane Missiles (${useStacks ? 'gs' : 'client'} rule): ${before} stacks before, ${after} after; expected ${expected}`);
+  if (useStacks) continue;
+  // Clearcasting procs that land in the middle of a channel come from its missiles.
+  let midChannel = 0;
+  for (let i = 0; i < 150; i++) {
+    c.use('arcaneMissiles');
+    step();
+    while (c.channeling) {
+      const procs = c.counters.clearcasting ?? 0;
+      step();
+      if ((c.counters.clearcasting ?? 0) > procs && c.channeling) midChannel++;
+    }
+    while (c.player.gcdEnd > c.t) step();
+  }
+  console.log(`Arcane Missiles keep ${after} of ${before} Arcane Blast stacks; ${midChannel} Clearcasting procs from missiles in 150 casts`);
+  if (midChannel < 20) failures.push(`Only ${midChannel} Clearcasting procs from single missiles in 150 Missiles casts`);
+}
 // Fire: Ignite rolls, Fire Vulnerability stays at 5, Pyroblast only with Heating Up.
 {
   const r = play(mageFire, { build: 'fire', options: { lockMana: true } });
