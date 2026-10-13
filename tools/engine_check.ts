@@ -14,6 +14,16 @@ import { warlockAffliction, warlockDemonology, warlockDestruction } from '../src
 import { warrior } from '../src/specs/warrior';
 import { SPECS } from '../src/specs';
 import { classKey, decode, pointsPerTree, treesOf } from '../src/ui/talents-data';
+import { canAdd, canRemove, encode, isValid, parseTalents } from '../src/ui/talent-rules';
+import * as druidTalents from '../src/specs/druid/talents';
+import * as hunterTalents from '../src/specs/hunter/talents';
+import * as mageTalents from '../src/specs/mage/talents';
+import * as paladinTalents from '../src/specs/paladin/talents';
+import * as priestTalents from '../src/specs/priest/talents';
+import * as rogueTalents from '../src/specs/rogue/talents';
+import * as shamanTalents from '../src/specs/shaman/talents';
+import * as warlockTalents from '../src/specs/warlock/talents';
+import * as warriorTalents from '../src/specs/warrior/talents';
 
 function run(spec: Spec, seconds: number, seed: number, stats = spec.stats, options: Record<string, number | boolean | string> = {}) {
   let s = seed;
@@ -911,6 +921,52 @@ for (const sp of SPECS) {
   }
 }
 console.log(`Talent layouts checked for ${SPECS.reduce((n, s) => n + (s.builds?.length ?? 0), 0)} builds`);
+
+// Talents of your own (Settings → Edit talents) are written in the drawn layout's order: a point on any
+// drawn talent must reach the spec as that same talent.
+{
+  type Summary = { tree: string; points: number; talents: string[] }[];
+  const read: Record<string, (s: string) => Summary> = {
+    rogue: (s) => rogueTalents.summary(rogueTalents.talentsFor(undefined, s)),
+    warrior: (s) => warriorTalents.summary(warriorTalents.talentsFor(undefined, s)),
+    druid: (s) => druidTalents.summary(druidTalents.talentsFor(undefined, 'cat', s)),
+    paladin: (s) => paladinTalents.summary(paladinTalents.talentsFor(undefined, 'ret', s)),
+    hunter: (s) => hunterTalents.summary(hunterTalents.talentsFor(undefined, 'mm', s)),
+    priest: (s) => priestTalents.summary(priestTalents.talentsFor(undefined, 'shadow', s)),
+    mage: (s) => mageTalents.summary(mageTalents.talentsFor(undefined, 'fire', s)),
+    warlock: (s) => warlockTalents.summary(warlockTalents.talentsFor(undefined, 'affliction', s)),
+    shaman: (s) => shamanTalents.summary(shamanTalents.talentsFor(undefined, 'elemental', s)),
+  };
+  const norm = (x: string) => x.replace(/ \d+( ★)?$/, '').toLowerCase().replace(/[^a-z]/g, '');
+  let checked = 0;
+  for (const [cls, summarize] of Object.entries(read)) {
+    treesOf(cls).forEach((tree, i) => tree.talents.forEach((t, j) => {
+      const s = treesOf(cls).map((_, k) => (k === i ? `${'0'.repeat(j)}1` : '')).join('-');
+      const got = summarize(s)[i]?.talents ?? [];
+      checked++;
+      if (got.length !== 1 || norm(got[0]) !== norm(t.name)) failures.push(`${cls}: a point on ${t.name} reads as ${got.join(', ') || 'nothing'}`);
+    }));
+  }
+  console.log(`Own talents: ${checked} talents read back as drawn`);
+  // Every published build follows the rules the editor enforces.
+  for (const sp of SPECS) {
+    const cls = classKey(sp.className);
+    for (const b of sp.builds ?? []) {
+      if (b.talentString && !isValid(cls, decode(cls, b.talentString))) failures.push(`${sp.id}/${b.id}: not a legal level 60 build`);
+    }
+  }
+  // The rules: a row needs five points above it, a prerequisite at full rank, at most 51 points.
+  const holy = decode('paladin', '');
+  const shock = treesOf('paladin')[0].talents.findIndex((t) => t.key === 'holyShock');
+  const vigil = treesOf('paladin')[0].talents.findIndex((t) => t.key === 'lightsVigil');
+  if (canAdd('paladin', holy, 0, shock)) failures.push('Holy Shock could be taken with no points in Holy');
+  const shockadin = decode('paladin', '55003013200131151--05223331001');
+  if (canRemove('paladin', shockadin, 0, shock)) failures.push("Holy Shock could be removed under Light's Vigil");
+  if (!canRemove('paladin', shockadin, 0, vigil)) failures.push("Light's Vigil could not be removed");
+  if (canAdd('paladin', shockadin, 2, 0)) failures.push('a 52nd point could be spent');
+  if (encode(shockadin) !== '55003013200131151--05223331001') failures.push(`encode gives ${encode(shockadin)}`);
+  if (parseTalents('paladin', '5555555555555555555') !== null) failures.push('an illegal link was accepted');
+}
 if (failures.length) {
   console.error(`FAILED:\n  ${failures.join('\n  ')}`);
   process.exit(1);

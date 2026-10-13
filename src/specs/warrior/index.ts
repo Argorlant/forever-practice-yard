@@ -9,7 +9,7 @@ import { ARMS_STATS, DATA, FURY_STATS, NORMALIZED_SPEED, PROT_STATS } from './da
 import { BUILDS, buildById, buildLabel, summary, talentsFor, type Stance, type Talents } from './talents';
 
 const D = DATA;
-const T = (c: Combat): Talents => talentsFor(c.options.build);
+const T = (c: Combat): Talents => talentsFor(c.options.build, c.options.talents);
 const build = (c: Combat) => buildById(c.options.build);
 const landed = (o: Outcome) => o === 'hit' || o === 'crit' || o === 'glance' || o === 'block';
 const roll = (c: Combat, pct: number) => c.random() * 100 < pct;

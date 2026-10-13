@@ -15,7 +15,7 @@ const note = (c: Combat, text: string, kind: 'proc' | 'resource' = 'proc') => c.
 /** The spec ('ret', 'prot', 'shock') from the spec id 'paladin-ret'… */
 const specOf = (c: Combat) => c.spec.id.replace('paladin-', '') as PaladinSpec;
 /** Talent ranks of the build chosen in Settings. */
-export const T = (c: Combat): Talents => talentsFor(c.options.build, specOf(c));
+export const T = (c: Combat): Talents => talentsFor(c.options.build, specOf(c), c.options.talents);
 
 interface PaladinState { lastCommand: number; lastReckoning: number; lastShieldSpec: number }
 const states = new WeakMap<Combat, PaladinState>();

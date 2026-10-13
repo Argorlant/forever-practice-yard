@@ -380,6 +380,18 @@ img.wow-icon { width: 100%; height: 100%; display: block; object-fit: cover; tra
   line-height: 13px; color: #8a8a8a; border: 1px solid #333; }
 .tal.part .tal-rank { color: #6fef6f; border-color: #2f7f2f; }
 .tal.max .tal-rank { color: #ffd84a; border-color: #8a6d33; }
+/* Settings → Edit talents: green where a point can go, as in the game; dark where it cannot yet. */
+.talent-edit-bar { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin: 8px 0; }
+.talent-edit-bar .points { margin-right: auto; color: var(--muted); font-size: 13px; }
+.talent-edit-bar .points b { color: var(--gold); }
+.talent-edit-bar [hidden] { display: none; }
+.talent-edit-bar .active { background: #4a3a1e; border-color: var(--gold); color: #fff; }
+.talent-graphic.editing .tal { cursor: pointer; }
+.talent-graphic.editing .tal.avail { box-shadow: 0 0 0 2px #3fbf3f, 0 0 8px rgba(63, 191, 63, .55); }
+.talent-graphic.editing .tal.off.avail img { filter: none; }
+.talent-graphic.editing .tal.off.avail .tal-rank { color: #6fef6f; border-color: #2f7f2f; }
+.talent-graphic.editing .tal.locked { cursor: not-allowed; }
+.talent-graphic.editing .tal:not(.locked):hover { filter: brightness(1.2); }
 .talent-list { margin-top: 8px; }
 .talent-list summary { cursor: pointer; color: var(--muted); font-size: 12px; }
 @media (max-width: 600px) { .talent-graphic { --tal: 30px; gap: 6px; } .build-card { grid-template-columns: 1fr; } }

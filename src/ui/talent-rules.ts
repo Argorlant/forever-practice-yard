@@ -1,0 +1,57 @@
+// WoW's rules for a talent build of your own: 51 points at level 60, five
+// points in a tree for every row above a talent, and a talent's prerequisite
+// at full rank. Points are per talent in the drawn layout's order, the order
+// the specs read (tools/engine_check.ts checks every talent).
+import { decode, treesOf } from './talents-data';
+
+export const MAX_POINTS = 51;
+export type Points = number[][];
+
+/** The sims' talent string: one digit per talent, trees split by '-', trailing zeros left out. */
+export const encode = (points: Points): string =>
+  points.map((tree) => tree.join('').replace(/0+$/, '')).join('-').replace(/-+$/, '');
+
+export const totalPoints = (points: Points) => points.reduce((n, tree) => n + tree.reduce((a, b) => a + b, 0), 0);
+
+/** Points spent in a tree's rows above `row`. */
+function above(cls: string, points: Points, tree: number, row: number): number {
+  return treesOf(cls)[tree].talents.reduce((n, t, j) => n + (t.row < row ? points[tree][j] : 0), 0);
+}
+
+function prerequisiteMet(cls: string, points: Points, tree: number, j: number): boolean {
+  const talents = treesOf(cls)[tree].talents;
+  const req = talents[j].req;
+  if (!req) return true;
+  const k = talents.findIndex((t) => t.row === req[0] && t.col === req[1]);
+  return k < 0 || points[tree][k] >= talents[k].max;
+}
+
+/** Every talent with points has its rows and its prerequisite, within 51 points. */
+export function isValid(cls: string, points: Points): boolean {
+  if (totalPoints(points) > MAX_POINTS) return false;
+  return treesOf(cls).every((tree, i) => tree.talents.every((t, j) => {
+    const r = points[i]?.[j] ?? 0;
+    return r === 0 || (r <= t.max && above(cls, points, i, t.row) >= 5 * t.row && prerequisiteMet(cls, points, i, j));
+  }));
+}
+
+export function canAdd(cls: string, points: Points, tree: number, j: number): boolean {
+  const t = treesOf(cls)[tree].talents[j];
+  return totalPoints(points) < MAX_POINTS && points[tree][j] < t.max
+    && above(cls, points, tree, t.row) >= 5 * t.row && prerequisiteMet(cls, points, tree, j);
+}
+
+/** A point can go if what is left still holds: rows below keep their five per row, and talents keep their prerequisite. */
+export function canRemove(cls: string, points: Points, tree: number, j: number): boolean {
+  if (points[tree][j] <= 0) return false;
+  const next = points.map((t) => [...t]);
+  next[tree][j]--;
+  return isValid(cls, next);
+}
+
+/** A talent string from a link, if it is a legal level 60 build for the class. */
+export function parseTalents(cls: string, s: string | null): string | null {
+  if (!s || !/^[0-9-]{1,120}$/.test(s)) return null;
+  const points = decode(cls, s);
+  return isValid(cls, points) ? encode(points) : null;
+}

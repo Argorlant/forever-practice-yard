@@ -10,7 +10,7 @@ import { BALANCE_STATS } from './data';
 import { CONTROLS, D, SOURCES, YARD, barkskin, clearcasting, faerieFire, manaPotion, omen, resetState, roll, useClearcasting } from './shared';
 import { buildById, buildLabel, buildsFor, summary, talentsFor, type Talents } from './talents';
 
-const T = (c: Combat): Talents => talentsFor(c.options.build, 'balance');
+const T = (c: Combat): Talents => talentsFor(c.options.build, 'balance', c.options.talents);
 const RANGE = 30;
 
 // ------------------------------------------------------------------- mana

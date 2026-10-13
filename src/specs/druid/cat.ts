@@ -14,7 +14,7 @@ import {
 } from './shared';
 import { buildById, buildLabel, buildsFor, summary, talentsFor, type Talents } from './talents';
 
-const T = (c: Combat): Talents => talentsFor(c.options.build, 'cat');
+const T = (c: Combat): Talents => talentsFor(c.options.build, 'cat', c.options.talents);
 
 // --------------------------------------------------------------- helpers
 const needsBehind = (c: Combat, t: Unit | null) => (t && !c.behind(t) ? UI.mustBeBehind : null);

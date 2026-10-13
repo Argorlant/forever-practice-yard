@@ -78,10 +78,13 @@ const cache = new Map<string, Talents>();
 export function buildById(id: unknown, spec: DruidSpec): Build {
   return BUILDS.find((b) => b.id === id && b.spec === spec) ?? buildsFor(spec)[0];
 }
-export function talentsFor(id: unknown, spec: DruidSpec): Talents {
-  const b = buildById(id, spec);
-  let t = cache.get(b.id);
-  if (!t) cache.set(b.id, (t = decodeTalents(TREES, b.talentString)));
+/** A build's talents, or your own (`custom`, a talent string from Settings → Edit talents). */
+export function talentsFor(id: unknown, spec: DruidSpec, custom?: unknown): Talents {
+  const own = typeof custom === 'string' && custom ? custom : null;
+  const string = own ?? buildById(id, spec).talentString;
+  const key = own ? `custom:${own}` : buildById(id, spec).id;
+  let t = cache.get(key);
+  if (!t) cache.set(key, (t = decodeTalents(TREES, string)));
   return t;
 }
 export const summary = (t: Talents) => talentSummary(['Balance', 'Feral Combat', 'Restoration'], TREES, NAMES, NEW_IN_FOREVER, t);

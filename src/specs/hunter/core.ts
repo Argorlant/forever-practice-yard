@@ -17,7 +17,7 @@ const between = (c: Combat, min: number, max: number) => min + c.random() * (max
 
 const specOf = (c: Combat) => c.spec.id.replace('hunter-', '') as HunterSpec;
 /** Talent ranks of the build chosen in Settings. */
-export const T = (c: Combat): Talents => talentsFor(c.options.build, specOf(c));
+export const T = (c: Combat): Talents => talentsFor(c.options.build, specOf(c), c.options.talents);
 export const build = (c: Combat) => buildById(c.options.build, specOf(c));
 
 interface HunterState {

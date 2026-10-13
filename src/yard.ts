@@ -14,11 +14,13 @@ import { createWorld } from './scene/world';
 import { SPECS, specById } from './specs';
 import { UI, fmt } from './strings';
 import { Floaters } from './ui/floaters';
-import { expandBar, fillExtraRows, slotShown } from './ui/bars';
+import { addMissing, expandBar, fillExtraRows, slotShown } from './ui/bars';
 import { Hud } from './ui/hud';
 import { SettingsDialog, claimKey, defaultPrefs, type Prefs } from './ui/settings';
 import { raidPicker } from './ui/raid-picker';
 import { DISCLAIMER_SHORT_HTML } from './ui/disclaimer';
+import { parseTalents } from './ui/talent-rules';
+import { classKey } from './ui/talents-data';
 import { bindingFor, load, save } from './ui/storage';
 
 // The class comes from the URL (?class=warrior), else the last one played; ?build= picks a build.
@@ -62,6 +64,8 @@ function applyBuild(id: string): boolean {
   const build = spec.builds?.find((b) => b.id === id);
   if (!build) return false;
   prefs.options.build = build.id;
+  // A build brings its own talents.
+  prefs.options.talents = '';
   prefs.stats = structuredClone(build.stats);
   Object.assign(prefs.options, build.options ?? {});
   // Tank builds turn on the attacking dummy; the others turn it off.
@@ -72,9 +76,13 @@ function applyBuild(id: string): boolean {
 }
 const urlBuild = params.get('build');
 if (urlBuild && urlBuild !== prefs.options.build && applyBuild(urlBuild)) refillRows = true;
-if (urlBuild) {
+// A shared link's own talents (Settings → Copy link), if they are a legal level 60 build.
+const urlTalents = params.has('talents') ? parseTalents(classKey(spec.className), params.get('talents')) : null;
+if (urlTalents !== null) { prefs.options.talents = urlTalents; refillRows = true; }
+if (urlBuild || params.has('talents')) {
   // Applied once: a reload keeps whatever you change afterwards.
   params.delete('build');
+  params.delete('talents');
   history.replaceState(null, '', `${location.pathname}?${params}`);
 }
 
@@ -259,7 +267,9 @@ const settings = new SettingsDialog(app, spec, prefs, combat, (what) => {
     fillExtraRows(prefs.bar, combat);
   }
   if (what === 'build' && applyBuild(String(prefs.options.build))) applyEnemy();
-  if (what === 'stats' || what === 'options' || what === 'build') { applyStats(); combat.reset(); }
+  if (what === 'stats' || what === 'options' || what === 'build' || what === 'talents') { applyStats(); combat.reset(); }
+  // Talents of your own: abilities they unlock get a button on rows 3 and 4.
+  if (what === 'talents') addMissing(prefs.bar, combat);
   // Rows 3 and 4 take what the new build can use and has no button for.
   if (what === 'build') fillExtraRows(prefs.bar, combat);
   if (what === 'enemy') applyEnemy();

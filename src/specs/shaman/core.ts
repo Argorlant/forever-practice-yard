@@ -18,7 +18,7 @@ const note = (c: Combat, text: string, kind: 'proc' | 'resource' = 'proc') => c.
 
 export const specOf = (c: Combat) => c.spec.id.replace('shaman-', '') as ShamanSpec;
 /** Talent ranks of the build chosen in Settings. */
-export const T = (c: Combat): Talents => talentsFor(c.options.build, specOf(c));
+export const T = (c: Combat): Talents => talentsFor(c.options.build, specOf(c), c.options.talents);
 export const build = (c: Combat) => buildById(c.options.build, specOf(c));
 /** Enhancement and the off-tank fight in melee; Elemental casts. */
 export const melee = (c: Combat) => specOf(c) !== 'elemental';

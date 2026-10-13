@@ -130,6 +130,8 @@ function fireSuggest(c: Combat): string | null {
   if (tool) return tool;
   if (p.inCombat && tl.combustion && ready('combustion')) return 'combustion';
   if (tl.pyroblast && stacksOf(c, p, 'heatingUp') >= 3) return 'pyroblast';
+  // A Fire/Frost build of your own with Ice Lance: Fingers of Frost charges go to Ice Lance, as for Frost.
+  if (tl.iceLance && c.aura(p, 'fingersOfFrost') && !c.casting) return 'iceLance';
   if (ready('fireBlast')) return 'fireBlast';
   const fv = c.aura(t, 'fireVulnerability');
   if (tl.improvedScorch && (!fv || (fv.stacks ?? 0) < 5 || fv.end - c.t <= 5)) return 'scorch';

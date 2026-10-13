@@ -78,7 +78,7 @@ export const BUILDS: Build[] = [
   { id: 'prot-dwarf', spec: 'prot', name: 'Protection (Dwarf)', talentString: '-5520513321301551-15003', source: GS, stats: PROT_STATS, bar: PROT_BAR, tank: true },
   { id: 'prot-fs', spec: 'prot', name: 'Protection, Holy dip', talentString: '55003-5530513321301501', source: FS, stats: PROT_STATS, bar: PROT_BAR, tank: true },
   { id: 'prot-deep', spec: 'prot', name: 'Protection, deep', talentString: '-5532513321301551-15', source: FS, stats: PROT_STATS, bar: PROT_BAR, tank: true },
-  { id: 'shock', spec: 'shock', name: 'Shockadin', talentString: '55003003200131251--05223331001', source: 'our proposal', stats: SHOCK_STATS, bar: SHOCK_BAR },
+  { id: 'shock', spec: 'shock', name: 'Shockadin', talentString: '55003013200131151--05223331001', source: 'our proposal', stats: SHOCK_STATS, bar: SHOCK_BAR },
   { id: 'shock-ret', spec: 'shock', name: 'Shock-Ret hybrid', talentString: '55003013200101--0522513100133031', source: 'our proposal', stats: RET_STATS, bar: SHOCK_BAR },
 ];
 
@@ -89,10 +89,13 @@ const cache = new Map<string, Talents>();
 export function buildById(id: unknown, spec: PaladinSpec): Build {
   return BUILDS.find((b) => b.id === id && b.spec === spec) ?? buildsFor(spec)[0];
 }
-export function talentsFor(id: unknown, spec: PaladinSpec): Talents {
-  const b = buildById(id, spec);
-  let t = cache.get(b.id);
-  if (!t) cache.set(b.id, (t = decodeTalents(TREES, b.talentString)));
+/** A build's talents, or your own (`custom`, a talent string from Settings → Edit talents). */
+export function talentsFor(id: unknown, spec: PaladinSpec, custom?: unknown): Talents {
+  const own = typeof custom === 'string' && custom ? custom : null;
+  const string = own ?? buildById(id, spec).talentString;
+  const key = own ? `custom:${own}` : buildById(id, spec).id;
+  let t = cache.get(key);
+  if (!t) cache.set(key, (t = decodeTalents(TREES, string)));
   return t;
 }
 export const summary = (t: Talents) => talentSummary(['Holy', 'Protection', 'Retribution'], TREES, NAMES, NEW_IN_FOREVER, t);

@@ -13,7 +13,7 @@ import {
 } from './shared';
 import { buildById, buildLabel, buildsFor, summary, talentsFor, type Talents } from './talents';
 
-const T = (c: Combat): Talents => talentsFor(c.options.build, 'bear');
+const T = (c: Combat): Talents => talentsFor(c.options.build, 'bear', c.options.talents);
 
 /** Rage from damage taken, shared with warriors (8 Oct model): raw x (1 - 39.3 %) x coefficient / 4,365. */
 const INCOMING = { coefficient: 10, expectedHealth: 4365, referenceArmor: 0.393 };

@@ -1,7 +1,7 @@
 // Settings dialog: how to play, character stats, enemy, options, keybinds
 // and credits. Every change applies at once and is saved in the browser.
 import type { Combat } from '../engine/combat';
-import type { Binding, Spec, Stats, WeaponType } from '../engine/types';
+import type { Binding, Spec, SpecBuild, Stats, WeaponType } from '../engine/types';
 import type { MoveBindings } from '../scene/controls';
 import { UI } from '../strings';
 import { ACTION_SLOTS, MAX_ROWS, ROW, expandBar } from './bars';
@@ -10,8 +10,9 @@ import { ICON_AUTHORS } from './icons.gen';
 import { bindingFor, keyLabel } from './storage';
 import { DISCLAIMER_HTML, INSPIRATION_HTML, SUPPORT_HTML } from './disclaimer';
 import { raidPicker } from './raid-picker';
+import { MAX_POINTS, canAdd, canRemove, encode, totalPoints } from './talent-rules';
 import { talentTreesHtml } from './talent-tree';
-import { classKey } from './talents-data';
+import { classKey, decode, treesOf } from './talents-data';
 
 export interface Prefs {
   stats: Stats;
@@ -56,7 +57,7 @@ const h = (tag: string, cls = '', html = '') => {
 };
 
 /** What changed; 'view' only changes what is drawn (the helper, the panel), so the fight goes on. */
-export type Change = 'stats' | 'enemy' | 'options' | 'keys' | 'bar' | 'defaults' | 'build' | 'view';
+export type Change = 'stats' | 'enemy' | 'options' | 'keys' | 'bar' | 'defaults' | 'build' | 'view' | 'talents';
 
 /** Other classes the player can switch to. */
 export interface ClassPicker { list: { id: string; name: string; group?: string }[]; current: string; pick(id: string): void }
@@ -76,6 +77,9 @@ export class SettingsDialog {
   private overlay: HTMLElement;
   private body: HTMLElement;
   private chancesBox: HTMLElement | null = null;
+  /** The talent frame takes clicks (Edit talents), and takes points back (Remove, for touch screens). */
+  private editingTalents = false;
+  private removingTalents = false;
   private onChange: (what: Change) => void;
   /** Set while waiting for a key press to rebind. */
   capturing: ((code: string | null, e: KeyboardEvent) => void) | null = null;
@@ -158,15 +162,8 @@ export class SettingsDialog {
       });
       sec.append(sel);
       const current = this.spec.builds.find((x) => x.id === p.options.build) ?? this.spec.builds[0];
-      // The talent frame, drawn; the same talents as a list (with what is new in Forever) underneath.
-      if (current.talentString) sec.append(h('div', 'build-trees', talentTreesHtml(classKey(this.spec.className), current.talentString)));
-      const list = h('details', 'talent-list', '<summary>Talents as a list (★ new in WoW Forever)</summary>');
-      const trees = h('div', 'talent-trees');
-      for (const t of current.trees) {
-        trees.append(h('div', 'talent-tree', `<b>${t.tree} <span>${t.points}</span></b>${t.talents.map((x) => `<div>${x}</div>`).join('') || '<div class="none">-</div>'}`));
-      }
-      list.append(trees);
-      sec.append(list, h('p', 'note', 'Picking a build loads its talents, its weapons and its action bar; your keys stay. The yellow glow follows that build\'s priority list. Hover a talent for what it does.'));
+      if (current.talentString) this.talentEditor(sec, current, sel);
+      sec.append(h('p', 'note', 'Picking a build loads its talents, its weapons and its action bar; your keys stay. The yellow glow follows that build\'s priority list, which reads your talents. Hover a talent for what it does.'));
     }
 
     // Character.
@@ -411,6 +408,94 @@ export class SettingsDialog {
     grid.append(l);
     row.append(grid);
     parent.append(row);
+  }
+
+  /**
+   * The build's talent frame, and an editor for talents of your own: left
+   * click adds a point, right click (or Remove on a touch screen) takes one,
+   * under WoW's rules. Your talents replace the build's; its gear, bar and
+   * priority list stay.
+   */
+  private talentEditor(sec: HTMLElement, build: SpecBuild, select: HTMLSelectElement): void {
+    const p = this.prefs;
+    const cls = classKey(this.spec.className);
+    const buildString = encode(decode(cls, build.talentString!));
+    const own = () => (typeof p.options.talents === 'string' ? p.options.talents : '');
+    const points = decode(cls, own() || buildString);
+
+    const bar = h('div', 'talent-edit-bar');
+    const label = h('span', 'points');
+    const editBtn = h('button', 'hud-btn small', 'Edit talents');
+    const removeBtn = h('button', 'hud-btn small', 'Remove');
+    removeBtn.title = 'On a touch screen: tap a talent to take a point back';
+    const resetBtn = h('button', 'hud-btn small', 'Back to the build');
+    const clearBtn = h('button', 'hud-btn small', 'Clear');
+    const linkBtn = h('button', 'hud-btn small', 'Copy link');
+    linkBtn.title = 'A link to this class, build and talents, to share';
+    bar.append(label, editBtn, removeBtn, resetBtn, clearBtn, linkBtn);
+    const graphic = h('div', 'build-trees');
+    const list = h('details', 'talent-list');
+    sec.append(bar, graphic, list);
+
+    const draw = () => {
+      const s = encode(points);
+      const mine = s !== buildString;
+      const split = points.map((t) => t.reduce((a, b) => a + b, 0));
+      label.innerHTML = `${mine ? '<b>Your talents</b>' : 'The build\'s talents'} · ${split.join('/')} · ${totalPoints(points)}/${MAX_POINTS}`;
+      editBtn.classList.toggle('active', this.editingTalents);
+      for (const b of [removeBtn, clearBtn]) b.hidden = !this.editingTalents;
+      removeBtn.classList.toggle('active', this.removingTalents);
+      resetBtn.hidden = !mine;
+      graphic.innerHTML = talentTreesHtml(cls, s, this.editingTalents);
+      const opt = select.selectedOptions[0];
+      if (opt) opt.textContent = `${build.label}${mine ? ' (your talents)' : ''}`;
+      // The same talents as a list; the build's own list marks what is new in WoW Forever.
+      const trees = mine
+        ? treesOf(cls).map((tree, i) => ({ tree: tree.name, points: split[i], talents: tree.talents.flatMap((t, j) => (points[i][j] ? [`${t.name} ${points[i][j]}`] : [])) }))
+        : build.trees;
+      list.innerHTML = `<summary>Talents as a list${mine ? '' : ' (★ new in WoW Forever)'}</summary>`;
+      const box = h('div', 'talent-trees');
+      for (const t of trees) box.append(h('div', 'talent-tree', `<b>${t.tree} <span>${t.points}</span></b>${t.talents.map((x) => `<div>${x}</div>`).join('') || '<div class="none">-</div>'}`));
+      list.append(box);
+    };
+    const commit = () => {
+      const s = encode(points);
+      p.options.talents = s === buildString ? '' : s;
+      this.onChange('talents');
+      draw();
+    };
+    const change = (e: Event, take: boolean) => {
+      const cell = (e.target as HTMLElement).closest<HTMLElement>('.tal[data-t]');
+      if (!cell || !this.editingTalents) return;
+      e.preventDefault();
+      const i = Number(cell.dataset.t), j = Number(cell.dataset.j);
+      if (take ? !canRemove(cls, points, i, j) : !canAdd(cls, points, i, j)) return;
+      points[i][j] += take ? -1 : 1;
+      commit();
+    };
+    graphic.addEventListener('click', (e) => change(e, this.removingTalents));
+    graphic.addEventListener('contextmenu', (e) => change(e, true));
+    editBtn.addEventListener('click', () => { this.editingTalents = !this.editingTalents; this.removingTalents = false; draw(); });
+    removeBtn.addEventListener('click', () => { this.removingTalents = !this.removingTalents; draw(); });
+    resetBtn.addEventListener('click', () => {
+      decode(cls, buildString).forEach((t, i) => t.forEach((r, j) => { points[i][j] = r; }));
+      commit();
+    });
+    clearBtn.addEventListener('click', () => {
+      for (const t of points) t.fill(0);
+      commit();
+    });
+    linkBtn.addEventListener('click', () => {
+      const url = new URL(location.href);
+      url.search = '';
+      url.searchParams.set('class', this.spec.id);
+      url.searchParams.set('build', build.id);
+      if (own()) url.searchParams.set('talents', own());
+      const done = () => { linkBtn.textContent = 'Copied!'; setTimeout(() => { linkBtn.textContent = 'Copy link'; }, 1500); };
+      navigator.clipboard?.writeText(url.toString()).then(done, () => window.prompt('Copy this link:', url.toString()))
+        ?? window.prompt('Copy this link:', url.toString());
+    });
+    draw();
   }
 
   private keyRow(parent: HTMLElement, label: string, get: () => string, set: (code: string | null) => boolean): void {

@@ -87,10 +87,12 @@ const cache = new Map<string, Talents>();
 export function buildById(id: unknown): Build {
   return BUILDS.find((b) => b.id === id) ?? BUILDS[0];
 }
-export function talentsFor(id: unknown): Talents {
-  const b = buildById(id);
-  let t = cache.get(b.id);
-  if (!t) cache.set(b.id, (t = decodeTalents(TREES, b.talentString)));
+/** A build's talents, or your own (`custom`, a talent string from Settings → Edit talents). */
+export function talentsFor(id: unknown, custom?: unknown): Talents {
+  const own = typeof custom === 'string' && custom ? custom : null;
+  const key = own ? `custom:${own}` : buildById(id).id;
+  let t = cache.get(key);
+  if (!t) cache.set(key, (t = decodeTalents(TREES, own ?? buildById(id).talentString)));
   return t;
 }
 export const summary = (t: Talents) => talentSummary(['Arms', 'Fury', 'Protection'], TREES, NAMES, NEW_IN_FOREVER, t);

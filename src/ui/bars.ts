@@ -24,6 +24,13 @@ export function fillExtraRows(bar: Binding[], c: Combat): void {
   for (let i = ACTION_BAR_SLOTS; i < ACTION_SLOTS && rest.length; i++) bar[i].id = rest.shift()!;
 }
 
+/** Abilities you can use but have no button for (a talent just taken) go into empty slots on rows 3 and 4. */
+export function addMissing(bar: Binding[], c: Combat): void {
+  const used = new Set(bar.map((b) => b.id).filter(Boolean));
+  const rest = c.spec.abilities.filter((a) => !used.has(a.id) && (a.usable?.(c) ?? true)).map((a) => a.id);
+  for (let i = ACTION_BAR_SLOTS; i < ACTION_SLOTS && rest.length; i++) if (!bar[i].id) bar[i].id = rest.shift()!;
+}
+
 /** The row of an action slot (0 = the main row, keys 1-8), or -1 for the stance bar. */
 export const rowOf = (slot: number) => (slot < ACTION_SLOTS ? Math.floor(slot / ROW) : -1);
 /** Whether a slot is on a row the player shows (the stance bar always is). */

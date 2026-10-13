@@ -15,7 +15,7 @@ const note = (c: Combat, text: string, kind: 'proc' | 'resource' = 'proc') => c.
 
 const specOf = (c: Combat) => c.spec.id.replace('priest-', '') as PriestSpec;
 /** Talent ranks of the build chosen in Settings. */
-export const T = (c: Combat): Talents => talentsFor(c.options.build, specOf(c));
+export const T = (c: Combat): Talents => talentsFor(c.options.build, specOf(c), c.options.talents);
 
 // ------------------------------------------------------------------- mana
 export const shadowform = (c: Combat) => !!c.aura(c.player, 'shadowform');

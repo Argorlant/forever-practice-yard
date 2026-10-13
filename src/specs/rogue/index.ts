@@ -9,7 +9,7 @@ import { BUILDS, buildById, buildLabel, summary, talentsFor, type Talents } from
 
 const D = DATA;
 /** Talent ranks of the build chosen in Settings. */
-const T = (c: Combat): Talents => talentsFor(c.options.build);
+const T = (c: Combat): Talents => talentsFor(c.options.build, c.options.talents);
 const landed = (o: Outcome) => o === 'hit' || o === 'crit' || o === 'glance';
 const roll = (c: Combat, pct: number) => c.random() * 100 < pct;
 const round1 = (n: number) => Math.round(n * 10) / 10;

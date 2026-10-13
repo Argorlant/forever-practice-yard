@@ -180,6 +180,12 @@ like the game's talent frame (hover a talent for what it does). `?class=warrior`
 current build's trees and links back to the first screen. `npm run talents` rebuilds the tree layouts from gunba's sim
 (`tools/talent_layout.mjs`), and `npm run icons` fetches their icons.
 
+**Your own talents.** In Settings, *Edit talents* turns the build's talent frame into a calculator: left click adds a
+point, right click (or *Remove* on a touch screen) takes one back, under the game's rules (51 points, five per row,
+prerequisites at full rank). Your talents replace the build's, which keeps its gear, action bar and priority list; the
+priority list reads your talents, and abilities a talent unlocks get a button. *Copy link* shares the class, build and
+talents (`?class=…&build=…&talents=…`).
+
 **Action bars and keys.** Up to four rows of 8 buttons (2 to 4 shown, in Settings or the Spellbook). Rows 3 and 4 start with
 the build's abilities that have no other button (Charge and Intercept for a warrior), row 3 on Shift+1-8. The Spellbook lists
 every ability to drag onto a button; dragging a button off the bar clears it. The Keys button turns on key binding: hover a
