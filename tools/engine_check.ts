@@ -48,7 +48,8 @@ function run(spec: Spec, seconds: number, seed: number, stats = spec.stats, opti
   c.on('ability', ({ id }) => { used[id] = (used[id] ?? 0) + 1; });
   const dt = 0.05;
   for (let t = 0; t < seconds; t += dt) {
-    const id = spec.suggest?.(c);
+    // A player who presses the glow when the cast ends (pressing during a cast would queue a stale choice).
+    const id = c.casting ? null : spec.suggest?.(c);
     if (id) c.use(id);
     const before = c.player.resource;
     c.update(dt);
@@ -258,7 +259,8 @@ function play(sp: Spec, opts: { build?: string; seconds?: number; seed?: number;
   c.on('ability', ({ id }) => { used[id] = (used[id] ?? 0) + 1; });
   const seconds = opts.seconds ?? 300;
   for (let t = 0; t < seconds; t += 0.05) {
-    const id = sp.suggest?.(c);
+    // A player who presses the glow when the cast ends (pressing during a cast would queue a stale choice).
+    const id = c.casting ? null : sp.suggest?.(c);
     if (id) c.use(id);
     c.update(0.05);
   }
@@ -710,6 +712,37 @@ for (const useStacks of [false, true]) {
   }
   console.log(`Arcane Missiles keep ${after} of ${before} Arcane Blast stacks; ${midChannel} Clearcasting procs from missiles in 150 casts`);
   if (midChannel < 20) failures.push(`Only ${midChannel} Clearcasting procs from single missiles in 150 Missiles casts`);
+}
+// Spell queue: a press in the last 0.4 s of a cast goes off the moment the cast ends; earlier is an error;
+// an interrupted cast drops the queued spell.
+{
+  const c = new Combat(mageFrost, { ...(mageFrost.defaultOptions ?? {}), lockMana: true });
+  c.stats = structuredClone(mageFrost.stats);
+  const dummy: Unit = { id: 0, name: 'Dummy', level: 63, health: 1e9, maxHealth: 1e9, armor: 3731, auras: new Map(), x: 0, z: 0, facing: 0, radius: 0.5 };
+  c.targets = [dummy];
+  c.target = dummy;
+  c.player.x = 0; c.player.z = -10; c.player.facing = 0;
+  c.reset();
+  const errors: string[] = [];
+  c.on('error', (e) => errors.push(e));
+  const until = (left: number) => { while (c.casting && c.casting.end - c.t > left) c.update(0.01); };
+  c.use('frostbolt');
+  until(0.6);
+  c.use('frostbolt');
+  const early = errors.length;
+  until(0.3);
+  c.use('frostbolt');
+  const end = c.casting!.end;
+  while (c.t < end + 0.001) c.update(0.01);
+  const next = c.casting;
+  if (early !== 1 || errors.length !== 1) failures.push(`spell queue: ${errors.length} errors (${early} for the early press); expected 1`);
+  if (!next || Math.abs(next.start - end) > 1e-6) failures.push(`spell queue: the queued Frostbolt started at ${next?.start.toFixed(3)}, the cast ended at ${end.toFixed(3)}`);
+  until(0.3);
+  c.use('frostbolt');
+  c.cancelCast();
+  for (let i = 0; i < 50; i++) c.update(0.01);
+  if (c.casting) failures.push('spell queue: a spell queued behind an interrupted cast still went off');
+  console.log(`Spell queue: a press 0.3 s before the end starts the next cast ${next ? ((next.start - end) * 1000).toFixed(0) : '?'} ms after it`);
 }
 // Fire: Ignite rolls, Fire Vulnerability stays at 5, Pyroblast only with Heating Up.
 {

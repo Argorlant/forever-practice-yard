@@ -81,7 +81,8 @@ function arcaneSuggest(c: Combat): string | null {
   const tool = manaTool(c, 0.15);
   if (tool) return tool;
   if (c.aura(p, 'missileBarrage')) return 'arcaneMissiles';
-  const stacks = abStacks(c);
+  // The Arcane Blast being cast counts: what glows in the spell queue window comes after it.
+  const stacks = Math.min(4, abStacks(c) + (c.casting?.id === 'arcaneBlast' ? 1 : 0));
   if (!tl.arcaneBlast) return 'arcaneMissiles';
   if (stacks >= 3 || (stacks >= 2 && mana < 0.2)) return tl.ignite && ready('fireBlast') ? 'fireBlast' : 'frostbolt';
   return 'arcaneBlast';

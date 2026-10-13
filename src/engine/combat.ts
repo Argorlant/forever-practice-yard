@@ -52,7 +52,7 @@ export const MELEE_RANGE = 5 * YARD;
 /** Ranged attacks: 8 to 35 yards; between melee and 8 yards is the dead zone. */
 export const RANGED_MIN = 8 * YARD;
 export const RANGED_MAX = 35 * YARD;
-/** Spell queue window: a press up to 0.4 s before the GCD ends is queued. */
+/** Spell queue window, as in WoW: a press up to 0.4 s before the GCD or a cast ends is queued and goes off right after. */
 const QUEUE_WINDOW = 0.4;
 const LEAVE_COMBAT_AFTER = 5;
 
@@ -592,7 +592,8 @@ export class Combat {
     const p = this.player;
     if (a.onNextSwing) return this.queueSwing(a);
     if (this.casting && a.gcd > 0) {
-      this.emit('error', UI.notReady);
+      if (this.casting.end - this.t <= QUEUE_WINDOW) this.queued = id;
+      else this.emit('error', UI.notReady);
       return false;
     }
     if (a.gcd > 0 && this.t < p.gcdEnd) {
@@ -726,6 +727,8 @@ export class Combat {
   cancelCast(reason?: string): void {
     if (!this.casting) return;
     this.casting.ev.cancel();
+    // An interrupted cast drops the spell queued behind it.
+    this.queued = null;
     this.emit('cast', { id: this.casting.id, done: true });
     this.casting = null;
     if (reason) this.emit('error', reason);

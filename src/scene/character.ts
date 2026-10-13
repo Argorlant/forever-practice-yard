@@ -128,12 +128,23 @@ export class Character {
     const darkLeather = new THREE.MeshStandardMaterial({ color: 0x1d1612, roughness: 0.6 });
     const metal = new THREE.MeshStandardMaterial({ color: 0x9aa3ad, metalness: 0.85, roughness: 0.3 });
 
+    // Bone orientations in the bind pose, relative to the model. Later attachments (a shield, a bow
+    // on the back) use them too: by then the bones are posed, and their current orientation would
+    // put a shield flat out from the arm.
+    const modelInv = model.getWorldQuaternion(new THREE.Quaternion()).invert();
+    const rest = new Map<THREE.Object3D, THREE.Quaternion>();
+    const restInv = (b: THREE.Object3D) => {
+      let q = rest.get(b);
+      if (!q) rest.set(b, (q = modelInv.clone().multiply(b.getWorldQuaternion(new THREE.Quaternion())).invert()));
+      return q;
+    };
+
     /** Attaches a group to a bone with axes given in world space at bind pose. */
     const attach = (b: THREE.Object3D, build: (g: THREE.Group) => void, offsetWorld = new THREE.Vector3()) => {
       const g = new THREE.Group();
       build(g);
       // The group's +Y is world up and +Z is world forward, whatever the bone axes are.
-      const inv = b.getWorldQuaternion(new THREE.Quaternion()).invert();
+      const inv = restInv(b);
       g.quaternion.copy(inv);
       g.position.copy(offsetWorld.clone().applyQuaternion(inv));
       b.add(g);
@@ -258,6 +269,9 @@ export class Character {
     this.handL = bone('hand_l');
     this.forearmL = bone('lowerarm_l');
     this.spine = bone('spine_03');
+    // Kept now, in the bind pose, for the shield and the bow on the back.
+    restInv(this.forearmL);
+    restInv(this.spine);
     this.attachToBone = attach;
     this.cloth = cloth;
     this.mats = { metal, grip: darkLeather, gold: new THREE.MeshStandardMaterial({ color: 0xc9a050, metalness: 0.8, roughness: 0.35 }) };

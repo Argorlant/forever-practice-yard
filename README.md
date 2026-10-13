@@ -191,7 +191,8 @@ the build's abilities that have no other button (Charge and Intercept for a warr
 every ability to drag onto a button; dragging a button off the bar clears it. The Keys button turns on key binding: hover a
 button and press a key (Backspace clears it). In Settings, × unbinds any key, movement included, and a key does one thing,
 as in WoW: binding it somewhere unbinds it elsewhere (bind A and D to strafe and they stop turning). Holding both mouse
-buttons runs forward. On-next-swing attacks (Heroic Strike, Cleave, Maul, Raptor Strike) keep a gold frame with a light
+buttons runs forward. As in WoW, a press in the last 0.4 s of a cast or the global cooldown is queued and goes off the
+moment it ends. On-next-swing attacks (Heroic Strike, Cleave, Maul, Raptor Strike) keep a gold frame with a light
 running around it from the press until the swing lands, and the button flashes when it does.
 
 **Spell effects.** Spells and blows have their own look: fire, frost, shadow, arcane, holy and nature missiles
