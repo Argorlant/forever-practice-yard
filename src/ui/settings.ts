@@ -55,7 +55,8 @@ const h = (tag: string, cls = '', html = '') => {
   return el;
 };
 
-export type Change = 'stats' | 'enemy' | 'options' | 'keys' | 'bar' | 'defaults' | 'build';
+/** What changed; 'view' only changes what is drawn (the helper, the panel), so the fight goes on. */
+export type Change = 'stats' | 'enemy' | 'options' | 'keys' | 'bar' | 'defaults' | 'build' | 'view';
 
 /** Other classes the player can switch to. */
 export interface ClassPicker { list: { id: string; name: string; group?: string }[]; current: string; pick(id: string): void }
@@ -247,8 +248,8 @@ export class SettingsDialog {
 
     // Options.
     const op = this.section(UI.options);
-    this.toggle(op, UI.suggestions, () => p.suggest, (v) => { p.suggest = v; }, 'options');
-    this.toggle(op, UI.showMeter, () => p.meter, (v) => { p.meter = v; }, 'options');
+    this.toggle(op, UI.suggestions, () => p.suggest, (v) => { p.suggest = v; }, 'view');
+    this.toggle(op, UI.showMeter, () => p.meter, (v) => { p.meter = v; }, 'view');
     for (const f of this.spec.options ?? []) {
       if (f.kind === 'toggle') {
         this.toggle(op, f.name, () => !!p.options[f.key], (v) => { p.options[f.key] = v; }, 'options');
@@ -352,7 +353,7 @@ export class SettingsDialog {
   }
 
   private toggle(parent: HTMLElement, label: string, get: () => boolean, set: (v: boolean) => void,
-    what: 'stats' | 'enemy' | 'options'): void {
+    what: 'stats' | 'enemy' | 'options' | 'view'): void {
     const row = h('label', 'field toggle');
     row.append(h('span', '', label));
     const input = document.createElement('input');

@@ -224,6 +224,12 @@ const hud = new Hud(app, combat, prefs.bar, {
     barChanged();
   },
   rows: (n) => { prefs.barRows = n; hud.setRows(n); barChanged(); },
+  helper: (on) => {
+    prefs.suggest = on;
+    hud.setSuggestions(on);
+    settings.setPrefs(prefs);
+    persist();
+  },
 });
 /** The bar changed on the screen (drag, spellbook, Keys): save it and keep Settings in step. */
 function barChanged(): void {
@@ -234,7 +240,7 @@ function barChanged(): void {
 hud.setRows(prefs.barRows);
 hud.setTargetCount(prefs.targets);
 hud.setMeterVisible(prefs.meter);
-hud.suggestions = prefs.suggest;
+hud.setSuggestions(prefs.suggest);
 
 const floaters = new Floaters(app, world.camera);
 
@@ -259,7 +265,7 @@ const settings = new SettingsDialog(app, spec, prefs, combat, (what) => {
   if (what === 'enemy') applyEnemy();
   hud.setRows(prefs.barRows);
   hud.setMeterVisible(prefs.meter);
-  hud.suggestions = prefs.suggest;
+  hud.setSuggestions(prefs.suggest);
   controls.bindings = prefs.move;
   hud.refreshBar();
   persist();

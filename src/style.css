@@ -185,6 +185,10 @@ img.wow-icon { width: 100%; height: 100%; display: block; object-fit: cover; tra
 .hud.binding .slot { outline: 1px dashed rgba(255, 214, 90, .7); outline-offset: 1px; }
 .hud.binding .slot:hover { outline: 2px solid var(--gold); }
 .hud.binding .keys-btn { border-color: var(--gold); color: #fff; background: #4a3a1e; }
+/* The rotation helper's switch: lit while it is on. */
+.helper-btn::before { content: ''; display: inline-block; width: 7px; height: 7px; margin-right: 6px; border-radius: 50%; background: #5a4a3a; vertical-align: 1px; }
+.helper-btn.on { border-color: var(--gold-dim); }
+.helper-btn.on::before { background: #ffd84a; box-shadow: 0 0 6px 1px rgba(255, 216, 74, .8); }
 
 .tooltip {
   position: fixed; width: 280px; transform: translateY(-100%); padding: 10px 12px; z-index: 40;
@@ -307,7 +311,8 @@ img.wow-icon { width: 100%; height: 100%; display: block; object-fit: cover; tra
   .meter-rows { max-height: 22vh; }
   .target-frame { grid-template-columns: 40px 170px; top: 56px; }
   .target-portrait { width: 40px; height: 40px; }
-  .hud-left { flex-direction: row; left: 8px; top: 8px; }
+  /* The buttons wrap before the target count on the right. */
+  .hud-left { flex-direction: row; flex-wrap: wrap; left: 8px; right: 112px; top: 8px; gap: 6px; }
   .hud-btn { min-width: 0; padding: 6px 10px; font-size: 13px; }
   .hud-right { right: 8px; top: 8px; }
   .hud-right span { display: none; }
@@ -317,6 +322,9 @@ img.wow-icon { width: 100%; height: 100%; display: block; object-fit: cover; tra
 @media (max-width: 420px) {
   :root { --slot: 38px; }
   .bottom { bottom: 8px; }
+  /* Two rows of buttons on a phone: the target frame goes below them. */
+  .hud-btn { padding: 5px 8px; font-size: 12px; }
+  .target-frame { top: 78px; }
 }
 
 /* ------------------------------------------------------------ first screen */

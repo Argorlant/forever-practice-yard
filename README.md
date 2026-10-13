@@ -23,7 +23,7 @@ values marked provisional there are still unconfirmed for Forever.
 Pick a talent build from the WoW Forever sims in Settings: Combat Swords (both sims), Combat with
 Improved Expose Armor, Combat Backstab, Mutilate (both sims) and Subtlety Hemorrhage (both sims).
 Each build brings its talents, weapons, action bar and the sims' priority list for the "next
-ability" glow. Raid options: keep Expose Armor up (when no warrior applies Sunder Armor) and
+ability" glow (the rotation helper: the Helper button turns it off to play from memory). Raid options: keep Expose Armor up (when no warrior applies Sunder Armor) and
 whether to use Thistle Tea.
 
 The **Warrior** follows Forever's normalized rage: each landed white swing gives a fixed amount

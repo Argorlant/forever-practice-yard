@@ -70,6 +70,8 @@ export interface HudCallbacks {
   bindKey(slot: number, code: string | null): void;
   /** Action bar rows shown. */
   rows(n: number): void;
+  /** The rotation helper turned on or off with its button. */
+  helper(on: boolean): void;
 }
 
 export class Hud {
@@ -118,7 +120,9 @@ export class Hud {
   private bindBanner: HTMLElement;
   /** Key binding mode: a key pressed over a button binds it. */
   bindMode = false;
-  suggestions = true;
+  /** The rotation helper: the next ability glows (and the weaving cue shows). */
+  private suggestions = true;
+  private helperBtn!: HTMLElement;
 
   /** The on-next-swing attack shown as queued, and the one whose swing just landed. */
   private queuedShown: string | null = null;
@@ -143,6 +147,10 @@ export class Hud {
     btn(UI.spellbook, () => this.toggleSpellbook());
     const keysBtn = btn(UI.keys, () => this.setBindMode(!this.bindMode));
     keysBtn.classList.add('keys-btn');
+    this.helperBtn = btn(UI.helper, () => cb.helper(!this.suggestions));
+    this.helperBtn.classList.add('helper-btn');
+    this.helperBtn.title = UI.helperTip;
+    this.setSuggestions(true);
     this.root.append(left);
 
     // Top right: number of dummies.
@@ -294,6 +302,12 @@ export class Hud {
       entry.addEventListener('pointerleave', () => { if (this.tip?.el === entry) this.tip = null; });
       this.spellList.append(entry);
     }
+  }
+
+  setSuggestions(on: boolean): void {
+    this.suggestions = on;
+    this.helperBtn.classList.toggle('on', on);
+    this.helperBtn.setAttribute('aria-pressed', String(on));
   }
 
   setBindMode(on: boolean): void {
@@ -450,7 +464,7 @@ export class Hud {
     const shootingOnly = c.autoShooting && !p.autoAttacking;
     this.swingMH.style.display = shootingOnly ? 'none' : '';
     this.swingOH.style.display = shootingOnly || !c.stats.offHand ? 'none' : '';
-    const cue = c.spec.cue?.(c) ?? null;
+    const cue = this.suggestions ? c.spec.cue?.(c) ?? null : null;
     this.cue.textContent = cue?.text ?? '';
     this.cue.className = cue ? `cue show ${cue.tone}` : 'cue';
     this.swingMH.parentElement!.classList.toggle('active', p.autoAttacking || c.autoShooting);
