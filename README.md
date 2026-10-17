@@ -7,6 +7,9 @@ counts your hits and crits and reviews your habits. There is no DPS meter on pur
 in beta, a DPS number would only mislead. It works with keyboard and mouse or on a phone.
 
 **Play it online:** https://argorlant.github.io/forever-practice-yard/
+
+Up to date with the October 15 beta update (client 1.60.1.70425): talent trees, builds and numbers follow the two sims'
+updates for it.
 > **Speculative, built on the sims.** WoW Forever is still in beta. The talents, builds, rotations and numbers here follow the
 > community sims ([wow-forever-sim](https://github.com/gunba/wow-forever-sim) and [foreversim](https://github.com/laurencestokes/foreversim))
 > and our own reading of the beta, so they may not match the live game, and classes can change a lot before launch and before
@@ -66,8 +69,9 @@ baseline Holy Strike roll on the melee table:
   and Seal of Righteousness. With Twist of Light, replacing a seal leaves an Echo that your next swing also
   applies, so the hint swaps seals once per swing. Vengeance and Vindication are in, and the review counts
   swings that carried both seals.
-- **Protection** (`?class=paladin-prot`): the dummy attacks you. Righteous Fury (Holy threat x1.6), Holy Shield
-  (+30 % block, 4 charges, Holy damage per block), Redoubt, Reckoning, Shield Specialization mana on blocks,
+- **Protection** (`?class=paladin-prot`): the dummy attacks you. Righteous Fury (Holy threat x1.9), Holy Shield
+  (+30 % block, 4 charges, Holy damage per block), Redoubt, Reckoning (up to 4 charges your next swing fires),
+  Shield Specialization mana on blocks,
   Templar's Bulwark (an absorb shield) and Swift Judgement.
 - **Shockadin** (`?class=paladin-shock`): a melee paladin with Holy Shock on a 10 s cooldown, Divine Favor,
   Divine Precision and Light's Vigil (the marked Holy Shock triggers no cooldown, so you Shock twice). No sim
@@ -101,21 +105,22 @@ The **Priest** comes as two damage specs (sources in [`research/priest_forever.m
 
 - **Shadow** (`?class=priest-shadow`): Shadowform (+10% Shadow damage, half-cost Shadow spells, 2.0x Shadow crits)
   and personal Shadow Weaving stacks (+2% of your Shadow damage, 5 stacks). Mind Flay is a channel with one hit
-  roll: the hint waits for two ticks before clipping. Also Shadow Word: Pain, Devouring Plague (baseline, 1 min),
+  roll, channelled in full (Improved Mind Flay makes each tick stronger). Also Shadow Word: Pain, Devouring Plague
+  (baseline, 24 s),
   and Shadow Word: Death, which costs you 10% of your health on a dummy (the health bar shows it).
-- **Smite (experimental)** (`?class=priest-smite`): Holy Fire kept burning for Power in Light, Smite, Penance (a
+- **Smite (experimental)** (`?class=priest-smite`): Holy Fire and Shadow Word: Pain for Power in Light, Smite, Penance (a
   channel with a bolt at 0, 1 and 2 s), Mind Blast, Power Infusion and Inner Focus. Judgement of the Crusader is
   on by default.
 
 The **Mage** comes as three specs, with the sims' hybrids as builds (sources in [`research/mage_forever.md`](research/mage_forever.md)):
 
-- **Arcane** (`?class=mage-arcane`): Arcane Blast stacks (+10% to your other spells, +175% to its own cost),
-  three Blasts then Frostbolt, Arcane Missiles on Missile Barrage (each missile rolls its own hit and crit),
-  Clearcasting, Arcane Power and Presence of Mind.
-- **Fire** (`?class=mage-fire`): Heating Up (direct crits make the next Pyroblast up to 1.5 s), rolling Ignite,
+- **Arcane** (`?class=mage-arcane`): Arcane Blast stacks (15% of your Intellect as spell damage each, 15 s from the
+  first, +175% to its own cost), Arcane Wrath, Arcane Missiles on Missile Barrage and as the filler (each missile rolls
+  its own hit, crit and procs), Clearcasting, Arcane Power and Presence of Mind.
+- **Fire** (`?class=mage-fire`): Heating Up (direct crits and every Fire Blast make the next Pyroblast up to 1.5 s), rolling Ignite, Fire Power,
   personal Fire Vulnerability from Scorch, Fire Blast and Combustion; Scorch, Fireball or Frostfire Bolt as the filler.
-- **Frost** (`?class=mage-frost`): Frostbolt, Fingers of Frost charges for Ice Lance x4 and Shatter, personal Winter's
-  Chill, and Arcane Missiles for the Arcane-Frost build.
+- **Frost** (`?class=mage-frost`): Frostbolt, Fingers of Frost charges for Ice Lance x3 and Shatter, Winter's Chill
+  stacks for Cone of Cold within 10 yards, and Arcane Missiles and Arcane Blast for the Arcane-Frost build.
 
 Mage Armor and Arcane Meditation keep Spirit regen while casting; Evocation, Mana Ruby and potions are on the bar.
 
@@ -147,7 +152,7 @@ Totems sit in four element slots (a new one replaces the old; Searing Totem atta
 global cooldown), Earth, Flame and Frost Shock share one cooldown, and Clearcasting makes the next damage spell free:
 
 - **Elemental** (`?class=shaman-elemental`): Lightning Bolt (2.0 s), Lava Burst for 20% more on your own Flame Shock,
-  Chain Lightning on Clearcasting, Lightning Overload copies and 2.0x crits from Elemental Fury. Mana runs out, as in the
+  Elemental Mastery (0.5 s faster Lightning Bolt and Lava Burst, Chain Lightning off cooldown), Chain Lightning on Clearcasting, Lightning Overload copies and 2.0x crits from Elemental Fury. Mana runs out, as in the
   sims; the Stormcaller hybrids are builds of this spec.
 - **Enhancement** (`?class=shaman-enhancement`): one two-hander (no dual wield in Forever) with Windfury Weapon (two extra
   attacks; it turns a raid Windfury Totem off for you) or Flametongue, Stormstrike's personal charge for your next Lightning
@@ -166,7 +171,7 @@ clipped by the next spell.
 plays. Pick them on the welcome screen or later in Settings:
 
 - Buffs: Windfury Totem (20 % on main-hand attacks for an extra attack with +246 AP, 1.5 s
-  cooldown; cats and bears too), Battle Shout, Blessing of Might, Leader of the Pack / Moonkin Aura,
+  cooldown; cats and bears too), Battle Shout, Blessing of Might, Leader of the Pack (melee and ranged crit), Moonkin Aura (spell crit),
   Blessing of Wisdom and Mana Spring Totem (in Forever both factions get paladin and shaman buffs).
 - Dummy debuffs: Judgement of Wisdom (mana back on your hits and direct spells), Sunder Armor, Faerie Fire, Curse of Recklessness, Curse of the Elements (in Forever +10% to every magic school),
   Demoralizing Shout and Thunder Clap.

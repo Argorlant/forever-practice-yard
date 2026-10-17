@@ -74,15 +74,13 @@ function spellMult(c: Combat, t: Unit, id: string): number {
 }
 
 /**
- * One spell hit: 17 % miss minus hit, crit (Call of Thunder +3 % for Lightning Bolt and Chain Lightning),
- * Elemental Fury's crit damage, average partial resists (Earth Shock all or nothing). The Stormstrike
+ * One spell hit: 17 % miss minus hit, crit, Elemental Fury's crit damage, average partial resists (Earth Shock all or nothing). The Stormstrike
  * charge adds 20 % to your next Lightning Bolt, Chain Lightning or Earth Shock (not an Overload copy).
  */
 function spellHit(c: Combat, t: Unit, id: string, school: School, base: number, coeff: number,
   opts: { charge?: boolean; scale?: number; binary?: boolean; direct?: boolean } = {}): { outcome: Outcome; amount: number } {
   const tl = T(c);
-  const thunder = (id === 'lightningBolt' || id === 'chainLightning' || id === 'lightningOverload') ? 3 * tl.callOfThunder : 0;
-  const outcome: Outcome = roll(c, Math.max(1, D.spellMiss - c.totalHit())) ? 'resist' : roll(c, c.spellCritChance(thunder)) ? 'crit' : 'hit';
+  const outcome: Outcome = roll(c, Math.max(1, D.spellMiss - c.totalHit())) ? 'resist' : roll(c, c.spellCritChance()) ? 'crit' : 'hit';
   let amount = 0;
   if (outcome !== 'resist') {
     let m = spellMult(c, t, id) * (opts.scale ?? 1);
@@ -95,8 +93,8 @@ function spellHit(c: Combat, t: Unit, id: string, school: School, base: number, 
       * (outcome === 'crit' ? elementalFury(c) : 1) * (opts.binary ? 1 : D.partialResist)));
   }
   c.deal({ target: t, source: id, outcome, school, amount, white: false, spell: opts.direct !== false });
-  // Elemental Devastation: a direct spell crit gives melee crit (not ticks, totems, procs or Overload copies).
-  if (outcome === 'crit' && opts.direct !== false && id !== 'lightningOverload' && tl.elementalDevastation) {
+  // Elemental Devastation: a direct spell crit gives melee crit (not ticks, totems, procs, Overload copies or Fire Nova).
+  if (outcome === 'crit' && opts.direct !== false && id !== 'lightningOverload' && id !== 'fireNova' && tl.elementalDevastation) {
     c.applyAura(c.player, { id: 'elementalDevastation', name: 'Elemental Devastation', icon: 'elementalDevastation', duration: D.elementalDevastation.duration, crit: 3 * tl.elementalDevastation });
   }
   return { outcome, amount };
@@ -186,6 +184,8 @@ const spell = (a: Omit<Ability, 'gcd' | 'target' | 'hastedGcd' | 'noAutoAttack'>
   gcd: D.gcd, target: 'enemy', hastedGcd: true, noAutoAttack: true, animation: 'cast', ...a, range: a.range ?? 30,
 });
 const alacrity = (c: Combat) => [0, 0.17, 0.33, 0.5][T(c).elementalAlacrity];
+/** Elemental Mastery: Lightning Bolt and Lava Burst 0.5 s faster while it lasts. */
+const mastery = (c: Combat) => (c.aura(c.player, 'elementalMastery') ? D.elementalMastery.castCut : 0);
 const castTime = (base: (c: Combat) => number) => (c: Combat) => Math.max(0, base(c)) / c.castHaste();
 const shockCd = (c: Combat) => D.shockCooldown - 0.2 * T(c).reverberation;
 const shock = { cooldown: shockCd, cooldownGroup: 'shock' };
@@ -195,7 +195,7 @@ export const ABILITIES: Ability[] = [
     id: 'lightningBolt', name: 'Lightning Bolt', icon: 'lightningBolt',
     projectile: { color: 0x9ad8ff, speed: D.lightningBolt.speed, style: 'lightning' },
     cost: cost('lightningBolt', D.lightningBolt.mana),
-    castTime: castTime((c) => (D.lightningBolt.cast - alacrity(c)) * (1 - maelstromCut(c))),
+    castTime: castTime((c) => (D.lightningBolt.cast - alacrity(c) - mastery(c)) * (1 - maelstromCut(c))),
     resetsSwing: true,
     highlight: (c) => T(c).maelstromWeapon > 0 && maelstromStacks(c) >= D.maelstromWeapon.max,
     description: (c) => `A ${(D.lightningBolt.cast - alacrity(c)).toFixed(1)} sec cast: ${D.lightningBolt.min}-${D.lightningBolt.max} Nature damage plus ${Math.round(D.lightningBolt.coeff * 100)}% of spell damage.${T(c).maelstromWeapon ? ' Each Maelstrom Weapon stack makes it faster and cheaper; at 5 stacks it is instant and free.' : ''}${T(c).lightningOverload ? ' Lightning Overload can cast a free copy for half damage.' : ''} A hardcast restarts your melee swing.`,
@@ -215,11 +215,12 @@ export const ABILITIES: Ability[] = [
   spell({
     id: 'chainLightning', name: 'Chain Lightning', icon: 'chainLightning',
     projectile: { color: 0x9ad8ff, speed: 30, style: 'lightning' },
-    cost: cost('chainLightning', D.chainLightning.mana), cooldown: D.chainLightning.cooldown,
+    // Elemental Mastery takes Chain Lightning's cooldown away while it lasts.
+    cost: cost('chainLightning', D.chainLightning.mana), cooldown: (c) => (c.aura(c.player, 'elementalMastery') ? 0 : D.chainLightning.cooldown),
     castTime: castTime((c) => D.chainLightning.cast - alacrity(c)),
     resetsSwing: true,
     highlight: (c) => !!c.aura(c.player, 'clearcasting'),
-    description: (c) => `A ${(D.chainLightning.cast - alacrity(c)).toFixed(1)} sec cast: ${D.chainLightning.min}-${D.chainLightning.max} Nature damage plus spell damage, then jumps to 2 more targets for 30% less each. 6 sec cooldown. Best on Clearcasting (free).`,
+    description: (c) => `A ${(D.chainLightning.cast - alacrity(c)).toFixed(1)} sec cast: ${D.chainLightning.min}-${D.chainLightning.max} Nature damage plus spell damage, then jumps to 2 more targets for 30% less each. 6 sec cooldown (none during Elemental Mastery). Best on Clearcasting (free).`,
     use: (c, t) => {
       const u = t!;
       const k = D.chainLightning;
@@ -237,10 +238,10 @@ export const ABILITIES: Ability[] = [
     id: 'lavaBurst', name: 'Lava Burst', icon: 'lavaBurst',
     projectile: { color: 0xff6a1a, speed: 24, style: 'fire' },
     cost: cost('lavaBurst', D.lavaBurst.mana), cooldown: D.lavaBurst.cooldown,
-    castTime: castTime((c) => D.lavaBurst.cast - alacrity(c)),
+    castTime: castTime((c) => D.lavaBurst.cast - alacrity(c) - mastery(c)),
     resetsSwing: true,
     ...talent('lavaBurst', 'Lava Burst'),
-    description: (c) => `A ${(D.lavaBurst.cast - alacrity(c)).toFixed(1)} sec cast: ${D.lavaBurst.min}-${D.lavaBurst.max} Fire damage plus spell damage, 20% more while your Flame Shock burns on the target. 10 sec cooldown.`,
+    description: (c) => `A ${(D.lavaBurst.cast - alacrity(c)).toFixed(1)} sec cast (0.5 sec less during Elemental Mastery): ${D.lavaBurst.min}-${D.lavaBurst.max} Fire damage plus spell damage, 20% more while your Flame Shock burns on the target. 10 sec cooldown.`,
     use: (c, t) => {
       spellHit(c, t!, 'lavaBurst', 'fire', between(c, D.lavaBurst.min, D.lavaBurst.max), D.lavaBurst.coeff);
       afterCast(c, 'lavaBurst');
@@ -261,7 +262,11 @@ export const ABILITIES: Ability[] = [
   spell({
     id: 'flameShock', name: 'Flame Shock', icon: 'flameShock', range: D.flameShock.range,
     cost: cost('flameShock', D.flameShock.mana), ...shock,
-    description: () => `Instant: ${D.flameShock.direct} Fire damage plus spell damage, then ${D.flameShock.ticks} ticks of ${D.flameShock.tick} plus spell damage over ${D.flameShock.ticks * D.flameShock.period} sec; the ticks can crit. Lava Burst deals 20% more while it burns. Shares the shock cooldown.`,
+    description: (c) => {
+      // Call of Flame: one more tick (3 sec) per point.
+      const ticks = D.flameShock.ticks + T(c).callOfFlame;
+      return `Instant: ${D.flameShock.direct} Fire damage plus spell damage, then ${ticks} ticks of ${D.flameShock.tick} plus spell damage over ${ticks * D.flameShock.period} sec; the ticks can crit. Lava Burst deals 20% more while it burns. Shares the shock cooldown.`;
+    },
     use: (c, t) => {
       const u = t!;
       const f = D.flameShock;
@@ -270,7 +275,7 @@ export const ABILITIES: Ability[] = [
       swingIn(c, u);
       if (r.outcome === 'resist') return;
       c.applyAura(u, {
-        id: 'flameShock', name: 'Flame Shock', icon: 'flameShock', duration: f.ticks * f.period, period: f.period,
+        id: 'flameShock', name: 'Flame Shock', icon: 'flameShock', duration: (f.ticks + T(c).callOfFlame) * f.period, period: f.period,
         onTick: (cc) => {
           const crit = roll(cc, cc.spellCritChance());
           const amount = Math.max(1, Math.round((f.tick + f.tickCoeff * cc.spellPowerFor('fire')) * spellMult(cc, u, 'flameShock') * (crit ? elementalFury(cc) : 1) * D.partialResist));
@@ -295,7 +300,7 @@ export const ABILITIES: Ability[] = [
     id: 'stormstrike', name: 'Stormstrike', icon: 'stormstrike', gcd: D.gcd, target: 'enemy', range: 'melee',
     cost: cost('stormstrike', D.stormstrike.mana), cooldown: D.stormstrike.cooldown,
     ...talent('stormstrike', 'Stormstrike'),
-    description: (c) => `Instant: a main-hand weapon hit. Your next Lightning Bolt, Chain Lightning or Earth Shock within 12 sec deals 20% more (personal).${T(c).improvedStormstrike ? ` Improved Stormstrike: ${50 * T(c).improvedStormstrike}% chance to keep 50% of your Spirit regen while casting for 15 sec.` : ''} 8 sec cooldown.`,
+    description: (c) => `Instant: a main-hand weapon hit. Your next Lightning Bolt, Chain Lightning or Earth Shock within 12 sec deals 20% more (personal); a spell that misses keeps the charge.${T(c).improvedStormstrike ? ` Improved Stormstrike: ${50 * T(c).improvedStormstrike}% chance to keep 50% of your Spirit regen while casting for 15 sec.` : ''} 8 sec cooldown.`,
     use: (c, t) => {
       const u = t!;
       const outcome = c.rollSpecial(u, 'stormstrike');
@@ -325,6 +330,16 @@ export const ABILITIES: Ability[] = [
       if (t) swingIn(c, t);
     },
   }),
+  {
+    id: 'elementalMastery', name: 'Elemental Mastery', icon: 'elementalMastery', gcd: 0, target: 'self',
+    cooldown: D.elementalMastery.cooldown,
+    ...talent('elementalMastery', 'Elemental Mastery'),
+    description: () => `For ${D.elementalMastery.duration} sec Lightning Bolt and Lava Burst cast 0.5 sec faster and Chain Lightning has no cooldown. Off the global cooldown; 3 min cooldown.`,
+    use: (c) => {
+      c.applyAura(c.player, { id: 'elementalMastery', name: 'Elemental Mastery', icon: 'elementalMastery', duration: D.elementalMastery.duration });
+      c.clearCooldown('chainLightning');
+    },
+  },
   {
     id: 'rageOfTheFarseer', name: 'Rage of the Farseer', icon: 'rageOfTheFarseer', gcd: 0, target: 'self',
     cooldown: D.rageOfTheFarseer.cooldown,
@@ -366,7 +381,7 @@ export const ABILITIES: Ability[] = [
   totem('stoneskinTotem', 'stoneskinTotem', 'earth', 'Stoneskin Totem', D.stoneskinTotem.mana,
     () => 'Physical hits on you deal 30 less damage, for 5 min (here about 1% of the dummy\'s hits).', () => ({ damageTaken: 0.99 })),
   totem('graceOfAirTotem', 'graceOfAirTotem', 'air', 'Grace of Air Totem', D.graceOfAirTotem.mana,
-    () => `+89 Agility (+${D.graceOfAirTotem.crit.toFixed(1)}% melee crit) for 5 min. It does not stack with Windfury Totem; with your own Windfury Weapon, this is your Air totem.`,
+    () => `+89 Agility (+${D.graceOfAirTotem.crit.toFixed(1)}% melee crit) for 5 min. Since Oct 15 it stacks with another shaman's Windfury Totem; you still drop one Air totem, so with your own Windfury Weapon this is yours.`,
     () => ({ crit: D.graceOfAirTotem.crit })),
   totem('windfuryTotem', 'windfuryTotemOwn', 'air', 'Windfury Totem', D.windfuryTotem.mana,
     () => 'Main-hand attacks: 20% for an extra attack with +246 AP, for 5 min. Your own Windfury Weapon turns it off for you: then use Grace of Air.',
@@ -428,8 +443,8 @@ export function prepare(c: Combat): void {
       if (fl.stacks <= 0) c.removeAura(p, 'flurry');
     }
     if (h.outcome === 'crit' && tl.flurry) c.applyAura(p, { id: 'flurry', name: 'Flurry', icon: 'flurry', duration: D.flurry.duration, stacks: D.flurry.charges, haste: 0.05 * tl.flurry });
-    // Maelstrom Weapon: 2 procs per minute per point, from any landed melee hit.
-    if (tl.maelstromWeapon && roll(c, (100 * D.maelstromWeapon.ppmPerPoint * tl.maelstromWeapon * c.stats.mainHand.speed) / 60)) {
+    // Maelstrom Weapon: 10 procs per minute at any rank, from any landed melee hit.
+    if (tl.maelstromWeapon && roll(c, (100 * D.maelstromWeapon.ppm * c.stats.mainHand.speed) / 60)) {
       const before = maelstromStacks(c);
       c.addStack(p, { id: 'maelstromWeapon', name: 'Maelstrom Weapon', icon: 'maelstromWeapon', duration: D.maelstromWeapon.duration }, D.maelstromWeapon.max);
       c.count('maelstromStacks');
@@ -487,13 +502,13 @@ export function chances(c: Combat): { title: string; rows: [string, string][] }[
   if (tl.elementalDevastation) procs.push(['Elemental Devastation on a spell crit', `+${3 * tl.elementalDevastation}% melee crit, 10 s`]);
   if (melee(c)) {
     if (imbue(c) === 'windfury') procs.push(['Windfury Weapon per landed main-hand hit', `20% (1.5 s cooldown): 2 attacks with +${c.mod.windfuryWeapon?.ap ?? D.windfuryWeapon.ap} AP`]);
-    if (tl.maelstromWeapon) procs.push(['Maelstrom Weapon stack per landed hit', pct((100 * D.maelstromWeapon.ppmPerPoint * tl.maelstromWeapon * c.stats.mainHand.speed) / 60)]);
+    if (tl.maelstromWeapon) procs.push(['Maelstrom Weapon stack per landed hit', pct((100 * D.maelstromWeapon.ppm * c.stats.mainHand.speed) / 60)]);
     if (tl.flurry) procs.push(['Flurry after a melee crit', `+${5 * tl.flurry}% attack speed for 3 swings`]);
   }
   if (c.raid.has('judgementOfWisdom')) procs.push(['Judgement of Wisdom: +59 mana', '50% per landed hit or direct spell']);
   const rows: [string, string][] = [
     ['Spell miss (17% minus hit)', pct(Math.max(1, D.spellMiss - c.totalHit()))],
-    ['Spell crit (Lightning Bolt, Chain Lightning)', `${pct(c.spellCritChance())} (${pct(c.spellCritChance(3 * tl.callOfThunder))})`],
+    ['Spell crit', pct(c.spellCritChance())],
     ['Spell crit damage', `${elementalFury(c).toFixed(1)}x`],
     ['Partial resists', `-${Math.round((1 - D.partialResist) * 100)}% on average (Earth Shock all or nothing)`],
   ];

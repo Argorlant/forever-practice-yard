@@ -16,7 +16,7 @@ export const SHADOW_STATS: Stats = {
   attackPower: 100,
   crit: 5,
   hit: 7.9,
-  spellCrit: 11.4,
+  spellCrit: 11.3,      // Oct 15: Mental Strength is 2% Intellect per point (was 3%)
   spellPower: 178,
   spellPowerBySchool: { shadow: 28 },
   mainHand: MACE,
@@ -29,7 +29,7 @@ export const SMITE_STATS: Stats = {
   attackPower: 100,
   crit: 5,
   hit: 7.9,
-  spellCrit: 10.8,
+  spellCrit: 10.6,      // Oct 15: Mental Strength is 2% Intellect per point (was 3%)
   spellPower: 192,
   spellPowerBySchool: { holy: 13 },
   mainHand: MACE,
@@ -46,9 +46,15 @@ export const DATA = {
   spellMiss: 17,
   mindBlast: { mana: 350, cast: 1.5, cooldown: 8, min: 477, max: 504, coeff: 0.429 },
   mindFlay: { mana: 205, duration: 3, ticks: 3, tick: 130, coeff: 0.167, range: 20 },
+  // Oct 15: Improved Mind Flay makes each tick 10/20% stronger than the one before (gs compounds it: x1.0/1.2/1.44 at 2/2).
+  improvedMindFlay: 0.1,
+  // Oct 15, Shadow row 4: Mind Blast and a full Mind Flay raise Spirit 3% per point for 10 sec.
+  darkInspiration: { duration: 10, spirit: 0.03 },
   shadowWordPain: { mana: 470, ticks: 6, period: 3, tick: 127, coeff: 0.2 },
-  devouringPlague: { mana: 985, cooldown: 60, ticks: 8, period: 3, tick: 106, coeff: 0.1 },
-  shadowWordDeath: { mana: 340, cooldown: 15, min: 444, max: 472, coeff: 0.429, backlash: 0.1 },
+  // Oct 15: 24 sec (was 1 min), the length of its DoT.
+  devouringPlague: { mana: 985, cooldown: 24, ticks: 8, period: 3, tick: 106, coeff: 0.1 },
+  // Oct 15: 18 sec (the client had 15).
+  shadowWordDeath: { mana: 340, cooldown: 18, min: 444, max: 472, coeff: 0.429, backlash: 0.1 },
   shadowform: { mana: Math.round(BASE_MANA * 0.4), damage: 1.1, cost: 0.5, critMultiplier: 2 },
   innerFocus: { cooldown: 180, crit: 25 },
   powerInfusion: { mana: Math.round(BASE_MANA * 0.2), cooldown: 180, duration: 15, damage: 1.2 },

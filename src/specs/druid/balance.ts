@@ -4,7 +4,7 @@
 // ./talents.ts; sources in research/druid_forever.md â†’ Balance.
 import type { Combat } from '../../engine/combat';
 import type { Ability, Outcome, School, Spec, Unit } from '../../engine/types';
-import { LEADER_OF_THE_PACK } from '../../engine/raid';
+import { MOONKIN_AURA } from '../../engine/raid';
 import { BOSS_RULES } from '../common';
 import { BALANCE_STATS } from './data';
 import { CONTROLS, D, SOURCES, YARD, barkskin, clearcasting, faerieFire, manaPotion, omen, resetState, roll, useClearcasting } from './shared';
@@ -190,7 +190,7 @@ const abilities: Ability[] = [
     requirements: (c) => (T(c).moonkinForm ? null : 'Requires the Moonkin Form talent'),
     usable: (c) => T(c).moonkinForm > 0,
     highlight: (c) => !!c.aura(c.player, 'moonkinForm'),
-    description: (c) => `Moonkin Aura: 3% crit for you and your party (not with Leader of the Pack); Omen of Clarity procs twice as often. ${moonkinMana(c)} mana. Press again to leave the form.`,
+    description: (c) => `Moonkin Aura: 3% spell crit for the raid (stacks with Leader of the Pack since Oct 15); Omen of Clarity procs twice as often. ${moonkinMana(c)} mana. Press again to leave the form.`,
     use: (c) => {
       if (c.aura(c.player, 'moonkinForm')) { leaveMoonkin(c); return; }
       enterMoonkin(c);
@@ -202,13 +202,12 @@ const abilities: Ability[] = [
 
 function enterMoonkin(c: Combat): void {
   c.applyAura(c.player, { id: 'moonkinForm', name: 'Moonkin Form', icon: 'moonkinForm', duration: Infinity });
-  c.applyAura(c.player, { ...LEADER_OF_THE_PACK, name: 'Moonkin Aura', icon: 'moonkinForm' });
+  c.applyAura(c.player, MOONKIN_AURA);
 }
 function leaveMoonkin(c: Combat): void {
   c.removeAura(c.player, 'moonkinForm');
-  // The raid's Leader of the Pack stays.
-  if (c.raid.has('leaderOfThePack')) c.applyAura(c.player, LEADER_OF_THE_PACK);
-  else c.removeAura(c.player, 'leaderOfThePack');
+  // Another druid's Moonkin Aura in the raid stays.
+  if (!c.raid.has('moonkinAura')) c.removeAura(c.player, 'moonkinAura');
 }
 
 // ----------------------------------------------------------------- setup

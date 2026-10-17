@@ -7,12 +7,12 @@ import type { Stats } from '../../engine/types';
 
 /**
  * Fury: gunba/wow-forever-sim's UI default (Human, real Forever items),
- * unbuffed. Crit is Agility + gear + the Human sword racial; Cruelty and
- * Berserker Stance are added on top.
+ * unbuffed. Crit is Agility + gear + Human Ruthless (+2 % with any weapon
+ * since Oct 15, was the sword racial); Cruelty and Berserker Stance go on top.
  */
 export const FURY_STATS: Stats = {
   attackPower: 784,
-  crit: 16.2,   // Agility 7.15 + gear 7 + Human sword 2
+  crit: 16.2,   // Agility 7.15 + gear 7 + Human Ruthless 2
   hit: 9.9,     // gear
   spellCrit: 0,
   mainHand: { name: 'Ironwood Blade', type: 'sword', min: 79, max: 148, speed: 2.4 },
@@ -22,7 +22,7 @@ export const FURY_STATS: Stats = {
 /** Arms: gunba's UI default (Human), a two-handed polearm, unbuffed. */
 export const ARMS_STATS: Stats = {
   attackPower: 838,
-  crit: 14.2,   // Agility 7.15 + gear 7 (Weaponmaster adds the polearm crit)
+  crit: 16.2,   // Agility 7.15 + gear 7 + Human Ruthless 2 (Oct 15; Weaponmaster adds the polearm crit)
   hit: 7.9,
   spellCrit: 0,
   mainHand: { name: 'Blackfury', type: 'polearm', min: 105, max: 158, speed: 2.1, twoHand: true },

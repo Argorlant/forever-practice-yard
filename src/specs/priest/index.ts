@@ -1,5 +1,5 @@
 // Priest for WoW Forever, damage only: Shadow (Shadowform, personal Shadow
-// Weaving, Mind Flay clipping, Shadow Word: Death) and the experimental Smite
+// Weaving, full Mind Flays, Shadow Word: Death) and the experimental Smite
 // build (Holy Fire for Power in Light, Smite, Penance, Mind Blast). Shared
 // rules in ./core.ts, numbers in ./data.ts, builds in ./talents.ts.
 import type { Combat } from '../../engine/combat';
@@ -55,7 +55,7 @@ function specFor(spec: PriestSpec, base: Omit<Spec, 'className' | 'resource' | '
 }
 
 // ------------------------------------------------------------------ Shadow
-/** gs's ranked Shadow list (death first), with Mind Flay clipped only after its 2nd tick. */
+/** gs's ranked Shadow list after Oct 15 (death first); Mind Flay is channelled in full (Improved Mind Flay makes the last tick strongest). */
 function shadowSuggest(c: Combat): string | null {
   const t = c.target;
   if (!t || t.health <= 0) return null;
@@ -67,16 +67,8 @@ function shadowSuggest(c: Combat): string | null {
   const plagueDue = !c.aura(t, 'devouringPlague') && ready('devouringPlague') && afford('devouringPlague');
   const painDue = !c.aura(t, 'shadowWordPain') && afford('shadowWordPain');
   const blastReady = ready('mindBlast') && afford('mindBlast');
-  // Mind Flay: let it tick twice, then clip right after a tick only for something better.
-  const ch = c.channeling;
-  if (ch?.id === 'mindFlay') {
-    if (ch.done < 2) return null;
-    if (deathReady) return 'shadowWordDeath';
-    if (plagueDue) return 'devouringPlague';
-    if (painDue) return 'shadowWordPain';
-    if (blastReady) return 'mindBlast';
-    return null;
-  }
+  // Let Mind Flay finish: its last tick is the strongest.
+  if (c.channeling?.id === 'mindFlay') return null;
   if (deathReady) return 'shadowWordDeath';
   if (plagueDue) return 'devouringPlague';
   if (painDue) return 'shadowWordPain';
@@ -97,10 +89,10 @@ function shadowReview(c: Combat): Row[] {
     { label: 'Shadow Word: Pain uptime', value: pctOf(uptime('uptime:target:shadowWordPain')), good: uptime('uptime:target:shadowWordPain') >= 0.9 },
     { label: 'Mind Blast on cooldown', value: pctOf(onCooldown(c, 'mindBlast', D.mindBlast.cooldown - 0.5 * T(c).improvedMindBlast)), good: onCooldown(c, 'mindBlast', D.mindBlast.cooldown - 0.5 * T(c).improvedMindBlast) >= 0.8 },
     { label: 'Shadow Word: Death on cooldown', value: pctOf(onCooldown(c, 'shadowWordDeath', D.shadowWordDeath.cooldown)), good: onCooldown(c, 'shadowWordDeath', D.shadowWordDeath.cooldown) >= 0.8 },
-    { label: 'Devouring Plague uptime', value: pctOf(uptime('uptime:target:devouringPlague')) },
+    { label: 'Devouring Plague uptime', value: pctOf(uptime('uptime:target:devouringPlague')), good: uptime('uptime:target:devouringPlague') >= 0.85 },
   ];
   if (T(c).shadowWeaving) rows.push({ label: 'Shadow Weaving uptime', value: pctOf(uptime('uptime:target:shadowWeaving')), good: uptime('uptime:target:shadowWeaving') >= 0.9 });
-  if (flays) rows.push({ label: 'Mind Flays cut short', value: String(k['clipped:mindFlay'] ?? 0) });
+  if (flays) rows.push({ label: 'Mind Flays cut short', value: String(k['clipped:mindFlay'] ?? 0), good: (k['clipped:mindFlay'] ?? 0) === 0 });
   manaRows(c, rows);
   return rows;
 }
@@ -110,16 +102,16 @@ export const priestShadow: Spec = specFor('shadow', {
   specName: 'Shadow',
   showHealth: true,
   stats: SHADOW_STATS,
-  defaultOptions: { build: 'shadow', mana: 4301, spirit: D.spirit, mp5: D.mp5, lockMana: false },
+  defaultOptions: { build: 'shadow', mana: 4212, spirit: D.spirit, mp5: D.mp5, lockMana: false },
   defaultRaid: ['judgementOfWisdom', 'blessingOfWisdom', 'manaSpring'],
   options: OPTIONS,
   sheet: { attackPower: false, crit: false, spellCrit: 'Spell crit (gear + Intellect)', spellPower: 'Spell power (every school)', mainHand: false, offHand: false },
   lowMana: (c) => c.cost(c.ability('mindBlast')!),
-  welcome: 'Welcome to the Shadow practice yard. In Shadowform, keep Shadow Word: Pain and Devouring Plague ticking, Shadow Word: Death and Mind Blast on cooldown, and fill with Mind Flay: let it tick twice before you clip it, right after a tick. Shadow Word: Death costs you health on a dummy.',
+  welcome: 'Welcome to the Shadow practice yard. In Shadowform, keep Shadow Word: Pain and Devouring Plague ticking, Shadow Word: Death and Mind Blast on cooldown, and fill with Mind Flay, channelled in full: Improved Mind Flay makes each tick stronger than the last. Devouring Plague comes back every 24 sec. Shadow Word: Death costs you health on a dummy.',
   help: `${CONTROLS}
     ${HELP_COMMON}
-    Shadow in WoW Forever: Shadowform gives +10% Shadow damage, half-price Shadow spells and 2.0x Shadow crits. Shadow Weaving is personal: each landed Shadow spell adds +2% to your Shadow damage, up to 5 stacks for 15 sec. Mind Flay is one hit roll for the whole channel; its ticks crit. Shadow Word: Death (baseline) hurts you for 10% of your health whenever the target survives: the health bar shows it, and raid healers top you up.
-    The yellow glow follows the WoW Forever sims: Death, Plague, Pain when it fell off (recast after the last tick: a recast restarts it), Inner Focus with Mind Blast, Mind Blast, Mind Flay. During Mind Flay it waits for two ticks, then lights what is worth clipping for.
+    Shadow in WoW Forever: Shadowform gives +10% Shadow damage, half-price Shadow spells and 2.0x Shadow crits. Shadow Weaving is personal: each landed Shadow spell adds +2% to your Shadow damage, up to 5 stacks for 15 sec. Mind Flay is one hit roll for the whole channel; its ticks crit, and Improved Mind Flay makes each tick 10/20% stronger than the one before. Shadowform's 2.0x crit includes Shadow Word: Death (confirmed Oct 15). Shadow Word: Death (baseline) hurts you for 10% of your health whenever the target survives: the health bar shows it, and raid healers top you up.
+    The yellow glow follows the WoW Forever sims: Death, Plague, Pain when it fell off (recast after the last tick: a recast restarts it), Inner Focus with Mind Blast, Mind Blast, Mind Flay. During Mind Flay it waits for all three ticks.
     This is a practice tool: hit, crit and proc chances follow WoW Forever; damage numbers are an approximation.`,
   look: { clothColor: 0x3a2a55, leatherColor: 0x2a2030, hood: true, robe: true },
   suggest: shadowSuggest,
@@ -127,7 +119,7 @@ export const priestShadow: Spec = specFor('shadow', {
 });
 
 // ------------------------------------------------------------------- Smite
-/** gs's ranked Smite list plus Mind Blast above 30 % mana (MythicSim engine's variant) and Pain when missing (fs). */
+/** gs's ranked Smite list after Oct 15 (Holy Fire, Shadow Word: Pain when missing, Inner Focus, Smite) plus Mind Blast above 30 % mana (MythicSim engine's variant). */
 function smiteSuggest(c: Combat): string | null {
   const t = c.target;
   if (!t || t.health <= 0) return null;
@@ -138,9 +130,10 @@ function smiteSuggest(c: Combat): string | null {
   const hf = c.aura(t, 'holyFire');
   if ((!hf || hf.end - c.t < 3) && afford('holyFire') && c.casting?.id !== 'holyFire') return 'holyFire';
   if (tl.powerInfusion && p.inCombat && ready('powerInfusion')) return 'powerInfusion';
+  // Shadow Word: Pain also powers Power in Light since Oct 15 (not while Inner Focus waits for Smite).
+  if (!c.aura(t, 'shadowWordPain') && !c.aura(p, 'innerFocus') && afford('shadowWordPain')) return 'shadowWordPain';
   if (tl.innerFocus && p.inCombat && ready('innerFocus')) return 'innerFocus';
   if (ready('mindBlast') && afford('mindBlast') && mana > 0.3) return 'mindBlast';
-  if (!c.aura(t, 'shadowWordPain') && mana >= 0.3 && afford('shadowWordPain')) return 'shadowWordPain';
   if (c.aura(p, 'holyPurpose') && tl.holyNova && c.inRange(t, D.holyNova.range)) return 'holyNova';
   if (tl.penance && ready('penance') && mana > 0.6) return 'penance';
   if (potion) return 'manaPotion';
@@ -154,7 +147,8 @@ function smiteReview(c: Combat): Row[] {
   const uptime = (key: string) => (k[key] ?? 0) / time;
   const tl = T(c);
   const rows: Row[] = [
-    { label: tl.powerInLight ? 'Holy Fire uptime (Power in Light)' : 'Holy Fire uptime', value: pctOf(uptime('uptime:target:holyFire')), good: uptime('uptime:target:holyFire') >= 0.85 },
+    { label: 'Holy Fire uptime', value: pctOf(uptime('uptime:target:holyFire')), good: uptime('uptime:target:holyFire') >= 0.85 },
+    { label: 'Shadow Word: Pain uptime', value: pctOf(uptime('uptime:target:shadowWordPain')), good: uptime('uptime:target:shadowWordPain') >= 0.85 },
     { label: 'Mind Blast casts', value: String((c.meter.rows.get('mindBlast')?.hits ?? 0) + (c.meter.rows.get('mindBlast')?.misses ?? 0)) },
   ];
   if (tl.penance) rows.push({ label: 'Penance casts', value: String(Math.round(((c.meter.rows.get('penance')?.hits ?? 0) + (c.meter.rows.get('penance')?.misses ?? 0)) / D.penance.bolts)) });
@@ -166,15 +160,15 @@ export const priestSmite: Spec = specFor('smite', {
   id: 'priest-smite',
   specName: 'Smite (experimental)',
   stats: SMITE_STATS,
-  defaultOptions: { build: 'smite', mana: 4650, spirit: D.spirit, mp5: D.mp5, lockMana: false },
+  defaultOptions: { build: 'smite', mana: 4495, spirit: D.spirit, mp5: D.mp5, lockMana: false },
   defaultRaid: ['judgementOfWisdom', 'blessingOfWisdom', 'manaSpring', 'judgementOfTheCrusader'],
   options: OPTIONS,
   sheet: { attackPower: false, crit: false, spellCrit: 'Spell crit (gear + Intellect)', spellPower: 'Spell power (every school)', mainHand: false, offHand: false },
   lowMana: (c) => c.cost(c.ability('smite')!),
-  welcome: 'Welcome to the Smite practice yard, an experimental WoW Forever build: keep your Holy Fire burning for Power in Light, Smite as the filler, Mind Blast while you have mana, Power Infusion and Inner Focus together. Judgement of the Crusader from a raid paladin is on by default.',
+  welcome: 'Welcome to the Smite practice yard, an experimental WoW Forever build: keep your Holy Fire and Shadow Word: Pain up for Power in Light, Smite as the filler, Mind Blast while you have mana, Power Infusion and Inner Focus together. Judgement of the Crusader from a raid paladin is on by default.',
   help: `${CONTROLS}
     ${HELP_COMMON}
-    Smite in WoW Forever: Smite and Holy Fire were halved, then built back by Power in Light (+10% to Smite and Penance while your Holy Fire burns), Searing Light (+5% Holy, and Holy Fire ticks can give a free Holy Nova), Holy Precision (+18% Holy hit) and Holy Specialization (+5% crit). Penance fires three bolts at 0, 1 and 2 sec; the sims only use it with mana to spare. Mind Blast does about 1.8x Smite's damage per second of casting.
+    Smite in WoW Forever: Smite and Holy Fire were halved, then built back by Power in Light (+10% to Smite and Penance while your Holy Fire or Shadow Word: Pain is on the target), Searing Light (+5% Holy, and Holy Fire ticks can give a free Holy Nova), Holy Precision (+18% Holy hit) and Holy Specialization (+5% crit). Penance fires three bolts at 0, 1 and 2 sec; the sims only use it with mana to spare. Mind Blast does about 1.8x Smite's damage per second of casting.
     Recast Holy Fire when its burn has less than 3 sec left: the 3.0 sec cast lands as the old one ends. Judgement of the Crusader adds Holy damage scaled by each spell's coefficient.
     This is a practice tool built on an experimental spec: hit, crit and proc chances follow WoW Forever; damage numbers are an approximation.`,
   look: { clothColor: 0xe8e0c8, leatherColor: 0xb8902e, hood: false, robe: true },

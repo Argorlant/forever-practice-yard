@@ -1,7 +1,8 @@
 // What every mage spec shares: the spell table with school hit, additive
 // talent damage, personal Fire Vulnerability and Winter's Chill stacks,
-// Arcane Blast stacks, Missile Barrage, Clearcasting, Heating Up, rolling
-// Ignite, Fingers of Frost, Combustion, Evocation and the mana model.
+// Arcane Blast's spell damage stacks, Missile Barrage, Clearcasting, Heating
+// Up, rolling Ignite, Fire Power, Fingers of Frost, Combustion, Evocation and
+// the mana model (WoW Forever after the Oct 15 patch).
 // Numbers in ./data.ts; sources in research/mage_forever.md.
 import type { Combat } from '../../engine/combat';
 import type { Ability, Outcome, School, Unit } from '../../engine/types';
@@ -75,19 +76,16 @@ interface SpellOpts {
   binary?: boolean;
   /** Frostfire Bolt: Fire and Frost at once. */
   frostfire?: boolean;
-  /** Missiles: whether they use the Arcane Blast stacks (an option; the client says no). */
-  noStacks?: boolean;
 }
 const isFire = (school: School, o: SpellOpts) => school === 'fire' || !!o.frostfire;
 const isFrost = (school: School, o: SpellOpts) => school === 'frost' || !!o.frostfire;
 
-function critChance(c: Combat, t: Unit, id: string, school: School, o: SpellOpts, frozen: boolean): number {
+function critChance(c: Combat, _t: Unit, id: string, school: School, o: SpellOpts, frozen: boolean): number {
   const tl = T(c);
   let extra = tl.arcaneInstability;
   if (school === 'arcane') extra += 2 * tl.arcaneImpact;
   if (isFire(school, o)) extra += 2 * tl.criticalMass + D.combustion.perHit * stacksOf(c, c.player, 'combustion');
   if (['fireBlast', 'scorch', 'iceLance', 'arcaneBlast'].includes(id)) extra += 2 * tl.incineration;
-  if (id === 'frostbolt' || id === 'iceLance') extra += D.wintersChill.perStack * stacksOf(c, t, 'wintersChill');
   if (frozen) extra += [0, 17, 33, 50][tl.shatter];
   return c.spellCritChance(extra);
 }
@@ -97,18 +95,32 @@ function critMultiplier(c: Combat, school: School, o: SpellOpts): number {
   if (isFrost(school, o)) return c.rules.spellCritMultiplier + 0.1 * T(c).iceShards;
   return c.rules.spellCritMultiplier;
 }
-/** Additive talents (Arcane Instability, Fire Power, Piercing Ice), Arcane Power and Arcane Blast stacks; your Fire Vulnerability multiplies. */
+/** Your Fire effects on the target that Fire Power counts (Oct 15): Ignite, Fire Vulnerability, the Fireball and Pyroblast burns. */
+const FIRE_EFFECTS = ['ignite', 'fireVulnerability', 'fireballDot', 'pyroblastDot'];
+/**
+ * Additive talents (Arcane Instability, Piercing Ice), Arcane Power, and Winter's Chill on Cone of Cold;
+ * your Fire Vulnerability, Fire Power and Improved Cone of Cold multiply.
+ */
 function damageMult(c: Combat, t: Unit, id: string, school: School, o: SpellOpts): number {
   const tl = T(c);
   let add = 0.01 * tl.arcaneInstability;
-  if (isFire(school, o)) add += 0.02 * tl.firePower;
   if (isFrost(school, o)) add += 0.02 * tl.piercingIce;
   if (arcanePower(c)) add += D.arcanePower.damage;
-  if (id !== 'arcaneBlast' && !o.noStacks) add += D.arcaneBlast.bonus * abStacks(c);
-  const fv = isFire(school, o) ? 1 + D.fireVulnerability.perStack * stacksOf(c, t, 'fireVulnerability') : 1;
-  return (1 + add) * fv;
+  if (id === 'coneOfCold') add += D.wintersChill.coneBonus * stacksOf(c, t, 'wintersChill');
+  let m = 1 + add;
+  if (isFire(school, o)) {
+    m *= 1 + D.fireVulnerability.perStack * stacksOf(c, t, 'fireVulnerability');
+    const effects = FIRE_EFFECTS.filter((a) => c.aura(t, a)).length;
+    if (tl.firePower) m *= 1 + D.firePower.perEffect * tl.firePower * Math.min(D.firePower.maxEffects, effects);
+  }
+  if (id === 'coneOfCold') m *= 1 + D.coneOfCold.improved[tl.improvedConeOfCold];
+  return m;
 }
-const spellPower = (c: Combat, school: School, o: SpellOpts) => (o.frostfire ? Math.max(c.spellPowerFor('fire'), c.spellPowerFor('frost')) : c.spellPowerFor(school));
+/** Intellect, read from the mana pool (mana = 933 + 15 x Intellect). */
+export const intellect = (c: Combat) => Math.max(0, (c.player.maxResource - D.intellect.manaAtZero) / D.intellect.manaPerPoint);
+/** Spell power, plus Arcane Blast's stacks: 15 % of your Intellect each, for every spell (Oct 15). */
+const spellPower = (c: Combat, school: School, o: SpellOpts) => (o.frostfire ? Math.max(c.spellPowerFor('fire'), c.spellPowerFor('frost')) : c.spellPowerFor(school))
+  + D.arcaneBlast.intPerStack * intellect(c) * abStacks(c);
 
 /** Resolves one spell hit (or one missile): hit, crit, damage and every proc that rolls on it. */
 function resolve(c: Combat, t: Unit, id: string, school: School, base: number, coeff: number, o: SpellOpts = {}, frozenBonus = 1): { outcome: Outcome; amount: number } {
@@ -128,31 +140,35 @@ function resolve(c: Combat, t: Unit, id: string, school: School, base: number, c
     const m = damageMult(c, t, id, school, o) * (outcome === 'crit' ? critMultiplier(c, school, o) : 1) * (o.binary ? 1 : D.partialResist);
     amount = Math.max(1, Math.round((base + coeff * spellPower(c, school, o)) * m * (frozen ? frozenBonus : 1)));
   }
+  // Clearcasting needs combat: a spell cast out of combat (the opener) cannot proc it (Oct 15).
+  const fighting = c.player.inCombat;
   c.deal({ target: t, source: id, outcome, school: o.frostfire ? 'fire' : school, amount, white: false, spell: true });
   if (outcome === 'resist') return { outcome, amount };
 
-  // Clearcasting: 2 % per point per landed damage spell, 1 s internal cooldown.
+  // Clearcasting: 2 % per point per landed damage spell (each missile rolls), 1 s internal cooldown.
   const s = state(c);
-  if (tl.arcaneConcentration && c.t - s.lastClearcasting >= D.clearcasting.icd && roll(c, 2 * tl.arcaneConcentration)) {
+  if (tl.arcaneConcentration && fighting && c.t - s.lastClearcasting >= D.clearcasting.icd && roll(c, 2 * tl.arcaneConcentration)) {
     s.lastClearcasting = c.t;
     c.applyAura(c.player, { id: 'clearcasting', name: 'Clearcasting', icon: 'clearcasting', duration: D.clearcasting.duration });
     c.count('clearcasting');
   }
-  // Missile Barrage: 40 % from Arcane Blast, 20 % from Fireball, Frostbolt and Frostfire Bolt.
-  const barrage = id === 'arcaneBlast' ? 40 : ['fireball', 'frostbolt', 'frostfireBolt'].includes(id) ? 20 : 0;
-  if (tl.missileBarrage && barrage && roll(c, barrage)) {
+  // Missile Barrage, per point: 20 % from Arcane Blast, 5 % per Arcane Missiles hit, 10 % from Arcane Wrath, Fireball, Frostbolt and Frostfire Bolt.
+  const mb = D.missileBarrage;
+  const barrage = id === 'arcaneBlast' ? mb.arcaneBlast : id === 'arcaneMissiles' ? mb.missile
+    : ['arcaneWrath', 'fireball', 'frostbolt', 'frostfireBolt'].includes(id) ? mb.other : 0;
+  if (tl.missileBarrage && barrage && roll(c, barrage * tl.missileBarrage)) {
     c.applyAura(c.player, { id: 'missileBarrage', name: 'Missile Barrage', icon: 'missileBarrage', duration: D.missileBarrage.duration });
     c.count('missileBarrage');
     note(c, 'Missile Barrage');
   }
   if (isFire(school, o)) fireProcs(c, t, id, outcome, amount);
   if (isFrost(school, o)) {
-    // Winter's Chill: personal crit stacks for your Frostbolt and Ice Lance.
-    if (tl.wintersChill && roll(c, 20 * tl.wintersChill)) {
-      c.addStack(t, { id: 'wintersChill', name: "Winter's Chill", icon: 'wintersChill', duration: D.wintersChill.duration }, tl.wintersChill);
+    // Winter's Chill (Oct 15): your stacks, each +40 % to your next Cone of Cold, which spends them.
+    if (tl.wintersChill && id !== 'coneOfCold' && roll(c, D.wintersChill.chance * tl.wintersChill)) {
+      c.addStack(t, { id: 'wintersChill', name: "Winter's Chill", icon: 'wintersChill', duration: D.wintersChill.duration }, D.wintersChill.stacks);
     }
-    // Fingers of Frost from a landed Chill (Frostbolt, Frostfire Bolt).
-    if (tl.fingersOfFrost && (id === 'frostbolt' || id === 'frostfireBolt') && roll(c, D.fingersOfFrost.chance)) {
+    // Fingers of Frost from a landed Chill (Frostbolt, Frostfire Bolt, Cone of Cold).
+    if (tl.fingersOfFrost && (id === 'frostbolt' || id === 'frostfireBolt' || id === 'coneOfCold') && roll(c, D.fingersOfFrost.chance)) {
       c.applyAura(c.player, { id: 'fingersOfFrost', name: 'Fingers of Frost', icon: 'fingersOfFrost', duration: D.fingersOfFrost.duration, stacks: tl.fingersOfFrost });
       c.count('fingers', tl.fingersOfFrost);
       note(c, 'Fingers of Frost');
@@ -181,12 +197,16 @@ function fireProcs(c: Combat, t: Unit, id: string, outcome: Outcome, amount: num
   if (id === 'scorch' && tl.improvedScorch && roll(c, [0, 33, 66, 100][tl.improvedScorch])) {
     c.addStack(t, { id: 'fireVulnerability', name: 'Fire Vulnerability', icon: 'fireVulnerability', duration: D.fireVulnerability.duration }, D.fireVulnerability.stacks);
   }
-  if (outcome !== 'crit') return;
-  // Heating Up: direct crits of Fireball, Frostfire, Fire Blast and Scorch cut the next Pyroblast by 25 % each.
-  if (tl.hotStreak && ['fireball', 'frostfireBolt', 'fireBlast', 'scorch'].includes(id)) {
-    c.addStack(c.player, { id: 'heatingUp', name: 'Heating Up', icon: 'heatingUp', duration: D.heatingUp.duration }, D.heatingUp.stacks);
-    if (stacksOf(c, c.player, 'heatingUp') === D.heatingUp.stacks) note(c, 'Heating Up: 1.5 sec Pyroblast');
+  // Heating Up: direct crits of Fireball, Frostfire, Fire Blast and Scorch cut the next Pyroblast by 25 % each;
+  // since Oct 15 every Fire Blast that lands adds one more (a Fire Blast crit adds two).
+  if (tl.hotStreak) {
+    let add = outcome === 'crit' && ['fireball', 'frostfireBolt', 'fireBlast', 'scorch'].includes(id) ? 1 : 0;
+    if (id === 'fireBlast') add++;
+    const before = stacksOf(c, c.player, 'heatingUp');
+    for (let i = 0; i < add; i++) c.addStack(c.player, { id: 'heatingUp', name: 'Heating Up', icon: 'heatingUp', duration: D.heatingUp.duration }, D.heatingUp.stacks);
+    if (add && before < D.heatingUp.stacks && stacksOf(c, c.player, 'heatingUp') === D.heatingUp.stacks) note(c, 'Heating Up: 1.5 sec Pyroblast');
   }
+  if (outcome !== 'crit') return;
   // Ignite: 8 % per point of the crit over 4 s; unpaid ticks roll into the new one.
   if (tl.ignite) {
     const old = c.aura(t, 'ignite');
@@ -209,18 +229,11 @@ function spellDot(c: Combat, t: Unit, id: string, name: string, school: School, 
     id: `${id}Dot`, name, icon: id, duration: ticks * period, period,
     onTick: (cc) => {
       const crit = roll(cc, critChance(cc, t, id, school, o, false));
-      const amount = Math.max(1, Math.round((base + coeff * spellPower(cc, school, o)) * damageMult(cc, t, id, school, { ...o, noStacks: true })
+      const amount = Math.max(1, Math.round((base + coeff * spellPower(cc, school, o)) * damageMult(cc, t, id, school, o)
         * (crit ? critMultiplier(cc, school, o) : 1)));
       cc.deal({ target: t, source: id, outcome: crit ? 'crit' : 'hit', school: o.frostfire ? 'fire' : school, amount, white: false, periodic: true });
     },
   });
-}
-
-/** Any damage spell but Arcane Blast spends the Arcane Blast stacks. */
-function spendStacks(c: Combat, id: string, o: SpellOpts = {}): void {
-  if (id === 'arcaneBlast' || o.noStacks || !abStacks(c)) return;
-  c.count(`stacksSpent:${abStacks(c)}`);
-  c.removeAura(c.player, 'arcaneBlast');
 }
 
 const talent = (key: keyof Talents, name: string) => ({
@@ -230,7 +243,8 @@ const talent = (key: keyof Talents, name: string) => ({
 const spell = (a: Omit<Ability, 'gcd' | 'target' | 'range' | 'hastedGcd' | 'noAutoAttack'> & { range?: number }): Ability => ({
   gcd: D.gcd, target: 'enemy', hastedGcd: true, noAutoAttack: true, animation: 'cast', ...a, range: a.range ?? 30,
 });
-const missilesUseStacks = (c: Combat) => !!c.options.missilesUseStacks;
+/** Fire Blast: 20 yards, +8/15 with Improved Fire Blast. */
+const fireBlastRange = (c: Combat) => D.fireBlast.range + D.improvedFireBlast.range[T(c).improvedFireBlast];
 
 // --------------------------------------------------------------- abilities
 export const ABILITIES: Ability[] = [
@@ -244,7 +258,6 @@ export const ABILITIES: Ability[] = [
       spend(c, D.frostbolt.cast);
       const f = D.frostbolt;
       resolve(c, t!, 'frostbolt', 'frost', between(c, f.min, f.max), f.coeff, { binary: true });
-      spendStacks(c, 'frostbolt');
     },
   }),
   spell({
@@ -259,7 +272,6 @@ export const ABILITIES: Ability[] = [
       const f = D.fireball;
       const r = resolve(c, u, 'fireball', 'fire', between(c, f.min, f.max), f.coeff);
       if (r.outcome !== 'resist') spellDot(c, u, 'fireball', 'Fireball', 'fire', f.dotTicks, f.dotPeriod, f.dot, 0);
-      spendStacks(c, 'fireball');
     },
   }),
   spell({
@@ -270,18 +282,18 @@ export const ABILITIES: Ability[] = [
     use: (c, t) => {
       spend(c, D.scorch.cast);
       resolve(c, t!, 'scorch', 'fire', between(c, D.scorch.min, D.scorch.max), D.scorch.coeff);
-      spendStacks(c, 'scorch');
     },
   }),
   spell({
-    id: 'fireBlast', name: 'Fire Blast', icon: 'fireBlast', range: D.fireBlast.range,
+    id: 'fireBlast', name: 'Fire Blast', icon: 'fireBlast', range: D.fireBlast.range + D.improvedFireBlast.range[2],
     cost: cost(D.fireBlast.mana),
-    cooldown: (c) => D.fireBlast.cooldown - T(c).wakeOfFire,
-    description: (c) => `Instant: ${D.fireBlast.min}-${D.fireBlast.max} Fire damage plus spell power, ${D.fireBlast.range} yards. ${D.fireBlast.cooldown - T(c).wakeOfFire} sec cooldown. Your spell on the move.`,
+    cooldown: (c) => D.fireBlast.cooldown - D.improvedFireBlast.cooldown[T(c).improvedFireBlast],
+    // Improved Fire Blast's range: the ability allows the longest, this checks yours.
+    requirements: (c, t) => (t && c.distance(t) > fireBlastRange(c) * 0.9144 + t.radius ? 'Out of range' : null),
+    description: (c) => `Instant: ${D.fireBlast.min}-${D.fireBlast.max} Fire damage plus spell power, ${fireBlastRange(c)} yards. ${D.fireBlast.cooldown - D.improvedFireBlast.cooldown[T(c).improvedFireBlast]} sec cooldown. Your spell on the move.${T(c).hotStreak ? ' Every Fire Blast that lands adds a Heating Up stack (two on a crit).' : ''}`,
     use: (c, t) => {
       spend(c, 0);
       resolve(c, t!, 'fireBlast', 'fire', between(c, D.fireBlast.min, D.fireBlast.max), D.fireBlast.coeff);
-      spendStacks(c, 'fireBlast');
     },
   }),
   spell({
@@ -291,16 +303,17 @@ export const ABILITIES: Ability[] = [
     castTime: castTime((c) => D.pyroblast.cast * (1 - D.heatingUp.cut * stacksOf(c, c.player, 'heatingUp'))),
     highlight: (c) => stacksOf(c, c.player, 'heatingUp') >= D.heatingUp.stacks,
     ...talent('pyroblast', 'Pyroblast'),
-    description: (c) => `A ${(D.pyroblast.cast * (1 - D.heatingUp.cut * stacksOf(c, c.player, 'heatingUp'))).toFixed(1)} sec cast: ${D.pyroblast.min}-${D.pyroblast.max} Fire damage plus spell power, then ${D.pyroblast.dot * D.pyroblast.dotTicks} more over ${D.pyroblast.dotTicks * D.pyroblast.dotPeriod} sec. Each Heating Up stack takes 25% off its cast: at 3 stacks it is a 1.5 sec cast.`,
+    description: (c) => `A ${(D.pyroblast.cast * (1 - D.heatingUp.cut * stacksOf(c, c.player, 'heatingUp'))).toFixed(1)} sec cast: ${D.pyroblast.min}-${D.pyroblast.max} Fire damage plus spell power, then ${D.pyroblast.dot * D.pyroblast.dotTicks} more over ${D.pyroblast.dotTicks * D.pyroblast.dotPeriod} sec. Each Heating Up stack takes 25% off its cast: at 3 stacks it is a 1.5 sec cast. A Pyroblast made instant by Presence of Mind keeps the stacks.`,
     use: (c, t) => {
       const u = t!;
+      // Oct 15: a Pyroblast made instant by Presence of Mind does not spend Heating Up.
+      const instant = pom(c);
       spend(c, D.pyroblast.cast);
-      c.removeAura(c.player, 'heatingUp');
+      if (!instant) c.removeAura(c.player, 'heatingUp');
       const p = D.pyroblast;
       const r = resolve(c, u, 'pyroblast', 'fire', between(c, p.min, p.max), p.coeff);
       if (r.outcome !== 'resist') spellDot(c, u, 'pyroblast', 'Pyroblast', 'fire', p.dotTicks, p.dotPeriod, p.dot, p.dotCoeff);
       c.count('pyroblasts');
-      spendStacks(c, 'pyroblast');
     },
   }),
   {
@@ -319,14 +332,11 @@ export const ABILITIES: Ability[] = [
         if (c.aura(c.player, 'missileBarrage')) { c.removeAura(c.player, 'missileBarrage'); c.count('barrageUsed'); }
         return true;
       },
-      onTick: (c, t, tick) => {
+      onTick: (c, t) => {
         const u = t!;
         c.emit('bolt', { target: u, color: 0xe9a8ff, speed: 20, style: 'arcane' });
-        // Client rule: Missiles neither use nor spend the Arcane Blast stacks. gs: every missile
-        // uses them and the channel spends them when it ends.
-        const useStacks = missilesUseStacks(c);
-        resolve(c, u, 'arcaneMissiles', 'arcane', D.arcaneMissiles.damage, D.arcaneMissiles.coeff, { noStacks: !useStacks });
-        if (useStacks && tick === D.arcaneMissiles.missiles) spendStacks(c, 'arcaneMissiles');
+        // Each missile rolls its own hit, crit, Clearcasting and (Oct 15) Missile Barrage; Arcane Blast's stacks add spell damage.
+        resolve(c, u, 'arcaneMissiles', 'arcane', D.arcaneMissiles.damage, D.arcaneMissiles.coeff);
       },
     },
   },
@@ -336,12 +346,47 @@ export const ABILITIES: Ability[] = [
     cost: arcaneBlastCost,
     castTime: castTime(() => D.arcaneBlast.cast),
     ...talent('arcaneBlast', 'Arcane Blast'),
-    description: (c) => `A ${D.arcaneBlast.cast} sec cast: ${D.arcaneBlast.min}-${D.arcaneBlast.max} Arcane damage plus ${Math.round(D.arcaneBlast.coeff * 100)}% of spell power. Each cast adds a stack (max ${D.arcaneBlast.stacks}, ${D.arcaneBlast.duration} sec): +10% damage to your other spells and +175% to Arcane Blast's own cost. The next other damage spell spends them all. Stacks now: ${abStacks(c)}.`,
+    description: (c) => `A ${D.arcaneBlast.cast} sec cast: ${D.arcaneBlast.min}-${D.arcaneBlast.max} Arcane damage plus ${Math.round(D.arcaneBlast.coeff * 100)}% of spell power. Each cast adds a stack (max ${D.arcaneBlast.stacks}): +${Math.round(D.arcaneBlast.intPerStack * intellect(c))} spell damage (15% of your Intellect) for every spell, and +175% to Arcane Blast's own cost. The stacks last ${D.arcaneBlast.duration} sec from the first and nothing spends them. Stacks now: ${abStacks(c)}.`,
     use: (c, t) => {
       spend(c, D.arcaneBlast.cast);
       const a = D.arcaneBlast;
       resolve(c, t!, 'arcaneBlast', 'arcane', between(c, a.min, a.max), a.coeff);
-      c.addStack(c.player, { id: 'arcaneBlast', name: 'Arcane Blast', icon: 'arcaneBlast', duration: a.duration }, a.stacks);
+      // A new stack keeps the first one's timer (Oct 15).
+      const old = c.aura(c.player, 'arcaneBlast');
+      if (old) old.stacks = Math.min(a.stacks, (old.stacks ?? 1) + 1);
+      else c.applyAura(c.player, { id: 'arcaneBlast', name: 'Arcane Blast', icon: 'arcaneBlast', duration: a.duration, stacks: 1 });
+      if ((old?.stacks ?? 1) === a.stacks) c.count('fourStacks');
+    },
+  }),
+  spell({
+    id: 'arcaneWrath', name: 'Arcane Wrath', icon: 'arcaneWrath',
+    projectile: { color: 0xc890ff, speed: 26, style: 'arcane' },
+    cost: cost(D.arcaneWrath.mana),
+    cooldown: D.arcaneWrath.cooldown,
+    castTime: castTime(() => D.arcaneWrath.cast),
+    ...talent('arcaneWrath', 'Arcane Wrath'),
+    description: (c) => `A ${D.arcaneWrath.cast} sec cast: ${D.arcaneWrath.min}-${D.arcaneWrath.max} Arcane damage plus spell power, as if you had ${Math.round(D.arcaneWrath.maxManaPct * 100)}% of your maximum mana (${Math.round(D.arcaneWrath.maxManaPct * c.player.maxResource)}) more. ${D.arcaneWrath.cooldown} sec cooldown. New in WoW Forever (Oct 15).`,
+    use: (c, t) => {
+      spend(c, D.arcaneWrath.cast);
+      const w = D.arcaneWrath;
+      resolve(c, t!, 'arcaneWrath', 'arcane', between(c, w.min, w.max) + w.maxManaPct * c.player.maxResource * w.coeff, w.coeff);
+    },
+  }),
+  spell({
+    id: 'coneOfCold', name: 'Cone of Cold', icon: 'coneOfCold', range: D.coneOfCold.range,
+    cost: cost(D.coneOfCold.mana, { frost: true }),
+    cooldown: D.coneOfCold.cooldown,
+    highlight: (c) => !!c.target && stacksOf(c, c.target, 'wintersChill') >= D.wintersChill.stacks,
+    description: (c) => `Instant, ${D.coneOfCold.range} yards in front of you: ${D.coneOfCold.min}-${D.coneOfCold.max} Frost damage plus spell power, all or nothing. Your Winter's Chill stacks add 40% each and are spent (${c.target ? stacksOf(c, c.target, 'wintersChill') : 0} on your target). ${D.coneOfCold.cooldown} sec cooldown.`,
+    use: (c, t) => {
+      spend(c, 0);
+      const k = D.coneOfCold;
+      const u = t!;
+      if (stacksOf(c, u, 'wintersChill') >= D.wintersChill.stacks) c.count('fullCones');
+      for (const x of [u, ...c.targets.filter((o) => o !== u && o.health > 0 && c.inRange(o, k.range))]) {
+        resolve(c, x, 'coneOfCold', 'frost', between(c, k.min, k.max), k.coeff, { binary: true });
+        c.removeAura(x, 'wintersChill');
+      }
     },
   }),
   spell({
@@ -354,7 +399,6 @@ export const ABILITIES: Ability[] = [
     use: (c, t) => {
       spend(c, 0);
       resolve(c, t!, 'iceLance', 'frost', between(c, D.iceLance.min, D.iceLance.max), D.iceLance.coeff, { binary: true }, D.iceLance.frozen);
-      spendStacks(c, 'iceLance');
     },
   }),
   spell({
@@ -369,7 +413,6 @@ export const ABILITIES: Ability[] = [
       const f = D.frostfireBolt;
       const r = resolve(c, u, 'frostfireBolt', 'fire', between(c, f.min, f.max), f.coeff, { frostfire: true });
       if (r.outcome !== 'resist') spellDot(c, u, 'frostfireBolt', 'Frostfire Bolt', 'fire', f.dotTicks, f.dotPeriod, f.dot, 0, { frostfire: true });
-      spendStacks(c, 'frostfireBolt');
     },
   }),
   {
@@ -460,12 +503,13 @@ export function chances(c: Combat): { title: string; rows: [string, string][] }[
   ];
   const procs: [string, string][] = [];
   if (tl.arcaneConcentration) procs.push(['Clearcasting per landed damage spell (each missile rolls)', `${2 * tl.arcaneConcentration}%, 1 s cooldown`]);
-  if (tl.missileBarrage) procs.push(['Missile Barrage', '40% per Arcane Blast, 20% per Fireball, Frostbolt or Frostfire Bolt']);
-  if (tl.hotStreak) procs.push(['Heating Up per direct Fire crit', '-25% Pyroblast cast, 3 stacks, 20 s']);
+  if (tl.missileBarrage) procs.push(['Missile Barrage', `${D.missileBarrage.arcaneBlast * tl.missileBarrage}% per Arcane Blast, ${D.missileBarrage.missile * tl.missileBarrage}% per missile, ${D.missileBarrage.other * tl.missileBarrage}% per Arcane Wrath, Fireball, Frostbolt or Frostfire Bolt`]);
+  if (tl.hotStreak) procs.push(['Heating Up per direct Fire crit (and every Fire Blast)', '-25% Pyroblast cast, 3 stacks, 20 s']);
+  if (tl.firePower) procs.push(['Fire Power', `+${tl.firePower}% Fire damage per Fire effect of yours on the target, up to ${D.firePower.maxEffects}`]);
   if (tl.ignite) procs.push(['Ignite', `${8 * tl.ignite}% of a Fire crit over 4 s, rolling`]);
   if (tl.improvedScorch) procs.push(['Fire Vulnerability per Scorch', `${[0, 33, 66, 100][tl.improvedScorch]}%: +3% of your Fire damage, 5 stacks`]);
-  if (tl.fingersOfFrost) procs.push(['Fingers of Frost per landed Frostbolt', `${D.fingersOfFrost.chance}%: ${tl.fingersOfFrost} charge(s), Ice Lance x4, Shatter +${[0, 17, 33, 50][tl.shatter]}% crit`]);
-  if (tl.wintersChill) procs.push(["Winter's Chill per landed Frost spell", `${20 * tl.wintersChill}%: +2% crit for your Frostbolt and Ice Lance, ${tl.wintersChill} stacks`]);
+  if (tl.fingersOfFrost) procs.push(['Fingers of Frost per landed Frostbolt or Cone of Cold', `${D.fingersOfFrost.chance}%: ${tl.fingersOfFrost} charge(s), Ice Lance x${D.iceLance.frozen}, Shatter +${[0, 17, 33, 50][tl.shatter]}% crit`]);
+  if (tl.wintersChill) procs.push(["Winter's Chill per landed Frost spell", `${D.wintersChill.chance * tl.wintersChill}%: +40% to your next Cone of Cold per stack, ${D.wintersChill.stacks} stacks`]);
   if (c.raid.has('judgementOfWisdom')) procs.push(['Judgement of Wisdom: +59 mana', '50% per landed direct spell']);
   return [
     { title: 'Your spells', rows },
@@ -473,7 +517,7 @@ export function chances(c: Combat): { title: string; rows: [string, string][] }[
     {
       title: 'Mana',
       rows: [
-        ['Arcane Blast cost at 0 / 1 / 2 / 3 stacks', [0, 1, 2, 3].map((n) => Math.round(D.baseMana * D.arcaneBlast.manaPct * (1 + D.arcaneBlast.perStack * n))).join(' / ')],
+        ['Arcane Blast cost at 0 / 1 / 2 / 3 / 4 stacks', [0, 1, 2, 3, 4].map((n) => Math.round(D.baseMana * D.arcaneBlast.manaPct * (1 + D.arcaneBlast.perStack * n))).join(' / ')],
         ['Regeneration now', `${regen(c).toFixed(1)} per second (Mage Armor + Arcane Meditation keep up to 100% while casting)`],
       ],
     },

@@ -39,15 +39,17 @@ const PACT_BAR = bar(['shadowBolt', 'searingPain', 'corruption', 'immolate', 'ba
 
 const GS = 'gunba/wow-forever-sim';
 const FS = 'foreversim';
+/** foreversim's builds, still on the old tree: Malediction's points moved to Improved Corruption, as gunba moved his. */
+const FS_REENCODED = `${FS}, re-encoded to the Oct 15 tree`;
 // Mana: 1093 + 15 x Intellect, x1.15 with Fel Vitality 3/3 (research → Default stats).
 export const BUILDS: Build[] = [
-  { id: 'affliction', spec: 'affliction', name: 'Affliction', talentString: '2525000013520105--0550015103', source: GS, stats: AFFLICTION_STATS, bar: AFFLICTION_BAR, rotation: 'affliction', options: { mana: 4033 } },
-  { id: 'affliction-deep', spec: 'affliction', name: 'Deep Affliction', talentString: '2535002013521105--05000551', source: FS, stats: AFFLICTION_STATS, bar: AFFLICTION_BAR, rotation: 'affliction', options: { mana: 4033 } },
+  { id: 'affliction', spec: 'affliction', name: 'Affliction', talentString: '2550020013520105--0550015103', source: GS, stats: AFFLICTION_STATS, bar: AFFLICTION_BAR, rotation: 'affliction', options: { mana: 4033 } },
+  { id: 'affliction-deep', spec: 'affliction', name: 'Deep Affliction', talentString: '2550032013521105--05000551', source: FS_REENCODED, stats: AFFLICTION_STATS, bar: AFFLICTION_BAR, rotation: 'affliction', options: { mana: 4033 } },
   { id: 'pact', spec: 'demonology', name: 'Demonic Pact', talentString: '011-0005003221220311351-0550005003', source: GS, stats: PACT_STATS, bar: PACT_BAR, rotation: 'pact', options: { mana: 4638, sacrifice: 'voidwalker' } },
   { id: 'pact-fs', spec: 'demonology', name: 'Demonic Pact', talentString: '113-0005003221220311351-0550005', source: FS, stats: PACT_STATS, bar: PACT_BAR, rotation: 'pact', options: { mana: 4638, sacrifice: 'imp' } },
-  { id: 'fire', spec: 'destruction', name: 'Shadow and Flame', talentString: '2521000003-0005-0050355103101351', source: GS, stats: DESTRUCTION_STATS, bar: FIRE_BAR, rotation: 'fire', options: { mana: 4153 } },
-  { id: 'ruin', spec: 'destruction', name: 'DS/Ruin', talentString: '252200001351-0025003001-0550005103', source: GS, stats: RUIN_STATS, bar: RUIN_BAR, rotation: 'ruin', options: { mana: 4638, sacrifice: 'imp' } },
-  { id: 'ruin-fs', spec: 'destruction', name: 'DS/Ruin with Pandemic', talentString: '25220010135201-0025003001-05500051', source: FS, stats: RUIN_STATS, bar: RUIN_BAR, rotation: 'ruin', options: { mana: 4638, sacrifice: 'imp' } },
+  { id: 'fire', spec: 'destruction', name: 'Shadow and Flame', talentString: '2530000003-0005-0050355103101351', source: GS, stats: DESTRUCTION_STATS, bar: FIRE_BAR, rotation: 'fire', options: { mana: 4153 } },
+  { id: 'ruin', spec: 'destruction', name: 'DS/Ruin', talentString: '254000001351-0025003001-0550005103', source: GS, stats: RUIN_STATS, bar: RUIN_BAR, rotation: 'ruin', options: { mana: 4638, sacrifice: 'imp' } },
+  { id: 'ruin-fs', spec: 'destruction', name: 'DS/Ruin with Pandemic', talentString: '25400010135201-0025003001-05500051', source: FS_REENCODED, stats: RUIN_STATS, bar: RUIN_BAR, rotation: 'ruin', options: { mana: 4638, sacrifice: 'imp' } },
 ];
 
 export const buildsFor = (spec: WarlockSpec) => BUILDS.filter((b) => b.spec === spec);

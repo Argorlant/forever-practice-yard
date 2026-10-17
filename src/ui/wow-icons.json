@@ -262,5 +262,9 @@
   "class_mage": "classicon_mage",
   "class_warlock": "classicon_warlock",
   "class_druid": "classicon_druid",
-  "lightsVigil": "ability_paladin_judgementofthepure"
+  "lightsVigil": "ability_paladin_judgementofthepure",
+  "darkInspiration": "spell_shadow_shadowform",
+  "arcaneWrath": "spell_arcane_arcane04",
+  "coneOfCold": "spell_frost_glacier",
+  "elementalMastery": "spell_nature_wispheal"
 }

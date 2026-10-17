@@ -13,13 +13,13 @@ const SAGEBLADE = { name: 'Sageblade', type: 'sword' as const, min: 58, max: 109
  * per point); spell crit is gear and Intellect (Malevolence adds Shadow crit).
  */
 export const AFFLICTION_STATS: Stats = {
-  attackPower: 100, crit: 5, hit: 7.9, spellCrit: 10.9,
+  attackPower: 100, crit: 6, hit: 7.9, spellCrit: 11.9,      // Oct 15: Orc Savage +1% crit, spells too
   spellPower: 210, spellPowerBySchool: { shadow: 15 },
   mainHand: SAGEBLADE, offHand: null, health: 2484,
 };
 /** Shadow and Flame: the Fire pieces and the Firestone (+21 Fire, +2 % crit). */
 export const DESTRUCTION_STATS: Stats = {
-  attackPower: 100, crit: 5, hit: 6.9, spellCrit: 12.1,
+  attackPower: 100, crit: 6, hit: 6.9, spellCrit: 13.1,      // Oct 15: Orc Savage +1% crit, spells too
   spellPower: 192, spellPowerBySchool: { fire: 73 },
   mainHand: { name: 'Searing Golden Blade', type: 'dagger', min: 58, max: 109, speed: 1.8 }, offHand: null, health: 2334,
 };

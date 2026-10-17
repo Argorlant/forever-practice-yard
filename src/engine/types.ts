@@ -93,7 +93,7 @@ export interface Aura {
   speed?: number;
   /** On the player: extra attack power (Battle Shout). */
   attackPower?: number;
-  /** On the player: extra crit in percentage points (Berserker Stance, Recklessness, Moonkin Aura). */
+  /** On the player: extra crit in percentage points (Berserker Stance, Recklessness, Leader of the Pack). */
   crit?: number;
   /** On the player: damage done multiplier (Death Wish, Defensive Stance). */
   damageDone?: number;

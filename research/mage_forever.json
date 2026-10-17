@@ -5723,6 +5723,7 @@
           "wandSpecialization",
           "arcaneFocus",
           "improvedChanneling",
+          "missileBarrage",
           "arcaneSubtlety",
           "magicAbsorption",
           "arcaneConcentration",
@@ -5733,14 +5734,14 @@
           "arcaneShielding",
           "improvedCounterspell",
           "arcaneMeditation",
-          "missileBarrage",
+          "arcaneWrath",
           "presenceOfMind",
           "arcaneMind",
           "arcaneInstability",
           "arcanePower"
         ],
         [
-          "wakeOfFire",
+          "improvedFireBlast",
           "incineration",
           "improvedFireball",
           "ignite",
@@ -5784,6 +5785,7 @@
         "wandSpecialization": "Wand Specialization",
         "arcaneFocus": "Arcane Focus",
         "improvedChanneling": "Improved Channeling",
+        "missileBarrage": "Missile Barrage",
         "arcaneSubtlety": "Arcane Subtlety",
         "magicAbsorption": "Magic Absorption",
         "arcaneConcentration": "Arcane Concentration",
@@ -5794,12 +5796,12 @@
         "arcaneShielding": "Arcane Shielding",
         "improvedCounterspell": "Improved Counterspell",
         "arcaneMeditation": "Arcane Meditation",
-        "missileBarrage": "Missile Barrage",
+        "arcaneWrath": "Arcane Wrath",
         "presenceOfMind": "Presence of Mind",
         "arcaneMind": "Arcane Mind",
         "arcaneInstability": "Arcane Instability",
         "arcanePower": "Arcane Power",
-        "wakeOfFire": "Wake of Fire",
+        "improvedFireBlast": "Improved Fire Blast",
         "incineration": "Incineration",
         "improvedFireball": "Improved Fireball",
         "ignite": "Ignite",
@@ -5842,7 +5844,8 @@
         "missileBarrage",
         "hotStreak",
         "iceLance",
-        "fingersOfFrost"
+        "fingersOfFrost",
+        "arcaneWrath"
       ]
     }
   },

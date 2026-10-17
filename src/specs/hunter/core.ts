@@ -119,7 +119,8 @@ const needsPet = (c: Combat) => (c.pet.out ? null : 'You have no pet out (Lone W
 // -------------------------------------------------------------------- pet
 const petAp = (c: Combat) => D.pet.apBase + D.pet.apShare * Math.max(c.attackPower(), c.rangedAttackPower(null));
 const petSpeed = (c: Combat) => Number(c.options.petSpeed ?? 1.2);
-const petCrit = (c: Combat) => D.pet.baseCrit + c.stats.crit + c.mod.crit + 2 * T(c).ferocity - c.rules.critSuppression;
+/** Your crit (gear, talents and buffs, minus the boss's suppression) plus Ferocity: pets inherit it since Oct 15. */
+const petCrit = (c: Combat) => D.pet.baseCrit + c.critChance('petAttack') + 2 * T(c).ferocity;
 const petMult = (c: Combat) => {
   const t = T(c);
   const wrath = c.aura(c.player, 'bestialWrath') ? D.bestialWrath.damage : 1;
@@ -207,7 +208,7 @@ export const ABILITIES: Ability[] = [
   {
     id: 'autoShot', name: 'Auto Shot', icon: 'autoShot', gcd: 0, target: 'enemy', range: 35, minRange: 8, noAutoAttack: true,
     highlight: (c) => c.autoShooting,
-    description: (c) => `Shoots every ${(c.stats.ranged?.speed ?? 0).toFixed(1)} sec divided by your ranged haste. Each shot has a ${0.5} sec windup (shorter with haste) in which you must stand still; moving makes it try again 0.5 sec later. Works from 8 to 35 yards: closer is the dead zone. Press again to stop.${c.classicAutoShot ? ' Classic rule on: a cast started during the windup clips the shot.' : ' Forever: it keeps firing while you cast Aimed, Multi-Shot or Sniper Shot.'}`,
+    description: (c) => `Shoots every ${(c.stats.ranged?.speed ?? 0).toFixed(1)} sec divided by your ranged haste. Each shot has a ${0.5} sec windup (shorter with haste) in which you must stand still; moving makes it try again 0.5 sec later. Works from 8 to 35 yards: closer is the dead zone. Press again to stop.${c.classicAutoShot ? ' Classic rule on: a cast started during the windup clips the shot.' : ' Forever: it keeps firing while you cast Aimed Shot or Sniper Shot.'}`,
     use: (c) => { if (c.autoShooting) c.stopAutoShot(); else c.startAutoShot(); },
   },
   {
@@ -229,7 +230,7 @@ export const ABILITIES: Ability[] = [
     animation: 'shoot',
     cost: shotCost(D.multiShot.mana), cooldown: D.multiShot.cooldown, cooldownGroup: 'aimedMulti',
     castTime: castTime(D.multiShot.cast),
-    description: () => `A ${D.multiShot.cast} sec cast: normalized weapon damage to up to ${D.multiShot.targets} targets. Shares its cooldown with Aimed Shot, so on one target Aimed Shot is better.`,
+    description: () => `Instant (since client 70425): normalized weapon damage to up to ${D.multiShot.targets} targets. Shares its cooldown with Aimed Shot, so on one target Aimed Shot is better.`,
     use: (c, t) => {
       const u = t!;
       const near = c.targets.filter((x) => x !== u && x.health > 0 && Math.hypot(x.x - u.x, x.z - u.z) <= 8 * 0.9144).slice(0, D.multiShot.targets - 1);
@@ -279,7 +280,8 @@ export const ABILITIES: Ability[] = [
   {
     id: 'sniperShot', name: 'Sniper Shot', icon: 'sniperShot', gcd: D.gcd, target: 'enemy', range: D.sniperShot.range, minRange: 8, ranged: true,
     animation: 'shoot',
-    cost: () => D.sniperShot.mana, cooldown: D.sniperShot.cooldown,
+    // Oct 15: Efficiency and Mortal Shots now apply to Sniper Shot.
+    cost: shotCost(D.sniperShot.mana), cooldown: D.sniperShot.cooldown,
     castTime: castTime(D.sniperShot.cast),
     ...talent('sniperShot', 'Sniper Shot'),
     description: (c) => `A ${castTime(D.sniperShot.cast)(c).toFixed(2)} sec cast: normalized weapon damage plus ${D.sniperShot.bonus}, up to ${D.sniperShot.range} yards.`,
@@ -318,7 +320,7 @@ export const ABILITIES: Ability[] = [
     cost: () => D.trueshotAura.mana,
     ...talent('trueshotAura', 'Trueshot Aura'),
     highlight: (c) => !!c.aura(c.player, 'trueshotAura'),
-    description: () => `+${D.trueshotAura.rap} ranged attack power for your party, 30 min.`,
+    description: () => `+${D.trueshotAura.rap} ranged attack power for the raid, 30 min.`,
     use: (c) => { c.applyAura(c.player, { id: 'trueshotAura', name: 'Trueshot Aura', icon: 'trueshotAura', duration: 1800, rangedAttackPower: D.trueshotAura.rap }); },
   },
   {
@@ -352,7 +354,8 @@ export const ABILITIES: Ability[] = [
       if (!slot) slot = (c.aura(c.player, 'hawkA')!.end <= c.aura(c.player, 'hawkB')!.end) ? 'hawkA' : 'hawkB';
       c.applyAura(c.player, {
         id: slot, name: 'Hawk', icon: 'summonHawk', duration: h.duration, period: h.swing / c.rangedHaste(),
-        onTick: (cc) => { if (cc.target && cc.target.health > 0) hawkHit(cc, cc.target, h.swingDamage, 'hawk'); },
+        // Oct 15: the hawk sticks to the target you summoned it on.
+        onTick: (cc) => { if (u.health > 0) hawkHit(cc, u, h.swingDamage, 'hawk'); },
       });
       c.count('hawks');
     },
@@ -393,7 +396,8 @@ export const ABILITIES: Ability[] = [
   {
     id: 'striderKick', name: 'Strider Kick', icon: 'striderKick', gcd: D.gcd, target: 'enemy', range: 'melee',
     animation: 'strike2',
-    cost: () => D.striderKick.mana, cooldown: D.striderKick.cooldown,
+    // Oct 15: Resourcefulness lowers its mana cost.
+    cost: trapCost(D.striderKick.mana), cooldown: D.striderKick.cooldown,
     ...talent('striderKick', 'Strider Kick'),
     description: () => `A kick for 100% of normalized weapon damage; you run 30% faster for 3 sec.`,
     use: (c, t) => {
@@ -415,7 +419,9 @@ export const ABILITIES: Ability[] = [
     description: (c) => `A trap at your feet: an enemy on it burns for ${Math.round(D.immolationTrap.total * (1 + [0, 0.15, 0.3][T(c).cleverTraps]))} Fire damage over ${D.immolationTrap.ticks * D.immolationTrap.period} sec. Usable in combat in WoW Forever; the dummy has to be next to you.`,
     use: (c) => {
       const tr = D.immolationTrap;
-      const tick = (tr.total / tr.ticks) * (1 + [0, 0.15, 0.3][T(c).cleverTraps]);
+      // Oct 15: + 10 % of your higher attack power (gs, provisional), fixed when you place it.
+      const ap = tr.apShare * Math.max(c.attackPower(), c.rangedAttackPower(null));
+      const tick = ((tr.total + ap) / tr.ticks) * (1 + [0, 0.15, 0.3][T(c).cleverTraps]);
       for (const u of c.targets.filter((x) => x.health > 0 && c.inRange(x, 5))) {
         c.applyAura(u, {
           id: 'immolationTrap', name: 'Immolation Trap', icon: 'immolationTrap', duration: tr.ticks * tr.period, period: tr.period,
@@ -516,8 +522,8 @@ export function prepare(c: Combat): void {
       const a = c.aura(p, 'mongooseReady');
       if (!a || a.end - c.t < D.mongooseBite.dodgeWindow) c.applyAura(p, { id: 'mongooseReady', name: 'Mongoose Bite', icon: 'mongooseBite', duration: D.mongooseBite.dodgeWindow });
     }
-    // Resourcefulness: a crit can give casting regen for 30 s.
-    if (hit.outcome === 'crit' && !hit.periodic && t.resourcefulness && roll(c, 50 * t.resourcefulness)) {
+    // Resourcefulness: a melee or ranged ability crit (not auto attacks or traps, Oct 15) can give casting regen for 30 s.
+    if (hit.outcome === 'crit' && !hit.periodic && !hit.white && t.resourcefulness && roll(c, 50 * t.resourcefulness)) {
       c.applyAura(p, { id: 'resourcefulness', name: 'Resourcefulness', icon: 'resourcefulness', duration: 30 });
     }
   });
@@ -545,7 +551,7 @@ export function chances(c: Combat): { title: string; rows: [string, string][] }[
   if (tl.deadlyAspects) procs.push(['Quick Shots / Quick Strikes (+30% speed, 12 s)', `${2 * tl.deadlyAspects}% per Auto Shot with the Hawk / per white swing with the Beast`]);
   if (tl.exposePrey) procs.push(['Expose Prey: Mongoose Bite for 10 s', `${5 * tl.exposePrey}% per landed hit on your marked target`]);
   if (tl.frenzy && c.pet.out) procs.push(['Frenzy: pet +30% attack speed for 8 s', `${20 * tl.frenzy}% per pet crit`]);
-  if (tl.resourcefulness) procs.push(['Resourcefulness: casting regen for 30 s', `${50 * tl.resourcefulness}% per crit`]);
+  if (tl.resourcefulness) procs.push(['Resourcefulness: casting regen for 30 s', `${50 * tl.resourcefulness}% per melee or ranged ability crit (not auto attacks or traps)`]);
   if (c.raid.has('judgementOfWisdom')) procs.push(['Judgement of Wisdom: +59 mana', '50% per landed hit or shot']);
   const groups = [
     { title: 'Your attacks', rows },

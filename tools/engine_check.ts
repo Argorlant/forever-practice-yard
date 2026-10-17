@@ -239,7 +239,7 @@ for (const b of warrior.builds ?? []) {
 
 // ------------------------------------------------------------------ druid
 /** Plays a spec's priority list; tanks stand in front of an attacking dummy, the others behind it. */
-function play(sp: Spec, opts: { build?: string; seconds?: number; seed?: number; raid?: string[]; options?: Record<string, number | boolean | string> } = {}) {
+function play(sp: Spec, opts: { build?: string; seconds?: number; seed?: number; raid?: string[]; options?: Record<string, number | boolean | string>; distance?: number } = {}) {
   let s = opts.seed ?? 4242;
   const b = sp.builds?.find((x) => x.id === opts.build);
   const c = new Combat(sp, { ...(sp.defaultOptions ?? {}), ...(opts.build ? { build: opts.build } : {}), ...(b?.options ?? {}), ...(opts.options ?? {}) });
@@ -250,7 +250,7 @@ function play(sp: Spec, opts: { build?: string; seconds?: number; seed?: number;
   const dummy: Unit = { id: 0, name: 'Dummy', level: 63, health: 1e9, maxHealth: 1e9, armor: 3731, auras: new Map(), x: 0, z: 0, facing: tank ? Math.PI : 0, radius: 0.5 };
   c.targets = [dummy];
   c.target = dummy;
-  c.player.x = 0; c.player.z = tank ? 2 : sp.startDistance ? -sp.startDistance * 0.9144 : -2; c.player.facing = tank ? Math.PI : 0;
+  c.player.x = 0; c.player.z = tank ? 2 : opts.distance ? -opts.distance * 0.9144 : sp.startDistance ? -sp.startDistance * 0.9144 : -2; c.player.facing = tank ? Math.PI : 0;
   // As in Settings: specs that show health play with it unlocked.
   c.playerHealthLocked = !sp.showHealth;
   c.reset();
@@ -434,7 +434,7 @@ for (const sp of [paladinRet, paladinProt, paladinShock]) {
   const holyThreat = c.meter.threat;
   c.clearMeter();
   c.deal({ target: dummy, source: 'melee_mh', outcome: 'hit', school: 'physical', amount: 1000, white: true, hand: 'main' });
-  if (Math.abs(c.meter.threat - 1000) > 1e-6 || Math.abs(holyThreat - 1000 * 1.6 * 1.25) > 1e-6) failures.push(`Prot threat: Holy Strike ${holyThreat}, white ${c.meter.threat}; expected 2000 and 1000`);
+  if (Math.abs(c.meter.threat - 1000) > 1e-6 || Math.abs(holyThreat - 1000 * 1.9 * 1.25) > 1e-6) failures.push(`Prot threat: Holy Strike ${holyThreat}, white ${c.meter.threat}; expected 2375 and 1000`);
 }
 // Shockadin: Holy Shock about every 10 s.
 {
@@ -642,16 +642,16 @@ for (const sp of [priestShadow, priestSmite]) {
 // ------------------------------------------------------------------- mage
 console.log('Mage builds (5 min, own gear, priority list, default raid buffs):');
 const MAGE_MUST_USE: Record<string, string[]> = {
-  arcane: ['arcaneBlast', 'frostbolt', 'arcaneMissiles', 'arcanePower', 'presenceOfMind'],
-  'arcane-fire': ['arcaneBlast', 'fireBlast', 'arcaneMissiles'],
-  'arcane-ms': ['arcaneBlast', 'arcaneMissiles'],
-  'arcane-fs': ['arcaneBlast', 'frostbolt'],
+  arcane: ['arcaneBlast', 'arcaneWrath', 'arcaneMissiles', 'arcanePower', 'presenceOfMind'],
+  'arcane-fire': ['arcaneBlast', 'arcaneWrath', 'arcaneMissiles'],
+  'arcane-ms': ['arcaneBlast', 'arcaneWrath', 'arcaneMissiles'],
+  'arcane-fs': ['arcaneBlast', 'arcaneWrath', 'arcaneMissiles'],
   fire: ['scorch', 'fireBlast', 'pyroblast', 'combustion'],
   'fire-fs': ['scorch', 'fireBlast', 'pyroblast', 'combustion'],
   'fire-ms': ['scorch', 'fireBlast', 'pyroblast'],
   'fire-frost': ['frostfireBolt', 'fireBlast', 'pyroblast'],
   frost: ['frostbolt', 'iceLance'],
-  'arcane-frost': ['frostbolt', 'iceLance', 'arcaneMissiles'],
+  'arcane-frost': ['frostbolt', 'iceLance', 'arcaneMissiles', 'arcaneBlast'],
   'frost-ms': ['frostbolt', 'iceLance', 'arcaneMissiles'],
   'frost-p1': ['frostbolt'],
 };
@@ -665,19 +665,22 @@ for (const sp of [mageArcane, mageFire, mageFrost]) {
     if (!(r.c.dps() > 100)) failures.push(`${b.label}: ${r.c.dps().toFixed(0)} DPS`);
   }
 }
-// Arcane: Blast stacks raise its cost; Missiles fire 5 separate missiles; Evocation refills.
+// Arcane (Oct 15): Arcane Blast's stacks last 15 s from the first, nothing spends them, and each adds 15 % of
+// Intellect as spell damage; Arcane Wrath goes on cooldown; Missiles fire 5 separate missiles.
 {
   const r = play(mageArcane, { build: 'arcane', options: { lockMana: true } });
   const k = r.c.counters;
   const missiles = r.c.meter.rows.get('arcaneMissiles');
-  console.log(`Arcane with locked mana: ${r.c.dps().toFixed(0)} DPS, ${missiles?.hits ?? 0} missiles hit, Barrage ${k.missileBarrage ?? 0}/${k.barrageUsed ?? 0}, stacks spent at 3: ${k['stacksSpent:3'] ?? 0}`);
-  if (!((k['stacksSpent:3'] ?? 0) > 20)) failures.push('Arcane rarely spent 3 Arcane Blast stacks');
+  const wraths = (r.c.meter.rows.get('arcaneWrath')?.hits ?? 0) + (r.c.meter.rows.get('arcaneWrath')?.misses ?? 0);
+  const up = (k['uptime:arcaneBlast'] ?? 0) / (k.combatTime ?? 1);
+  console.log(`Arcane with locked mana: ${r.c.dps().toFixed(0)} DPS, ${missiles?.hits ?? 0} missiles hit, ${wraths} Arcane Wraths, Arcane Blast stacks up ${Math.round(up * 100)}%, Barrage ${k.missileBarrage ?? 0}/${k.barrageUsed ?? 0}`);
+  // Stacks fall off 15 s after the first and take four casts to rebuild; Arcane Wrath fits about once per cycle.
+  if (up < 0.6) failures.push(`Arcane Blast stacks up only ${Math.round(up * 100)}% of the fight`);
+  if (wraths < 10) failures.push(`only ${wraths} Arcane Wraths in 5 minutes`);
 }
-// Arcane Missiles keep the Arcane Blast stacks (the client rule; gs spends them), and every missile
-// that lands can proc Clearcasting, so one Missiles cast has five chances.
-for (const useStacks of [false, true]) {
+{
   let s = 2024;
-  const c = new Combat(mageArcane, { ...(mageArcane.defaultOptions ?? {}), lockMana: true, missilesUseStacks: useStacks });
+  const c = new Combat(mageArcane, { ...(mageArcane.defaultOptions ?? {}), lockMana: true });
   c.random = () => { s = (s * 16807) % 2147483647; return (s - 1) / 2147483646; };
   c.stats = structuredClone(mageArcane.builds?.find((b) => b.id === 'arcane')?.stats ?? mageArcane.stats);
   const dummy: Unit = { id: 0, name: 'Dummy', level: 63, health: 1e9, maxHealth: 1e9, armor: 3731, auras: new Map(), x: 0, z: 0, facing: 0, radius: 0.5 };
@@ -691,14 +694,17 @@ for (const useStacks of [false, true]) {
     step();
     while (c.casting || c.channeling || c.player.gcdEnd > c.t) step();
   };
-  for (let i = 0; i < 3; i++) cast('arcaneBlast');
-  const before = c.aura(c.player, 'arcaneBlast')?.stacks ?? 0;
+  cast('arcaneBlast');
+  const first = c.aura(c.player, 'arcaneBlast');
+  const firstEnd = first?.end ?? 0;
+  for (let i = 0; i < 4; i++) cast('arcaneBlast');
+  const stacks = c.aura(c.player, 'arcaneBlast')?.stacks ?? 0;
+  const end = c.aura(c.player, 'arcaneBlast')?.end ?? 0;
+  cast('frostbolt');
   cast('arcaneMissiles');
-  const after = c.aura(c.player, 'arcaneBlast')?.stacks ?? 0;
-  const expected = useStacks ? 0 : before;
-  if (before !== 3 || after !== expected) failures.push(`Arcane Missiles (${useStacks ? 'gs' : 'client'} rule): ${before} stacks before, ${after} after; expected ${expected}`);
-  if (useStacks) continue;
-  // Clearcasting procs that land in the middle of a channel come from its missiles.
+  const kept = c.aura(c.player, 'arcaneBlast')?.stacks ?? 0;
+  if (stacks !== 4 || Math.abs(end - firstEnd) > 1e-9 || kept !== 4) failures.push(`Arcane Blast stacks: ${stacks} after five Blasts (4), timer ${end.toFixed(2)} vs first ${firstEnd.toFixed(2)}, ${kept} after Frostbolt and Missiles (4)`);
+  // Each missile that lands can proc Clearcasting, so one Missiles cast has five chances.
   let midChannel = 0;
   for (let i = 0; i < 150; i++) {
     c.use('arcaneMissiles');
@@ -710,8 +716,15 @@ for (const useStacks of [false, true]) {
     }
     while (c.player.gcdEnd > c.t) step();
   }
-  console.log(`Arcane Missiles keep ${after} of ${before} Arcane Blast stacks; ${midChannel} Clearcasting procs from missiles in 150 casts`);
+  console.log(`Arcane Blast: ${stacks} stacks on the first one's timer, kept by other spells; ${midChannel} Clearcasting procs from missiles in 150 casts`);
   if (midChannel < 20) failures.push(`Only ${midChannel} Clearcasting procs from single missiles in 150 Missiles casts`);
+}
+// Frost (Oct 15): Winter's Chill feeds Cone of Cold within 10 yards; Ice Lance x3 on Fingers of Frost.
+{
+  const r = play(mageFrost, { build: 'frost', options: { lockMana: true }, distance: 9 });
+  const k = r.c.counters;
+  console.log(`Frost at 9 yards with locked mana: ${r.c.dps().toFixed(0)} DPS, ${k.fullCones ?? 0} Cones of Cold at 5 Winter's Chill, ${k.fingers ?? 0} Fingers charges`);
+  if (!((k.fullCones ?? 0) > 5)) failures.push(`Frost cast only ${k.fullCones ?? 0} Cones of Cold at 5 Winter's Chill`);
 }
 // Spell queue: a press in the last 0.4 s of a cast goes off the moment the cast ends; earlier is an error;
 // an interrupted cast drops the queued spell.
@@ -827,9 +840,9 @@ for (const sp of [warlockAffliction, warlockDemonology, warlockDestruction]) {
 // ----------------------------------------------------------------- shaman
 console.log('Shaman builds (5 min, own gear, priority list, default raid buffs):');
 const SHAMAN_MUST_USE: Record<string, string[]> = {
-  elemental: ['lightningBolt', 'lavaBurst', 'flameShock', 'chainLightning', 'searingTotem', 'manaSpringTotem'],
-  'elemental-fs': ['lightningBolt', 'lavaBurst', 'flameShock', 'searingTotem'],
-  'elemental-60': ['lightningBolt', 'lavaBurst', 'flameShock', 'searingTotem'],
+  elemental: ['lightningBolt', 'lavaBurst', 'flameShock', 'chainLightning', 'searingTotem', 'manaSpringTotem', 'elementalMastery'],
+  'elemental-fs': ['lightningBolt', 'lavaBurst', 'flameShock', 'searingTotem', 'elementalMastery'],
+  'elemental-60': ['lightningBolt', 'lavaBurst', 'flameShock', 'searingTotem', 'elementalMastery'],
   stormcaller: ['lightningBolt', 'flameShock', 'chainLightning', 'searingTotem'],
   'stormcaller-fs': ['lightningBolt', 'flameShock', 'searingTotem'],
   enhancement: ['stormstrike', 'earthShock', 'flameShock', 'fireNova', 'lightningBolt', 'searingTotem', 'strengthOfEarthTotem', 'graceOfAirTotem', 'rageOfTheFarseer'],

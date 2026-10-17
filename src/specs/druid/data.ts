@@ -51,7 +51,8 @@ export const DATA = {
   catRefund: 0.8,           // provisional: builders refund 80 % when avoided
   shred: { cost: 60, bonus: 80, percent: 1.55 },
   claw: { cost: 45, bonus: 115, percent: 1.1 },
-  rake: { cost: 40, initial: 61, tick: 34, ticks: 3, period: 3 },
+  // Attack power shares: gs's fit to beta logs (provisional); foreversim uses 5 % on both.
+  rake: { cost: 40, initial: 61, tick: 34, ticks: 3, period: 3, apInitial: 0.065, apTick: 0.045 },
   rip: { cost: 30, tick: 15, tickPerCp: 25.5, apPerCp: 0.01, ticks: 6, period: 2 },
   ferociousBite: { cost: 35, min: 52, max: 112, perCp: 147, apPerCp: 0.03, perEnergy: 2.7 },
   shiftingPower: { mana: 684, energy: 40, cooldown: 16 },

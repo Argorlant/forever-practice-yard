@@ -3,7 +3,7 @@
 export const TREE_NAMES = ['Affliction', 'Demonology', 'Destruction'];
 
 export const TREES = [
-  ['improvedLifeTap', 'suppression', 'improvedCorruption', 'malediction', 'soulHarvesting', 'improvedDrains', 'improvedBaneOfAgony', 'felConcentration', 'amplifyCurse', 'pandemic', 'malevolence', 'nightfall', 'curseOfExhaustion', 'siphonLife', 'soulSiphon', 'shadowMastery', 'wrack'],
+  ['improvedLifeTap', 'suppression', 'improvedCorruption', 'grimReach', 'soulHarvesting', 'improvedDrains', 'improvedBaneOfAgony', 'felConcentration', 'amplifyCurse', 'pandemic', 'malevolence', 'nightfall', 'curseOfExhaustion', 'siphonLife', 'soulSiphon', 'shadowMastery', 'wrack'],
   ['improvedHealthFunnel', 'improvedImp', 'demonicEmbrace', 'unholyPower', 'demonicAegis', 'improvedVoidwalker', 'felVitality', 'demonicEnergies', 'improvedSayaad', 'demonicSacrifice', 'masterSummoner', 'decimation', 'felDomination', 'demonicBrand', 'improvedFelhunter', 'soulLink', 'demonicKnowledge', 'masterDemonologist', 'demonicPact'],
   ['destructiveReach', 'improvedShadowBolt', 'bane', 'moltenSkin', 'cataclysm', 'aftermath', 'ruin', 'shadowburn', 'intensity', 'agonizingFlames', 'conflagrate', 'pyroclasm', 'baneOfHavoc', 'fireAndBrimstone', 'shadowAndFlame', 'incinerate'],
 ] as const;
@@ -15,7 +15,7 @@ export const NAMES: Record<TalentKey, string> = {
   improvedLifeTap: 'Improved Life Tap',
   suppression: 'Suppression',
   improvedCorruption: 'Improved Corruption',
-  malediction: 'Malediction',
+  grimReach: 'Grim Reach',
   soulHarvesting: 'Soul Harvest',
   improvedDrains: 'Improved Drains',
   improvedBaneOfAgony: 'Improved Bane of Agony',
@@ -66,4 +66,4 @@ export const NAMES: Record<TalentKey, string> = {
   incinerate: 'Incinerate',
 };
 
-export const NEW_IN_FOREVER = new Set<TalentKey>(['malediction', 'improvedDrains', 'pandemic', 'malevolence', 'soulSiphon', 'wrack', 'demonicAegis', 'felVitality', 'demonicEnergies', 'decimation', 'demonicBrand', 'improvedFelhunter', 'demonicKnowledge', 'demonicPact', 'moltenSkin', 'agonizingFlames', 'baneOfHavoc', 'fireAndBrimstone', 'shadowAndFlame', 'incinerate']);
+export const NEW_IN_FOREVER = new Set<TalentKey>(['improvedDrains', 'pandemic', 'malevolence', 'soulSiphon', 'wrack', 'demonicAegis', 'felVitality', 'demonicEnergies', 'decimation', 'demonicBrand', 'improvedFelhunter', 'demonicKnowledge', 'demonicPact', 'moltenSkin', 'agonizingFlames', 'baneOfHavoc', 'fireAndBrimstone', 'shadowAndFlame', 'incinerate']);

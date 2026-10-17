@@ -71,13 +71,13 @@ function critMultiplier(c: Combat, id: string): number {
   if (PANDEMIC.includes(id)) return c.rules.spellCritMultiplier + [0, 0.167, 0.333, 0.5][tl.pandemic];
   return c.rules.spellCritMultiplier;
 }
-/** Damage multipliers by school and spell: Shadow Mastery, Malediction, Agonizing Flames, Improved Corruption, your Improved Shadow Bolt debuff, Shadow and Flame, Demonic Sacrifice, Soul Link. */
-function damageMult(c: Combat, t: Unit, id: string, school: School, periodic: boolean): number {
+/** Damage multipliers by school and spell: Shadow Mastery (2 % a point since Oct 15), Agonizing Flames, Improved Corruption, your Improved Shadow Bolt debuff, Shadow and Flame, Demonic Sacrifice, Soul Link. */
+function damageMult(c: Combat, t: Unit, id: string, school: School, _periodic: boolean): number {
   const tl = T(c);
   const p = c.player;
   let m = 1;
   if (school === 'shadow') {
-    m *= 1 + 0.01 * tl.shadowMastery;
+    m *= 1 + 0.02 * tl.shadowMastery;
     if (c.aura(t, 'improvedShadowBolt')) m *= 1 + 0.04 * tl.improvedShadowBolt;
     if (c.aura(p, 'shadowFlameShadow')) m *= 1 + 0.02 * tl.shadowAndFlame;
     if (c.aura(p, 'burningShadow')) m *= D.demonicSacrifice.damage;
@@ -86,7 +86,6 @@ function damageMult(c: Combat, t: Unit, id: string, school: School, periodic: bo
     if (c.aura(p, 'shadowFlameFire')) m *= 1 + 0.02 * tl.shadowAndFlame;
     if (c.aura(p, 'touchOfFire')) m *= D.demonicSacrifice.damage;
   }
-  if (periodic) m *= 1 + 0.01 * tl.malediction;
   if (DESTRUCTION.includes(id)) m *= 1 + [0, 0.03, 0.07, 0.1][tl.agonizingFlames];
   if (id === 'corruption') m *= 1 + 0.02 * tl.improvedCorruption;
   if (id === 'drainLife' || id === 'wrack') m *= 1 + [0, 0.07, 0.13, 0.2][tl.improvedDrains];

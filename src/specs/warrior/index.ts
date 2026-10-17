@@ -565,7 +565,9 @@ function prepare(c: Combat): void {
     }
     const w = weaponOf(c, hand);
     const s = states.get(c)!;
-    if (!extra && wm && w?.type === 'sword' && c.t - s.lastWeaponmaster >= D.weaponmasterIcd && roll(c, wm)) {
+    // Shield Slam and Shield Bash cannot trigger it (Oct 15 fix).
+    if (!extra && wm && w?.type === 'sword' && hit.source !== 'shieldSlam' && hit.source !== 'shieldBash'
+      && c.t - s.lastWeaponmaster >= D.weaponmasterIcd && roll(c, wm)) {
       extra = true;
       s.lastWeaponmaster = c.t;
       c.count('weaponmaster');

@@ -84,6 +84,8 @@ export function faerieFire(opts: { gcd: number; cooldown?: number; cost?: (c: Co
         return;
       }
       c.applyAura(u, { id: 'faerieFire', name: 'Faerie Fire', icon: 'faerieFire', duration: D.faerieFire.duration, armor: D.faerieFire.armor, armorSlot: 'faerieFire' });
+      // In Bear Form it makes threat since Oct 15 (gs: 2 x 54, then the bear multiplier).
+      if (c.spec.id === 'druid-bear') c.addThreat(108);
     },
   };
 }

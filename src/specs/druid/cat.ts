@@ -30,7 +30,7 @@ const shredCost = (c: Combat) => D.shred.cost - 6 * T(c).shreddingAttacks;
 const clawCost = (c: Combat) => D.claw.cost - T(c).ferocity;
 const rakeCost = (c: Combat) => D.rake.cost - T(c).ferocity;
 const shiftingPowerMana = (c: Combat) => Math.round(D.shiftingPower.mana * (1 - 0.1 * T(c).naturalShapeshifter));
-const shiftingPowerCooldown = (c: Combat) => D.shiftingPower.cooldown - 4 * T(c).improvedShiftingPower - (c.options.howlingIdol ? 1 : 0);
+const shiftingPowerCooldown = (c: Combat) => D.shiftingPower.cooldown - 4 * T(c).improvedShiftingPower - (c.options.howlingIdol ? 0.5 : 0);
 const shiftingPowerEnergy = (c: Combat) => D.shiftingPower.energy + (c.options.wolfshead ? 5 : 0);
 const ripTicks = (c: Combat) => D.rip.ticks + (c.options.idolOfTheDream ? 1 : 0);
 const ripTick = (c: Combat, cp: number) => D.rip.tick + D.rip.tickPerCp * cp + c.attackPower() * D.rip.apPerCp * Math.min(cp, 4);
@@ -101,11 +101,13 @@ const abilities: Ability[] = [
     id: 'rake', name: 'Rake', icon: 'rake', gcd: D.catGcd, target: 'enemy', range: 'melee',
     animation: 'strike2',
     cost: freeWithClearcasting(rakeCost),
-    description: () => `Rake the target for ${D.rake.initial} damage and ${D.rake.tick * D.rake.ticks} more over ${D.rake.ticks * D.rake.period} sec. Ignores armor; the ticks can crit. Awards 1 combo point.`,
+    description: (c) => `Rake the target for ${Math.round(D.rake.initial + D.rake.apInitial * c.attackPower())} damage and ${Math.round((D.rake.tick + D.rake.apTick * c.attackPower()) * D.rake.ticks)} more over ${D.rake.ticks * D.rake.period} sec (both grow with attack power). Ignores armor; the ticks can crit. Awards 1 combo point.`,
     use: (c, t) => {
       const u = t!;
-      if (landed(builder(c, u, 'rake', D.rake.initial, { ignoreArmor: true }))) {
-        bleed(c, u, 'rake', 'Rake', D.rake.ticks, D.rake.period, () => D.rake.tick, { genesis: T(c).genesis });
+      // Attack power, fixed when Rake lands (gs, fitted to beta logs; provisional).
+      const ap = c.attackPower();
+      if (landed(builder(c, u, 'rake', D.rake.initial + D.rake.apInitial * ap, { ignoreArmor: true }))) {
+        bleed(c, u, 'rake', 'Rake', D.rake.ticks, D.rake.period, () => D.rake.tick + D.rake.apTick * ap, { genesis: T(c).genesis });
       }
     },
   },
@@ -291,6 +293,8 @@ function suggest(c: Combat): string | null {
   const rip = c.aura(t, 'rip');
   if (cp >= 5 && rip && rip.end - c.t >= 5) return 'ferociousBite';
   if (cp >= 4 && !rip) return 'rip';
+  // gs keeps Rake up since it scales with attack power (Oct 16).
+  if (cp < 5 && !c.aura(t, 'rake') && energy >= c.cost(c.ability('rake')!)) return 'rake';
   const enoughMana = c.manaLocked || p.mana >= shiftingPowerMana(c);
   if (tl.shiftingPower && energy <= 60 && ready('shiftingPower') && enoughMana) return 'shiftingPower';
   if (!c.manaLocked && p.inCombat && p.mana < shiftingPowerMana(c) && ready('manaPotion')) return 'manaPotion';
@@ -383,7 +387,7 @@ export const druidCat: Spec = {
     { key: 'faerieFire', name: 'You keep Faerie Fire up (free in Cat Form)', kind: 'toggle' },
     { key: 'thistleTea', name: 'Use Thistle Tea', kind: 'toggle' },
     { key: 'wolfshead', name: 'Wolfshead Helm (+5 Energy from Shifting Power)', kind: 'toggle' },
-    { key: 'howlingIdol', name: 'Howling Idol (Shifting Power cooldown -1 sec)', kind: 'toggle' },
+    { key: 'howlingIdol', name: 'Howling Idol (Shifting Power cooldown -0.5 sec since Oct 15)', kind: 'toggle' },
     { key: 'idolOfTheDream', name: 'Idol of the Dream (Rip +2 sec)', kind: 'toggle' },
     { key: 'mana', name: 'Mana pool', kind: 'number', step: 100 },
     { key: 'manaRegen', name: 'Mana regeneration per second', kind: 'number', step: 1 },

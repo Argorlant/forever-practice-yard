@@ -3,8 +3,8 @@
 export const TREE_NAMES = ['Arcane', 'Fire', 'Frost'];
 
 export const TREES = [
-  ['wandSpecialization', 'arcaneFocus', 'improvedChanneling', 'arcaneSubtlety', 'magicAbsorption', 'arcaneConcentration', 'arcaneResilience', 'arcaneGeometry', 'arcaneImpact', 'arcaneBlast', 'arcaneShielding', 'improvedCounterspell', 'arcaneMeditation', 'missileBarrage', 'presenceOfMind', 'arcaneMind', 'arcaneInstability', 'arcanePower'],
-  ['wakeOfFire', 'incineration', 'improvedFireball', 'ignite', 'flameThrowing', 'impact', 'burningSoul', 'improvedFlamestrike', 'pyroblast', 'improvedScorch', 'improvedFireWard', 'hotStreak', 'masterOfElements', 'criticalMass', 'blastWave', 'firePower', 'combustion'],
+  ['wandSpecialization', 'arcaneFocus', 'improvedChanneling', 'missileBarrage', 'arcaneSubtlety', 'magicAbsorption', 'arcaneConcentration', 'arcaneResilience', 'arcaneGeometry', 'arcaneImpact', 'arcaneBlast', 'arcaneShielding', 'improvedCounterspell', 'arcaneMeditation', 'arcaneWrath', 'presenceOfMind', 'arcaneMind', 'arcaneInstability', 'arcanePower'],
+  ['improvedFireBlast', 'incineration', 'improvedFireball', 'ignite', 'flameThrowing', 'impact', 'burningSoul', 'improvedFlamestrike', 'pyroblast', 'improvedScorch', 'improvedFireWard', 'hotStreak', 'masterOfElements', 'criticalMass', 'blastWave', 'firePower', 'combustion'],
   ['frostWarding', 'improvedFrostbolt', 'elementalPrecision', 'iceShards', 'permafrost', 'improvedFrostNova', 'frostbite', 'piercingIce', 'frostChanneling', 'iceLance', 'improvedBlizzard', 'arcticReach', 'iceBlock', 'shatter', 'improvedConeOfCold', 'coldSnap', 'fingersOfFrost', 'wintersChill', 'iceBarrier'],
 ] as const;
 
@@ -15,6 +15,7 @@ export const NAMES: Record<TalentKey, string> = {
   wandSpecialization: 'Wand Specialization',
   arcaneFocus: 'Arcane Focus',
   improvedChanneling: 'Improved Channeling',
+  missileBarrage: 'Missile Barrage',
   arcaneSubtlety: 'Arcane Subtlety',
   magicAbsorption: 'Magic Absorption',
   arcaneConcentration: 'Arcane Concentration',
@@ -25,12 +26,12 @@ export const NAMES: Record<TalentKey, string> = {
   arcaneShielding: 'Arcane Shielding',
   improvedCounterspell: 'Improved Counterspell',
   arcaneMeditation: 'Arcane Meditation',
-  missileBarrage: 'Missile Barrage',
+  arcaneWrath: 'Arcane Wrath',
   presenceOfMind: 'Presence of Mind',
   arcaneMind: 'Arcane Mind',
   arcaneInstability: 'Arcane Instability',
   arcanePower: 'Arcane Power',
-  wakeOfFire: 'Wake of Fire',
+  improvedFireBlast: 'Improved Fire Blast',
   incineration: 'Incineration',
   improvedFireball: 'Improved Fireball',
   ignite: 'Ignite',
@@ -68,4 +69,4 @@ export const NAMES: Record<TalentKey, string> = {
   iceBarrier: 'Ice Barrier',
 };
 
-export const NEW_IN_FOREVER = new Set<TalentKey>(['arcaneGeometry', 'arcaneBlast', 'missileBarrage', 'hotStreak', 'iceLance', 'fingersOfFrost']);
+export const NEW_IN_FOREVER = new Set<TalentKey>(['arcaneGeometry', 'arcaneBlast', 'missileBarrage', 'hotStreak', 'iceLance', 'fingersOfFrost', 'arcaneWrath']);

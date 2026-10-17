@@ -5982,7 +5982,7 @@
      "improvedLifeTap",
      "suppression",
      "improvedCorruption",
-     "malediction",
+     "grimReach",
      "soulHarvesting",
      "improvedDrains",
      "improvedBaneOfAgony",
@@ -6041,7 +6041,7 @@
     "improvedLifeTap": "Improved Life Tap",
     "suppression": "Suppression",
     "improvedCorruption": "Improved Corruption",
-    "malediction": "Malediction",
+    "grimReach": "Grim Reach",
     "soulHarvesting": "Soul Harvest",
     "improvedDrains": "Improved Drains",
     "improvedBaneOfAgony": "Improved Bane of Agony",
@@ -6092,7 +6092,6 @@
     "incinerate": "Incinerate"
    },
    "NEW_IN_FOREVER": [
-    "malediction",
     "improvedDrains",
     "pandemic",
     "malevolence",

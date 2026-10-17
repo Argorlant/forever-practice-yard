@@ -27,7 +27,8 @@ export class Floaters {
       cls += ' ft-miss';
     } else {
       text = fmt(hit.amount);
-      if (hit.white) cls += ' ft-white';
+      // Windfury Weapon's attacks read as white hits, as in the game (Oct 15); the engine keeps them special for Flurry.
+      if (hit.white || hit.source === 'windfuryWeapon') cls += ' ft-white';
       else if (hit.school === 'nature') cls += ' ft-nature';
       else if (hit.school === 'arcane') cls += ' ft-arcane';
       else if (hit.school === 'holy') cls += ' ft-holy';

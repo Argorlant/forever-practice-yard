@@ -10,7 +10,7 @@ import { ICON_AUTHORS } from './icons.gen';
 import { bindingFor, keyLabel } from './storage';
 import { DISCLAIMER_HTML, INSPIRATION_HTML, SUPPORT_HTML } from './disclaimer';
 import { raidPicker } from './raid-picker';
-import { MAX_POINTS, canAdd, canRemove, encode, totalPoints } from './talent-rules';
+import { MAX_POINTS, TREE_VERSION, canAdd, canRemove, encode, totalPoints } from './talent-rules';
 import { talentTreesHtml } from './talent-tree';
 import { classKey, decode, treesOf } from './talents-data';
 
@@ -30,6 +30,8 @@ export interface Prefs {
   barRows: number;
   targets: number;
   seenWelcome: boolean;
+  /** The game update these settings last caught up with (new abilities get a button once). */
+  patch?: string;
 }
 
 export function defaultPrefs(spec: Spec, move: MoveBindings): Prefs {
@@ -461,6 +463,7 @@ export class SettingsDialog {
     const commit = () => {
       const s = encode(points);
       p.options.talents = s === buildString ? '' : s;
+      p.options.talentsTree = TREE_VERSION;
       this.onChange('talents');
       draw();
     };

@@ -44,7 +44,9 @@ function useInnerFocus(c: Combat): number {
 
 /** Mana per second: Spirit regen outside the five-second rule (Meditation keeps 17/33/50 % while casting), MP5 always. */
 export function regen(c: Combat): number {
-  const spirit = 6.25 + Number(c.options.spirit ?? D.spirit) / 8;
+  // Dark Inspiration: +3% Spirit per point for 10 sec after Mind Blast or a full Mind Flay.
+  const inspired = c.aura(c.player, 'darkInspiration') ? 1 + D.darkInspiration.spirit * T(c).darkInspiration : 1;
+  const spirit = 6.25 + (Number(c.options.spirit ?? D.spirit) * inspired) / 8;
   const mp5 = Number(c.options.mp5 ?? D.mp5) / 5;
   const casting = c.t - c.lastSpend < 5;
   return spirit * (casting ? [0, 0.17, 0.33, 0.5][T(c).meditation] : 1) + mp5;
@@ -109,9 +111,13 @@ function dot(c: Combat, t: Unit, id: string, name: string, school: School, ticks
   });
 }
 
-const holyFireOn = (c: Combat, t: Unit) => !!c.aura(t, 'holyFire');
-/** Power in Light: +2 % per point to Smite and Penance while your Holy Fire burns on the target. */
-const powerInLight = (c: Combat, t: Unit) => (holyFireOn(c, t) ? 1 + 0.02 * T(c).powerInLight : 1);
+/** Power in Light: +2 % per point to Smite and Penance while your Holy Fire or Shadow Word: Pain is on the target (Oct 15). */
+const powerInLight = (c: Combat, t: Unit) => (c.aura(t, 'holyFire') || c.aura(t, 'shadowWordPain') ? 1 + 0.02 * T(c).powerInLight : 1);
+
+/** Dark Inspiration (Oct 15): Mind Blast and a full Mind Flay raise your Spirit for 10 sec. */
+function inspire(c: Combat): void {
+  if (T(c).darkInspiration) c.applyAura(c.player, { id: 'darkInspiration', name: 'Dark Inspiration', icon: 'darkInspiration', duration: D.darkInspiration.duration });
+}
 
 const talent = (key: keyof Talents, name: string) => ({
   requirements: (c: Combat) => (T(c)[key] ? null : `Requires the ${name} talent`),
@@ -139,6 +145,7 @@ export const ABILITIES: Ability[] = [
       const amount = spellDamage(c, u, 'mindBlast', 'shadow', between(c, m.min, m.max), m.coeff, outcome);
       c.deal({ target: u, source: 'mindBlast', outcome, school: 'shadow', amount, white: false, spell: true });
       if (amount) weave(c, u);
+      inspire(c);
     },
   }),
   {
@@ -146,12 +153,10 @@ export const ABILITIES: Ability[] = [
       id: 'mindFlay', name: 'Mind Flay', icon: 'mindFlay',
       cost: cost(D.mindFlay.mana, 'shadow'),
       ...talent('mindFlay', 'Mind Flay'),
-      description: (c) => `A ${D.mindFlay.duration} sec channel: ${D.mindFlay.ticks} ticks of ${D.mindFlay.tick} Shadow damage plus spell power, one per second. All or nothing: one hit roll for the whole channel. Another spell after the GCD clips it; clip right after a tick, never in the middle. Range ${D.mindFlay.range + 5 * T(c).improvedMindFlay} yards.`,
+      description: (c) => `A ${D.mindFlay.duration} sec channel: ${D.mindFlay.ticks} ticks of ${D.mindFlay.tick} Shadow damage plus spell power, one per second. All or nothing: one hit roll for the whole channel.${T(c).improvedMindFlay ? ` Improved Mind Flay: each tick ${10 * T(c).improvedMindFlay}% stronger than the one before, so let it finish.` : ''} Another spell after the GCD clips it. Range ${D.mindFlay.range} yards.`,
       use: (c) => { useInnerFocus(c); },
     }),
-    range: D.mindFlay.range + 10,
-    requirements: (c, t) => (T(c).mindFlay ? null : 'Requires the Mind Flay talent')
-      ?? (t && c.distance(t) > (D.mindFlay.range + 5 * T(c).improvedMindFlay) * 0.9144 + t.radius ? 'Out of range' : null),
+    requirements: (c) => (T(c).mindFlay ? null : 'Requires the Mind Flay talent'),
     channel: {
       duration: D.mindFlay.duration, ticks: D.mindFlay.ticks,
       onStart: (c, t) => {
@@ -163,11 +168,14 @@ export const ABILITIES: Ability[] = [
         weave(c, u);
         return true;
       },
-      onTick: (c, t) => {
+      onTick: (c, t, tick) => {
         const u = t!;
         const outcome: Outcome = critRoll(c, 'shadow') ? 'crit' : 'hit';
-        const amount = spellDamage(c, u, 'mindFlay', 'shadow', D.mindFlay.tick, D.mindFlay.coeff, outcome, { binary: true });
+        // Improved Mind Flay (Oct 15): each tick stronger than the one before (gs compounds it).
+        const ramp = (1 + D.improvedMindFlay * T(c).improvedMindFlay) ** (tick - 1);
+        const amount = Math.round(spellDamage(c, u, 'mindFlay', 'shadow', D.mindFlay.tick, D.mindFlay.coeff, outcome, { binary: true }) * ramp);
         c.deal({ target: u, source: 'mindFlay', outcome, school: 'shadow', amount, white: false, spell: true });
+        if (tick === D.mindFlay.ticks) inspire(c);
       },
     },
   },
@@ -188,7 +196,7 @@ export const ABILITIES: Ability[] = [
     id: 'devouringPlague', name: 'Devouring Plague', icon: 'devouringPlague',
     cost: cost(D.devouringPlague.mana, 'shadow', { agility: true, extra: (c) => 1 - 0.25 * T(c).devouringContagion }),
     cooldown: D.devouringPlague.cooldown,
-    description: () => `${D.devouringPlague.ticks} ticks of ${D.devouringPlague.tick} Shadow damage plus spell power every ${D.devouringPlague.period} sec; it heals you for the damage. Baseline for every race in WoW Forever, 1 min cooldown.`,
+    description: () => `${D.devouringPlague.ticks} ticks of ${D.devouringPlague.tick} Shadow damage plus spell power every ${D.devouringPlague.period} sec; it heals you for the damage. Baseline for every race in WoW Forever; 24 sec cooldown since Oct 15, so it can stay up.`,
     use: (c, t) => {
       const u = t!;
       useInnerFocus(c);
@@ -202,7 +210,7 @@ export const ABILITIES: Ability[] = [
     id: 'shadowWordDeath', name: 'Shadow Word: Death', icon: 'shadowWordDeath',
     cost: cost(D.shadowWordDeath.mana, 'shadow', { agility: true }),
     cooldown: D.shadowWordDeath.cooldown,
-    description: () => `${D.shadowWordDeath.min}-${D.shadowWordDeath.max} Shadow damage plus ${D.shadowWordDeath.coeff * 100}% of spell power. If the target survives, you take ${D.shadowWordDeath.backlash * 100}% of your maximum health: every cast on a dummy. New and baseline in WoW Forever.`,
+    description: () => `${D.shadowWordDeath.min}-${D.shadowWordDeath.max} Shadow damage plus ${D.shadowWordDeath.coeff * 100}% of spell power. If the target survives, you take ${D.shadowWordDeath.backlash * 100}% of your maximum health: every cast on a dummy. New and baseline in WoW Forever; ${D.shadowWordDeath.cooldown} sec cooldown.`,
     use: (c, t) => {
       const u = t!;
       const s = D.shadowWordDeath;
@@ -250,7 +258,7 @@ export const ABILITIES: Ability[] = [
     projectile: { color: 0xffe680, fromSky: true, style: 'holy' },
     cost: cost(D.smite.mana, 'holy', { agility: true }),
     castTime: (c) => (D.smite.cast - 0.1 * T(c).divineFury) / c.castHaste(),
-    description: (c) => `A ${(D.smite.cast - 0.1 * T(c).divineFury).toFixed(1)} sec cast: ${D.smite.min}-${D.smite.max} Holy damage plus ${Math.round(D.smite.coeff * 100)}% of spell power.${T(c).powerInLight ? ` Power in Light: +${2 * T(c).powerInLight}% while your Holy Fire burns on the target.` : ''}`,
+    description: (c) => `A ${(D.smite.cast - 0.1 * T(c).divineFury).toFixed(1)} sec cast: ${D.smite.min}-${D.smite.max} Holy damage plus ${Math.round(D.smite.coeff * 100)}% of spell power.${T(c).powerInLight ? ` Power in Light: +${2 * T(c).powerInLight}% while your Holy Fire or Shadow Word: Pain is on the target.` : ''}`,
     use: (c, t) => {
       const u = t!;
       const s = D.smite;
@@ -264,7 +272,7 @@ export const ABILITIES: Ability[] = [
     projectile: { color: 0xffa040, fromSky: true, style: 'fire' },
     cost: cost(D.holyFire.mana, 'holy', { agility: true }),
     castTime: (c) => (D.holyFire.cast - 0.1 * T(c).divineFury) / c.castHaste(),
-    description: (c) => `A ${(D.holyFire.cast - 0.1 * T(c).divineFury).toFixed(1)} sec cast: ${D.holyFire.min}-${D.holyFire.max} Holy damage plus spell power, then ${D.holyFire.ticks} ticks of ${D.holyFire.tick} over ${D.holyFire.ticks * D.holyFire.period} sec. Keep it burning for Power in Light: recast when less than 3 sec are left.`,
+    description: (c) => `A ${(D.holyFire.cast - 0.1 * T(c).divineFury).toFixed(1)} sec cast: ${D.holyFire.min}-${D.holyFire.max} Holy damage plus spell power, then ${D.holyFire.ticks} ticks of ${D.holyFire.tick} over ${D.holyFire.ticks * D.holyFire.period} sec. Keep it burning for Power in Light (your Shadow Word: Pain counts too): recast when less than 3 sec are left.`,
     use: (c, t) => {
       const u = t!;
       const h = D.holyFire;
@@ -346,12 +354,15 @@ export function prepare(c: Combat): void {
   p.maxResource = Math.max(1, Number(c.options.mana ?? 4300));
   p.regenPerSecond = 0;
   c.manaLocked = !!c.options.lockMana;
-  // Improved Mind Flay +10 % per point; Twin Disciplines +1 % per point to Pain, Plague and Holy Nova (the client masks).
+  // Twin Disciplines +1 % per point to Pain, Plague, Holy Nova and (Oct 15) Death, Mind Flay and Penance.
+  // Improved Mind Flay is a per-tick ramp now (Mind Flay's onTick).
   c.mod.damageFor = {
-    mindFlay: 1 + 0.1 * t.improvedMindFlay,
+    mindFlay: 1 + 0.01 * t.twinDisciplines,
     shadowWordPain: 1 + 0.01 * t.twinDisciplines,
     devouringPlague: 1 + 0.01 * t.twinDisciplines,
     holyNova: 1 + 0.01 * t.twinDisciplines,
+    shadowWordDeath: 1 + 0.01 * t.twinDisciplines,
+    penance: 1 + 0.01 * t.twinDisciplines,
   };
   // Shadowform before the pull.
   if (t.shadowform) c.applyAura(p, { id: 'shadowform', name: 'Shadowform', icon: 'shadowform', duration: Infinity });
@@ -380,7 +391,7 @@ export function chances(c: Combat): { title: string; rows: [string, string][] }[
       title: 'Rhythm',
       rows: [
         ['Global cooldown', '1.5 s, shorter with casting haste (1.0 s floor)'],
-        ['Mind Flay', `3 ticks over 3 s, not sped up by haste; ${D.mindFlay.range + 5 * tl.improvedMindFlay} yards`],
+        ['Mind Flay', `3 ticks over 3 s, not sped up by haste; ${D.mindFlay.range} yards${tl.improvedMindFlay ? `; ticks x${[1, 2, 3].map((n) => ((1 + D.improvedMindFlay * tl.improvedMindFlay) ** (n - 1)).toFixed(2)).join(' / ')}` : ''}`],
         ['Mind Blast cooldown', `${D.mindBlast.cooldown - 0.5 * tl.improvedMindBlast} s`],
         ['Mana regeneration now', `${regen(c).toFixed(1)} per second (Spirit stops 5 s after you spend mana${tl.meditation ? `; Meditation keeps ${[0, 17, 33, 50][tl.meditation]}%` : ''})`],
       ],

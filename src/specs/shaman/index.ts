@@ -56,7 +56,7 @@ const onCooldown = (c: Combat, id: string, cd: number) => {
 };
 
 // --------------------------------------------------------------- Elemental
-/** gs's ranked Elemental list (Stormcaller: the same without Lava Burst): Searing, Flame Shock, Lava Burst on it, Chain Lightning on Clearcasting, Lightning Bolt. */
+/** gs's ranked Elemental list (Stormcaller: the same without Lava Burst): Searing, Elemental Mastery on cooldown, Flame Shock, Lava Burst on it, Chain Lightning on Clearcasting, Lightning Bolt. */
 function elementalSuggest(c: Combat): string | null {
   const t = c.target;
   if (!t || t.health <= 0) return null;
@@ -66,6 +66,8 @@ function elementalSuggest(c: Combat): string | null {
   if (totem) return totem;
   const drink = potion(c);
   if (drink) return drink;
+  // Elemental Mastery on cooldown: instant and off the global cooldown.
+  if (tl.elementalMastery && p.inCombat && can('elementalMastery')) return 'elementalMastery';
   const flame = !!c.aura(t, 'flameShock');
   // On the move, only instants: Flame Shock when it is down, otherwise Earth Shock.
   if (p.moving) return !flame && can('flameShock') ? 'flameShock' : can('earthShock') ? 'earthShock' : null;
@@ -103,7 +105,8 @@ function enhancementSuggest(c: Combat): string | null {
   if (!t || t.health <= 0) return null;
   const tl = T(c);
   const { p, can, has, mana } = ctx(c);
-  const air = imbue(c) === 'windfury' ? 'graceOfAirTotem' : 'windfuryTotem';
+  // Grace of Air stacks with a raid Windfury Totem since Oct 15.
+  const air = imbue(c) === 'windfury' || c.raid.has('windfury') ? 'graceOfAirTotem' : 'windfuryTotem';
   const totem = totems(c, ['strengthOfEarthTotem', air, 'searingTotem', 'manaSpringTotem']);
   if (totem) return totem;
   const close = c.inRange(t);
@@ -211,10 +214,10 @@ export const shamanElemental: Spec = specFor('elemental', {
   options: OPTIONS,
   sheet: { attackPower: false, crit: false, spellCrit: 'Spell crit (gear + Intellect; Thundering Strikes adds on top)', spellPower: 'Spell damage (every school)', hit: 'Hit (gear; Tidal Focus adds on top)', mainHand: false, offHand: false },
   lowMana: (c) => c.cost(c.ability('lightningBolt')!),
-  welcome: 'Welcome to the Elemental practice yard. Drop Searing Totem and Mana Spring Totem, keep Flame Shock burning, cast Lava Burst whenever it is ready on your Flame Shock, Chain Lightning on Clearcasting, and Lightning Bolt for everything else. Mana runs out; that is part of the spec in WoW Forever.',
+  welcome: 'Welcome to the Elemental practice yard. Drop Searing Totem and Mana Spring Totem, keep Flame Shock burning, cast Lava Burst whenever it is ready on your Flame Shock, Elemental Mastery on cooldown, Chain Lightning on Clearcasting, and Lightning Bolt for everything else. Mana runs out; that is part of the spec in WoW Forever.',
   help: `${CONTROLS}
     ${HELP_COMMON}
-    Elemental in WoW Forever: casts are faster and weaker (Lightning Bolt 2.0 sec with Elemental Alacrity). Lava Burst (31 points) deals 20% more on your own Flame Shock. Elemental Fury makes your spells and Searing Totem crit for 2.0x; Lightning Overload has 10% for a free half-damage copy. Elemental Mastery is gone. The Stormcaller builds trade Lava Burst for Intellect turned into spell damage.
+    Elemental in WoW Forever: casts are faster and weaker (Lightning Bolt 2.0 sec with Elemental Alacrity). Lava Burst (21 points, no prerequisite) deals 20% more on your own Flame Shock; Call of Flame keeps Flame Shock up 3/6/9 sec longer. Elemental Fury makes your spells and Searing Totem crit for 2.0x; Lightning Overload has 10% for a free half-damage copy. Elemental Mastery (31 points, needs Lava Burst) is back since Oct 15: for 15 sec Lightning Bolt and Lava Burst cast 0.5 sec faster (1.5 sec with Alacrity) and Chain Lightning has no cooldown; 3 min cooldown. The Stormcaller builds trade Lava Burst for Intellect turned into spell damage.
     This is a practice tool: hit, crit and proc chances follow WoW Forever; damage numbers are an approximation.`,
   look: { clothColor: 0x2a5a8a, leatherColor: 0x4a3a20, hood: false, robe: true },
   suggest: elementalSuggest,
@@ -235,7 +238,7 @@ export const shamanEnhancement: Spec = specFor('enhancement', {
   welcome: 'Welcome to the Enhancement practice yard. One two-hander with Windfury Weapon: drop Strength of Earth, Grace of Air and Searing Totem, then Stormstrike on cooldown, spend its charge on Earth Shock or a 5-stack Lightning Bolt (instant and free), keep Flame Shock up and use Fire Nova around your Searing Totem, always on Clearcasting.',
   help: `${CONTROLS}
     ${HELP_COMMON}
-    Enhancement in WoW Forever: no dual wield. Windfury Weapon: 20% per landed main-hand hit (1.5 sec cooldown) for two extra attacks with +466 AP (Elemental Weapons 3/3); it turns a Windfury Totem off for you, so your Air totem is Grace of Air. Stormstrike (8 sec): a weapon hit, and your next Lightning Bolt, Chain Lightning or Earth Shock within 12 sec deals 20% more. Maelstrom Weapon: melee hits stack it (2 procs per minute per point, provisional); at 5 stacks Lightning Bolt is instant and free. Never hardcast Lightning Bolt below 5 stacks: it restarts your swing. Fire Nova is the biggest spell; Rage of the Farseer gives +30% attack speed.
+    Enhancement in WoW Forever: no dual wield. Windfury Weapon: 20% per landed main-hand hit (1.5 sec cooldown) for two extra attacks with +466 AP (Elemental Weapons 3/3); it turns a Windfury Totem off for you, so your Air totem is Grace of Air. Stormstrike (8 sec): a weapon hit, and your next Lightning Bolt, Chain Lightning or Earth Shock within 12 sec deals 20% more. Maelstrom Weapon: melee hits stack it (10 per minute at any rank); at 5 stacks Lightning Bolt is instant and free. Never hardcast Lightning Bolt below 5 stacks: it restarts your swing. Fire Nova is much weaker since Oct 15 (232-258, 0.143); Stormstrike costs 8% of base mana, and a spell that misses keeps its charge. Rage of the Farseer gives +30% attack speed.
     This is a practice tool: hit, crit and proc chances follow WoW Forever; damage numbers are an approximation.`,
   look: { clothColor: 0x3a6a8a, leatherColor: 0x5a4020, hood: false, plate: false },
   suggest: enhancementSuggest,

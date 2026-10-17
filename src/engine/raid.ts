@@ -31,8 +31,12 @@ export const RAID_EFFECTS: RaidEffect[] = [
     apply: (c) => c.applyAura(c.player, { id: 'blessingOfMight', name: 'Blessing of Might', icon: 'blessingOfMight', ...forever(), attackPower: 133 }),
   },
   {
-    id: 'leaderOfThePack', name: 'Leader of the Pack or Moonkin Aura (+3% crit, melee and spells; they do not stack)', from: 'druid', side: 'buff', icon: 'leaderOfThePack',
+    id: 'leaderOfThePack', name: 'Leader of the Pack (+3% melee and ranged crit, raid-wide)', from: 'druid', side: 'buff', icon: 'leaderOfThePack',
     apply: (c) => c.applyAura(c.player, LEADER_OF_THE_PACK),
+  },
+  {
+    id: 'moonkinAura', name: 'Moonkin Aura (+3% spell crit, raid-wide)', from: 'druid', side: 'buff', icon: 'moonkinForm',
+    apply: (c) => c.applyAura(c.player, MOONKIN_AURA),
   },
   {
     id: 'blessingOfWisdom', name: 'Blessing of Wisdom (40 MP5: +8 mana per second)', from: 'paladin', side: 'buff', icon: 'blessingOfWisdom',
@@ -83,8 +87,12 @@ export const RAID_EFFECTS: RaidEffect[] = [
   },
 ];
 
-/** Leader of the Pack and Moonkin Aura: one aura id, so a druid's own and the raid's never stack. */
-export const LEADER_OF_THE_PACK = { id: 'leaderOfThePack', name: 'Leader of the Pack', icon: 'leaderOfThePack', duration: Infinity, crit: 3, spellCrit: 3 };
+/**
+ * Since Oct 15 Leader of the Pack is melee and ranged crit only and Moonkin Aura spell crit only, both
+ * raid-wide, so they stack with each other. Each keeps one aura id: a druid's own and the raid's never stack.
+ */
+export const LEADER_OF_THE_PACK = { id: 'leaderOfThePack', name: 'Leader of the Pack', icon: 'leaderOfThePack', duration: Infinity, crit: 3 };
+export const MOONKIN_AURA = { id: 'moonkinAura', name: 'Moonkin Aura', icon: 'moonkinForm', duration: Infinity, spellCrit: 3 };
 
 /** Windfury Totem in the sims: 20 % per eligible landed main-hand attack, +246 AP, 1.5 s internal cooldown. */
 export const WINDFURY = { chance: 20, ap: 246, icd: 1.5 };

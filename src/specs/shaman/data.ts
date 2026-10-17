@@ -9,22 +9,22 @@ const PERSUADER = { name: 'Persuader', type: 'mace' as const, min: 89, max: 167,
 
 /**
  * gs's UI default gear (real Forever items), Orc, unbuffed. Hit and crit are
- * gear and Intellect/Agility only: Tidal Focus and Thundering Strikes are
+ * gear, Intellect/Agility and Orc Savage (+1 % melee and spell crit since Oct 15): Tidal Focus and Thundering Strikes are
  * added from the talents. Spell power includes Mental Quickness where the
  * build has it, attack power Mental Dexterity (both scale with Intellect).
  */
 export const ELEMENTAL_STATS: Stats = {
-  attackPower: 296, crit: 9.3, hit: 6.9, spellCrit: 10.8,
+  attackPower: 296, crit: 10.3, hit: 6.9, spellCrit: 11.8,
   spellPower: 228, spellPowerBySchool: { nature: 10 },
   mainHand: PERSUADER, offHand: null, shield: true, health: 2510,
 };
 /** Stormcaller: the same gear; Mental Quickness turns 30 % of Intellect into spell power, Mental Dexterity 100 % into attack power. */
 export const STORMCALLER_STATS: Stats = {
-  ...ELEMENTAL_STATS, attackPower: 517, spellCrit: 11.0, spellPower: 294,
+  ...ELEMENTAL_STATS, attackPower: 517, spellCrit: 12.0, spellPower: 294,
 };
-/** Enhancement: Forest Defender's Axe (two-handed), Orc (+1 % crit with axes, included). */
+/** Enhancement: Forest Defender's Axe (two-handed), Orc (Savage: +1 % crit with everything since Oct 15, was axes only). */
 export const ENHANCEMENT_STATS: Stats = {
-  attackPower: 732, crit: 13.5, hit: 4.9, spellCrit: 7.9,
+  attackPower: 732, crit: 13.5, hit: 4.9, spellCrit: 8.9,
   spellPower: 56,
   mainHand: { name: "Forest Defender's Axe", type: 'axe', twoHand: true, min: 162, max: 244, speed: 3.3 },
   offHand: null, health: 2960,
@@ -45,14 +45,18 @@ export const DATA = {
   spellMiss: 17,
   partialResist: 0.94,     // provisional: gs's average; Earth Shock is all or nothing
   lightningBolt: { mana: 220, cast: 2.5, min: 190, max: 212, coeff: 0.714, speed: 20 },
-  chainLightning: { mana: 485, cast: 2, cooldown: 6, min: 119, max: 134, coeff: 0.571, jump: 0.7, targets: 3 },
+  // Oct 15: about 35% cheaper on every rank (gs chain_lightning.go: 145/200/250/315, was 225/305/390/485).
+  chainLightning: { mana: 315, cast: 2, cooldown: 6, min: 119, max: 134, coeff: 0.571, jump: 0.7, targets: 3 },
+  // Rank 4 since Oct 15 (the old rank 3's numbers; ranks at 30/40/50/60). Elemental Mastery cuts the cast by 0.5 s.
   lavaBurst: { mana: 265, cast: 2.5, cooldown: 10, min: 192, max: 248, coeff: 0.714, flameShockBonus: 0.2 },
   shockCooldown: 6,
   earthShock: { mana: 450, min: 293, max: 309, coeff: 0.386, threat: 2, range: 20 },
   flameShock: { mana: 410, direct: 166, coeff: 0.214, tick: 44, tickCoeff: 0.1, ticks: 4, period: 3, range: 20 },
   frostShock: { mana: 430, min: 278, max: 295, coeff: 0.386, range: 20 },
-  stormstrike: { mana: 125, cooldown: 8, bonus: 0.2, duration: 12 },
-  fireNova: { mana: 520, cooldown: 10, min: 397, max: 443, coeff: 0.214, radius: 10 },
+  // Oct 15: 8% of base mana (1520 at 60, gs base_stats.go), was 125.
+  stormstrike: { mana: 121, cooldown: 8, bonus: 0.2, duration: 12 },
+  // Oct 15: rank 5 much weaker and cheaper (gs fire_totems.go: 232-258, 375 mana, coefficient 0.143; was 397-443, 520, 0.214).
+  fireNova: { mana: 375, cooldown: 10, min: 232, max: 258, coeff: 0.143, radius: 10 },
   lightningShield: { mana: 370, orbs: 3, damage: 178, coeff: 0.267, icd: 3.5, duration: 600 },
   rageOfTheFarseer: { cooldown: 180, duration: 25, haste: 0.3 },
   windfuryWeapon: { ap: 333 },                       // 20 %, 1.5 s cooldown (engine/raid.ts WINDFURY)
@@ -67,7 +71,9 @@ export const DATA = {
   manaSpringTotem: { mana: 100, duration: 300, perSecond: 5 },     // 10 mana every 2 s
   clearcasting: { chance: 10, duration: 15 },
   elementalDevastation: { duration: 10 },
-  maelstromWeapon: { ppmPerPoint: 2, max: 5, duration: 30 },        // provisional: both sims
+  // Oct 15: the 31-point talent again. 15 s of Lightning Bolt and Lava Burst 0.5 s faster and Chain Lightning off cooldown; 3 min.
+  elementalMastery: { cooldown: 180, duration: 15, castCut: 0.5 },
+  maelstromWeapon: { ppm: 10, max: 5, duration: 30 },              // 10 per minute at any rank (both sims, Oct 16)
   flurry: { charges: 3, duration: 15 },
   improvedStormstrike: { duration: 15, regen: 0.5 },
   lightningOverload: { damage: 0.5 },

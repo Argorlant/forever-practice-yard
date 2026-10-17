@@ -186,11 +186,11 @@ export const paladinProt: Spec = specFor('prot', {
   options: MANA_OPTIONS,
   sheet: { spellCrit: 'Spell crit (gear + Intellect)', spellPower: 'Spell power (Holy)' },
   lowMana: (c) => c.cost(c.ability('holyShield')!),
-  welcome: 'Welcome to the Protection practice yard. The dummy hits back: keep Righteous Fury, a seal and Holy Shield up, Judgement on cooldown, Consecration with spare mana and Holy Strike. Blocks give you Holy Shield damage, Reckoning swings and mana.',
+  welcome: 'Welcome to the Protection practice yard. The dummy hits back: keep Righteous Fury, a seal and Holy Shield up, Judgement on cooldown, Consecration with spare mana and Holy Strike. Blocks give you Holy Shield damage, Reckoning charges and mana.',
   help: `${CONTROLS}
     ${HELP_COMMON}
-    The dummy attacks you and rolls miss, dodge, parry, block, crit and crushing blows against your sheet. Holy Shield adds 30% block for 10 sec or 4 blocks and deals Holy damage on each block; Redoubt raises your block after hits taken; Shield Specialization gives back 6% of your mana on a block; Reckoning gives an extra swing after a block or a crit taken.
-    Righteous Fury makes your Holy damage cause 60% more threat (Holy Shield and Holy Strike more still). Your health is locked by default; unlock it to practice Templar's Bulwark and Lay on Hands.
+    The dummy attacks you and rolls miss, dodge, parry, block, crit and crushing blows against your sheet. Holy Shield adds 30% block for 10 sec or 4 blocks and deals Holy damage on each block; Redoubt raises your block after hits taken; Shield Specialization gives back 4% of your mana on a block; Reckoning: a block (at most once per 1.5 sec) or a crit taken stores a charge, up to 4, and your next swing fires them all as extra attacks without resetting your swing timer.
+    Righteous Fury makes your Holy damage cause 90% more threat (Holy Shield and Holy Strike more still). Your health is locked by default; unlock it to practice Templar's Bulwark and Lay on Hands.
     This is a practice tool: hit, crit, block and proc chances follow WoW Forever; damage and threat are an approximation.`,
   look: { clothColor: 0x2f4f8a, leatherColor: 0x9aa0a8, hood: false, plate: true },
   suggest: protSuggest,
@@ -254,7 +254,7 @@ export const paladinShock: Spec = specFor('shock', {
     ${HELP_COMMON}
     Holy Shock is a 21-point Holy talent with a 10 sec cooldown in WoW Forever (30 in Classic). Divine Precision gives it 18% hit, Holy Power 15% crit, and Divine Favor makes the next one crit. It costs a lot of mana: practice it as a burst on top of your melee.
     Light's Vigil (the 31-point Holy talent) is a 1.5 sec cast that marks the target: your next Holy Shock on it triggers no cooldown, deals extra Holy damage and refunds 75% of the Vigil's mana. Cast it while Holy Shock is ready, then Shock twice. Its damage is provisional: the sims disagree on whether it adds to Holy Shock or replaces it.
-    The build is our proposal (31/0/20); no sim has one yet. Expect changes, in particular to Infusion of Light (bug #260) and Light's Vigil.
+    The build is our proposal (31/0/20); no sim has one yet. Expect changes, in particular to Light's Vigil. (Since Oct 15 Infusion of Light no longer adds 50% to Holy Shock; these builds never took it.)
     This is a practice tool: hit, crit and proc chances follow WoW Forever; damage numbers are an approximation.`,
   look: { clothColor: 0xe8e0c8, leatherColor: 0xb8902e, hood: false, plate: true },
   suggest: shockSuggest,

@@ -25,7 +25,7 @@ const KEYS = ['Digit1', 'Digit2', 'Digit3', 'Digit4', 'Digit5', 'Digit6', 'Digit
 const bar = (ids: (string | null)[]): Binding[] => KEYS.map((key, i) => ({ id: ids[i] ?? null, key }));
 
 const ELEMENTAL_BAR = bar(['lightningBolt', 'lavaBurst', 'flameShock', 'chainLightning', 'earthShock', 'searingTotem', 'manaSpringTotem', 'manaPotion',
-  'frostShock', 'magmaTotem', 'fireNova', 'strengthOfEarthTotem', 'graceOfAirTotem']);
+  'frostShock', 'magmaTotem', 'fireNova', 'strengthOfEarthTotem', 'graceOfAirTotem', 'elementalMastery']);
 const ENHANCEMENT_BAR = bar(['stormstrike', 'earthShock', 'flameShock', 'fireNova', 'lightningBolt', 'searingTotem', 'strengthOfEarthTotem', 'graceOfAirTotem',
   'rageOfTheFarseer', 'windfuryTotem', 'manaSpringTotem', 'manaPotion', 'frostShock', 'magmaTotem', 'chainLightning']);
 const TANK_BAR = bar(['stormstrike', 'earthShock', 'flameShock', 'lightningShield', 'lightningBolt', 'searingTotem', 'stoneskinTotem', 'strengthOfEarthTotem',
@@ -33,18 +33,20 @@ const TANK_BAR = bar(['stormstrike', 'earthShock', 'flameShock', 'lightningShiel
 
 const GS = 'gunba/wow-forever-sim';
 const FS = 'foreversim';
+/** foreversim's builds, still on the old tree: the same points in the Oct 15 tree (Call of Thunder's points moved). */
+const FS_REENCODED = 'foreversim, re-encoded to the Oct 15 tree';
 const OURS = 'our proposal';
 // Mana: 1240 + 15 x Intellect (research → Default stats).
 export const BUILDS: Build[] = [
-  { id: 'elemental', spec: 'elemental', name: 'Elemental', talentString: '5502301300123051-052-05305', source: GS, stats: ELEMENTAL_STATS, bar: ELEMENTAL_BAR, options: { mana: 4376 } },
-  { id: 'elemental-fs', spec: 'elemental', name: 'Elemental with Water Shield', talentString: '2505301300123051-0500001-053050001', source: FS, stats: ELEMENTAL_STATS, bar: ELEMENTAL_BAR, options: { mana: 4376 } },
-  { id: 'elemental-60', spec: 'elemental', name: 'Elemental "Level 60"', talentString: '5505301300103051--503352001', source: FS, stats: ELEMENTAL_STATS, bar: ELEMENTAL_BAR, options: { mana: 4376 } },
-  { id: 'stormcaller', spec: 'elemental', name: 'Stormcaller (caster hybrid)', talentString: '550133130010304-055030021004002', source: GS, stats: STORMCALLER_STATS, bar: ELEMENTAL_BAR, options: { mana: 4556 } },
-  { id: 'stormcaller-fs', spec: 'elemental', name: 'Stormcaller', talentString: '150533130010303-055030030004102', source: FS, stats: STORMCALLER_STATS, bar: ELEMENTAL_BAR, options: { mana: 4556 } },
-  { id: 'enhancement', spec: 'enhancement', name: 'Enhancement', talentString: '550133102-053030031005102251', source: GS, stats: ENHANCEMENT_STATS, bar: ENHANCEMENT_BAR, options: { mana: 2623 } },
-  { id: 'enhancement-60', spec: 'enhancement', name: 'Enhancement "Level 60"', talentString: '5505301-053030031005112251', source: `${GS} and ${FS}`, stats: ENHANCEMENT_STATS, bar: ENHANCEMENT_BAR, options: { mana: 2623 } },
-  { id: 'enhancement-fs', spec: 'enhancement', name: 'Enhancement', talentString: '2502331-055030030205112251', source: FS, stats: ENHANCEMENT_STATS, bar: ENHANCEMENT_BAR, options: { mana: 2623 } },
-  { id: 'tank', spec: 'tank', name: 'Off-tank (experimental)', talentString: '0535031-050230031355112201', source: OURS, stats: OFFTANK_STATS, bar: TANK_BAR, options: { mana: 2900 }, tank: true },
+  { id: 'elemental', spec: 'elemental', name: 'Elemental', talentString: '5503331000011351-054-05303', source: GS, stats: ELEMENTAL_STATS, bar: ELEMENTAL_BAR, options: { mana: 4376 } },
+  { id: 'elemental-fs', spec: 'elemental', name: 'Elemental with Water Shield', talentString: '3505331000011351-0500001-053050001', source: FS_REENCODED, stats: ELEMENTAL_STATS, bar: ELEMENTAL_BAR, options: { mana: 4376 } },
+  { id: 'elemental-60', spec: 'elemental', name: 'Elemental "Level 60"', talentString: '5505331000001351--553302001', source: FS_REENCODED, stats: ELEMENTAL_STATS, bar: ELEMENTAL_BAR, options: { mana: 4376 } },
+  { id: 'stormcaller', spec: 'elemental', name: 'Stormcaller (caster hybrid)', talentString: '553233100000034-055030021004002', source: GS, stats: STORMCALLER_STATS, bar: ELEMENTAL_BAR, options: { mana: 4556 } },
+  { id: 'stormcaller-fs', spec: 'elemental', name: 'Stormcaller', talentString: '253533100000033-055030030004102', source: FS_REENCODED, stats: STORMCALLER_STATS, bar: ELEMENTAL_BAR, options: { mana: 4556 } },
+  { id: 'enhancement', spec: 'enhancement', name: 'Enhancement', talentString: '453203102-053030031005102251', source: GS, stats: ENHANCEMENT_STATS, bar: ENHANCEMENT_BAR, options: { mana: 2623 } },
+  { id: 'enhancement-60', spec: 'enhancement', name: 'Enhancement "Level 60"', talentString: '5505031-053030031005112251', source: `${GS} and ${FS}`, stats: ENHANCEMENT_STATS, bar: ENHANCEMENT_BAR, options: { mana: 2623 } },
+  { id: 'enhancement-fs', spec: 'enhancement', name: 'Enhancement', talentString: '2532031-055030030205112251', source: FS_REENCODED, stats: ENHANCEMENT_STATS, bar: ENHANCEMENT_BAR, options: { mana: 2623 } },
+  { id: 'tank', spec: 'tank', name: 'Off-tank (experimental)', talentString: '05350013-050230031355112201', source: OURS, stats: OFFTANK_STATS, bar: TANK_BAR, options: { mana: 2900 }, tank: true },
 ];
 
 export const buildsFor = (spec: ShamanSpec) => BUILDS.filter((b) => b.spec === spec);

@@ -213,7 +213,8 @@ const abilities: Ability[] = [
     description: () => `Strike with both daggers, each for 75% weapon damage plus ${Math.round(D.mutilate.bonus * D.mutilate.percent)}; 20% more if the target has your Deadly Poison. Awards 2 combo points.`,
     use: (c, t) => {
       const u = t!;
-      const cold = useColdBlood(c);
+      // Cold Blood: both hands crit; a Mutilate that misses outright keeps it (Oct 15, gs).
+      const cold = !!c.aura(c.player, 'coldBlood');
       // One avoidance roll for both strikes; then each hand rolls its own crit.
       const parent = c.rollSpecial(u, 'mutilate', { forceCrit: cold });
       if (!landed(parent)) {
@@ -221,6 +222,7 @@ const abilities: Ability[] = [
         c.deal({ target: u, source: 'mutilate', outcome: parent, school: 'physical', amount: 0, white: false });
         return;
       }
+      if (cold) useColdBlood(c);
       const poisoned = c.aura(u, 'deadlyPoison') ? 1 + D.mutilate.poisonedBonus : 1;
       let anyCrit = false;
       for (const [hand, source] of [['main', 'mutilate'], ['off', 'mutilateOH']] as [Hand, string][]) {

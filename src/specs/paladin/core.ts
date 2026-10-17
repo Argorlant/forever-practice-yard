@@ -17,11 +17,11 @@ const specOf = (c: Combat) => c.spec.id.replace('paladin-', '') as PaladinSpec;
 /** Talent ranks of the build chosen in Settings. */
 export const T = (c: Combat): Talents => talentsFor(c.options.build, specOf(c), c.options.talents);
 
-interface PaladinState { lastCommand: number; lastReckoning: number; lastShieldSpec: number }
+interface PaladinState { lastCommand: number; lastReckoning: number; lastShieldSpec: number; releasing: boolean }
 const states = new WeakMap<Combat, PaladinState>();
 const state = (c: Combat): PaladinState => {
   let s = states.get(c);
-  if (!s) states.set(c, (s = { lastCommand: -Infinity, lastReckoning: -Infinity, lastShieldSpec: -Infinity }));
+  if (!s) states.set(c, (s = { lastCommand: -Infinity, lastReckoning: -Infinity, lastShieldSpec: -Infinity, releasing: false }));
   return s;
 };
 
@@ -423,7 +423,7 @@ const JUDGEMENT_SOURCES = ['judgementOfRighteousness', 'judgementOfCommand', 'ju
 export function prepare(c: Combat): void {
   const t = T(c);
   const p = c.player;
-  states.set(c, { lastCommand: -Infinity, lastReckoning: -Infinity, lastShieldSpec: -Infinity });
+  states.set(c, { lastCommand: -Infinity, lastReckoning: -Infinity, lastShieldSpec: -Infinity, releasing: false });
   p.maxResource = Math.max(1, Number(c.options.mana ?? 4000));
   p.regenPerSecond = 0;
   c.manaLocked = !!c.options.lockMana;
@@ -514,15 +514,29 @@ export function prepare(c: Combat): void {
         c.count('shieldSpecMana', n);
       }
     }
-    // Reckoning: an extra swing after a block (8 % per point) or a crit taken (20 % per point), 1.5 s cooldown.
-    const chance = i.outcome === 'block' ? D.reckoning.onBlock : i.outcome === 'crit' ? D.reckoning.onCrit : 0;
-    if (chance && t.reckoning && c.t - s.lastReckoning >= D.reckoning.icd && roll(c, chance * t.reckoning)
-      && p.autoAttacking && c.target && c.inRange(c.target)) {
-      s.lastReckoning = c.t;
-      c.count('reckoning');
-      note(c, 'Reckoning!');
-      c.extraAttack(c.target);
+    // Reckoning (Oct 15, Classic again): a block (8 % per point, at most once per 1.5 s) or a crit taken
+    // (20 % per point) stores a charge, up to 4. Your next swing fires them all.
+    const block = i.outcome === 'block';
+    const chance = block ? D.reckoning.onBlock : i.outcome === 'crit' ? D.reckoning.onCrit : 0;
+    if (chance && t.reckoning && (!block || c.t - s.lastReckoning >= D.reckoning.icd) && roll(c, chance * t.reckoning)) {
+      if (block) s.lastReckoning = c.t;
+      c.addStack(p, { id: 'reckoning', name: 'Reckoning', icon: 'reckoning', duration: Infinity }, D.reckoning.charges);
     }
+  });
+  // The stored Reckoning charges go off right after your next main-hand swing, hit or miss, without resetting the swing timer.
+  c.afterDamage.push((hit: Hit) => {
+    const s = state(c);
+    if (s.releasing || !hit.white || hit.source !== 'melee_mh') return;
+    const n = c.aura(p, 'reckoning')?.stacks ?? 0;
+    if (!n) return;
+    c.removeAura(p, 'reckoning');
+    c.schedule(c.t, () => {
+      s.releasing = true;
+      for (let k = 0; k < n && hit.target.health > 0; k++) c.whiteHit('main', hit.target);
+      s.releasing = false;
+      c.count('reckoning', n);
+      note(c, n > 1 ? `Reckoning x${n}!` : 'Reckoning!');
+    });
   });
 }
 
@@ -539,9 +553,9 @@ export function chances(c: Combat): { title: string; rows: [string, string][] }[
   if (tl.twistOfLight) procs.push(['Twist of Light', 'replacing a seal banks an Echo your next landed swing also applies']);
   if (tl.vengeance) procs.push(['Vengeance after any crit', `+${tl.vengeance}% Physical and Holy per stack, 3 stacks, 30 s`]);
   if (tl.vindication) procs.push(['Vindication on every landed melee hit', `+${tl.vindication}% attack power, the dummy -${D.vindication.apPerRank * tl.vindication} attack power`]);
-  if (tl.reckoning) procs.push(['Reckoning: extra swing after a block / a crit taken', `${D.reckoning.onBlock * tl.reckoning}% / ${D.reckoning.onCrit * tl.reckoning}%, 1.5 s cooldown`]);
+  if (tl.reckoning) procs.push(['Reckoning: a charge after a block / a crit taken', `${D.reckoning.onBlock * tl.reckoning}% / ${D.reckoning.onCrit * tl.reckoning}% (blocks at most once per 1.5 s); up to ${D.reckoning.charges}, all fired by your next swing`]);
   if (tl.redoubt) procs.push(['Redoubt: +block after a hit taken', `${D.redoubt.chance * tl.redoubt}% for +${D.redoubt.block * tl.redoubt}% block (10 s or 5 blocks)`]);
-  if (tl.shieldSpecialization) procs.push(['Shield Specialization: 6% of your mana on a block', `${[0, 33, 66, 100][tl.shieldSpecialization]}%, 3 s cooldown`]);
+  if (tl.shieldSpecialization) procs.push([`Shield Specialization: ${D.shieldSpecialization.manaPct * 100}% of your mana on a block`, `${[0, 33, 66, 100][tl.shieldSpecialization]}%, 3 s cooldown`]);
   if (c.raid.has('judgementOfWisdom')) procs.push(['Judgement of Wisdom: +59 mana', '50% per landed hit or direct spell']);
   const spells: [string, string][] = [
     ['Seal procs, Judgements, Holy Strike: crit (melee table)', pct(c.critChance('sealOfRighteousness'))],
