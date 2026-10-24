@@ -7,7 +7,7 @@ import { UI } from '../strings';
 import { ACTION_SLOTS, MAX_ROWS, ROW, expandBar } from './bars';
 import { iconHtml } from './icon';
 import { ICON_AUTHORS } from './icons.gen';
-import { bindingFor, keyLabel } from './storage';
+import { bindingFor, keyLabel, wheelBinding } from './storage';
 import { DISCLAIMER_HTML, INSPIRATION_HTML, SUPPORT_HTML } from './disclaimer';
 import { raidPicker } from './raid-picker';
 import { MAX_POINTS, TREE_VERSION, canAdd, canRemove, encode, totalPoints } from './talent-rules';
@@ -84,7 +84,7 @@ export class SettingsDialog {
   private removingTalents = false;
   private onChange: (what: Change) => void;
   /** Set while waiting for a key press to rebind. */
-  capturing: ((code: string | null, e: KeyboardEvent) => void) | null = null;
+  capturing: ((code: string | null, e: KeyboardEvent | WheelEvent) => void) | null = null;
   classes: ClassPicker | null = null;
 
   constructor(
@@ -261,13 +261,14 @@ export class SettingsDialog {
 
     // Keybinds.
     const kb = this.section(UI.keybinds);
-    kb.append(h('p', 'note', 'Click a key, then press the new one. Shift, Ctrl and Alt combine with ability keys. A key does one thing: binding it here unbinds it elsewhere. × or Backspace unbinds a key. Esc cancels. On the screen you can also use the Keys button (hover a button, press a key) and the Spellbook (drag abilities onto the bar; drag a button off the bar to clear it).'));
+    kb.append(h('p', 'note', 'Click a key, then press the new one, or turn the mouse wheel (up and down are two keys, as in WoW; a bound direction no longer zooms). Shift, Ctrl and Alt combine with ability keys and the wheel. A key does one thing: binding it here unbinds it elsewhere. × or Backspace unbinds a key. Esc cancels. On the screen you can also use the Keys button (hover a button, press a key) and the Spellbook (drag abilities onto the bar; drag a button off the bar to clear it).'));
     this.choice(kb, 'Action bar rows', [2, 3, 4].map((n) => ({ value: String(n), label: `${n} rows of ${ROW}` })), () => String(p.barRows), (v) => { p.barRows = Number(v); }, 'bar');
     const mv = h('div', 'keys-grid');
     for (const [k, label] of MOVE_LABELS) {
       this.keyRow(mv, label, () => p.move[k], (code) => {
-        // Movement reads plain keys: Shift+Q moves like Q.
+        // Movement reads plain keys: Shift+Q moves like Q. The wheel cannot be held, so it cannot move you.
         const key = code?.split('+').pop() ?? '';
+        if (key.startsWith('Wheel')) return false;
         if (key) claimKey(p, key);
         p.move[k] = key;
         return true;
@@ -523,8 +524,9 @@ export class SettingsDialog {
       this.capturing = (code, e) => {
         btn.classList.remove('capturing');
         this.capturing = null;
-        if (e.code === 'Escape') { btn.textContent = keyLabel(get()) || '—'; return; }
-        const value = e.code === 'Backspace' || e.code === 'Delete' ? null : code;
+        const key = 'code' in e ? e.code : '';
+        if (key === 'Escape') { btn.textContent = keyLabel(get()) || '—'; return; }
+        const value = key === 'Backspace' || key === 'Delete' ? null : code;
         if (set(value)) this.onChange('keys');
         this.render();
       };
@@ -532,6 +534,15 @@ export class SettingsDialog {
     const keys = h('span', 'key-pair');
     keys.append(btn, unbind);
     row.append(keys);
+  }
+
+  /** Feeds a turn of the mouse wheel to the dialog while capturing a key. Returns true if used. */
+  handleWheel(e: WheelEvent): boolean {
+    if (!this.capturing) return false;
+    const code = wheelBinding(e);
+    e.preventDefault();
+    if (code) this.capturing(code, e);
+    return true;
   }
 
   /** Feeds a keydown to the dialog while capturing. Returns true if used. */

@@ -21,7 +21,7 @@ import { raidPicker } from './ui/raid-picker';
 import { DISCLAIMER_SHORT_HTML } from './ui/disclaimer';
 import { TREE_VERSION, parseTalents } from './ui/talent-rules';
 import { classKey } from './ui/talents-data';
-import { bindingFor, load, save } from './ui/storage';
+import { bindingFor, load, save, wheelBinding } from './ui/storage';
 
 // The class comes from the URL (?class=warrior), else the last one played; ?build= picks a build.
 const CLASS_KEY = 'fpy.class';
@@ -325,6 +325,26 @@ function pressSlot(slot: number): void {
   hud.flash(slot);
   combat.use(id);
 }
+
+// The mouse wheel: binding it (Settings, or Keys over a button), and pressing the button a direction is bound to.
+window.addEventListener('wheel', (e) => {
+  if (settings.handleWheel(e)) return;
+  if (!settings.open && hud.handleWheel(e)) e.preventDefault();
+}, { passive: false, capture: true });
+const lastWheel = new Map<string, number>();
+controls.wheelAction = (e) => {
+  if (settings.open || welcomeOpen) return false;
+  const code = wheelBinding(e);
+  const slot = code ? prefs.bar.findIndex((b, i) => b.key === code && slotShown(i, prefs.barRows)) : -1;
+  if (slot < 0) return false;
+  // One press per notch: a touchpad sends a stream of small turns.
+  const now = performance.now();
+  if (now - (lastWheel.get(code!) ?? 0) >= 100) {
+    lastWheel.set(code!, now);
+    pressSlot(slot);
+  }
+  return true;
+};
 
 window.addEventListener('keydown', (e) => {
   if (settings.handleKey(e)) return;

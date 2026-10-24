@@ -39,7 +39,7 @@ export const CONTROLS = `You start behind the dummy. W and S move along your fac
     Hold the left mouse button to orbit the camera; hold the right button to steer; hold both to run forward. Scroll to zoom.
     Click a dummy to target it, right-click to target and start attacking, Tab cycles targets, Esc clears it.
     On a phone, use the joystick to move and drag the screen to steer.
-    Action bars: up to four rows of 8 (Settings or the Spellbook); rows 3 and 4 start with the abilities that have no other button, row 3 on Shift+1-8. Spellbook: drag an ability onto a button; drag a button off the bar to clear it. Keys: hover a button and press a key to bind it. Helper turns the next-ability glow off or on. As in WoW, a press in the last 0.4 sec of a cast or the global cooldown is queued and goes off the moment it ends. Heroic Strike, Cleave, Maul and Raptor Strike keep a gold frame from the press until the swing lands, then flash.`;
+    Action bars: up to four rows of 8 (Settings or the Spellbook); rows 3 and 4 start with the abilities that have no other button, row 3 on Shift+1-8. Spellbook: drag an ability onto a button; drag a button off the bar to clear it. Keys: hover a button and press a key, or turn the mouse wheel, to bind it. Helper turns the next-ability glow off or on. As in WoW, a press in the last 0.4 sec of a cast or the global cooldown is queued and goes off the moment it ends. Heroic Strike, Cleave, Maul and Raptor Strike keep a gold frame from the press until the swing lands, then flash.`;
 
 /** "18/33/0" from a talent string. */
 export function talentSplit(talentString: string): string {

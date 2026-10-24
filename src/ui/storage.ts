@@ -29,12 +29,22 @@ export function keyLabel(binding: string): string {
       BracketLeft: '[', BracketRight: ']', Semicolon: ';', Quote: "'", Comma: ',', Period: '.',
       Slash: '/', Backslash: '\\', CapsLock: 'Caps', Tab: 'Tab', Escape: 'Esc',
       ArrowUp: '↑', ArrowDown: '↓', ArrowLeft: '←', ArrowRight: '→', MouseMiddle: 'M3',
+      WheelUp: 'MwU', WheelDown: 'MwD',
     };
     return named[part] ?? part.replace(/^F(\d+)$/, 'F$1');
   }).join(part2sep(binding));
 }
 
 const part2sep = (b: string) => (b.includes('+') ? '-' : '');
+
+/** The binding string for a turn of the mouse wheel (WheelUp or WheelDown, modifiers first), as WoW binds it. */
+export function wheelBinding(e: WheelEvent): string | null {
+  // Shift turns the wheel sideways in some browsers.
+  const d = e.deltaY || e.deltaX;
+  if (!d) return null;
+  const mods = [e.shiftKey && 'Shift', e.ctrlKey && 'Control', e.altKey && 'Alt'].filter(Boolean);
+  return [...mods, d < 0 ? 'WheelUp' : 'WheelDown'].join('+');
+}
 
 /** The binding string for a keydown: modifiers first, then the code. */
 export function bindingFor(e: KeyboardEvent): string | null {

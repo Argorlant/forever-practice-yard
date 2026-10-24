@@ -6,7 +6,7 @@ import type { Aura, Binding, Unit } from '../engine/types';
 import { UI, fmt } from '../strings';
 import { ACTION_SLOTS, ROW } from './bars';
 import { iconHtml } from './icon';
-import { bindingFor, keyLabel } from './storage';
+import { bindingFor, keyLabel, wheelBinding } from './storage';
 
 const h = <K extends keyof HTMLElementTagNameMap>(tag: K, cls = '', html = ''): HTMLElementTagNameMap[K] => {
   const el = document.createElement(tag);
@@ -325,6 +325,16 @@ export class Hud {
     const clear = e.code === 'Backspace' || e.code === 'Delete';
     this.cb.bindKey(this.tooltipSlot, clear ? null : code);
     this.refreshBar();
+    return true;
+  }
+  /** Key binding mode: turning the mouse wheel over a button binds that direction. Returns true when it used the wheel. */
+  handleWheel(e: WheelEvent): boolean {
+    if (!this.bindMode || this.tooltipSlot < 0) return false;
+    const code = wheelBinding(e);
+    if (code) {
+      this.cb.bindKey(this.tooltipSlot, code);
+      this.refreshBar();
+    }
     return true;
   }
   setTargetCount(n: number): void {

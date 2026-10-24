@@ -194,7 +194,8 @@ talents (`?class=…&build=…&talents=…`).
 **Action bars and keys.** Up to four rows of 8 buttons (2 to 4 shown, in Settings or the Spellbook). Rows 3 and 4 start with
 the build's abilities that have no other button (Charge and Intercept for a warrior), row 3 on Shift+1-8. The Spellbook lists
 every ability to drag onto a button; dragging a button off the bar clears it. The Keys button turns on key binding: hover a
-button and press a key (Backspace clears it). In Settings, × unbinds any key, movement included, and a key does one thing,
+button and press a key or turn the mouse wheel (Backspace clears it). The wheel binds like in WoW: up and down are two
+keys, Shift, Ctrl and Alt combine with them, and a bound direction no longer zooms the camera. In Settings, × unbinds any key, movement included, and a key does one thing,
 as in WoW: binding it somewhere unbinds it elsewhere (bind A and D to strafe and they stop turning). Holding both mouse
 buttons runs forward. As in WoW, a press in the last 0.4 s of a cast or the global cooldown is queued and goes off the
 moment it ends. On-next-swing attacks (Heroic Strike, Cleave, Maul, Raptor Strike) keep a gold frame with a light

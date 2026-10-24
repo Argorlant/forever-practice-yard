@@ -1,7 +1,8 @@
 // WoW-style movement and camera.
 // Keys: forward/back, turn, strafe, Space to jump. Left mouse drag orbits the
 // camera; right mouse drag steers the character; both buttons run forward.
-// Wheel zooms. On touch: a joystick to move and one-finger drag to steer.
+// Wheel zooms, unless that turn of the wheel is bound to a button. On touch: a
+// joystick to move and one-finger drag to steer.
 import * as THREE from 'three';
 import { YARD } from '../engine/combat';
 
@@ -51,6 +52,8 @@ export class Controls {
   obstacles: { x: number; z: number; r: number }[] = [];
   /** A click or tap that did not drag; button 0 left, 2 right. */
   onClick: (clientX: number, clientY: number, button: number) => void = () => {};
+  /** A turn of the wheel bound to an action button: true if it was used, and then the camera does not zoom. */
+  wheelAction: (e: WheelEvent) => boolean = () => false;
   /** Keys that the UI is using right now (e.g. while rebinding). */
   paused = false;
 
@@ -62,6 +65,7 @@ export class Controls {
     canvas.addEventListener('pointercancel', (e) => this.up(e));
     canvas.addEventListener('wheel', (e) => {
       e.preventDefault();
+      if (this.wheelAction(e)) return;
       this.camDist = THREE.MathUtils.clamp(this.camDist * Math.exp(e.deltaY * 0.0012), 1.6, 22);
     }, { passive: false });
     window.addEventListener('keyup', (e) => this.keys.delete(e.code));
