@@ -207,6 +207,14 @@ with trails and impacts that show the crit, Lightning Bolt as a real bolt, arrow
 hands while you cast, the Drain Life and Mind Flay streams, and the auras you wear (Lightning Shield's orbs, Holy
 Shield, Shadowform). It is all particles (`src/scene/vfx.ts`) driven by the engine's events (`src/combat-vfx.ts`).
 
+**Your own model (optional).** Settings → "Your own model" draws a character of your own instead of the yard's: export
+it from your own game files with [wow.export](https://github.com/Kruithne/wow.export) or a similar tool as glTF with its
+animations, then load the `.glb` (or the `.gltf` with its `.bin` and textures; dropping the files on the section works
+too). WoW's animation names (Stand, Run, Attack1H, SpellCastDirected, FireBow…, or their AnimationData numbers) are
+matched to what you do in the yard, attacks and casts play on the upper body while you run, and Turn 90° fixes an
+export that faces another way. The files stay in your browser (IndexedDB, one model per class): the site never uploads,
+hosts or shares them, and the yard's own model stays the default. Druid forms keep the yard's animals.
+
 The engine is shared, so more specs plug in as data.
 
 ## Run it
@@ -230,7 +238,7 @@ Then open http://127.0.0.1:5180.
 | --- | --- |
 | `src/engine` | The combat engine, shared by every class: event clock, smooth regeneration, GCD and spell queue, casts, cooldowns, auras, dual-wield auto attacks, attack and spell tables, armor, the attacking dummy, raid buffs and debuffs (`raid.ts`). |
 | `src/specs/<class>` | One class (`rogue`, `warrior`, `druid`, `paladin`, `hunter`, `priest`, `mage`, `warlock`, `shaman`): `data.ts` holds every number with its source; `talents.ts` the sims' builds; the spec files define abilities, procs and the priority list. |
-| `src/scene` | The 3D yard (three.js): world, dummy, character, WoW-style controls and spell effects. |
+| `src/scene` | The 3D yard (three.js): world, dummy, character, WoW-style controls and spell effects; `custom-model.ts` draws a model of your own (wired in `src/own-model.ts`). |
 | `src/ui` | HUD, action bar, floating combat text, rotation panel and settings. |
 | `research` | Sourced notes on each spec's WoW Forever mechanics. |
 

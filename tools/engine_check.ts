@@ -15,6 +15,7 @@ import { warrior } from '../src/specs/warrior';
 import { SPECS } from '../src/specs';
 import { classKey, decode, pointsPerTree, treesOf } from '../src/ui/talents-data';
 import { canAdd, canRemove, encode, isValid, parseTalents } from '../src/ui/talent-rules';
+import { animKey } from '../src/scene/custom-model';
 import * as druidTalents from '../src/specs/druid/talents';
 import * as hunterTalents from '../src/specs/hunter/talents';
 import * as mageTalents from '../src/specs/mage/talents';
@@ -1012,6 +1013,15 @@ console.log(`Talent layouts checked for ${SPECS.reduce((n, s) => n + (s.builds?.
   if (canAdd('paladin', shockadin, 2, 0)) failures.push('a 52nd point could be spent');
   if (encode(shockadin) !== '55003013200131151--05223331001') failures.push(`encode gives ${encode(shockadin)}`);
   if (parseTalents('paladin', '5555555555555555555') !== null) failures.push('an illegal link was accepted');
+}
+{
+  // Your own model: the animation names exports use, read as the yard's.
+  const names: [string, string][] = [
+    ['Stand', 'stand'], ['Stand_0', 'stand'], ['Run (5)', 'run'], ['Walk_0_0', 'walk'], ['Attack1H [17]', 'attack1h'],
+    ['17', 'attack1h'], ['47_0', 'firebow'], ['Anim_53', 'spellcastdirected'], ['Ready2H', 'ready2h'],
+    ['WalkBackwards_1', 'walkbackwards'], ['Sword_Regular_A', 'swordregulara'], ['Jog_Fwd_Loop', 'jogfwdloop'],
+  ];
+  for (const [name, want] of names) if (animKey(name) !== want) failures.push(`animation "${name}" reads as ${animKey(name)}, not ${want}`);
 }
 if (failures.length) {
   console.error(`FAILED:\n  ${failures.join('\n  ')}`);

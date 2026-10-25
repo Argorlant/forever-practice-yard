@@ -10,6 +10,7 @@ import { Dummy } from './scene/dummy';
 import { Totems } from './scene/totems';
 import { Vfx } from './scene/vfx';
 import { wireVfx } from './combat-vfx';
+import { OwnModel } from './own-model';
 import { createWorld } from './scene/world';
 import { SPECS, specById } from './specs';
 import { UI, fmt } from './strings';
@@ -131,10 +132,13 @@ function syncMinion(): void {
 // Shaman totems, drawn where they were dropped.
 const totems = new Totems(world.scene);
 
+// A model of the player's own (Settings → Your own model), kept in this browser for the class.
+const own = new OwnModel(classKey(spec.className), world.scene);
+
 /** The model that stands for the player right now. */
 const avatar = () => {
   const form = spec.form?.(combat) ?? null;
-  return (form && beasts[form]) || character;
+  return (form && beasts[form]) || own.active || character;
 };
 
 // Dummies.
@@ -285,6 +289,8 @@ const settings = new SettingsDialog(app, spec, prefs, combat, (what) => {
   hud.refreshBar();
   persist();
 });
+
+settings.ownModel = (sec) => own.panel(sec);
 
 // Switching class reloads the page with ?class=.
 settings.classes = {
@@ -460,7 +466,8 @@ const fx = wireVfx(combat, vfx, {
   },
   feet: playerPos,
   hand: (side) => {
-    const p = avatar() === character ? character.handPosition(side) : null;
+    const a = avatar();
+    const p = a === character || a === own.model ? a.handPosition(side) : null;
     if (p) return p;
     // Animal forms: in front of the chest.
     return playerPos().add(new THREE.Vector3(Math.sin(controls.facing) * 0.5, 1.1, Math.cos(controls.facing) * 0.5));
@@ -608,7 +615,7 @@ function frame(): void {
   combat.update(dt);
 
   const active = avatar();
-  for (const a of [character, beasts.cat, beasts.bear]) if (a) a.root.visible = a === active;
+  for (const a of [character, own.model, beasts.cat, beasts.bear]) if (a) a.root.visible = a === active;
   active.root.position.set(controls.x, controls.y, controls.z);
   active.root.rotation.y = controls.facing;
   active.setBodyYaw(move.moving ? move.bodyYaw : 0);
@@ -656,4 +663,4 @@ character.load(MODEL_URL, spec.look).then(() => {
 });
 
 // Debug handle for automated checks.
-(window as unknown as { yard: unknown }).yard = { combat, controls, character, world, vfx, prefs: () => prefs };
+(window as unknown as { yard: unknown }).yard = { combat, controls, character, own, world, vfx, prefs: () => prefs };

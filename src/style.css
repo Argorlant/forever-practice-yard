@@ -381,6 +381,12 @@ img.wow-icon { width: 100%; height: 100%; display: block; object-fit: cover; tra
 .tal.part .tal-rank { color: #6fef6f; border-color: #2f7f2f; }
 .tal.max .tal-rank { color: #ffd84a; border-color: #8a6d33; }
 /* Settings → Edit talents: green where a point can go, as in the game; dark where it cannot yet. */
+/* Settings → Your own model. */
+.own-model { border-radius: 6px; }
+.own-model.drop { outline: 2px dashed var(--gold); outline-offset: 4px; }
+.own-model .file-btn { position: relative; cursor: pointer; }
+.own-model .file-btn input { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; }
+.own-model .own-model-error { color: #ff8a7a; }
 .talent-edit-bar { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin: 8px 0; }
 .talent-edit-bar .points { margin-right: auto; color: var(--muted); font-size: 13px; }
 .talent-edit-bar .points b { color: var(--gold); }
