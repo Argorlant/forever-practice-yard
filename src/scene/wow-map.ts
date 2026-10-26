@@ -250,7 +250,10 @@ export async function loadMapSource(files: ModelFile[], restoring = false): Prom
         placements.push({ model: file, matrix: TO_Y_UP.clone().multiply(matrix), building: false });
         continue;
       }
-      if (sizeOf(file) > TOO_BIG || (restoring && !has(file))) {
+      // A building whose files are not in the folder was left out (or deleted to save room, as a city's
+      // often is): the zone goes on without it, without a note.
+      if (!has(file)) continue;
+      if (sizeOf(file) > TOO_BIG) {
         if (!restoring) notes.push(`Left out ${file.split('/').pop()} (${Math.round(sizeOf(file) / 1e6)} MB, too big for a browser).`);
         continue;
       }
