@@ -13,6 +13,10 @@ import { Totems } from './scene/totems';
 import { Vfx } from './scene/vfx';
 import { wireVfx } from './combat-vfx';
 import { OwnModel, ownModelsSection } from './own-model';
+import { OnyxiaFight, ROOM } from './encounters/onyxia';
+import { OnyxiaView } from './encounter-view';
+import type { EnemyView } from './scene/enemy';
+import { showFightReview } from './ui/fight-review';
 import { createWorld } from './scene/world';
 import { SPECS, specById } from './specs';
 import { UI, fmt } from './strings';
@@ -162,7 +166,15 @@ const ownYard = new OwnModel({
   key: 'yard', title: 'The yard', kind: 'place',
   hint: `A zone: Maps tab, Shift+click a map tile (Goldshire is Azeroth 31, 49), Export OBJ, then Load a map folder… here and pick wow.export's export folder (its Settings → Export Directory). Your browser may call this an upload: nothing leaves your computer. Or a building, an arena or a raid room: Models tab, WMO filter, such as ${CODE('stranglegladiatorarena.wmo')} (the Gurubashi Arena), Export GLB. Then walk to where the dummy should stand and press Put the dummy here.`,
 });
-const ownSlots = [ownPlayer, ...Object.values(ownForms), ownDummy, ownYard];
+const ownOnyxia = new OwnModel({
+  key: 'onyxia', title: 'Onyxia', kind: 'figure', moments: ['stand', 'attack', 'wound'],
+  hint: `For the Onyxia fight. Models tab: ${CODE('creature/dragon/dragononyxia.m2')}, then Export GLB. Her lair, for the yard above: ${CODE('world/wmo/dungeon/kl_onyxiaslair/kl_onyxiaslair.wmo')}.`,
+});
+const ownWhelp = new OwnModel({
+  key: 'onyxian-whelp', title: 'Onyxian Whelp', kind: 'figure', moments: ['stand', 'attack', 'wound'],
+  hint: `For the Onyxia fight. Models tab: ${CODE('creature/dragonwhelp/dragonwhelp.m2')} with its black skin, then Export GLB.`,
+});
+const ownSlots = [ownPlayer, ...Object.values(ownForms), ownDummy, ownYard, ownOnyxia, ownWhelp];
 /** The copies drawn now: yours, else null for the yard's own. */
 let ownCharacter: CustomModel | null = null;
 const ownForm: { cat?: CustomModel | null; bear?: CustomModel | null } = {};
@@ -193,8 +205,8 @@ const avatar = () => {
   return ownCharacter || character;
 };
 
-// Dummies.
-const dummies: { dummy: Dummy; unit: Unit }[] = [];
+// What you fight: the practice dummies, or an encounter's boss and adds (src/encounter-view.ts fills it then).
+const dummies: { dummy: EnemyView; unit: Unit }[] = [];
 function layoutDummies(n: number): void {
   for (const d of dummies) world.scene.remove(d.dummy.root);
   dummies.length = 0;
@@ -219,7 +231,7 @@ function layoutDummies(n: number): void {
 function dressDummy(dummy: Dummy): void {
   dummy.setModel(ownDummy.on ? ownDummy.source!.figure(ownDummy.turns) : null);
 }
-ownDummy.onChange = () => { for (const d of dummies) dressDummy(d.dummy); };
+ownDummy.onChange = () => { for (const d of dummies) if (d.dummy instanceof Dummy) dressDummy(d.dummy); };
 
 /** The yard built in code, or a place of yours around the dummies. */
 function applyPlace(): void {
@@ -230,14 +242,22 @@ function applyPlace(): void {
     world.scene.add(place.root);
     if (!ownYard.anchor) ownYard.setAnchor(place.anchor.toArray());
   }
-  world.setEnvironment(!place, !place?.hasGround);
-  // In a place of your own you can walk off to find a spot for the dummy.
-  controls.arenaRadius = place ? 400 : FENCE;
+  applyScenery();
+}
+/** Around the fight: the yard or your place; for Onyxia her lair (built in code, or just its cracks over your place). */
+function applyScenery(): void {
+  const lair = !!fightView;
+  world.setEnvironment(!place && !lair, !place?.hasGround && !lair);
+  fightView?.lair.setCave(!place);
+  fightView?.lair.setFloor(place ? (x, z) => groundY(x, z, 3) : null);
+  world.setAmbience(lair && !place ? 'cave' : 'dusk');
+  // In a place of your own you can walk off to find a spot for the dummy; Onyxia's room has its walls.
+  controls.arenaRadius = place ? 400 : lair ? ROOM.radius - 1 : FENCE;
   standOnFloors();
 }
 /** Dummies and you on the floor where you are. */
 function standOnFloors(): void {
-  for (const d of dummies) d.dummy.root.position.y = groundY(d.unit.x, d.unit.z);
+  if (!fight) for (const d of dummies) d.dummy.root.position.y = groundY(d.unit.x, d.unit.z);
   controls.y = groundY(controls.x, controls.z, controls.y);
 }
 ownYard.onChange = applyPlace;
@@ -263,6 +283,15 @@ function select(u: Unit | null): void {
 }
 
 function applyEnemy(): void {
+  if (fight) {
+    // An encounter: real health on both sides; its boss swings at you only if you are the tank.
+    combat.healthLocked = false;
+    combat.startHealth = 1;
+    combat.playerHealthLocked = false;
+    combat.enemyAttacks = { ...combat.enemyAttacks, on: false, speed: 2, damage: 3000 };
+    combat.enemyAttacker = fight.boss;
+    return;
+  }
   combat.healthLocked = prefs.enemy.locked;
   combat.startHealth = prefs.enemy.startPct / 100;
   for (const { unit } of dummies) {
@@ -291,8 +320,81 @@ function fullReset(): void {
   applyStats();
   applyEnemy();
   combat.reset();
+  if (fight) {
+    fight.reset();
+    fightView!.reset();
+    placeAtStart();
+    select(fight.boss);
+  }
   pullTimers.forEach(clearTimeout);
   pullTimers = [];
+}
+
+// ----------------------------------------------------------- encounters
+let fight: OnyxiaFight | null = null;
+let fightView: OnyxiaView | null = null;
+
+/** You tank: a tank spec (bear, protection paladin, shaman tank) or a tank build (a protection warrior). */
+const tanking = () => !!spec.tank || !!spec.builds?.find((b) => b.id === prefs.options.build)?.tank;
+
+/** Training dummies, or an encounter: Onyxia, with a simulated tank (unless you are one) and healer. */
+function setFight(id: string): void {
+  if ((prefs.encounter ?? 'dummies') !== id) { prefs.encounter = id; persist(); }
+  hud.setFight(id);
+  if (fight) {
+    fightView!.dispose();
+    fightView = null;
+    fight = null;
+    combat.encounter = false;
+    combat.enemyAttacker = null;
+  }
+  if (id === 'onyxia') {
+    for (const d of dummies) d.dummy.root.removeFromParent();
+    dummies.length = 0;
+    fight = new OnyxiaFight(combat, !tanking());
+    combat.encounter = true;
+    fightView = new OnyxiaView(fight, {
+      scene: world.scene, camera: world.camera, vfx, hud, floaters, controls, combat, enemies: dummies, modelUrl: MODEL_URL,
+      tankLook: tanking() ? null : specById('warrior').look, healerLook: specById('priest-smite').look,
+      playerPos, groundAt: (x, z) => groundY(x, z, 3), onEnd: (r) => showFightReview(app, r, () => fullReset()),
+    });
+    dragonSources();
+  } else {
+    layoutDummies(prefs.targets);
+  }
+  applyScenery();
+  fullReset();
+  if (!fight) {
+    // Back in front of the dummy.
+    controls.x = 0;
+    controls.z = START_Z;
+    controls.facing = 0;
+    standOnFloors();
+  }
+}
+/** Your own Onyxia and whelp models, when you have them on. */
+function dragonSources(): void {
+  fightView?.setSources(ownOnyxia.on ? ownOnyxia.source : null, ownWhelp.on ? ownWhelp.source : null);
+}
+ownOnyxia.onChange = dragonSources;
+ownWhelp.onChange = dragonSources;
+
+/** At the room's west side, facing her. */
+function placeAtStart(): void {
+  controls.x = ROOM.start.x;
+  controls.z = ROOM.start.z;
+  controls.facing = Math.atan2(-ROOM.start.x, -ROOM.start.z);
+  controls.y = groundY(controls.x, controls.z, 5);
+}
+
+/** The pull: she wakes; with you as the tank she swings at you. */
+function startFight(): void {
+  if (!fight || fight.phase) return;
+  fight.start();
+  if (!fight.tankBot) {
+    combat.enemyAttacks.on = true;
+    combat.enemyAttacker = fight.boss;
+  }
 }
 
 layoutDummies(prefs.targets);
@@ -312,7 +414,9 @@ const hud = new Hud(app, combat, prefs.bar, {
   settings: () => settings.show(),
   reset: () => fullReset(),
   pull: () => startPull(),
+  fight: (id) => setFight(id),
   targets: (n) => {
+    if (fight) return;
     prefs.targets = n;
     persist();
     layoutDummies(n);
@@ -358,8 +462,10 @@ const floaters = new Floaters(app, world.camera);
 const settings = new SettingsDialog(app, spec, prefs, combat, (what) => {
   if (what === 'defaults') {
     const targets = prefs.targets;
+    const encounter = prefs.encounter;
     prefs = defaultPrefs(spec, DEFAULT_MOVE);
     prefs.targets = targets;
+    prefs.encounter = encounter;
     prefs.seenWelcome = true;
     controls.bindings = prefs.move;
     settings.setPrefs(prefs);
@@ -375,6 +481,8 @@ const settings = new SettingsDialog(app, spec, prefs, combat, (what) => {
   if (what === 'talents') addMissing(prefs.bar, combat);
   // Rows 3 and 4 take what the new build can use and has no button for.
   if (what === 'build') fillExtraRows(prefs.bar, combat);
+  // A tank build tanks Onyxia itself: the fight starts over with or without the simulated tank.
+  if (what === 'build' && fight) setFight('onyxia');
   if (what === 'enemy') applyEnemy();
   hud.setRows(prefs.barRows);
   hud.setMeterVisible(prefs.meter);
@@ -415,6 +523,7 @@ function startPull(): void {
   pullTimers.push(window.setTimeout(() => {
     hud.showCountdown(UI.go, false);
     combat.clearMeter();
+    startFight();
   }, 10_000));
 }
 
@@ -459,7 +568,7 @@ window.addEventListener('keydown', (e) => {
   if (settings.open || welcomeOpen) return;
   if (e.code === 'Tab') {
     e.preventDefault();
-    const list = dummies.map((d) => d.unit);
+    const list = dummies.filter((d) => d.unit.health > 0).map((d) => d.unit);
     const i = combat.target ? list.indexOf(combat.target) : -1;
     select(list[(i + 1) % list.length]);
     return;
@@ -528,6 +637,8 @@ const dummyOf = (u: Unit) => dummies.find((d) => d.unit === u)?.dummy;
 const playerPos = () => new THREE.Vector3(controls.x, controls.y, controls.z);
 
 combat.on('damage', (hit) => {
+  // Hitting a sleeping Onyxia pulls her.
+  if (fight && !fight.phase && hit.target === fight.boss) startFight();
   const d = dummyOf(hit.target);
   if (!d) return;
   floaters.damage(hit, d.headPosition);
@@ -636,7 +747,8 @@ combat.on('dash', (u) => {
 });
 combat.on('playerDeath', () => {
   floaters.note('You died', playerPos().add(new THREE.Vector3(0, 2, 0)), 'ft-incoming ft-crit');
-  window.setTimeout(() => fullReset(), 1500);
+  // An encounter shows its review first; the dummy just starts over.
+  if (!fight) window.setTimeout(() => fullReset(), 1500);
 });
 
 controls.speedMultiplier = () => combat.moveSpeed();
@@ -704,12 +816,20 @@ function frame(): void {
   const p = combat.player;
   p.x = controls.x; p.z = controls.z; p.facing = controls.facing; p.moving = move.moving;
   // The attacking dummy turns to face you.
-  for (const { dummy, unit } of dummies) {
-    const facing = combat.enemyAttacks.on && unit === combat.target ? Math.atan2(controls.x - unit.x, controls.z - unit.z) : 0;
-    unit.facing = facing;
-    dummy.root.rotation.y = facing;
+  if (!fight) {
+    for (const { dummy, unit } of dummies) {
+      const facing = combat.enemyAttacks.on && unit === combat.target ? Math.atan2(controls.x - unit.x, controls.z - unit.z) : 0;
+      unit.facing = facing;
+      dummy.root.rotation.y = facing;
+    }
   }
   combat.update(dt);
+  if (fight) {
+    fight.update(dt);
+    // Her body is in the way on the ground; in the air you walk under her.
+    const b = fight.boss;
+    controls.obstacles = fight.pose === 'ground' || fight.pose === 'asleep' || fight.pose === 'dead' ? [{ x: b.x, z: b.z, r: 4 }] : [];
+  }
 
   const active = avatar();
   for (const a of [character, ownCharacter, ownForm.cat, ownForm.bear, beasts.cat, beasts.bear]) if (a) a.root.visible = a === active;
@@ -720,7 +840,8 @@ function frame(): void {
   character.setRangedMode(aiming);
   active.setLocomotion(locomotion(move.moving, move.backwards, move.airborne, aiming), move.backwards ? -move.speed : move.speed);
   active.update(dt);
-  for (const d of dummies) d.dummy.update(dt, elapsed);
+  if (fightView) fightView.update(dt, elapsed);
+  else for (const d of dummies) d.dummy.update(dt, elapsed);
   fx.update(dt, elapsed);
   vfx.update(dt, world.camera, world.renderer.domElement.height);
   updateRings();
@@ -749,6 +870,9 @@ function updatePet(dt: number): void {
 
 window.addEventListener('resize', () => world.resize());
 
+if (prefs.encounter && prefs.encounter !== 'dummies') setFight(prefs.encounter);
+else hud.setFight('dummies');
+
 character.load(MODEL_URL, spec.look).then(() => {
   loading?.remove();
   equip();
@@ -763,4 +887,6 @@ character.load(MODEL_URL, spec.look).then(() => {
 (window as unknown as { yard: unknown }).yard = {
   combat, controls, character, world, vfx, prefs: () => prefs,
   own: { slots: ownSlots, player: () => ownCharacter, forms: ownForm, place: () => place, dummies: () => dummies },
+  fight: () => fight,
+  startFight,
 };

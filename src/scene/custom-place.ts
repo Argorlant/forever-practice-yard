@@ -61,7 +61,7 @@ export class CustomPlace {
    */
   private middle(scene: THREE.Object3D): THREE.Vector3 {
     this.placeAnchor(new THREE.Vector3());
-    const box = new THREE.Box3().setFromObject(scene);
+    const box = lairBox(scene) ?? new THREE.Box3().setFromObject(scene);
     const c = box.getCenter(new THREE.Vector3());
     const size = box.getSize(new THREE.Vector3());
     const down = (x: number, z: number) => this.hit(new THREE.Vector3(x, box.max.y + 1, z), size.y + 2);
@@ -112,4 +112,24 @@ export class CustomPlace {
   dispose(): void {
     this.root.removeFromParent();
   }
+}
+
+/**
+ * Onyxia's Lair as wow.export exports it is the whole dungeon (the tunnels, the spiral down, the hall):
+ * its "Lair" groups are the room the fight is in, so the first guess for the anchor is their middle.
+ * Its groups share one vertex buffer, so the room's bounds come from the vertices its triangles use.
+ */
+function lairBox(scene: THREE.Object3D): THREE.Box3 | null {
+  const box = new THREE.Box3();
+  const v = new THREE.Vector3();
+  scene.updateMatrixWorld(true);
+  scene.traverse((o) => {
+    const m = o as THREE.Mesh;
+    if (!m.isMesh || !/_lair\d*$/i.test(m.name)) return;
+    const pos = m.geometry.attributes.position;
+    const index = m.geometry.index;
+    const n = index ? index.count : pos.count;
+    for (let i = 0; i < n; i++) box.expandByPoint(v.fromBufferAttribute(pos, index ? index.getX(i) : i).applyMatrix4(m.matrixWorld));
+  });
+  return box.isEmpty() ? null : box;
 }

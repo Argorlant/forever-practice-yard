@@ -56,6 +56,10 @@ export class Controls {
   ground: (x: number, z: number, y: number) => number = () => 0;
   /** The floor under you, updated every frame. */
   private floor = 0;
+  /** Thrown by a blow (Tail Sweep): a velocity that dies down. */
+  private thrown = { x: 0, z: 0, left: 0 };
+  /** Running in terror (Bellowing Roar): seconds left, and where to. */
+  private fear = { left: 0, dir: 0, turnIn: 0 };
   /** A click or tap that did not drag; button 0 left, 2 right. */
   onClick: (clientX: number, clientY: number, button: number) => void = () => {};
   /** A turn of the wheel bound to an action button: true if it was used, and then the camera does not zoom. */
@@ -142,9 +146,20 @@ export class Controls {
     this.syncButtons(e);
   }
 
+  /** A blow throws you this far (meters) over half a second. */
+  throw(dx: number, dz: number): void {
+    this.thrown = { x: dx * 4, z: dz * 4, left: 0.5 };
+  }
+
+  /** You flee in terror for this long: no control, a new direction every second or so. */
+  flee(seconds: number): void {
+    this.fear = { left: seconds, dir: Math.random() * Math.PI * 2, turnIn: 0.8 + Math.random() * 0.6 };
+  }
+
   update(dt: number): MoveState {
     const b = this.bindings;
-    const on = (code: string) => this.keys.has(code);
+    const fleeing = this.fear.left > 0;
+    const on = (code: string) => !fleeing && this.keys.has(code);
     let fwd = 0, strafe = 0, turn = 0;
     if (on(b.forward) || (this.lmb && this.rmb)) fwd += 1;
     if (on(b.back)) fwd -= 1;
@@ -153,11 +168,23 @@ export class Controls {
     // With the right button held, the turn keys strafe.
     if (on(b.turnLeft)) { if (this.rmb) strafe += 1; else turn += 1; }
     if (on(b.turnRight)) { if (this.rmb) strafe -= 1; else turn -= 1; }
-    fwd += -this.joy.y;
-    strafe += -this.joy.x;
+    if (!fleeing) {
+      fwd += -this.joy.y;
+      strafe += -this.joy.x;
+    }
     fwd = THREE.MathUtils.clamp(fwd, -1, 1);
     strafe = THREE.MathUtils.clamp(strafe, -1, 1);
     if (on('Space')) this.jump();
+    if (fleeing) {
+      // Terror: running forward, turning to a new way now and then.
+      this.fear.left -= dt;
+      this.fear.turnIn -= dt;
+      if (this.fear.turnIn <= 0) { this.fear.dir += (Math.random() - 0.5) * 2.4; this.fear.turnIn = 0.8 + Math.random() * 0.6; }
+      // Back toward the middle when near the edge.
+      if (Math.hypot(this.x, this.z) > this.arenaRadius * 0.8) this.fear.dir = Math.atan2(-this.x, -this.z);
+      this.facing = this.fear.dir;
+      fwd = 1;
+    }
 
     this.facing += turn * TURN * dt;
     const moving = Math.hypot(fwd, strafe) > 0.05;
@@ -181,6 +208,15 @@ export class Controls {
       this.z += vz * dt;
       bodyYaw = backwards ? Math.atan2(-dirS, -dirF) : Math.atan2(dirS, dirF);
       bodyYaw = THREE.MathUtils.clamp(bodyYaw, -1.3, 1.3);
+    }
+    if (this.thrown.left > 0) {
+      const k = Math.min(dt, this.thrown.left);
+      this.x += this.thrown.x * k;
+      this.z += this.thrown.z * k;
+      this.thrown.left -= dt;
+      // It slows as it goes: a throw, not a slide.
+      this.thrown.x *= Math.max(0, 1 - dt * 3);
+      this.thrown.z *= Math.max(0, 1 - dt * 3);
     }
     // Stay inside the fence and out of the dummies.
     const r = Math.hypot(this.x, this.z);

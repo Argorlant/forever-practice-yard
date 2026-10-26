@@ -231,6 +231,24 @@ upper body while you run, wow.export's helmets and shoulder pads (left at the fe
 attachment bones, models are turned to face forward, and Turn 90° fixes any other export. The files stay in your
 browser (IndexedDB): the site never uploads, hosts or shares them, and the yard's own models stay the default.
 
+**Encounters: Onyxia.** The menu at the top right switches from the training dummies to Onyxia, Classic's three-phase
+fight practiced alone (`src/encounters/onyxia.ts`): a simulated tank holds her (you hold her yourself as a tank spec or
+build), a simulated healer heals you, and the rest of the raid wears her down, so the fight takes a few minutes and you
+practice what happens around your rotation:
+- **Phase 1:** Flame Breath in front of her and Tail Sweep behind (it throws you aside): stand at her sides.
+- **Phase 2 (65 %):** she flies; fireballs, whelps pouring out of both caves (kill them: they bite you), and Deep
+  Breath: "Onyxia takes in a deep breath..." and the fire rolls across the room (a red band on the floor shows the line;
+  in it you are hit five or six times).
+- **Phase 3 (40 %):** she lands; Bellowing Roar makes you flee (Berserker Rage, Fear Ward and Will of the Forsaken stop
+  it) and right after, lava spews from the floor's cracks.
+
+Pull with PULL or by hitting her. At the end a review says how often each mechanic hit you, with a tip for each, and no
+damage numbers. The mechanics follow warcraft.wiki.gg's Onyxia (Classic) page; where it gives no number (her health,
+most timers, the whelps), the numbers are ours and the code says so. The lair, Onyxia and her whelps are built in code;
+with your own models (Settings → Your own models: `creature/dragon/dragononyxia.m2`, `creature/dragonwhelp/dragonwhelp.m2`
+and, as the yard, `world/wmo/dungeon/kl_onyxiaslair/kl_onyxiaslair.wmo`) it is her and her real lair, with her own
+animations (asleep in her bed, Lift Off, Hover, Fly, DragonTail, EmoteRoar, Death).
+
 The engine is shared, so more specs plug in as data.
 
 ## Run it
@@ -255,6 +273,7 @@ Then open http://127.0.0.1:5180.
 | `src/engine` | The combat engine, shared by every class: event clock, smooth regeneration, GCD and spell queue, casts, cooldowns, auras, dual-wield auto attacks, attack and spell tables, armor, the attacking dummy, raid buffs and debuffs (`raid.ts`). |
 | `src/specs/<class>` | One class (`rogue`, `warrior`, `druid`, `paladin`, `hunter`, `priest`, `mage`, `warlock`, `shaman`): `data.ts` holds every number with its source; `talents.ts` the sims' builds; the spec files define abilities, procs and the priority list. |
 | `src/scene` | The 3D yard (three.js): world, dummy, character, WoW-style controls and spell effects; `custom-model.ts`, `custom-place.ts` and `wow-map.ts` draw models, places and zones of your own (wired in `src/own-model.ts`). |
+| `src/encounters` | Boss encounters: their rules, without drawing (`onyxia.ts`); `src/encounter-view.ts` draws them (`scene/dragon.ts`, `scene/lair.ts`). |
 | `src/ui` | HUD, action bar, floating combat text, rotation panel and settings. |
 | `research` | Sourced notes on each spec's WoW Forever mechanics. |
 

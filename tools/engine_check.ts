@@ -16,6 +16,7 @@ import { SPECS } from '../src/specs';
 import { classKey, decode, pointsPerTree, treesOf } from '../src/ui/talents-data';
 import { canAdd, canRemove, encode, isValid, parseTalents } from '../src/ui/talent-rules';
 import { animKey } from '../src/scene/custom-model';
+import { CRACKS, OnyxiaFight, ROOM } from '../src/encounters/onyxia';
 import * as druidTalents from '../src/specs/druid/talents';
 import * as hunterTalents from '../src/specs/hunter/talents';
 import * as mageTalents from '../src/specs/mage/talents';
@@ -1023,6 +1024,75 @@ console.log(`Talent layouts checked for ${SPECS.reduce((n, s) => n + (s.builds?.
     ['WalkBackwards_1', 'walkbackwards'], ['Sword_Regular_A', 'swordregulara'], ['Jog_Fwd_Loop', 'jogfwdloop'],
   ];
   for (const [name, want] of names) if (animKey(name) !== want) failures.push(`animation "${name}" reads as ${animKey(name)}, not ${want}`);
+}
+{
+  // Onyxia: the fight runs through its three phases; each mechanic hits where it should.
+  const seeded = (seed: number) => () => ((seed = (seed * 16807) % 2147483647) - 1) / 2147483646;
+  const realRandom = Math.random;
+  Math.random = seeded(7);
+  const fightAt = (x: number, z: number, locked: boolean, seconds = 900) => {
+    const c = new Combat(warrior);
+    const f = new OnyxiaFight(c, true);
+    c.encounter = true;
+    c.playerHealthLocked = locked;
+    f.reset();
+    const phases: number[] = [];
+    f.on('phase', (n) => phases.push(n));
+    f.start();
+    c.player.x = x; c.player.z = z;
+    for (let t = 0; t < seconds && !f.over; t += 0.05) { c.update(0.05); f.update(0.05); }
+    return { f, c, phases };
+  };
+  // Standing still at the start with health locked: the raid brings her down through all three phases.
+  const idle = fightAt(ROOM.start.x, ROOM.start.z, true);
+  if (idle.phases.join() !== '1,2,3') failures.push(`Onyxia: phases ${idle.phases.join()}`);
+  if (!idle.f.review.won) failures.push('Onyxia: the raid did not bring her down');
+  if (idle.f.review.flameBreath || idle.f.review.tailSweep) failures.push('Onyxia: breath or tail reached the start, at her side');
+  if (idle.f.review.whelpsSpawned < 12 || idle.f.review.fears < 2) failures.push(`Onyxia: ${idle.f.review.whelpsSpawned} whelps, ${idle.f.review.fears} fears`);
+  // In front of her, where the tank stands, the breath lands; behind her, the tail.
+  const front = fightAt(0, 14, true, 40);
+  if (!front.f.review.flameBreath) failures.push('Onyxia: Flame Breath missed the front');
+  const back = fightAt(0, -8, true, 40);
+  if (!back.f.review.tailSweep) failures.push('Onyxia: Tail Sweep missed behind her');
+  // On a crack in phase three the lava burns; at her side, out of every breath line, nothing but whelps and fireballs.
+  const [a, b] = CRACKS[3];
+  const crack = fightAt((a.x + b.x) / 2, (a.z + b.z) / 2, true);
+  if (!crack.f.review.lava) failures.push('Onyxia: the lava missed a crack');
+  // Doing nothing with real health: the whelps win.
+  const wipe = fightAt(ROOM.start.x, ROOM.start.z, false);
+  if (wipe.f.review.won || !wipe.f.over) failures.push('Onyxia: an idle player survived the whelps');
+  // Phase two's Deep Breath: standing in the middle, on every line across the room, burns five or six times (wiki).
+  let line = fightAt(0, 0, true);
+  let breaths = 0;
+  for (let seed = 11; seed < 40; seed++) {
+    Math.random = seeded(seed);
+    const c = new Combat(warrior);
+    const f = new OnyxiaFight(c, true);
+    c.encounter = true;
+    f.reset();
+    breaths = 0;
+    f.on('deepBreath', (d) => { if (!d.warn) breaths++; });
+    f.start();
+    c.player.x = 0; c.player.z = 0;
+    for (let t = 0; t < 900 && !f.over; t += 0.05) { c.update(0.05); f.update(0.05); }
+    if (breaths) { line = { f, c, phases: [] }; break; }
+  }
+  const perBreath = line.f.review.deepBreath / Math.max(1, breaths);
+  if (!breaths || perBreath < 5 || perBreath > 6) failures.push(`Onyxia: Deep Breath hit the middle ${perBreath} times a breath (${breaths} breaths)`);
+  // From the middle of the room a 30-yard spell reaches her at every spot she hovers at.
+  {
+    const c = new Combat(warrior);
+    const f = new OnyxiaFight(c, true);
+    f.reset();
+    c.player.x = 0; c.player.z = 0;
+    for (let i = 0; i < 6; i++) {
+      Object.assign(f.boss, { x: Math.sin(i * Math.PI / 3) * ROOM.hover, z: Math.cos(i * Math.PI / 3) * ROOM.hover, altitude: ROOM.altitude });
+      if (!c.inRange(f.boss, 30)) failures.push(`Onyxia: out of 30-yard range from the middle at spot ${i}`);
+      if (c.inRange(f.boss)) failures.push('Onyxia: melee reaches her in the air');
+    }
+  }
+  Math.random = realRandom;
+  console.log(`Onyxia: ${idle.f.review.time.toFixed(0)} s idle with the raid, ${idle.f.review.whelpsSpawned} whelps, ${idle.f.review.fears} fears, ${perBreath} Deep Breath hits a breath in the middle; idle with real health dies in phase ${wipe.f.review.phase}`);
 }
 if (failures.length) {
   console.error(`FAILED:\n  ${failures.join('\n  ')}`);

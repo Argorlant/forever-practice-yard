@@ -47,6 +47,12 @@ a { color: var(--gold); }
 .field select { width: 170px; }
 
 .hud-right { position: absolute; right: 14px; top: 14px; display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--muted); }
+.fight-select { background: #1c1712; color: var(--ink); border: 1px solid #5a4630; border-radius: 4px; padding: 4px 6px; font: inherit; font-size: 12px; pointer-events: auto; }
+.boss-text { position: absolute; top: 15%; left: 50%; transform: translateX(-50%); width: min(90vw, 760px); text-align: center; pointer-events: none; display: flex; flex-direction: column; gap: 6px; }
+.boss-line { font-weight: 700; text-shadow: 0 1px 2px #000, 0 0 4px #000; transition: opacity 1s; }
+.boss-line.yell { color: #ff3b2a; font-size: 16px; }
+.boss-line.emote { color: #ffa640; font-size: 22px; }
+.boss-line.fade { opacity: 0; }
 .hud-num { width: 30px; height: 30px; border-radius: 6px; cursor: pointer; background: #1a1511; border: 1px solid var(--gold-dim); }
 .hud-num.active { background: #4a3a1e; border-color: var(--gold); color: #fff; }
 

@@ -647,7 +647,8 @@ export class Vfx {
     const mat = new THREE.MeshBasicMaterial({ map: this.discTex, color: s.colors[0], transparent: true, opacity: 0, depthWrite: false, blending: THREE.AdditiveBlending, toneMapped: false });
     const m = new THREE.Mesh(new THREE.CircleGeometry(radius, 48), mat);
     m.rotation.x = -Math.PI / 2;
-    m.position.set(at.x, 0.03, at.z);
+    // On the floor where it is (a place of your own has slopes and steps).
+    m.position.set(at.x, at.y + 0.03, at.z);
     this.scene.add(m);
     let t = 0;
     const area = Math.PI * radius * radius;

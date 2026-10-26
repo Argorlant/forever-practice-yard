@@ -13,6 +13,8 @@ export interface World {
    * player's own; the grass stays as the ground under it unless the place has terrain of its own.
    */
   setEnvironment(visible: boolean, grass?: boolean): void;
+  /** The light of the dusk yard, or a cavern's (Onyxia's Lair): darker, warm fog, no sky. */
+  setAmbience(kind: 'dusk' | 'cave'): void;
 }
 
 /** Seeded pseudo-random numbers, so the yard always looks the same. */
@@ -271,12 +273,15 @@ export function createWorld(container: HTMLElement): World {
   container.appendChild(renderer.domElement);
 
   const scene = new THREE.Scene();
-  scene.fog = new THREE.Fog(0x5d4a55, 25, 110);
-  scene.add(sky());
+  const fog = new THREE.Fog(0x5d4a55, 25, 110);
+  scene.fog = fog;
+  const skyDome = sky();
+  scene.add(skyDome);
 
   const camera = new THREE.PerspectiveCamera(55, 1, 0.1, 600);
 
-  scene.add(new THREE.HemisphereLight(0x9fb3d9, 0x3a2e24, 1.2));
+  const hemi = new THREE.HemisphereLight(0x9fb3d9, 0x3a2e24, 1.2);
+  scene.add(hemi);
   // Key light from behind the starting camera, so the character is lit;
   // the sunset glow stays ahead in the sky with a warm rim light.
   const sun = new THREE.DirectionalLight(0xffd9b0, 2.3);
@@ -365,6 +370,18 @@ export function createWorld(container: HTMLElement): World {
 
   return {
     renderer, scene, camera, resize,
+    setAmbience(kind) {
+      const cave = kind === 'cave';
+      fog.color.setHex(cave ? 0x1c120e : 0x5d4a55);
+      fog.near = cave ? 35 : 25;
+      fog.far = cave ? 140 : 110;
+      skyDome.visible = !cave;
+      hemi.intensity = cave ? 1.05 : 1.2;
+      hemi.color.setHex(cave ? 0xb08a78 : 0x9fb3d9);
+      sun.intensity = cave ? 1.8 : 2.3;
+      rim.intensity = cave ? 1.6 : 1.4;
+      renderer.setClearColor(cave ? 0x0e0907 : 0x000000);
+    },
     setEnvironment(visible, grass = true) {
       env.visible = visible;
       ground.visible = visible || grass;

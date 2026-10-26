@@ -133,6 +133,8 @@ interface EventMap {
   /** The attacking dummy swung at the player. */
   incoming: Incoming;
   playerDeath: void;
+  /** An encounter's mechanic hurt the player (a breath, lava, a whelp's bite). */
+  hurt: { amount: number; absorbed: number; source: string };
   cast: { id: string; done: boolean };
   /** Charge and Intercept: the player rushes to this unit. */
   dash: Unit;
@@ -191,8 +193,14 @@ export class Combat {
   channeling: { id: string; start: number; end: number; ticks: number; done: number; events: Scheduled[] } | null = null;
   /** Incoming swings from the attacking dummy (tank practice). */
   enemyAttacks = { on: false, speed: 2, damage: 3000, ap: 805, healing: 1500 };
+  /** Who swings at you: an encounter's boss, whatever you target; null for your target (the dummy). */
+  enemyAttacker: Unit | null = null;
   /** The player's health does not drop (damage still counts for rage). */
   playerHealthLocked = true;
+  /** Feared until then (Bellowing Roar): no abilities, no auto attacks. */
+  fearedUntil = -Infinity;
+  /** An encounter is on: the player's health shows, and the dummy's regeneration rule is off. */
+  encounter = false;
   /** Mana is never spent (practice option). */
   manaLocked = false;
   /** When mana was last spent, for the five-second rule. */
@@ -297,16 +305,18 @@ export class Combat {
     this.t = end;
     this.runQueued();
     const p = this.player;
-    // Moving interrupts a cast or a channel, and Auto Shot's windup (it tries again 0.5 s later).
-    if (this.casting && p.moving) this.cancelCast(UI.interrupted);
-    if (this.channeling && p.moving) this.stopChannel(UI.interrupted);
+    // Moving interrupts a cast or a channel, and Auto Shot's windup (it tries again 0.5 s later); so does fear.
+    const fleeing = this.t < this.fearedUntil;
+    if (this.casting && (p.moving || fleeing)) this.cancelCast(UI.interrupted);
+    if (this.channeling && (p.moving || fleeing)) this.stopChannel(UI.interrupted);
     if (this.windup && p.moving) {
       this.windup.ev.cancel();
       this.windup = null;
       this.count('autoShotsInterrupted');
       this.scheduleRanged(this.t + 0.5);
     }
-    if (this.enemyAttacks.on && !this.enemySwing && this.target && this.target.health > 0) this.scheduleEnemySwing(this.t + 0.5);
+    const attacker = this.enemyAttacker ?? this.target;
+    if (this.enemyAttacks.on && !this.enemySwing && attacker && attacker.health > 0) this.scheduleEnemySwing(this.t + 0.5);
     if (p.inCombat && !p.autoAttacking && !this.autoShooting && this.t - p.lastCombat > LEAVE_COMBAT_AFTER
       && !this.targets.some((u) => [...u.auras.values()].some((a) => a.period))) {
       p.inCombat = false;
@@ -355,6 +365,7 @@ export class Combat {
     this.queuedSwing = null;
     this.casting = null;
     this.channeling = null;
+    this.fearedUntil = -Infinity;
     this.t = 0;
     this.regenAt = 0;
     this.lastSpend = -Infinity;
@@ -426,8 +437,8 @@ export class Combat {
     for (const a of p.auras.values()) if (a.manaPerSecond) buffMana += a.manaPerSecond;
     if (p.maxMana) p.mana = Math.min(p.maxMana, p.mana + (p.manaPerSecond + buffMana) * dt);
     else if (this.spec.resource === 'mana' && buffMana) this.addResource(buffMana * dt);
-    // External healing while the dummy attacks and your health is not locked.
-    if ((this.enemyAttacks.on || this.spec.showHealth) && !this.playerHealthLocked && p.health > 0) {
+    // External healing while the dummy attacks and your health is not locked (an encounter has its own healer).
+    if ((this.enemyAttacks.on || this.spec.showHealth) && !this.encounter && !this.playerHealthLocked && p.health > 0) {
       p.health = Math.min(p.maxHealth, p.health + this.enemyAttacks.healing * dt);
     }
     this.regenAt = to;
@@ -471,7 +482,7 @@ export class Combat {
   }
 
   distance(u: Unit): number {
-    return Math.hypot(u.x - this.player.x, u.z - this.player.z);
+    return Math.hypot(u.x - this.player.x, u.z - this.player.z, u.altitude ?? 0);
   }
   inRange(u: Unit, range: 'melee' | number = 'melee'): boolean {
     const max = range === 'melee' ? MELEE_RANGE + u.radius * 0.5 : range * YARD + u.radius;
@@ -568,6 +579,7 @@ export class Combat {
 
   /** Why the ability cannot be used now, or null. Ignores the GCD. */
   blocker(a: Ability, u: Unit | null = this.target): string | null {
+    if (this.t < this.fearedUntil) return UI.fleeing;
     if (this.cooldownLeft(a.id).left > 0) return UI.notReady;
     if (a.target === 'enemy') {
       if (!u) return UI.noTarget;
@@ -1013,7 +1025,7 @@ export class Combat {
     if (hand === 'main') this.swingMH = null; else this.swingOH = null;
     const u = this.target;
     if (!this.player.autoAttacking || !u) return;
-    if (u.health <= 0 || !this.inRange(u) || !this.facingTarget(u)) {
+    if (u.health <= 0 || !this.inRange(u) || !this.facingTarget(u) || this.t < this.fearedUntil) {
       // Out of range the swing waits, ready, and lands as soon as you are back.
       this.scheduleSwing(hand, this.t + 0.1);
       this.nextSwing[hand] = this.t;
@@ -1232,7 +1244,7 @@ export class Combat {
       if (u.health === 0) {
         this.emit('death', u);
         if (this.target === u) this.stopAutoAttack();
-        this.schedule(this.t + 3, () => { u.health = Math.max(1, Math.round(u.maxHealth * this.startHealth)); u.auras.clear(); this.applyRaid('debuff'); });
+        if (!u.stayDead) this.schedule(this.t + 3, () => { u.health = Math.max(1, Math.round(u.maxHealth * this.startHealth)); u.auras.clear(); this.applyRaid('debuff'); });
       }
     }
     this.emit('damage', h);
@@ -1377,7 +1389,7 @@ export class Combat {
 
   private enemyHit(): void {
     this.enemySwing = null;
-    const u = this.target;
+    const u = this.enemyAttacker ?? this.target;
     if (!this.enemyAttacks.on || !u || u.health <= 0) return;
     const p = this.player;
     if (this.distance(u) > MELEE_RANGE + u.radius) {
@@ -1436,6 +1448,49 @@ export class Combat {
     this.emit('incoming', hit);
     for (const fn of this.onIncoming) fn(hit);
     this.scheduleEnemySwing(this.t + this.enemySwingTime(u));
+  }
+
+  /**
+   * Damage from an encounter's mechanics (a breath, lava, a whelp): damage-taken effects and absorb
+   * shields apply, and it can kill. Returns what got through.
+   */
+  hurtPlayer(amount: number, source: string): number {
+    const p = this.player;
+    if (p.health <= 0) return 0;
+    let d = Math.round(amount * this.mod.damageTaken * this.auraProduct('damageTaken'));
+    let absorbed = 0;
+    for (const a of [...p.auras.values()]) {
+      if (!a.absorb || absorbed >= d) continue;
+      const n = Math.min(a.absorb, d - absorbed);
+      a.absorb -= n;
+      absorbed += n;
+      if (a.absorb <= 0) this.removeAura(p, a.id);
+    }
+    d -= absorbed;
+    p.inCombat = true;
+    p.lastCombat = this.t;
+    if (!this.playerHealthLocked && d > 0) {
+      p.health = Math.max(0, p.health - d);
+      if (p.health === 0) this.emit('playerDeath', undefined);
+    }
+    this.emit('hurt', { amount: d, absorbed, source });
+    return d;
+  }
+
+  /** Healing from an encounter's healer. */
+  healPlayer(amount: number): void {
+    const p = this.player;
+    if (p.health > 0) p.health = Math.min(p.maxHealth, p.health + amount);
+  }
+
+  /** Damage from outside the player (the rest of a raid): it moves the fight on and can kill. */
+  damageUnit(u: Unit, amount: number): void {
+    if (u.health <= 0 || amount <= 0) return;
+    u.health = Math.max(0, u.health - amount);
+    if (u.health === 0) {
+      this.emit('death', u);
+      if (this.target === u) this.stopAutoAttack();
+    }
   }
 
   private meterRow(source: string): MeterRow {

@@ -152,6 +152,10 @@ export interface Unit {
   z: number;
   facing: number;  // forward = (sin facing, cos facing)
   radius: number;  // meters
+  /** Height above the ground in meters (a flying boss): melee cannot reach it. */
+  altitude?: number;
+  /** An encounter's unit stays dead (the practice dummies stand up again). */
+  stayDead?: boolean;
 }
 
 export interface Hit {

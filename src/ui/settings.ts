@@ -32,6 +32,8 @@ export interface Prefs {
   seenWelcome: boolean;
   /** The game update these settings last caught up with (new abilities get a button once). */
   patch?: string;
+  /** What you fight: 'dummies' or an encounter ('onyxia'). */
+  encounter?: string;
 }
 
 export function defaultPrefs(spec: Spec, move: MoveBindings): Prefs {

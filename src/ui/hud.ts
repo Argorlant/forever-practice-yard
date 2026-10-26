@@ -72,7 +72,15 @@ export interface HudCallbacks {
   rows(n: number): void;
   /** The rotation helper turned on or off with its button. */
   helper(on: boolean): void;
+  /** What you fight: 'dummies' or an encounter's id ('onyxia'). */
+  fight(id: string): void;
 }
+
+/** The fights to pick from, top right. */
+export const FIGHTS = [
+  { id: 'dummies', label: 'Training dummies' },
+  { id: 'onyxia', label: 'Onyxia' },
+];
 
 export class Hud {
   readonly root: HTMLElement;
@@ -91,6 +99,9 @@ export class Hud {
   private manaFill: HTMLElement;
   private manaText: HTMLElement;
   private healthBar: HTMLElement;
+  private fightSelect: HTMLSelectElement;
+  private targetsLabel: HTMLElement;
+  private bossText: HTMLElement;
   private healthFill: HTMLElement;
   private healthText: HTMLElement;
   private castBar: HTMLElement;
@@ -153,8 +164,15 @@ export class Hud {
     this.setSuggestions(true);
     this.root.append(left);
 
-    // Top right: number of dummies.
-    const right = h('div', 'hud-right', `<span>${UI.targets}</span>`);
+    // Top right: what you fight, and how many dummies.
+    const right = h('div', 'hud-right');
+    this.fightSelect = document.createElement('select');
+    this.fightSelect.className = 'fight-select';
+    this.fightSelect.title = 'What you fight';
+    for (const f of FIGHTS) this.fightSelect.append(new Option(f.label, f.id));
+    this.fightSelect.addEventListener('change', () => { cb.fight(this.fightSelect.value); this.fightSelect.blur(); });
+    this.targetsLabel = h('span', '', UI.targets);
+    right.append(this.fightSelect, this.targetsLabel);
     for (let n = 1; n <= 3; n++) {
       const b = h('button', 'hud-num', String(n));
       b.addEventListener('click', () => cb.targets(n));
@@ -162,6 +180,9 @@ export class Hud {
       this.targetButtons.push(b);
     }
     this.root.append(right);
+    // An encounter's boss: its yells, and its emotes as in the raid ("Onyxia takes in a deep breath...").
+    this.bossText = h('div', 'boss-text');
+    this.root.append(this.bossText);
 
     // Target frame.
     this.targetFrame = h('div', 'target-frame');
@@ -341,6 +362,24 @@ export class Hud {
     this.targetButtons.forEach((b, i) => b.classList.toggle('active', i + 1 === n));
   }
 
+  /** The fight picked: an encounter has no dummy count. */
+  setFight(id: string): void {
+    this.fightSelect.value = id;
+    const dummies = id === 'dummies';
+    this.targetsLabel.style.display = dummies ? '' : 'none';
+    for (const b of this.targetButtons) b.style.display = dummies ? '' : 'none';
+  }
+
+  /** A boss's yell (red, "Onyxia yells: …") or emote (orange, larger), for five seconds. */
+  bossSay(text: string, kind: 'yell' | 'emote', name = ''): void {
+    const line = h('div', `boss-line ${kind}`, '');
+    line.textContent = kind === 'yell' ? `${name} yells: ${text}` : text;
+    this.bossText.append(line);
+    window.setTimeout(() => line.classList.add('fade'), 4500);
+    window.setTimeout(() => line.remove(), 5500);
+    while (this.bossText.children.length > 3) this.bossText.firstElementChild?.remove();
+  }
+
   showError(msg: string): void {
     this.error.textContent = msg;
     this.error.classList.remove('show');
@@ -440,7 +479,7 @@ export class Hud {
     this.resourceFill.style.transform = `scaleX(${p.resource / p.maxResource})`;
     this.resourceText.textContent = c.manaLocked && c.spec.resource === 'mana' ? `${fmt(p.maxResource)} (locked)`
       : `${fmt(Math.floor(p.resource))} / ${fmt(p.maxResource)}`;
-    const showHealth = c.enemyAttacks.on || !!c.spec.showHealth;
+    const showHealth = c.enemyAttacks.on || !!c.spec.showHealth || c.encounter;
     this.healthBar.style.display = showHealth ? '' : 'none';
     if (showHealth) {
       this.healthFill.style.transform = `scaleX(${p.health / p.maxHealth})`;

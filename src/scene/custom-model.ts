@@ -116,9 +116,9 @@ export class ModelSource {
   /** Quarter turns that make it face forward: WoW models face +X; the yard looks down +Z. */
   get defaultTurns(): number { return this.fromWowExport ? 3 : 0; }
 
-  /** A copy that moves on its own (a character, a form, a dummy). */
-  figure(quarterTurns = this.defaultTurns): CustomModel {
-    return new CustomModel(cloneSkinned(this.scene), this.animations, quarterTurns);
+  /** A copy that moves on its own (a character, a form, a dummy); `scale` shrinks a creature to fit (Onyxia). */
+  figure(quarterTurns = this.defaultTurns, scale = 1): CustomModel {
+    return new CustomModel(cloneSkinned(this.scene), this.animations, quarterTurns, { yards: this.fromWowExport, scale });
   }
 
   dispose(): void {
@@ -155,7 +155,12 @@ export class CustomModel {
   private loco = new Map<Locomotion, Loop>();
   private sums = new Map<THREE.AnimationAction, number>();
   private current: Locomotion = 'idle';
-  private shot: { action: THREE.AnimationAction; elapsed: number; length: number; upperOnly: boolean; ability: boolean } | null = null;
+  private shot: { action: THREE.AnimationAction; elapsed: number; length: number; upperOnly: boolean; ability: boolean; hold: boolean } | null = null;
+  /** An encounter's own loop (Sleep, Hover, Fly) over the locomotion, by clip, and the loops it has used. */
+  private posed: THREE.AnimationClip | null = null;
+  private poseLoops = new Map<THREE.AnimationClip, Loop>();
+  /** A one-shot that stays at its last frame (Death). */
+  private held: THREE.AnimationAction | null = null;
   private bodyYaw = 0;
   private bodyYawTarget = 0;
   private swingToggle = false;
@@ -171,23 +176,34 @@ export class CustomModel {
   readonly attachedItems: number;
   readonly animationCount: number;
 
-  constructor(scene: THREE.Object3D, animations: THREE.AnimationClip[], quarterTurns = 0) {
+  /**
+   * `yards`: a wow.export model, in yards with its feet at the origin, whatever its size (a whelp floats a
+   * yard up, Onyxia is twenty tall). Otherwise it is set upright, sized as a person and stood on the ground.
+   */
+  constructor(scene: THREE.Object3D, animations: THREE.AnimationClip[], quarterTurns = 0, opts: { yards?: boolean; scale?: number } = {}) {
     scene.traverse((o) => {
       const m = o as THREE.Mesh;
       if (m.isMesh) { m.castShadow = true; m.receiveShadow = true; m.frustumCulled = false; }
     });
     this.attachedItems = attachItems(scene);
-    // Upright (some exports are Z-up), sized (WoW units are yards; otherwise a human's height) and on the ground.
     let box = new THREE.Box3().setFromObject(scene);
-    const size = box.getSize(new THREE.Vector3());
-    if (size.y < Math.max(size.x, size.z) * 0.5) scene.rotation.x = -Math.PI / 2;
-    box = new THREE.Box3().setFromObject(scene);
-    const h = box.getSize(new THREE.Vector3()).y;
-    scene.scale.multiplyScalar(h > 0.4 && h < 4.5 ? 0.9144 : 1.85 / Math.max(0.01, h));
-    this.holder.add(scene);
-    box = new THREE.Box3().setFromObject(this.holder);
-    this.holder.position.y = -box.min.y;
-    this.height = box.max.y - box.min.y;
+    if (opts.yards) {
+      scene.scale.multiplyScalar(0.9144 * (opts.scale ?? 1));
+      this.holder.add(scene);
+      box = new THREE.Box3().setFromObject(this.holder);
+      this.height = box.max.y;
+    } else {
+      // Upright (some exports are Z-up), a person's size unless it already is one in yards, and on the ground.
+      const size = box.getSize(new THREE.Vector3());
+      if (size.y < Math.max(size.x, size.z) * 0.5) scene.rotation.x = -Math.PI / 2;
+      box = new THREE.Box3().setFromObject(scene);
+      const h = box.getSize(new THREE.Vector3()).y;
+      scene.scale.multiplyScalar((h > 0.4 && h < 4.5 ? 0.9144 : 1.85 / Math.max(0.01, h)) * (opts.scale ?? 1));
+      this.holder.add(scene);
+      box = new THREE.Box3().setFromObject(this.holder);
+      this.holder.position.y = -box.min.y;
+      this.height = box.max.y - box.min.y;
+    }
     this.setQuarterTurns(quarterTurns);
     this.body.add(this.holder);
     this.root.add(this.body);
@@ -279,6 +295,46 @@ export class CustomModel {
 
   setBodyYaw(yaw: number): void { this.bodyYawTarget = yaw; }
 
+  /**
+   * An encounter's own loop by animation names, first found (Sleep, Hover, Fly), over the locomotion;
+   * null goes back to the locomotion. Returns whether the model has one of them.
+   */
+  setPose(names: string[] | null): boolean {
+    const clip = names ? this.pick(names) : null;
+    if (clip && !this.poseLoops.has(clip)) {
+      const action = this.mixer.clipAction(clip);
+      action.play();
+      action.setEffectiveWeight(0);
+      this.poseLoops.set(clip, { lower: action, upper: null, weight: 0, target: 0 });
+    }
+    this.posed = clip;
+    return !!clip || !names;
+  }
+
+  /** A one-shot by animation names, whole body (LiftOff, DragonTail, EmoteRoar); `hold` stays on its last frame (Death). */
+  playNamed(names: string[], rate = 1, hold = false): boolean {
+    const clip = this.pick(names);
+    if (!clip) return false;
+    if (this.shot) this.shot.action.stop();
+    this.held?.stop();
+    this.held = null;
+    const action = this.mixer.clipAction(clip);
+    action.reset();
+    action.setLoop(THREE.LoopOnce, 1);
+    action.clampWhenFinished = true;
+    action.timeScale = rate;
+    action.setEffectiveWeight(0);
+    action.play();
+    this.shot = { action, elapsed: 0, length: clip.duration / rate, upperOnly: false, ability: true, hold };
+    return true;
+  }
+
+  /** Back from a held last frame (a dead boss standing up for the next try). */
+  release(): void {
+    this.held?.stop();
+    this.held = null;
+  }
+
   /** An ability: WoW's own animation for it if the model has one (Maul, Claw, Whirlwind), else the yard's. */
   playAbility(id: string, animation?: string): void {
     const own = ABILITY_ANIMS[id] && this.pick(ABILITY_ANIMS[id]);
@@ -305,7 +361,7 @@ export class CustomModel {
     action.timeScale = rate;
     action.setEffectiveWeight(0);
     action.play();
-    this.shot = { action, elapsed: 0, length: clip.duration / rate, upperOnly: !!parts.upper, ability };
+    this.shot = { action, elapsed: 0, length: clip.duration / rate, upperOnly: !!parts.upper, ability, hold: false };
   }
 
   /** Auto attack swing: alternates the main-hand and off-hand attacks. */
@@ -327,20 +383,31 @@ export class CustomModel {
     if (this.shot) {
       const s = this.shot;
       s.elapsed += dt;
-      shotWeight = Math.min(1, s.elapsed / 0.06, Math.max(0, (s.length - s.elapsed) / 0.14));
+      shotWeight = s.hold ? Math.min(1, s.elapsed / 0.06) : Math.min(1, s.elapsed / 0.06, Math.max(0, (s.length - s.elapsed) / 0.14));
       s.action.setEffectiveWeight(shotWeight);
-      if (s.elapsed >= s.length) { s.action.stop(); this.shot = null; shotWeight = 0; }
+      if (s.elapsed >= s.length) {
+        if (s.hold) this.held = s.action; else s.action.stop();
+        this.shot = null;
+        shotWeight = 0;
+      }
     }
+    if (this.held) shotWeight = 1;
     // A whole-body one-shot replaces the loop; an upper-body one only the arms and chest.
     // States can share an animation (Stand for standing and for stealth): their weights add up.
-    const whole = this.shot && !this.shot.upperOnly ? 1 - shotWeight : 1;
+    const whole = this.held || (this.shot && !this.shot.upperOnly) ? 1 - shotWeight : 1;
     const sums = this.sums;
     sums.clear();
     for (const loop of this.loco.values()) {
-      loop.weight += (loop.target - loop.weight) * fade;
+      const target = this.posed ? 0 : loop.target;
+      loop.weight += (target - loop.weight) * fade;
       if (loop.weight < 0.002) loop.weight = 0;
       sums.set(loop.lower, (sums.get(loop.lower) ?? 0) + loop.weight * whole);
       if (loop.upper) sums.set(loop.upper, (sums.get(loop.upper) ?? 0) + loop.weight * (1 - shotWeight));
+    }
+    for (const [clip, loop] of this.poseLoops) {
+      loop.weight += ((clip === this.posed ? 1 : 0) - loop.weight) * fade;
+      if (loop.weight < 0.002) loop.weight = 0;
+      sums.set(loop.lower, (sums.get(loop.lower) ?? 0) + loop.weight * whole);
     }
     for (const [action, w] of sums) action.setEffectiveWeight(Math.min(1, w));
     this.bodyYaw += (this.bodyYawTarget - this.bodyYaw) * Math.min(1, dt * 10);
