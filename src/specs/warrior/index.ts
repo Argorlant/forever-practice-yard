@@ -4,7 +4,7 @@
 import type { Combat, Incoming } from '../../engine/combat';
 import type { Ability, Hand, Hit, Outcome, Spec, Unit, Weapon } from '../../engine/types';
 import { UI } from '../../strings';
-import { BOSS_RULES } from '../common';
+import { BOSS_RULES, rageFromDamageTaken } from '../common';
 import { ARMS_STATS, DATA, FURY_STATS, NORMALIZED_SPEED, PROT_STATS } from './data';
 import { BUILDS, buildById, buildLabel, summary, talentsFor, type Stance, type Talents } from './talents';
 
@@ -44,10 +44,10 @@ function enterStance(c: Combat, s: Stance, keepRage = true): void {
 }
 
 // ------------------------------------------------------------------- rage
-/** Rage from talents and abilities also makes threat (5 per rage, not modified by stance). */
+/** Rage from talents and abilities also makes threat: 5 per rage, times the stance's threat (Oct 21). */
 function gainRage(c: Combat, n: number, threat = true): void {
   c.addResource(n);
-  if (threat) c.addThreat(n * D.threatPerRage, { ignoreStance: true });
+  if (threat) c.addThreat(n * D.threatPerRage);
 }
 
 /** Forever's normalized rage: a fixed amount per landed white swing, from the listed weapon speed. */
@@ -61,11 +61,8 @@ function swingRage(c: Combat, hand: Hand, crit: boolean): number {
   return rate * w.speed * (crit ? r.critFactor : 1);
 }
 
-/** Rage from damage taken: raw damage (armor and blocks ignored) scaled to an expected creature's health. */
-function incomingRage(c: Combat, raw: number): number {
-  const r = D.rage;
-  return (raw * (1 - r.referenceArmor) * Number(c.options.incomingRage ?? r.incomingCoefficient)) / r.expectedHealth;
-}
+/** Rage from damage taken: the hit before armor and blocks, from a level 63 boss. */
+const incomingRage = (raw: number) => rageFromDamageTaken(raw);
 
 // --------------------------------------------------------------- helpers
 function normalized(c: Combat, hand: Hand = 'main'): number {
@@ -129,7 +126,7 @@ const abilities: Ability[] = [
     id: 'heroicStrike', name: 'Heroic Strike', icon: 'heroicStrike', gcd: 0, target: 'enemy', range: 'melee', onNextSwing: true,
     animation: 'slash',
     cost: (c) => D.heroicStrike.cost - T(c).improvedHeroicStrike - focused(c),
-    description: () => `Your next main-hand swing deals weapon damage plus ${D.heroicStrike.bonus}. Press again to cancel. The rage is spent when it lands, and that swing gives no rage.`,
+    description: () => `Your next main-hand swing deals weapon damage plus ${D.heroicStrike.bonus}. Pressing it again does not cancel it. The rage is spent when it lands, and that swing gives no rage.`,
     use: (c, t) => {
       if (landed(strike(c, t!, 'heroicStrike', c.weaponDamage('main') + D.heroicStrike.bonus))) c.addThreat(D.heroicStrike.threat);
     },
@@ -140,9 +137,9 @@ const abilities: Ability[] = [
     cost: (c) => D.cleave.cost - 3 * T(c).ragingBlows - focused(c),
     description: () => `Your next main-hand swing hits your target and one more nearby enemy for weapon damage plus ${D.cleave.bonus}.`,
     use: (c, t) => {
-      for (const u of [t!, ...others(c, t!).slice(0, D.cleave.targets - 1)]) {
-        if (landed(strike(c, u, 'cleave', c.weaponDamage('main') + D.cleave.bonus, { refund: false }))) c.addThreat(D.cleave.threat);
-      }
+      // Its flat threat is split between the targets it lands on (Oct 21).
+      const hits = [t!, ...others(c, t!).slice(0, D.cleave.targets - 1)].filter((u) => landed(strike(c, u, 'cleave', c.weaponDamage('main') + D.cleave.bonus, { refund: false })));
+      if (hits.length) c.addThreat(D.cleave.threat);
     },
   },
   {
@@ -234,7 +231,7 @@ const abilities: Ability[] = [
       c.count('revengeUsed');
       const r = D.revenge;
       const base = (r.min + c.random() * (r.max - r.min)) * (1 + 0.2 * T(c).improvedRevenge);
-      if (landed(strike(c, t!, 'revenge', base))) c.addThreat(270);
+      strike(c, t!, 'revenge', base);
     },
   },
   {
@@ -281,7 +278,7 @@ const abilities: Ability[] = [
       const s = D.sunderArmor;
       const stacks = Math.min(s.stacks, (c.aura(u, 'sunderArmor')?.stacks ?? 0) + 1);
       c.applyAura(u, { id: 'sunderArmor', name: 'Sunder Armor', icon: 'sunderArmor', duration: s.duration, stacks, armor: s.armor * stacks, armorSlot: 'major' });
-      c.addThreat(s.threat);
+      c.addThreat(s.threat + s.threatAp * c.attackPower());
     },
   },
   {
@@ -575,8 +572,10 @@ function prepare(c: Combat): void {
       c.extraAttack(hit.target);
       extra = false;
     }
-    if (t.bloodthrill && hand === 'main' && c.aura(hit.target, 'rend') && roll(c, 4 * t.bloodthrill)) {
-      c.applyAura(c.player, { id: 'overpowerReady', name: 'Overpower', icon: 'overpower', duration: 6 });
+    // Bloodthrill: only main-hand white swings and the queued Heroic Strike or Cleave (Forever logs, Oct 21).
+    const swing = (hit.white && hand === 'main') || hit.source === 'heroicStrike' || hit.source === 'cleave';
+    if (t.bloodthrill && swing && c.aura(hit.target, 'rend') && roll(c, D.bloodthrill.chance * t.bloodthrill)) {
+      c.applyAura(c.player, { id: 'overpowerReady', name: 'Overpower', icon: 'overpower', duration: D.bloodthrill.window });
       c.count('overpowerWindows');
       note(c, 'Bloodthrill: Overpower');
     }
@@ -627,7 +626,7 @@ function prepare(c: Combat): void {
   c.onIncoming.push((i: Incoming) => {
     // Unmitigated damage: crits and crushing blows give more, blocks and armor do not lower it; avoided hits give none.
     if (i.raw > 0) {
-      const rage = incomingRage(c, i.raw);
+      const rage = incomingRage(i.raw);
       c.addResource(rage);
       c.count('incomingRage', rage);
       if (c.aura(c.player, 'berserkerRage')) c.addResource(D.berserkerRage.ragePerHit);
@@ -721,8 +720,9 @@ function suggest(c: Combat): string | null {
     return null;
   }
 
-  // Fury and two-hand Bloodthirst.
-  const hsAt = b.rotation === 'twoHandBloodthirst' ? 50 : 30;
+  // Fury and two-hand Bloodthirst: gs's priority lists since 21 Oct.
+  const twoHand = b.rotation === 'twoHandBloodthirst';
+  const hsAt = twoHand ? 80 : 40;
   const bs = c.aura(p, 'battleShout');
   if (!bs && rage >= 10) return 'battleShout';
   if (c.options.sunderDuty && (!sunder || (sunder.stacks ?? 0) < 5 || sunder.end - c.t < 8)) {
@@ -732,14 +732,20 @@ function suggest(c: Combat): string | null {
   if (p.inCombat && tl.deathWish && ready('deathWish') && rage >= 10) return 'deathWish';
   if (ready('bloodrage')) return 'bloodrage';
   if (p.inCombat && stance === 'berserker' && ready('berserkerRage')) return 'berserkerRage';
+  // Dance for an Overpower window up to 35 rage (60 with a two-hander), in the execute phase and during Recklessness too.
   const opWindow = !!c.aura(p, 'overpowerReady');
-  if (stance === 'berserker' && opWindow && rage <= 25 && !exec && !c.aura(p, 'recklessness') && c.cooldownLeft('overpower').left === 0) return 'battleStance';
+  if (stance === 'berserker' && opWindow && rage <= (twoHand ? 60 : 35) && c.cooldownLeft('overpower').left === 0) return 'battleStance';
+  // In Battle Stance, Rend goes back up outside the execute phase (not with Sunder duty: those globals go to Sunder).
+  if (stance === 'battle' && !exec && !c.options.sunderDuty && !c.aura(t, 'rend') && rage >= cost('rend')) return 'rend';
   if (stance === 'battle' && opWindow && ready('overpower')) return 'overpower';
   if (stance !== 'berserker') return 'berserkerStance';
   if (exec && ready('execute')) return 'execute';
   if (ready('bloodthirst')) return rage >= cost('bloodthirst') ? 'bloodthirst' : null;
   if (ready('whirlwind')) return rage >= cost('whirlwind') ? 'whirlwind' : null;
-  if (ready('slam') && rage >= 30) return 'slam';
+  if (twoHand && ready('slam') && rage >= 50) return 'slam';
+  // With a Windfury Totem every landed special rolls Windfury: Hamstring fills the gaps between Bloodthirst and Whirlwind.
+  if (c.raid.has('windfury') && !exec && c.cooldownLeft('bloodthirst').left >= 1.5 && c.cooldownLeft('whirlwind').left >= 1.5
+    && c.swingLeft('main').left >= 1 && rage >= cost('hamstring')) return 'hamstring';
   if (!hsQueued && !exec && rage >= hsAt) return 'heroicStrike';
   return null;
 }
@@ -757,7 +763,7 @@ function chances(c: Combat): { title: string; rows: [string, string][] }[] {
   if (tl.unbridledWrath) procs.push(['Unbridled Wrath: +1 rage per landed white swing', `${12 * tl.unbridledWrath}%`]);
   if (tl.deepWounds) procs.push(['Deep Wounds: bleed after any crit', `${20 * tl.deepWounds}% of weapon damage over 12 s`]);
   if (tl.weaponmaster && [mh, oh].some((w) => w?.type === 'sword')) procs.push(['Weaponmaster: extra attack per sword hit', `${tl.weaponmaster}%`]);
-  if (tl.bloodthrill) procs.push(['Bloodthrill: Overpower from main-hand hits on your Rend target', `${4 * tl.bloodthrill}%`]);
+  if (tl.bloodthrill) procs.push(['Bloodthrill: Overpower for 5 s from main-hand swings, Heroic Strike and Cleave on your Rend target', `${D.bloodthrill.chance * tl.bloodthrill}%`]);
   if (tl.enrage) procs.push(['Enrage when the dummy hits you', `${D.enrage.chance}%: +${2 * tl.enrage}% damage`]);
   if (tl.shieldSpecialization) procs.push(['Shield Specialization: +5 rage on a block', `${20 * tl.shieldSpecialization}%`]);
   if (tl.masterOfDefense) procs.push(['Master of Defense: +5 rage on a dodge or parry', `${Math.min(100, 50 * tl.masterOfDefense)}%`]);
@@ -767,7 +773,7 @@ function chances(c: Combat): { title: string; rows: [string, string][] }[] {
   if (oh) rage.push(['Off hand per landed swing', `${swingRage(c, 'off', false).toFixed(1)} rage`]);
   rage.push(
     ['Misses, dodges, parries, Heroic Strike swings', '0 rage'],
-    ['Per hit taken: normal / crit / crushing blow (unmitigated damage)', [1, 2, 1.5].map((m) => incomingRage(c, m * c.enemyAttacks.damage * (1 + 1 / 6 + c.enemyAttacks.ap / 2478)).toFixed(1)).join(' / ') + ' rage'],
+    ['Per hit taken: normal / crit / crushing blow (before armor and blocks)', [1, 2, 1.5].map((m) => incomingRage(m * c.enemyAttacks.damage * (1 + 1 / 6 + c.enemyAttacks.ap / 2478)).toFixed(1)).join(' / ') + ' rage'],
     ['Hits you dodge, parry or that miss you', '0 rage'],
     ['Kept when changing stance', `${D.rage.tacticalMastery + 3 * tl.improvedTacticalMastery} rage`],
   );
@@ -857,19 +863,18 @@ export const warrior: Spec = {
     { name: 'Protection: sword and shield', stats: PROT_STATS },
   ],
   builds: BUILDS.map((b) => ({ id: b.id, label: buildLabel(b), name: b.name, source: 'gunba/wow-forever-sim', talentString: b.talentString, stats: b.stats, bar: b.bar, options: b.options, tank: b.tank, trees: summary(talentsFor(b.id)) })),
-  defaultOptions: { build: BUILDS[0].id, sunderDuty: false, incomingRage: D.rage.incomingCoefficient },
+  defaultOptions: { build: BUILDS[0].id, sunderDuty: false },
   options: [
     { key: 'sunderDuty', name: 'You keep 5 Sunder Armors up', kind: 'toggle' },
-    { key: 'incomingRage', name: 'Rage from damage taken: coefficient (10 to 20, unconfirmed)', kind: 'number', step: 1 },
   ],
   bar: BUILDS[0].bar,
   welcome: 'Welcome to the warrior practice yard. Pick a Fury, Arms or Protection build from the WoW Forever sims in Settings. For Protection the dummy hits back, so blocks, Revenge and rage from damage taken work as in the game.',
   help: `You start behind the dummy. W and S move along your facing, A and D turn, Q and E strafe; all six can be rebound below. Space jumps.
     Hold the left mouse button to orbit the camera; hold the right button to steer; hold both to run forward. Scroll to zoom.
     Rage in WoW Forever is normalized: each landed white swing gives a fixed amount from your weapon's speed (3.46 per second of speed with a one-hander, 4.5 with a two-hander, half for the off hand), doubled on a crit. Misses, dodges, parries and Heroic Strike swings give none. Abilities do not give rage.
-    Heroic Strike and Cleave replace your next main-hand swing: press once to queue, again to cancel. Slam has a cast and restarts your swing. Changing stance keeps up to 10 rage (25 with Improved Tactical Mastery).
+    Heroic Strike and Cleave replace your next main-hand swing: press once to queue it; pressing again does not cancel it in WoW Forever. Slam has a cast and restarts your swing. Changing stance keeps up to 10 rage (25 with Improved Tactical Mastery).
     Overpower opens for 5 sec after the dummy dodges; Revenge for 5 sec after you block, dodge or parry. Execute only works below 20% health: in Settings, start the dummy at 15% and lock its health to practice it.
-    For Protection the dummy attacks you: its hits give you rage from their unmitigated damage, before armor, blocks and stances (about 6 per hit, 12 on a crit, 9 on a crushing blow; nothing when it misses or you dodge or parry), blocks open Revenge and Shield Block gives 2 sure blocks. Your health is locked by default; unlock it to practice Shield Wall and Last Stand.
+    For Protection the dummy attacks you: its hits give you rage from their damage before armor, blocks and stances (Forever's measured rule: about 27 per hit, 55 on a crit, 41 on a crushing blow from the default dummy; nothing when it misses or you dodge or parry), blocks open Revenge and Shield Block gives 2 sure blocks. Your health is locked by default; unlock it to practice Shield Wall and Last Stand.
     This is a practice tool: crit, proc and rage numbers follow WoW Forever; damage is an approximation.`,
   look: { clothColor: 0x7a1f1f, leatherColor: 0x4a4f57, hood: false, plate: true },
   sources: [

@@ -42,7 +42,6 @@ const BASE_MANA = 1376;
 export const DATA = {
   gcd: 1.5,
   baseMana: BASE_MANA,
-  partialResist: 0.94,     // provisional: gs's average partial resist on Shadow and Holy (Mind Flay is all or nothing)
   spellMiss: 17,
   mindBlast: { mana: 350, cast: 1.5, cooldown: 8, min: 477, max: 504, coeff: 0.429 },
   mindFlay: { mana: 205, duration: 3, ticks: 3, tick: 130, coeff: 0.167, range: 20 },

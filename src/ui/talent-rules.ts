@@ -5,8 +5,8 @@
 import { decode, treesOf } from './talents-data';
 
 export const MAX_POINTS = 51;
-/** The client build of the talent trees: talents saved for older trees are dropped (the Oct 15 trees moved talents). */
-export const TREE_VERSION = '70425';
+/** The trees' version: talents saved for older trees are dropped (the Oct 15 trees moved talents, the Oct 21 hotfix the Mage's Frost tree). */
+export const TREE_VERSION = '70450';
 export type Points = number[][];
 
 /** The sims' talent string: one digit per talent, trees split by '-', trailing zeros left out. */

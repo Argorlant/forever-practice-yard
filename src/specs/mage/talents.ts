@@ -29,26 +29,30 @@ const ARCANE_BAR = bar(['arcaneBlast', 'arcaneMissiles', 'arcaneWrath', 'fireBla
 const FIRE_BAR = bar(['scorch', 'fireball', 'fireBlast', 'pyroblast', 'combustion', 'frostfireBolt', 'evocation', 'manaRuby', 'manaPotion',
   'presenceOfMind']);
 const FROST_BAR = bar(['frostbolt', 'iceLance', 'arcaneMissiles', 'coneOfCold', 'fireBlast', 'presenceOfMind', 'evocation', 'manaRuby',
-  'manaPotion', 'frostfireBolt', 'arcaneBlast']);
+  'manaPotion', 'frostfireBolt', 'arcaneBlast', 'iceBarrier']);
 
 const GS = 'gunba/wow-forever-sim';
 const FS = 'foreversim';
 const MS = 'MythicSim / Kami Labs';
-/** MythicSim publishes no strings for the Oct 15 trees: its builds by name, re-spent the way gunba re-spent his. */
-const MS_REENCODED = `${MS}, re-encoded to the Oct 15 tree`;
+/**
+ * MythicSim publishes no strings for the current trees: its builds by name, re-spent the way gunba re-spent his
+ * (Oct 21 Frost hotfix: Piercing Ice gone and Elemental Precision 3 ranks, the freed points to Improved Frostbolt).
+ */
+const MS_REENCODED = `${MS}, re-encoded to the Oct 21 trees`;
 export const BUILDS: Build[] = [
-  { id: 'arcane', spec: 'arcane', name: 'Arcane', talentString: '0512005023100311531-03-005500032', source: GS, stats: ARCANE_STATS, bar: ARCANE_BAR },
+  { id: 'arcane', spec: 'arcane', name: 'Arcane', talentString: '0502205013100311531-03-05350002', source: GS, stats: ARCANE_STATS, bar: ARCANE_BAR },
   { id: 'arcane-fire', spec: 'arcane', name: 'Arcane/Fire', talentString: '0502015003100311531-2305003202003', source: 'gunba and foreversim', stats: ARCANE_STATS, bar: ARCANE_BAR },
-  { id: 'arcane-ms', spec: 'arcane', name: 'Arcane', talentString: '0532205003100311531-230500001-005', source: MS_REENCODED, stats: ARCANE_STATS, bar: ARCANE_BAR },
-  { id: 'arcane-fs', spec: 'arcane', name: 'Arcane', talentString: '0532005023100311531--005500033', source: `${FS} (gunba's Oct 15 re-encoding)`, stats: ARCANE_STATS, bar: ARCANE_BAR },
-  { id: 'fire', spec: 'fire', name: 'Fire', talentString: '05001252000003-23450000130135031-002', source: GS, stats: FIRE_STATS, bar: FIRE_BAR },
+  { id: 'arcane-ms', spec: 'arcane', name: 'Arcane', talentString: '0532205003100311531-230500001-023', source: MS_REENCODED, stats: ARCANE_STATS, bar: ARCANE_BAR },
+  { id: 'arcane-fs', spec: 'arcane', name: 'Arcane', talentString: '0532005023100311531--05350003', source: `${FS} (re-encoded to the Oct 21 Frost tree)`, stats: ARCANE_STATS, bar: ARCANE_BAR },
+  { id: 'fire', spec: 'fire', name: 'Fire', talentString: '05002152000003-23450000130135031-002', source: GS, stats: FIRE_STATS, bar: FIRE_BAR },
   { id: 'fire-fs', spec: 'fire', name: 'Fire', talentString: '05002252000003-23550000130135031', source: `${FS} (gunba's Oct 15 re-encoding)`, stats: FIRE_STATS, bar: FIRE_BAR },
-  { id: 'fire-ms', spec: 'fire', name: 'Fire', talentString: '0501205003-13550000130135031-004', source: MS_REENCODED, stats: FIRE_STATS, bar: FIRE_BAR },
-  { id: 'fire-frost', spec: 'fire', name: 'Fire/Frost (Frostfire Bolt)', talentString: '-03552020130135131-005500033', source: 'gunba and foreversim', stats: FIRE_STATS, bar: FIRE_BAR, options: { fireFiller: 'frostfire' } },
-  { id: 'frost', spec: 'frost', name: 'Frost', talentString: '0500105001-03-0555003331000301241', source: GS, stats: FROST_STATS, bar: FROST_BAR },
-  { id: 'arcane-frost', spec: 'frost', name: 'Arcane-Frost', talentString: '050200500310031053--05550002010003002', source: GS, stats: FROST_STATS, bar: FROST_BAR },
-  { id: 'frost-ms', spec: 'frost', name: 'Frost with Missile Barrage', talentString: '0501205003-03-0555000301001301251', source: MS_REENCODED, stats: FROST_STATS, bar: FROST_BAR },
-  { id: 'frost-p1', spec: 'frost', name: 'Frost, first raid tier', talentString: '05002050030003--055500033100030024', source: 'gunba and foreversim', stats: FROST_STATS, bar: FROST_BAR },
+  { id: 'fire-ms', spec: 'fire', name: 'Fire', talentString: '0501205003-13550000130135031-013', source: MS_REENCODED, stats: FIRE_STATS, bar: FIRE_BAR },
+  { id: 'fire-frost', spec: 'fire', name: 'Fire/Frost (Frostfire Bolt)', talentString: '-03552020130135131-05350003', source: 'gunba and foreversim', stats: FIRE_STATS, bar: FIRE_BAR, options: { fireFiller: 'frostfire' } },
+  { id: 'frostfire', spec: 'fire', name: 'Frostfire', talentString: '-1355000013013502-2035010311013002', source: GS, stats: FIRE_STATS, bar: FIRE_BAR, options: { fireFiller: 'frostfire' } },
+  { id: 'frost', spec: 'frost', name: 'Frost', talentString: '0500205-03-253520330100301251', source: GS, stats: FROST_STATS, bar: FROST_BAR },
+  { id: 'arcane-frost', spec: 'frost', name: 'Arcane-Frost', talentString: '050220500310030053--0535000301003002', source: GS, stats: FROST_STATS, bar: FROST_BAR },
+  { id: 'frost-ms', spec: 'frost', name: 'Frost with Missile Barrage', talentString: '0501205003-03-053520030101301251', source: MS_REENCODED, stats: FROST_STATS, bar: FROST_BAR },
+  { id: 'frost-p1', spec: 'frost', name: 'Frost, first raid tier', talentString: '05002050030003--25353023010030024', source: 'gunba and foreversim', stats: FROST_STATS, bar: FROST_BAR },
 ];
 
 export const buildsFor = (spec: MageSpec) => BUILDS.filter((b) => b.spec === spec);

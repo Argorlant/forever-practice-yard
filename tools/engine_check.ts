@@ -708,20 +708,20 @@ for (const sp of [mageArcane, mageFire, mageFrost]) {
   cast('arcaneMissiles');
   const kept = c.aura(c.player, 'arcaneBlast')?.stacks ?? 0;
   if (stacks !== 4 || Math.abs(end - firstEnd) > 1e-9 || kept !== 4) failures.push(`Arcane Blast stacks: ${stacks} after five Blasts (4), timer ${end.toFixed(2)} vs first ${firstEnd.toFixed(2)}, ${kept} after Frostbolt and Missiles (4)`);
-  // Each missile that lands can proc Clearcasting, so one Missiles cast has five chances.
-  let midChannel = 0;
+  // Since Oct 21 Arcane Missiles' missiles proc neither Clearcasting nor Missile Barrage (a log: none from 34 casts).
+  let fromMissiles = 0;
   for (let i = 0; i < 150; i++) {
     c.use('arcaneMissiles');
     step();
     while (c.channeling) {
-      const procs = c.counters.clearcasting ?? 0;
+      const procs = (c.counters.clearcasting ?? 0) + (c.counters.missileBarrage ?? 0);
       step();
-      if ((c.counters.clearcasting ?? 0) > procs && c.channeling) midChannel++;
+      if ((c.counters.clearcasting ?? 0) + (c.counters.missileBarrage ?? 0) > procs) fromMissiles++;
     }
     while (c.player.gcdEnd > c.t) step();
   }
-  console.log(`Arcane Blast: ${stacks} stacks on the first one's timer, kept by other spells; ${midChannel} Clearcasting procs from missiles in 150 casts`);
-  if (midChannel < 20) failures.push(`Only ${midChannel} Clearcasting procs from single missiles in 150 Missiles casts`);
+  console.log(`Arcane Blast: ${stacks} stacks on the first one's timer, kept by other spells; ${fromMissiles} procs from missiles in 150 casts`);
+  if (fromMissiles) failures.push(`${fromMissiles} Clearcasting or Missile Barrage procs from Arcane Missiles' missiles`);
 }
 // Frost (Oct 15): Winter's Chill feeds Cone of Cold within 10 yards; Ice Lance x3 on Fingers of Frost.
 {

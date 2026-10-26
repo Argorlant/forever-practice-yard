@@ -19,6 +19,7 @@
   "bladeFlurry": "ability_warrior_punishingblow",
   "adrenalineRush": "spell_shadow_shadowworddominate",
   "coldBlood": "spell_ice_lament",
+  "iceBarrier": "spell_ice_lament",
   "instantPoison": "ability_poisons",
   "deadlyPoison": "ability_rogue_dualweild",
   "thistleTea": "inv_drink_milk_05",

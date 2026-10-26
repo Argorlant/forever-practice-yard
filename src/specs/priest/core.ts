@@ -59,7 +59,7 @@ const schoolHit = (c: Combat, school: School) => (school === 'shadow' ? T(c).sha
 const schoolCrit = (c: Combat, school: School) => (school === 'holy' ? T(c).holySpecialization : 0);
 
 function spellRoll(c: Combat, school: School, opts: { extraCrit?: number; forceCrit?: boolean } = {}): Outcome {
-  if (roll(c, Math.max(1, D.spellMiss - c.totalHit() - schoolHit(c, school)))) return 'resist';
+  if (roll(c, Math.max(0, D.spellMiss - c.totalHit() - schoolHit(c, school)))) return 'resist';
   if (opts.forceCrit) return 'crit';
   return roll(c, c.spellCritChance(schoolCrit(c, school) + (opts.extraCrit ?? 0))) ? 'crit' : 'hit';
 }
@@ -83,11 +83,11 @@ function schoolMult(c: Combat, t: Unit, school: School): number {
 }
 
 /** Damage of a spell hit or tick: base plus spell power of its school (and Judgement of the Crusader for Holy), times modifiers. */
-function spellDamage(c: Combat, t: Unit, id: string, school: School, base: number, coeff: number, outcome: Outcome, opts: { binary?: boolean } = {}): number {
+function spellDamage(c: Combat, t: Unit, id: string, school: School, base: number, coeff: number, outcome: Outcome): number {
   if (outcome === 'resist' || outcome === 'miss') return 0;
   const crit = outcome === 'crit' ? critMultiplier(c, school) : 1;
   const d = (base + coeff * (c.spellPowerFor(school) + c.bonusTaken(t, school))) * schoolMult(c, t, school) * (c.mod.damageFor[id] ?? 1)
-    * crit * (opts.binary ? 1 : D.partialResist);
+    * crit;
   return Math.max(1, Math.round(d));
 }
 
@@ -161,7 +161,7 @@ export const ABILITIES: Ability[] = [
       duration: D.mindFlay.duration, ticks: D.mindFlay.ticks,
       onStart: (c, t) => {
         const u = t!;
-        if (roll(c, Math.max(1, D.spellMiss - c.totalHit() - schoolHit(c, 'shadow')))) {
+        if (roll(c, Math.max(0, D.spellMiss - c.totalHit() - schoolHit(c, 'shadow')))) {
           c.deal({ target: u, source: 'mindFlay', outcome: 'resist', school: 'shadow', amount: 0, white: false });
           return false;
         }
@@ -173,7 +173,7 @@ export const ABILITIES: Ability[] = [
         const outcome: Outcome = critRoll(c, 'shadow') ? 'crit' : 'hit';
         // Improved Mind Flay (Oct 15): each tick stronger than the one before (gs compounds it).
         const ramp = (1 + D.improvedMindFlay * T(c).improvedMindFlay) ** (tick - 1);
-        const amount = Math.round(spellDamage(c, u, 'mindFlay', 'shadow', D.mindFlay.tick, D.mindFlay.coeff, outcome, { binary: true }) * ramp);
+        const amount = Math.round(spellDamage(c, u, 'mindFlay', 'shadow', D.mindFlay.tick, D.mindFlay.coeff, outcome) * ramp);
         c.deal({ target: u, source: 'mindFlay', outcome, school: 'shadow', amount, white: false, spell: true });
         if (tick === D.mindFlay.ticks) inspire(c);
       },
@@ -373,12 +373,11 @@ export function prepare(c: Combat): void {
 export function chances(c: Combat): { title: string; rows: [string, string][] }[] {
   const tl = T(c);
   const pct = (n: number) => `${Math.max(0, Math.min(100, n)).toFixed(1)}%`;
-  const miss = (school: School) => Math.max(1, D.spellMiss - c.totalHit() - schoolHit(c, school));
+  const miss = (school: School) => Math.max(0, D.spellMiss - c.totalHit() - schoolHit(c, school));
   const rows: [string, string][] = [
     ['Shadow: miss / crit', `${pct(miss('shadow'))} / ${pct(c.spellCritChance())}`],
     ['Holy: miss / crit', `${pct(miss('holy'))} / ${pct(c.spellCritChance(schoolCrit(c, 'holy')))}`],
     ['Crit damage', shadowform(c) ? '2.0x for Shadow spells in Shadowform, 1.5x otherwise' : '1.5x'],
-    ['Partial resists', `-${Math.round((1 - D.partialResist) * 100)}% on average (Mind Flay is all or nothing)`],
   ];
   const procs: [string, string][] = [];
   if (tl.shadowWeaving) procs.push(['Shadow Weaving per landed Shadow spell', `${[0, 33, 67, 100][tl.shadowWeaving]}%: +2% of your Shadow damage, 5 stacks, 15 s`]);

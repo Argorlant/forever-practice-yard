@@ -41,9 +41,9 @@ function schoolMult(c: Combat, _t: Unit, school: School): number {
   return moonfury * (1 + 0.01 * T(c).naturalist);
 }
 
-/** Spell table: miss 17 % minus hit (1 % floor), then crit from spell crit and auras. */
+/** Spell table: miss 17 % minus hit (no floor in Forever), then crit from spell crit and auras. */
 function spellRoll(c: Combat, extraCrit = 0): Outcome {
-  if (roll(c, Math.max(1, c.rules.spellMiss - c.totalHit()))) return 'resist';
+  if (roll(c, Math.max(0, c.rules.spellMiss - c.totalHit()))) return 'resist';
   return roll(c, c.spellCritChance(extraCrit)) ? 'crit' : 'hit';
 }
 
@@ -55,12 +55,12 @@ function naturesGrace(c: Combat): void {
   c.count('naturesGrace');
 }
 
-/** A direct damage spell; `delay` is the missile's flight time. Wrath, Starfire and Moonfire lose ~6 % to partial resists. */
+/** A direct damage spell; `delay` is the missile's flight time. */
 function directSpell(c: Combat, t: Unit, id: string, school: School, base: number, opts: { extraCrit?: number; mult?: number; delay?: number } = {}): Outcome {
   const outcome = spellRoll(c, opts.extraCrit);
   if (outcome === 'crit') naturesGrace(c);
   const amount = outcome === 'resist' ? 0
-    : Math.round(base * schoolMult(c, t, school) * (opts.mult ?? 1) * D.partialResist * (outcome === 'crit' ? vengeance(c) : 1));
+    : Math.round(base * schoolMult(c, t, school) * (opts.mult ?? 1) * (outcome === 'crit' ? vengeance(c) : 1));
   const land = () => c.deal({ target: t, source: id, outcome, school, amount, white: false, spell: true });
   if (opts.delay) c.schedule(c.t + opts.delay, land); else land();
   return outcome;
@@ -68,12 +68,12 @@ function directSpell(c: Combat, t: Unit, id: string, school: School, base: numbe
 
 /** A damage over time spell: ticks can crit and re-read spell power (Forever client flag); Genesis +1 % per point. */
 function dot(c: Combat, t: Unit, id: string, name: string, school: School, ticks: number, period: number,
-  perTick: (cc: Combat) => number, opts: { extraCrit?: number; mult?: number; partial?: boolean } = {}): void {
+  perTick: (cc: Combat) => number, opts: { extraCrit?: number; mult?: number } = {}): void {
   c.applyAura(t, {
     id, name, icon: id, duration: ticks * period, period,
     onTick: (cc) => {
       const crit = roll(cc, cc.spellCritChance(opts.extraCrit));
-      const mult = schoolMult(cc, t, school) * (opts.mult ?? 1) * (1 + 0.01 * T(cc).genesis) * (opts.partial ? D.partialResist : 1);
+      const mult = schoolMult(cc, t, school) * (opts.mult ?? 1) * (1 + 0.01 * T(cc).genesis);
       const amount = Math.round(perTick(cc) * mult * (crit ? vengeance(cc) : 1));
       cc.deal({ target: t, source: id, outcome: crit ? 'crit' : 'hit', school, amount, white: false, periodic: true });
     },
@@ -150,7 +150,7 @@ const abilities: Ability[] = [
       useClearcasting(c);
       const imf = { extraCrit: 5 * improvedMoonfire(c), mult: 1 + 0.05 * improvedMoonfire(c) };
       const outcome = directSpell(c, u, 'moonfire', 'arcane', m.min + c.random() * (m.max - m.min) + m.coeff * spellPower(c), imf);
-      if (outcome !== 'resist') dot(c, u, 'moonfire', 'Moonfire', 'arcane', m.ticks + splendor(c), m.period, (cc) => m.tick + m.tickCoeff * spellPower(cc), { ...imf, partial: true });
+      if (outcome !== 'resist') dot(c, u, 'moonfire', 'Moonfire', 'arcane', m.ticks + splendor(c), m.period, (cc) => m.tick + m.tickCoeff * spellPower(cc), imf);
       afterCast(c, 0);
     },
   }),
@@ -159,12 +159,12 @@ const abilities: Ability[] = [
     cost: balanceMana(D.insectSwarm.mana),
     requirements: (c) => (T(c).insectSwarm ? null : 'Requires the Insect Swarm talent'),
     usable: (c) => T(c).insectSwarm > 0,
-    description: (c) => `${D.insectSwarm.tick} Nature damage plus spell power every ${D.insectSwarm.period} sec for ${(D.insectSwarm.ticks + splendor(c)) * D.insectSwarm.period} sec; the target's hit chance drops by 2%. All or nothing: no partial resists.`,
+    description: (c) => `${D.insectSwarm.tick} Nature damage plus spell power every ${D.insectSwarm.period} sec for ${(D.insectSwarm.ticks + splendor(c)) * D.insectSwarm.period} sec; the target's hit chance drops by 2%.`,
     use: (c, t) => {
       const u = t!;
       const s = D.insectSwarm;
       useClearcasting(c);
-      if (roll(c, Math.max(1, c.rules.spellMiss - c.totalHit()))) {
+      if (roll(c, Math.max(0, c.rules.spellMiss - c.totalHit()))) {
         c.deal({ target: u, source: 'insectSwarm', outcome: 'resist', school: 'nature', amount: 0, white: false });
       } else {
         dot(c, u, 'insectSwarm', 'Insect Swarm', 'nature', s.ticks + splendor(c), s.period, (cc) => s.tick + s.tickCoeff * spellPower(cc));
@@ -251,7 +251,7 @@ function suggest(c: Combat): string | null {
 function chances(c: Combat): { title: string; rows: [string, string][] }[] {
   const tl = T(c);
   const pct = (n: number) => `${Math.max(0, n).toFixed(1)}%`;
-  const miss = Math.max(1, c.rules.spellMiss - c.totalHit());
+  const miss = Math.max(0, c.rules.spellMiss - c.totalHit());
   const moonkin = !!c.aura(c.player, 'moonkinForm');
   const omenAt = (cast: number) => pct(((D.omen.ppm * Math.max(1.5, cast)) / 60) * 100 * (moonkin ? 2 : 1));
   const procs: [string, string][] = [
@@ -263,10 +263,9 @@ function chances(c: Combat): { title: string; rows: [string, string][] }[] {
     {
       title: 'Your spells',
       rows: [
-        ['Miss (17% minus hit, 1% floor)', pct(miss)],
+        ['Miss (17% minus hit)', pct(miss)],
         ['Crit (Moonfire +' + 5 * tl.improvedMoonfire + '%)', pct(c.spellCritChance())],
         ['Crit damage', `${vengeance(c).toFixed(1)}x`],
-        ['Partial resists on Wrath, Starfire and Moonfire', `-${Math.round((1 - D.partialResist) * 100)}% on average`],
       ],
     },
     { title: 'Procs', rows: procs },

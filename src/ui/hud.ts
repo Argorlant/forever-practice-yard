@@ -265,10 +265,10 @@ export class Hud {
     bottom.append(this.extraRows[1], this.extraRows[0], barEl);
     this.root.append(bottom);
 
-    // Rotation panel: what landed and how the habits went. No damage or DPS: those would be guesses while WoW Forever is in beta.
+    // Rotation panel: what landed and how the habits went. No damage or DPS: those would be guesses until the live game is measured at level 60.
     this.meter = h('div', 'meter');
     this.meterHead = h('div', 'meter-head');
-    this.meterHead.title = 'Hits and crits per ability, and a review of your rotation. No damage or DPS numbers: with the game in beta they would only be guesses.';
+    this.meterHead.title = 'Hits and crits per ability, and a review of your rotation. No damage or DPS numbers: until the live game is measured at level 60 they would only be guesses.';
     this.meterRows = h('div', 'meter-rows');
     this.meterReview = h('div', 'meter-review');
     this.meter.append(this.meterHead, this.meterRows, this.meterReview);

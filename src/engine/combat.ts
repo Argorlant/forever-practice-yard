@@ -656,12 +656,9 @@ export class Combat {
     return true;
   }
 
-  /** Queues or cancels an on-next-swing ability (Heroic Strike, Cleave). */
+  /** Queues an on-next-swing ability (Heroic Strike, Cleave). Pressing it again does not cancel it in Forever (gs, Oct 17). */
   private queueSwing(a: Ability): boolean {
-    if (this.queuedSwing === a.id) {
-      this.queuedSwing = null;
-      return true;
-    }
+    if (this.queuedSwing === a.id) return true;
     const reason = this.blocker(a, this.target);
     if (reason) {
       this.emit('error', reason);
@@ -1113,9 +1110,9 @@ export class Combat {
     return this.random() * 100 < this.critChance(source) ? 'crit' : 'hit';
   }
 
-  /** Spell table (poisons): resist chance with a 1 % floor, then crit from spell crit. */
+  /** Spell table (poisons): resist chance, then crit from spell crit. Forever has no 1 % floor: 17 % hit never misses a boss. */
   rollSpell(extraCrit = 0): Outcome {
-    const miss = Math.max(1, this.rules.spellMiss - this.totalHit());
+    const miss = Math.max(0, this.rules.spellMiss - this.totalHit());
     if (this.random() * 100 < miss) return 'resist';
     return this.random() * 100 < this.stats.spellCrit + extraCrit ? 'crit' : 'hit';
   }

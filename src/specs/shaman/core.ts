@@ -74,13 +74,13 @@ function spellMult(c: Combat, t: Unit, id: string): number {
 }
 
 /**
- * One spell hit: 17 % miss minus hit, crit, Elemental Fury's crit damage, average partial resists (Earth Shock all or nothing). The Stormstrike
+ * One spell hit: 17 % miss minus hit, crit, Elemental Fury's crit damage. The Stormstrike
  * charge adds 20 % to your next Lightning Bolt, Chain Lightning or Earth Shock (not an Overload copy).
  */
 function spellHit(c: Combat, t: Unit, id: string, school: School, base: number, coeff: number,
-  opts: { charge?: boolean; scale?: number; binary?: boolean; direct?: boolean } = {}): { outcome: Outcome; amount: number } {
+  opts: { charge?: boolean; scale?: number; direct?: boolean } = {}): { outcome: Outcome; amount: number } {
   const tl = T(c);
-  const outcome: Outcome = roll(c, Math.max(1, D.spellMiss - c.totalHit())) ? 'resist' : roll(c, c.spellCritChance()) ? 'crit' : 'hit';
+  const outcome: Outcome = roll(c, Math.max(0, D.spellMiss - c.totalHit())) ? 'resist' : roll(c, c.spellCritChance()) ? 'crit' : 'hit';
   let amount = 0;
   if (outcome !== 'resist') {
     let m = spellMult(c, t, id) * (opts.scale ?? 1);
@@ -90,7 +90,7 @@ function spellHit(c: Combat, t: Unit, id: string, school: School, base: number, 
       c.count('stormstrikeCharges');
     }
     amount = Math.max(1, Math.round((base + coeff * c.spellPowerFor(school)) * m
-      * (outcome === 'crit' ? elementalFury(c) : 1) * (opts.binary ? 1 : D.partialResist)));
+      * (outcome === 'crit' ? elementalFury(c) : 1)));
   }
   c.deal({ target: t, source: id, outcome, school, amount, white: false, spell: opts.direct !== false });
   // Elemental Devastation: a direct spell crit gives melee crit (not ticks, totems, procs, Overload copies or Fire Nova).
@@ -169,9 +169,9 @@ function totem(id: string, auraId: string, slot: Slot, name: string, mana: numbe
 }
 
 function totemAttack(c: Combat, u: Unit, id: string, base: number, coeff: number): void {
-  const outcome: Outcome = roll(c, Math.max(1, D.spellMiss - c.totalHit())) ? 'resist' : roll(c, c.spellCritChance()) ? 'crit' : 'hit';
+  const outcome: Outcome = roll(c, Math.max(0, D.spellMiss - c.totalHit())) ? 'resist' : roll(c, c.spellCritChance()) ? 'crit' : 'hit';
   const amount = outcome === 'resist' ? 0 : Math.max(1, Math.round((base + coeff * c.spellPowerFor('fire')) * spellMult(c, u, id)
-    * (outcome === 'crit' ? elementalFury(c) : 1) * D.partialResist));
+    * (outcome === 'crit' ? elementalFury(c) : 1)));
   c.deal({ target: u, source: id, outcome, school: 'fire', amount, white: false });
 }
 
@@ -251,10 +251,10 @@ export const ABILITIES: Ability[] = [
     id: 'earthShock', name: 'Earth Shock', icon: 'earthShock', range: D.earthShock.range,
     projectile: { color: 0xc89a4a, speed: 40, style: 'earth' },
     cost: cost('earthShock', D.earthShock.mana), ...shock,
-    description: (c) => `Instant: ${D.earthShock.min}-${D.earthShock.max} Nature damage plus spell damage, double threat. All or nothing. Shares a ${shockCd(c).toFixed(1)} sec cooldown with your other shocks.`,
+    description: (c) => `Instant: ${D.earthShock.min}-${D.earthShock.max} Nature damage plus spell damage, double threat. Shares a ${shockCd(c).toFixed(1)} sec cooldown with your other shocks.`,
     use: (c, t) => {
       const u = t!;
-      spellHit(c, u, 'earthShock', 'nature', between(c, D.earthShock.min, D.earthShock.max), D.earthShock.coeff, { charge: true, binary: true });
+      spellHit(c, u, 'earthShock', 'nature', between(c, D.earthShock.min, D.earthShock.max), D.earthShock.coeff, { charge: true });
       afterCast(c, 'earthShock');
       swingIn(c, u);
     },
@@ -278,7 +278,7 @@ export const ABILITIES: Ability[] = [
         id: 'flameShock', name: 'Flame Shock', icon: 'flameShock', duration: (f.ticks + T(c).callOfFlame) * f.period, period: f.period,
         onTick: (cc) => {
           const crit = roll(cc, cc.spellCritChance());
-          const amount = Math.max(1, Math.round((f.tick + f.tickCoeff * cc.spellPowerFor('fire')) * spellMult(cc, u, 'flameShock') * (crit ? elementalFury(cc) : 1) * D.partialResist));
+          const amount = Math.max(1, Math.round((f.tick + f.tickCoeff * cc.spellPowerFor('fire')) * spellMult(cc, u, 'flameShock') * (crit ? elementalFury(cc) : 1)));
           cc.deal({ target: u, source: 'flameShock', outcome: crit ? 'crit' : 'hit', school: 'fire', amount, white: false, periodic: true });
         },
       });
@@ -377,11 +377,11 @@ export const ABILITIES: Ability[] = [
       },
     })),
   totem('strengthOfEarthTotem', 'strengthOfEarthTotem', 'earth', 'Strength of Earth Totem', D.strengthOfEarthTotem.mana,
-    () => '+53 Strength (+106 attack power) for 5 min.', () => ({ attackPower: D.strengthOfEarthTotem.ap })),
+    () => '+42 Strength (+84 attack power) for 5 min.', () => ({ attackPower: D.strengthOfEarthTotem.ap })),
   totem('stoneskinTotem', 'stoneskinTotem', 'earth', 'Stoneskin Totem', D.stoneskinTotem.mana,
     () => 'Physical hits on you deal 30 less damage, for 5 min (here about 1% of the dummy\'s hits).', () => ({ damageTaken: 0.99 })),
   totem('graceOfAirTotem', 'graceOfAirTotem', 'air', 'Grace of Air Totem', D.graceOfAirTotem.mana,
-    () => `+89 Agility (+${D.graceOfAirTotem.crit.toFixed(1)}% melee crit) for 5 min. Since Oct 15 it stacks with another shaman's Windfury Totem; you still drop one Air totem, so with your own Windfury Weapon this is yours.`,
+    () => `+77 Agility (+${D.graceOfAirTotem.crit.toFixed(1)}% melee crit) for 5 min. Since Oct 15 it stacks with another shaman's Windfury Totem; you still drop one Air totem, so with your own Windfury Weapon this is yours.`,
     () => ({ crit: D.graceOfAirTotem.crit })),
   totem('windfuryTotem', 'windfuryTotemOwn', 'air', 'Windfury Totem', D.windfuryTotem.mana,
     () => 'Main-hand attacks: 20% for an extra attack with +246 AP, for 5 min. Your own Windfury Weapon turns it off for you: then use Grace of Air.',
@@ -453,9 +453,9 @@ export function prepare(c: Combat): void {
     // Flametongue Weapon: Fire damage on every landed hit, scaled by weapon speed.
     if (kind === 'flametongue') {
       const f = D.flametongueWeapon;
-      const outcome: Outcome = roll(c, Math.max(1, D.spellMiss - c.totalHit())) ? 'resist' : roll(c, c.spellCritChance()) ? 'crit' : 'hit';
+      const outcome: Outcome = roll(c, Math.max(0, D.spellMiss - c.totalHit())) ? 'resist' : roll(c, c.spellCritChance()) ? 'crit' : 'hit';
       const amount = outcome === 'resist' ? 0 : Math.round((f.perSpeed * c.stats.mainHand.speed + f.coeff * c.spellPowerFor('fire')) * (1 + 0.05 * ew)
-        * (outcome === 'crit' ? c.rules.spellCritMultiplier : 1) * D.partialResist);
+        * (outcome === 'crit' ? c.rules.spellCritMultiplier : 1));
       c.deal({ target: h.target, source: 'flametongueWeapon', outcome, school: 'fire', amount, white: false });
     }
     // Rockbiter: bonus threat on each of the weapon's hits.
@@ -470,7 +470,7 @@ export function prepare(c: Combat): void {
     if (landed && ls && c.t - lastOrb >= D.lightningShield.icd) {
       lastOrb = c.t;
       const l = D.lightningShield;
-      const amount = Math.round((l.damage + l.coeff * c.spellPowerFor('nature')) * (1 + 0.05 * tl.improvedLightningShield) * D.partialResist);
+      const amount = Math.round((l.damage + l.coeff * c.spellPowerFor('nature')) * (1 + 0.05 * tl.improvedLightningShield));
       c.deal({ target: i.attacker, source: 'lightningShield', outcome: 'hit', school: 'nature', amount, white: false });
       ls.stacks = (ls.stacks ?? 1) - 1;
       if (ls.stacks <= 0) c.removeAura(p, 'lightningShield');
@@ -507,10 +507,9 @@ export function chances(c: Combat): { title: string; rows: [string, string][] }[
   }
   if (c.raid.has('judgementOfWisdom')) procs.push(['Judgement of Wisdom: +59 mana', '50% per landed hit or direct spell']);
   const rows: [string, string][] = [
-    ['Spell miss (17% minus hit)', pct(Math.max(1, D.spellMiss - c.totalHit()))],
+    ['Spell miss (17% minus hit)', pct(Math.max(0, D.spellMiss - c.totalHit()))],
     ['Spell crit', pct(c.spellCritChance())],
     ['Spell crit damage', `${elementalFury(c).toFixed(1)}x`],
-    ['Partial resists', `-${Math.round((1 - D.partialResist) * 100)}% on average (Earth Shock all or nothing)`],
   ];
   if (melee(c)) {
     const tbl = c.target ? c.whiteTable(c.target) : null;

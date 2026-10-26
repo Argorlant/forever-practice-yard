@@ -5,7 +5,7 @@ export const TREE_NAMES = ['Arcane', 'Fire', 'Frost'];
 export const TREES = [
   ['wandSpecialization', 'arcaneFocus', 'improvedChanneling', 'missileBarrage', 'arcaneSubtlety', 'magicAbsorption', 'arcaneConcentration', 'arcaneResilience', 'arcaneGeometry', 'arcaneImpact', 'arcaneBlast', 'arcaneShielding', 'improvedCounterspell', 'arcaneMeditation', 'arcaneWrath', 'presenceOfMind', 'arcaneMind', 'arcaneInstability', 'arcanePower'],
   ['improvedFireBlast', 'incineration', 'improvedFireball', 'ignite', 'flameThrowing', 'impact', 'burningSoul', 'improvedFlamestrike', 'pyroblast', 'improvedScorch', 'improvedFireWard', 'hotStreak', 'masterOfElements', 'criticalMass', 'blastWave', 'firePower', 'combustion'],
-  ['frostWarding', 'improvedFrostbolt', 'elementalPrecision', 'iceShards', 'permafrost', 'improvedFrostNova', 'frostbite', 'piercingIce', 'frostChanneling', 'iceLance', 'improvedBlizzard', 'arcticReach', 'iceBlock', 'shatter', 'improvedConeOfCold', 'coldSnap', 'fingersOfFrost', 'wintersChill', 'iceBarrier'],
+  ['frostWarding', 'improvedFrostbolt', 'elementalPrecision', 'iceShards', 'frostbite', 'improvedFrostNova', 'permafrost', 'frostChanneling', 'improvedBlizzard', 'iceLance', 'arcticReach', 'iceBlock', 'shatter', 'improvedConeOfCold', 'coldSnap', 'fingersOfFrost', 'wintersChill', 'iceBarrier'],
 ] as const;
 
 export type TalentKey = (typeof TREES)[number][number];
@@ -55,7 +55,6 @@ export const NAMES: Record<TalentKey, string> = {
   permafrost: 'Permafrost',
   improvedFrostNova: 'Improved Frost Nova',
   frostbite: 'Frostbite',
-  piercingIce: 'Piercing Ice',
   frostChanneling: 'Frost Channeling',
   iceLance: 'Ice Lance',
   improvedBlizzard: 'Improved Blizzard',

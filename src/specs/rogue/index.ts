@@ -757,7 +757,7 @@ function chances(c: Combat): { title: string; rows: [string, string][] }[] {
   if (tl.ruthlessness) procs.push(['Ruthlessness: +1 combo point after a finisher', `${20 * tl.ruthlessness}%`]);
   if (tl.cutthroat) procs.push(['Cutthroat: Ambush without stealth after Backstab', `${3 * tl.cutthroat}%`]);
   procs.push(poisonRow('Main-hand', c.options.poisonMH), poisonRow('Off-hand', c.options.poisonOH));
-  procs.push(['Poisons: resisted / crit', `${pct(Math.max(1, r.spellMiss - hit))} / ${pct(c.stats.spellCrit + c.mod.crit)}`]);
+  procs.push(['Poisons: resisted / crit', `${pct(Math.max(0, r.spellMiss - hit))} / ${pct(c.stats.spellCrit + c.mod.crit)}`]);
   const builderCrit = (id: string) => pct(c.critChance(id));
   const attacks: [string, string][] = [['Crit chance (gear + talents, minus 4.8% vs a +3 boss)', pct(c.critChance('melee_mh'))]];
   if (tl.puncturingWounds || tl.improvedAmbush) {

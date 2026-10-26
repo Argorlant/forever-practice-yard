@@ -52,7 +52,6 @@ export const DATA = {
   gcd: 1.5,
   baseMana: BASE_MANA,
   normalizedSpeed: { oneHand: 2.4, twoHand: 3.3 },
-  partialResist: 0.94,        // provisional: gs's average partial resist on non-binary Holy damage
   refund: 0.8,                // provisional: avoided Holy Strike refunds 80 %
   // Seals: 30 s, 1.5 s GCD, one at a time. Judgement does not use them up.
   sealDuration: 30,

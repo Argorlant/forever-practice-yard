@@ -47,22 +47,21 @@ const spellPower = (c: Combat) => c.stats.spellPower ?? 0;
 
 /**
  * Holy damage: base plus spell power at `coeff`, Vengeance and talents
- * (mod.damageFor), crit x2 on the melee table or x1.5 on the spell table,
- * and gs's average 6 % partial resist unless the spell is binary. Holy
- * damage ignores armor.
+ * (mod.damageFor), crit x2 on the melee table or x1.5 on the spell table.
+ * Holy damage ignores armor, and a boss without resistances resists none of it (Oct 21).
  */
 export function holyDamage(c: Combat, t: Unit, id: string, base: number, coeff: number, outcome: Outcome,
-  opts: { spellTable?: boolean; binary?: boolean } = {}): number {
+  opts: { spellTable?: boolean } = {}): number {
   if (!landed(outcome)) return 0;
   const crit = outcome === 'crit' ? (opts.spellTable ? c.rules.spellCritMultiplier : c.rules.critMultiplier) : 1;
   const d = (base + coeff * (spellPower(c) + c.bonusTaken(t, 'holy'))) * c.auraProduct('damageDone') * (c.mod.damageFor[id] ?? 1)
-    * crit * (opts.binary ? 1 : D.partialResist);
+    * crit;
   return Math.max(1, Math.round(d));
 }
 
 /** Spell table: 17 % miss minus hit (1 % floor), then spell crit. */
 function spellRoll(c: Combat, opts: { extraHit?: number; extraCrit?: number; forceCrit?: boolean } = {}): Outcome {
-  if (roll(c, Math.max(1, c.rules.spellMiss - c.totalHit() - (opts.extraHit ?? 0)))) return 'resist';
+  if (roll(c, Math.max(0, c.rules.spellMiss - c.totalHit() - (opts.extraHit ?? 0)))) return 'resist';
   if (opts.forceCrit) return 'crit';
   return roll(c, c.spellCritChance(opts.extraCrit)) ? 'crit' : 'hit';
 }
@@ -198,13 +197,13 @@ export const ABILITIES: Ability[] = [
       let amount = 0;
       if (seal === 'sealOfRighteousness') {
         const r = D.judgementOfRighteousness;
-        amount = holyDamage(c, u, j.id, between(c, r.min, r.max), r.coeff, outcome, { binary: true });
+        amount = holyDamage(c, u, j.id, between(c, r.min, r.max), r.coeff, outcome);
       } else if (seal === 'sealOfCommand') {
         const k = D.judgementOfCommand;
         amount = holyDamage(c, u, j.id, between(c, k.min, k.max), k.coeff, outcome);
       } else {
         const f = D.judgementOfFury;
-        amount = holyDamage(c, u, j.id, between(c, f.min, f.max), f.coeff, outcome, { binary: true });
+        amount = holyDamage(c, u, j.id, between(c, f.min, f.max), f.coeff, outcome);
         if (landed(outcome)) c.applyAura(u, { id: 'judgementOfFury', name: 'Judgement of Fury', icon: 'sealOfFury', duration: f.taunt });
       }
       c.deal({ target: u, source: j.id, outcome, school: 'holy', amount, white: false });
@@ -245,7 +244,7 @@ export const ABILITIES: Ability[] = [
         c.applyAura(u, {
           id: 'consecration', name: 'Consecration', icon: 'consecration', duration: k.ticks, period: 1,
           onTick: (cc) => {
-            const outcome: Outcome = roll(cc, Math.max(1, cc.rules.spellMiss - cc.totalHit())) ? 'resist' : 'hit';
+            const outcome: Outcome = roll(cc, Math.max(0, cc.rules.spellMiss - cc.totalHit())) ? 'resist' : 'hit';
             const amount = holyDamage(cc, u, 'consecration', k.all + (i < 4 ? k.first4 : 0), i < 4 ? k.coeff : 0, outcome);
             cc.deal({ target: u, source: 'consecration', outcome, school: 'holy', amount, white: false, periodic: true });
           },
@@ -260,11 +259,11 @@ export const ABILITIES: Ability[] = [
     cooldown: (c) => D.exorcism.cooldown * (1 - [0, 0.17, 0.33][T(c).purifyingPower]),
     requirements: needsUndead,
     usable: undeadDummy,
-    description: () => `${D.exorcism.min}-${D.exorcism.max} Holy damage plus spell power to an Undead or Demon. All or nothing: no partial resists. Turn on "The dummy is Undead or a Demon" in Settings to use it.`,
+    description: () => `${D.exorcism.min}-${D.exorcism.max} Holy damage plus spell power to an Undead or Demon. Turn on "The dummy is Undead or a Demon" in Settings to use it.`,
     use: (c, t) => {
       const e = D.exorcism;
       const outcome = spellRoll(c, { extraHit: 6 * T(c).divinePrecision });
-      const amount = holyDamage(c, t!, 'exorcism', between(c, e.min, e.max), e.coeff, outcome, { spellTable: true, binary: true });
+      const amount = holyDamage(c, t!, 'exorcism', between(c, e.min, e.max), e.coeff, outcome, { spellTable: true });
       c.deal({ target: t!, source: 'exorcism', outcome, school: 'holy', amount, white: false, spell: true });
     },
   },
@@ -560,10 +559,9 @@ export function chances(c: Combat): { title: string; rows: [string, string][] }[
   const spells: [string, string][] = [
     ['Seal procs, Judgements, Holy Strike: crit (melee table)', pct(c.critChance('sealOfRighteousness'))],
     ['Holy Strike crit', pct(c.critChance('holyStrike'))],
-    ['Partial resists on Holy damage (not Exorcism or Judgement of Righteousness)', `-${Math.round((1 - D.partialResist) * 100)}% on average`],
   ];
   if (tl.holyShock) {
-    spells.push(['Holy Shock: miss / crit', `${pct(Math.max(1, r.spellMiss - hit - 6 * tl.divinePrecision))} / ${pct(c.spellCritChance(2 * tl.holyPower))} (Divine Favor: 100%)`]);
+    spells.push(['Holy Shock: miss / crit', `${pct(Math.max(0, r.spellMiss - hit - 6 * tl.divinePrecision))} / ${pct(c.spellCritChance(2 * tl.holyPower))} (Divine Favor: 100%)`]);
   }
   const groups = [
     {

@@ -3,17 +3,17 @@
 A browser practice yard for **World of Warcraft: Forever** rotations. You stand next to a
 training dummy and play your class with real keybinds: energy, combo points, the global
 cooldown, positional requirements, procs and auras follow the game rules, and a rotation panel
-counts your hits and crits and reviews your habits. There is no DPS meter on purpose: with the game
-in beta, a DPS number would only mislead. It works with keyboard and mouse or on a phone.
+counts your hits and crits and reviews your habits. There is no DPS meter on purpose: until anyone has
+played Forever at level 60, a DPS number would only mislead. It works with keyboard and mouse or on a phone.
 
 **Play it online:** https://argorlant.github.io/forever-practice-yard/
 
 Up to date with the October 15 beta update (client 1.60.1.70425): talent trees, builds and numbers follow the two sims'
 updates for it.
-> **Speculative, built on the sims.** WoW Forever is still in beta. The talents, builds, rotations and numbers here follow the
-> community sims ([wow-forever-sim](https://github.com/gunba/wow-forever-sim) and [foreversim](https://github.com/laurencestokes/foreversim))
-> and our own reading of the beta, so they may not match the live game, and classes can change a lot before launch and before
-> anyone reaches level 60. Use it as a practice tool: learn a rotation's rhythm and get a feel for how a class might play at max
+> **Speculative, built on the sims.** WoW Forever's beta has closed and the game launches on 4 November 2026. The talents,
+> builds, rotations and numbers here follow the community sims ([wow-forever-sim](https://github.com/gunba/wow-forever-sim) and
+> [foreversim](https://github.com/laurencestokes/foreversim)) and our own reading of the beta, which stopped at level 30, so they
+> may not match the live game, and classes can still change at launch and once players reach level 60. Use it as a practice tool: learn a rotation's rhythm and get a feel for how a class might play at max
 > level. That's why the yard shows no DPS: the damage in the floating combat text is only a rough guide. Spotted something wrong? Feedback is very welcome in the
 > [issues](https://github.com/Argorlant/forever-practice-yard/issues).
 

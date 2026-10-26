@@ -34,7 +34,6 @@ export const DATA = {
   gcd: 1.5,
   baseMana: BASE_MANA,
   spellMiss: 17,
-  partialResist: 0.94,     // provisional: gs's average; Immolate, Shadowburn, Death Coil and Siphon Life are all or nothing
   shadowBolt: { mana: 380, cast: 3, min: 253, max: 283, coeff: 0.857, speed: 20 },
   immolate: { mana: 380, cast: 2, direct: 158, coeff: 0.2, tick: 55, tickCoeff: 0.13, ticks: 5, period: 3 },
   corruption: { mana: 340, cast: 2, tick: 73, coeff: 0.2, ticks: 6, period: 3 },

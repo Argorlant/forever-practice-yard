@@ -879,32 +879,29 @@
     "change": "-0.1 s/point (2.5 s at 5/5). Wowhead prints \"0 sec\" (raw)."
    },
    "elementalPrecision": {
-    "change": "Redesigned: +1% Fire and Frost hit per point (Classic: reduced resists). Wowhead prints the raw 6%."
+    "change": "Back to Classic's 3 ranks of 2/4/6% Fire and Frost hit (server hotfix, Oct 21); it was 5 ranks of 1%."
    },
    "iceShards": {
     "change": "+20..100% Frost crit damage bonus (2.0x at 5/5); also reaches Frostfire Bolt."
    },
-   "permafrost": {
-    "change": "Chill duration +11/22/33% (was +1/2/3 s), slow +3/7/10%."
+   "frostbite": {
+    "change": "5/10/15% freeze on Chill; bosses immune; 0% with rank-1 Frostbolt at 60 (1 Oct)."
    },
    "improvedFrostNova": {
     "change": "Frost Nova -2/-4 s."
    },
-   "frostbite": {
-    "change": "5/10/15% freeze on Chill; bosses immune; 0% with rank-1 Frostbolt at 60 (1 Oct)."
-   },
-   "piercingIce": {
-    "change": "+2/4/6% Frost damage (Frostfire Bolt DoT: flat 2% in gs)."
+   "permafrost": {
+    "change": "Chill duration +11/22/33% (was +1/2/3 s), slow +3/7/10%."
    },
    "frostChanneling": {
     "change": "Row 3; -5/10/15% Frost mana cost, -10/20/30% Frost threat."
    },
+   "improvedBlizzard": {
+    "change": "Chill slow 15/30/40% (Classic up to 65%), 1.5 s; can proc Fingers of Frost."
+   },
    "iceLance": {
     "new": true,
     "change": "New 11-point talent: instant, 136-161 Frost, x4 against Frozen targets (or with Fingers of Frost); 160 mana."
-   },
-   "improvedBlizzard": {
-    "change": "Chill slow 15/30/40% (Classic up to 65%), 1.5 s; can proc Fingers of Frost."
    },
    "arcticReach": {
     "change": "Frostbolt/Blizzard range and Nova/Cone radius +10/20%."
@@ -926,14 +923,15 @@
     "change": "New: Chill effects have a 15% chance (both ranks) to give 1/2 charges that treat the target as Frozen, 15 s. Requires Ice Lance."
    },
    "wintersChill": {
-    "change": "20%/point per landed Frost spell; personal debuff, +2% crit per stack for YOUR Frostbolt and Ice Lance only, 1 stack per point (5 at 5/5), 15 s; no second resist roll (1 Oct). Wowhead prints \"0%\"."
+    "change": "Since a server hotfix (Oct 21): only Frostbolt, Frost Blast and Fingers of Frost Ice Lances apply it, 20% a point; each stack adds 5% damage and 7% of spell power to your next Cone of Cold, which spends them; stacks to the talent rank. No crit any more."
    },
    "iceBarrier": {
-    "change": "Rank 4 absorbs 819 at 60 (Wowhead prints 835 at 64); 30 s cooldown, 1 min; no pushback while it holds."
+    "change": "Since a server hotfix (Oct 21): +3% Frost damage while the shield holds, and Frigid Power +3% Frost damage for 1 min."
    }
   },
   "removed": [
-   "Magic Attunement (baseline)"
+   "Magic Attunement (baseline)",
+   "Piercing Ice (removed by a server hotfix, Oct 21)"
   ]
  },
  "warlock": {

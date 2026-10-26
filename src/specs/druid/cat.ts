@@ -323,7 +323,7 @@ function chances(c: Combat): { title: string; rows: [string, string][] }[] {
         ['Auto attack: miss / dodge / glancing', `${pct(r.specialMiss - hit)} / ${pct(c.dodgeChance())} / ${pct(r.glanceChance)}`],
         ['Abilities: miss / dodge', `${pct(r.specialMiss - hit)} / ${pct(c.dodgeChance())}`],
         ['Parry and block if you stand in front', `${pct(r.parryFromFront)} / 5.0%`],
-        ['Faerie Fire misses (spell table)', pct(Math.max(1, r.spellMiss - hit))],
+        ['Faerie Fire misses (spell table)', pct(Math.max(0, r.spellMiss - hit))],
       ],
     },
     { title: 'Procs', rows: procs },

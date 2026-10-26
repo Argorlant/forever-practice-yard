@@ -78,7 +78,7 @@ export function faerieFire(opts: { gcd: number; cooldown?: number; cost?: (c: Co
     description: () => `Lowers the target's armor by ${D.faerieFire.armor} for ${D.faerieFire.duration} sec. A spell: it can miss. Does not stack with another Faerie Fire.${opts.cooldown ? ` Free in an animal form, ${opts.cooldown} sec cooldown.` : ''}`,
     use: (c, t) => {
       const u = t!;
-      const miss = Math.max(1, c.rules.spellMiss - c.totalHit());
+      const miss = Math.max(0, c.rules.spellMiss - c.totalHit());
       if (roll(c, miss)) {
         c.deal({ target: u, source: 'faerieFire', outcome: 'resist', school: 'nature', amount: 0, white: false });
         return;

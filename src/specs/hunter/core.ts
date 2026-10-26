@@ -364,7 +364,7 @@ export const ABILITIES: Ability[] = [
     id: 'raptorStrike', name: 'Raptor Strike', icon: 'raptorStrike', gcd: 0, target: 'enemy', range: 'melee', onNextSwing: true,
     animation: 'slash',
     cost: meleeCost(D.raptorStrike.mana), cooldown: D.raptorStrike.cooldown,
-    description: () => `Your next main-hand swing deals weapon damage plus ${D.raptorStrike.bonus}. Off the global cooldown; press again to cancel.`,
+    description: () => `Your next main-hand swing deals weapon damage plus ${D.raptorStrike.bonus}. Off the global cooldown; pressing it again does not cancel it.`,
     use: (c, t) => { meleeStrike(c, t!, 'raptorStrike', c.weaponDamage('main') + D.raptorStrike.bonus); },
   },
   {

@@ -15,6 +15,7 @@ export interface RaidEffect {
 }
 
 const forever = (duration = Infinity) => ({ duration });
+// Raid buffs at the last trainer rank: the Ahn'Qiraj books need raids, which open on 9 December (gs, Oct 21).
 
 export const RAID_EFFECTS: RaidEffect[] = [
   // ------------------------------------------------------------ buffs
@@ -23,12 +24,12 @@ export const RAID_EFFECTS: RaidEffect[] = [
     apply: (c) => c.applyAura(c.player, { id: 'windfuryTotem', name: 'Windfury Totem', icon: 'windfury', ...forever(), windfury: true }),
   },
   {
-    id: 'battleShout', name: 'Battle Shout (+139 AP)', from: 'warrior', side: 'buff', icon: 'battleShout',
-    apply: (c) => c.applyAura(c.player, { id: 'battleShout', name: 'Battle Shout', icon: 'battleShout', ...forever(), attackPower: 139 }),
+    id: 'battleShout', name: 'Battle Shout (+111 AP)', from: 'warrior', side: 'buff', icon: 'battleShout',
+    apply: (c) => c.applyAura(c.player, { id: 'battleShout', name: 'Battle Shout', icon: 'battleShout', ...forever(), attackPower: 111 }),
   },
   {
-    id: 'blessingOfMight', name: 'Blessing of Might (+133 AP)', from: 'paladin', side: 'buff', icon: 'blessingOfMight',
-    apply: (c) => c.applyAura(c.player, { id: 'blessingOfMight', name: 'Blessing of Might', icon: 'blessingOfMight', ...forever(), attackPower: 133 }),
+    id: 'blessingOfMight', name: 'Blessing of Might (+112 AP)', from: 'paladin', side: 'buff', icon: 'blessingOfMight',
+    apply: (c) => c.applyAura(c.player, { id: 'blessingOfMight', name: 'Blessing of Might', icon: 'blessingOfMight', ...forever(), attackPower: 112 }),
   },
   {
     id: 'leaderOfThePack', name: 'Leader of the Pack (+3% melee and ranged crit, raid-wide)', from: 'druid', side: 'buff', icon: 'leaderOfThePack',
@@ -39,8 +40,8 @@ export const RAID_EFFECTS: RaidEffect[] = [
     apply: (c) => c.applyAura(c.player, MOONKIN_AURA),
   },
   {
-    id: 'blessingOfWisdom', name: 'Blessing of Wisdom (40 MP5: +8 mana per second)', from: 'paladin', side: 'buff', icon: 'blessingOfWisdom',
-    apply: (c) => c.applyAura(c.player, { id: 'blessingOfWisdom', name: 'Blessing of Wisdom', icon: 'blessingOfWisdom', ...forever(), manaPerSecond: 8 }),
+    id: 'blessingOfWisdom', name: 'Blessing of Wisdom (36 MP5: +7.2 mana per second)', from: 'paladin', side: 'buff', icon: 'blessingOfWisdom',
+    apply: (c) => c.applyAura(c.player, { id: 'blessingOfWisdom', name: 'Blessing of Wisdom', icon: 'blessingOfWisdom', ...forever(), manaPerSecond: 7.2 }),
   },
   {
     // In Forever both factions get paladin and shaman buffs (gs: canReceivePaladinBuffs / canReceiveShamanBuffs).

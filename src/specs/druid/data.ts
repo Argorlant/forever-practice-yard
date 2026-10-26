@@ -85,7 +85,6 @@ export const DATA = {
   bearThreat: 1.5,
   // Balance
   spellGcd: 1.5,
-  partialResist: 0.94,     // classic: level-based partial resists on Wrath, Starfire and Moonfire vs +3
   wrath: { mana: 120, cast: 2, min: 92, max: 102, coeff: 0.571, eclipseCharges: 2 },
   starfire: { mana: 340, cast: 3.5, min: 350, max: 412, coeff: 1 },
   moonfire: { mana: 375, min: 128, max: 151, coeff: 0.15, tick: 60, tickCoeff: 0.13, ticks: 4, period: 3 },

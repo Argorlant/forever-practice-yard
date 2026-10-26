@@ -207,7 +207,7 @@ export interface Ability {
   provisional?: boolean;
   /**
    * Replaces the next main-hand swing (Heroic Strike, Cleave): pressing it
-   * queues it, pressing again cancels; the cost is paid when the swing lands.
+   * queues it (pressing again does not cancel it); the cost is paid when the swing lands.
    */
   onNextSwing?: boolean;
   /** Cast time in seconds (Slam). Moving interrupts it. */

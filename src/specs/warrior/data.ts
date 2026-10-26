@@ -58,27 +58,26 @@ export const DATA = {
     twoHandPerSpeed: 4.5,
     offHandPerSpeed: 1.73,
     critFactor: 2,          // +100 % since 1 Oct (gs)
-    // Rage from damage taken (partly confirmed): raw damage x (1 - 0.393) x C / 4365.
-    incomingCoefficient: 10,
-    expectedHealth: 4365,
-    referenceArmor: 0.393,
+    // Rage from damage taken: rageFromDamageTaken in ../common (measured on Forever logs, gs Oct 21).
     tacticalMastery: 10,    // baseline: rage kept on a stance swap
   },
-  heroicStrike: { cost: 15, bonus: 157, threat: 173 },
-  cleave: { cost: 20, bonus: 50, threat: 100, targets: 2 },
+  // Trainer ranks (gs Oct 21): Heroic Strike 9, Revenge 6 and Battle Shout 7 are Ahn'Qiraj books, and raids open on 9 December.
+  // Heroic Strike rank 8: threat 2.54 per spell level (56); Cleave rank 5: 1.53 per spell level (60), split between the targets it lands on.
+  heroicStrike: { cost: 15, bonus: 138, threat: 142 },
+  cleave: { cost: 20, bonus: 50, threat: 92, targets: 2 },
   bloodthirst: { cost: 30, cooldown: 6, apRatio: 0.45, bonus: 48, haste: 0.1, duration: 10 },
   mortalStrike: { cost: 30, cooldown: 6, bonus: 160 },
   whirlwind: { cost: 25, cooldown: 10, targets: 4 },
   slam: { cost: 15, cooldown: 18, cast: 1.5, bonus: 87, threat: 140 },
   execute: { cost: 15, base: 600, perRage: 15, threshold: 0.2 },
   overpower: { cost: 5, cooldown: 5, bonus: 35, window: 5 },
-  revenge: { cost: 5, cooldown: 5, min: 138, max: 168, window: 5 },
+  revenge: { cost: 5, cooldown: 5, min: 109, max: 133, window: 5 },   // rank 5; threat 2.25x its damage, no flat part
   shieldSlam: { cost: 20, cooldown: 6, min: 640, max: 670, threat: 508 },
   shieldBlock: { cost: 10, cooldown: 5, block: 75, duration: 7, charges: 2 },
-  sunderArmor: { cost: 15, armor: 450, stacks: 5, duration: 30, threat: 206 },
+  sunderArmor: { cost: 15, armor: 450, stacks: 5, duration: 30, threat: 206, threatAp: 0.05 },   // threat 206 + 5 % of attack power
   thunderClap: { cost: 20, cooldown: 6, damage: 103, slow: 0.2, duration: 30, targets: 4 },
   demoralizingShout: { cost: 10, apReduction: 210, duration: 45, threat: 43 },
-  battleShout: { cost: 10, ap: 140, duration: 180, threat: 60 },
+  battleShout: { cost: 10, ap: 111, duration: 180, threat: 0 },   // rank 6; Forever buffs make no threat (forever-bugs#64)
   bloodrage: { cooldown: 60, now: 10, overTime: 10, duration: 10 },
   berserkerRage: { cooldown: 30, duration: 10, ragePerHit: 2 },
   recklessness: { cooldown: 1800, duration: 15, crit: 100, damageTaken: 1.2 },
@@ -99,6 +98,7 @@ export const DATA = {
   flurryCharges: 3,
   deepWounds: { ticks: 4, period: 3 },
   enrage: { chance: 30, duration: 12 },
+  bloodthrill: { chance: 4, window: 5 },   // per point; the Overpower window is 5 s since a server hotfix (gs Oct 21)
   weaponmasterIcd: 0.2,
-  threatPerRage: 5,         // confirmed: rage from non-damage sources, not modified by stance
+  threatPerRage: 5,         // rage from non-damage sources, times the stance's threat when the rage arrives (gs Oct 21)
 };

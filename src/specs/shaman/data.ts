@@ -43,7 +43,6 @@ export const DATA = {
   totemGcd: 1,             // confirmed: every totem, not hasted
   baseMana: 1520,
   spellMiss: 17,
-  partialResist: 0.94,     // provisional: gs's average; Earth Shock is all or nothing
   lightningBolt: { mana: 220, cast: 2.5, min: 190, max: 212, coeff: 0.714, speed: 20 },
   // Oct 15: about 35% cheaper on every rank (gs chain_lightning.go: 145/200/250/315, was 225/305/390/485).
   chainLightning: { mana: 315, cast: 2, cooldown: 6, min: 119, max: 134, coeff: 0.571, jump: 0.7, targets: 3 },
@@ -65,8 +64,8 @@ export const DATA = {
   searingTotem: { mana: 170, duration: 55, period: 2.5, min: 40, max: 54, coeff: 0.017, range: 20 },   // gs 2.5 s, fs 2.2 s
   magmaTotem: { mana: 650, duration: 20, period: 2, damage: 73, coeff: 0.033, radius: 8 },
   windfuryTotem: { mana: 250, duration: 300 },
-  graceOfAirTotem: { mana: 310, duration: 300, crit: 89 / 19.7 },   // +89 Agility
-  strengthOfEarthTotem: { mana: 275, duration: 300, ap: 106 },     // +53 Strength
+  graceOfAirTotem: { mana: 250, duration: 300, crit: 77 / 19.7 },   // rank 2, +77 Agility (rank 3 is an Ahn'Qiraj book)
+  strengthOfEarthTotem: { mana: 225, duration: 300, ap: 84 },      // rank 4, +42 Strength (rank 5 is an Ahn'Qiraj book)
   stoneskinTotem: { mana: 210, duration: 300, reduction: 30 },
   manaSpringTotem: { mana: 100, duration: 300, perSecond: 5 },     // 10 mana every 2 s
   clearcasting: { chance: 10, duration: 15 },

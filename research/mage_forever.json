@@ -327,10 +327,10 @@
       "critMultiplier": {
         "value": {
           "base": 1.5,
-          "frostWithIceShards5": 2.0,
-          "arcaneWithArcaneMind5": 2.0,
+          "frostWithIceShards5": 2,
+          "arcaneWithArcaneMind5": 2,
           "fire": 1.5,
-          "frostfireWithIceShards5": 2.0
+          "frostfireWithIceShards5": 2
         },
         "source": [
           "https://github.com/gunba/wow-forever-sim/blob/9c05fc890b2c78e95c15605895134ebeb689b857/sim/core/spell_outcome.go#L1023-L1035",
@@ -362,7 +362,7 @@
     "globalCooldown": {
       "value": {
         "base": 1.5,
-        "floor": 1.0,
+        "floor": 1,
         "hastedBy": "cast speed (Berserking)",
         "offGcd": [
           "Presence of Mind",
@@ -424,8 +424,8 @@
       "arcaneMissiles": {
         "value": {
           "missiles": 5,
-          "period": 1.0,
-          "firstMissileAt": 1.0,
+          "period": 1,
+          "firstMissileAt": 1,
           "perMissile": "own hit roll, own crit roll, travels at 20 yd/s",
           "missileBarrage": "0.5 s period, 2.5 s channel, 0 mana",
           "clip": "moving or casting again cancels the rest; the GCD is 1.5 s from channel start",
@@ -446,7 +446,7 @@
       "blizzard": {
         "value": {
           "ticks": 8,
-          "period": 1.0,
+          "period": 1,
           "note": "area trigger casting a damage spell each second; Arcane Concentration rolls once per target on the cast (gs)"
         },
         "source": [
@@ -553,7 +553,7 @@
     },
     "threat": {
       "value": {
-        "all": 1.0,
+        "all": 1,
         "arcaneSubtlety": "-15/-30% Arcane",
         "burningSoul": "-10/20/30% Fire",
         "frostChanneling": "-10/20/30% Frost",
@@ -609,7 +609,7 @@
         "confidence": "confirmed-forever"
       },
       "castTime": {
-        "value": 3.0,
+        "value": 3,
         "unit": "s",
         "source": [
           "https://github.com/laurencestokes/foreversim/blob/255df1627fa6a96f43cdfa018c92e6cb7687492c/sim/core/spelldata/spells_auto_gen.go#L19494-L19499",
@@ -1590,7 +1590,7 @@
         "confidence": "confirmed-forever"
       },
       "castTime": {
-        "value": 3.0,
+        "value": 3,
         "unit": "s",
         "source": [
           "https://github.com/laurencestokes/foreversim/blob/255df1627fa6a96f43cdfa018c92e6cb7687492c/sim/core/spelldata/spells_auto_gen.go#L30065-L30071",
@@ -1771,7 +1771,7 @@
         "confidence": "confirmed-forever"
       },
       "castTime": {
-        "value": 3.0,
+        "value": 3,
         "unit": "s",
         "source": [
           "https://github.com/laurencestokes/foreversim/blob/255df1627fa6a96f43cdfa018c92e6cb7687492c/sim/core/spelldata/spells_auto_gen.go#L6238-L6244",
@@ -5058,7 +5058,7 @@
         },
         "newInForever": false,
         "renamedFrom": null,
-        "foreverChange": "Redesigned: +1% Fire and Frost hit per point (Classic: reduced resists). Wowhead prints the raw 6%.",
+        "foreverChange": "Back to Classic's 3 ranks of 2/4/6% Fire and Frost hit (server hotfix, Oct 21); it was 5 ranks of 1%.",
         "simulatedByGs": true,
         "source": [
           "https://github.com/gunba/wow-forever-sim/blob/9c05fc890b2c78e95c15605895134ebeb689b857/ui/core/talents/trees/mage.json#L1046",
@@ -5661,7 +5661,7 @@
         },
         "newInForever": false,
         "renamedFrom": null,
-        "foreverChange": "20%/point per landed Frost spell; personal debuff, +2% crit per stack for YOUR Frostbolt and Ice Lance only, 1 stack per point (5 at 5/5), 15 s; no second resist roll (1 Oct). Wowhead prints \"0%\".",
+        "foreverChange": "Since a server hotfix (Oct 21): only Frostbolt, Frost Blast and Fingers of Frost Ice Lances apply it, 20% a point; each stack adds 5% damage and 7% of spell power to your next Cone of Cold, which spends them; stacks to the talent rank. No crit any more.",
         "simulatedByGs": true,
         "source": [
           "https://github.com/gunba/wow-forever-sim/blob/9c05fc890b2c78e95c15605895134ebeb689b857/ui/core/talents/trees/mage.json#L1451",
@@ -5696,7 +5696,7 @@
         },
         "newInForever": false,
         "renamedFrom": null,
-        "foreverChange": "Rank 4 absorbs 819 at 60 (Wowhead prints 835 at 64); 30 s cooldown, 1 min; no pushback while it holds.",
+        "foreverChange": "Since a server hotfix (Oct 21): +3% Frost damage while the shield holds, and Frigid Power +3% Frost damage for 1 min.",
         "simulatedByGs": false,
         "source": [
           "https://github.com/gunba/wow-forever-sim/blob/9c05fc890b2c78e95c15605895134ebeb689b857/ui/core/talents/trees/mage.json#L1491",
@@ -5706,7 +5706,8 @@
       }
     ],
     "removedInForever": [
-      "Magic Attunement (baseline)"
+      "Magic Attunement (baseline)",
+      "Piercing Ice (removed by a server hotfix, Oct 21)"
     ],
     "renamedInForever": {
       "improvedChanneling": "Improved Arcane Missiles",
@@ -5764,13 +5765,12 @@
           "improvedFrostbolt",
           "elementalPrecision",
           "iceShards",
-          "permafrost",
-          "improvedFrostNova",
           "frostbite",
-          "piercingIce",
+          "improvedFrostNova",
+          "permafrost",
           "frostChanneling",
-          "iceLance",
           "improvedBlizzard",
+          "iceLance",
           "arcticReach",
           "iceBlock",
           "shatter",
@@ -5825,7 +5825,6 @@
         "permafrost": "Permafrost",
         "improvedFrostNova": "Improved Frost Nova",
         "frostbite": "Frostbite",
-        "piercingIce": "Piercing Ice",
         "frostChanneling": "Frost Channeling",
         "iceLance": "Ice Lance",
         "improvedBlizzard": "Improved Blizzard",
@@ -6006,7 +6005,7 @@
           "Undead": 682.54,
           "Human": 686.12,
           "Gnome": 690.62,
-          "HighOrder": 681.0
+          "HighOrder": 681
         },
         "unit": "DPS, 300 s",
         "source": [
@@ -6657,7 +6656,7 @@
           "schoolBonus": "+13 to the spec school (Fire set +52)",
           "mp5": 9,
           "hitPct": 7.9,
-          "critPct": 5.0,
+          "critPct": 5,
           "bloodvine3pc": "+2% spell crit with Tailoring (gs default profession)"
         },
         "race": "Orc (gs sim.ts default)",
@@ -6678,7 +6677,7 @@
         "value": {
           "race": "Orc",
           "int": 239.8,
-          "spirit": 142.0,
+          "spirit": 142,
           "mana": 4530,
           "health": 2230,
           "spellDamage": 192,
@@ -6706,8 +6705,8 @@
       "uiFire18_31_2": {
         "value": {
           "race": "Orc",
-          "int": 219.0,
-          "spirit": 142.0,
+          "int": 219,
+          "spirit": 142,
           "mana": 4218,
           "health": 2090,
           "spellDamage": 192,
@@ -6734,8 +6733,8 @@
       "uiFrost11_3_37": {
         "value": {
           "race": "Orc",
-          "int": 218.0,
-          "spirit": 142.0,
+          "int": 218,
+          "spirit": 142,
           "mana": 4203,
           "health": 2230,
           "spellDamage": 192,
@@ -6859,8 +6858,8 @@
       "value": {
         "build": "Frost 11/3/37",
         "formula": "(475 + 0.814 x 390) x 1.06 Piercing Ice",
-        "nonCrit": 840.0,
-        "crit2x": 1680.0,
+        "nonCrit": 840,
+        "crit2x": 1680,
         "critChance": "13% + 10% Winter's Chill = 23%",
         "expectedPerCast": 1022.9,
         "cast": "2.5 s",
@@ -6920,7 +6919,7 @@
       "value": {
         "formula": "(181.4 + 0.429 x 390) x 1.10 x 1.15 x 0.94",
         "nonCrit": 414.7,
-        "crit": 622.0,
+        "crit": 622,
         "critChance": "13 + 6 + 6 Incineration = 25%",
         "igniteFromCrit": 248.8,
         "expectedWithIgnite": 523.4,
@@ -6938,7 +6937,7 @@
     },
     "pyroblastAt3HeatingUp": {
       "value": {
-        "nonCrit": 1157.0,
+        "nonCrit": 1157,
         "crit": 1735.5,
         "dotTick": 132.6,
         "dotTotal": 530.3,
@@ -6982,7 +6981,7 @@
         "frostboltDumpAt3Stacks": {
           "formula": "792.5 x (1 + 0.03 + 0.06 + 0.30)",
           "nonCrit": 1101.5,
-          "crit2x": 2203.0,
+          "crit2x": 2203,
           "cast": "3.0 s (no Improved Frostbolt)",
           "mana": 261
         },

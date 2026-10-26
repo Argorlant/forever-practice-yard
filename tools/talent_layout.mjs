@@ -7,7 +7,7 @@
 // Usage: node tools/talent_layout.mjs
 import fs from 'node:fs';
 
-const GS = 'https://raw.githubusercontent.com/gunba/wow-forever-sim/887a3a7b5558e032e84732e8b8c4c3df87fbe59c/ui/core/talents/trees';
+const GS = 'https://raw.githubusercontent.com/gunba/wow-forever-sim/bb5811b3af888df9f9bd66e1cc90a6693c3d672c/ui/core/talents/trees';
 const CLASSES = ['warrior', 'paladin', 'hunter', 'rogue', 'priest', 'shaman', 'mage', 'warlock', 'druid'];
 /** The talent frame's tab icon for each tree (Classic). */
 const TAB_ICONS = {

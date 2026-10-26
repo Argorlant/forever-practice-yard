@@ -55,7 +55,6 @@ export function regen(c: Combat): number {
 
 // --------------------------------------------------------------- spell table
 const PANDEMIC = ['corruption', 'baneOfAgony', 'baneOfDoom', 'drainLife', 'siphonLife', 'wrack'];
-const BINARY = ['immolate', 'shadowburn', 'deathCoil', 'siphonLife'];
 
 function critChance(c: Combat, id: string, school: School): number {
   const tl = T(c);
@@ -96,11 +95,11 @@ function damageMult(c: Combat, t: Unit, id: string, school: School, _periodic: b
 
 /** A direct spell: hit (17 % minus hit and Suppression), crit, damage. */
 function directSpell(c: Combat, t: Unit, id: string, school: School, base: number, coeff: number): { outcome: Outcome; amount: number } {
-  const outcome: Outcome = roll(c, Math.max(1, D.spellMiss - c.totalHit())) ? 'resist' : roll(c, critChance(c, id, school)) ? 'crit' : 'hit';
+  const outcome: Outcome = roll(c, Math.max(0, D.spellMiss - c.totalHit())) ? 'resist' : roll(c, critChance(c, id, school)) ? 'crit' : 'hit';
   let amount = 0;
   if (outcome !== 'resist') {
     amount = Math.max(1, Math.round((base + coeff * c.spellPowerFor(school)) * damageMult(c, t, id, school, false)
-      * (outcome === 'crit' ? critMultiplier(c, id) : 1) * (BINARY.includes(id) ? 1 : D.partialResist)));
+      * (outcome === 'crit' ? critMultiplier(c, id) : 1)));
   }
   c.deal({ target: t, source: id, outcome, school, amount, white: false, spell: true });
   return { outcome, amount };
@@ -109,7 +108,7 @@ function directSpell(c: Combat, t: Unit, id: string, school: School, base: numbe
 /** A DoT: hit rolled when applied, ticks crit and use your current stats; Nightfall can proc from Corruption ticks. */
 function dot(c: Combat, t: Unit, id: string, name: string, school: School, ticks: number, period: number, perTick: (cc: Combat, n: number) => number,
   opts: { heal?: boolean; nightfall?: boolean } = {}): boolean {
-  if (roll(c, Math.max(1, D.spellMiss - c.totalHit()))) {
+  if (roll(c, Math.max(0, D.spellMiss - c.totalHit()))) {
     c.deal({ target: t, source: id, outcome: 'resist', school, amount: 0, white: false });
     return false;
   }
@@ -120,7 +119,7 @@ function dot(c: Combat, t: Unit, id: string, name: string, school: School, ticks
       n++;
       const crit = roll(cc, critChance(cc, id, school));
       const amount = Math.max(1, Math.round(perTick(cc, n) * damageMult(cc, t, id, school, true) * (crit ? critMultiplier(cc, id) : 1)
-        * (BINARY.includes(id) ? 1 : D.partialResist)));
+       ));
       cc.deal({ target: t, source: id, outcome: crit ? 'crit' : 'hit', school, amount, white: false, periodic: true });
       if (opts.heal) healPlayer(cc, amount);
       if (opts.nightfall) nightfall(cc);
@@ -171,7 +170,7 @@ function petHit(c: Combat, u: Unit, source: string, base: number, kind: 'melee' 
     else if (source === 'petMelee' && (x -= c.rules.glanceChance) < 0) outcome = 'glance';
     else if (roll(c, D.pet.crit + c.stats.crit - c.rules.critSuppression)) outcome = 'crit';
   } else {
-    outcome = roll(c, Math.max(1, D.spellMiss - c.totalHit())) ? 'resist' : roll(c, c.spellCritChance()) ? 'crit' : 'hit';
+    outcome = roll(c, Math.max(0, D.spellMiss - c.totalHit())) ? 'resist' : roll(c, c.spellCritChance()) ? 'crit' : 'hit';
   }
   let amount = 0;
   if (outcome === 'hit' || outcome === 'crit' || outcome === 'glance') {
@@ -272,7 +271,7 @@ export const ABILITIES: Ability[] = [
     id: 'immolate', name: 'Immolate', icon: 'immolate',
     cost: cost('immolate', D.immolate.mana),
     castTime: castTime((c) => D.immolate.cast - 0.1 * T(c).bane),
-    description: () => `A cast: ${D.immolate.direct} Fire damage plus spell power, then ${D.immolate.ticks} ticks of ${D.immolate.tick} every ${D.immolate.period} sec. All or nothing. Refresh it when it has less time left than its cast.`,
+    description: () => `A cast: ${D.immolate.direct} Fire damage plus spell power, then ${D.immolate.ticks} ticks of ${D.immolate.tick} every ${D.immolate.period} sec. Refresh it when it has less time left than its cast.`,
     use: (c, t) => {
       const u = t!;
       const i = D.immolate;
@@ -331,7 +330,7 @@ export const ABILITIES: Ability[] = [
     description: () => 'All magic schools: +10% damage taken and -75 resistances for 5 min. Your one Curse on the target; skip it if a raid warlock already keeps it up.',
     use: (c, t) => {
       const magic = { arcane: 1.1, fire: 1.1, frost: 1.1, holy: 1.1, nature: 1.1, shadow: 1.1 };
-      if (roll(c, Math.max(1, D.spellMiss - c.totalHit()))) { c.deal({ target: t!, source: 'curseOfTheElements', outcome: 'resist', school: 'shadow', amount: 0, white: false }); return; }
+      if (roll(c, Math.max(0, D.spellMiss - c.totalHit()))) { c.deal({ target: t!, source: 'curseOfTheElements', outcome: 'resist', school: 'shadow', amount: 0, white: false }); return; }
       c.applyAura(t!, { id: 'curseOfElements', name: 'Curse of the Elements', icon: 'curseOfElements', duration: D.curseOfTheElements.duration, schoolTaken: magic });
     },
   }),
@@ -355,14 +354,14 @@ export const ABILITIES: Ability[] = [
     channel: {
       duration: D.drainLife.duration, ticks: D.drainLife.ticks,
       onStart: (c, t) => {
-        if (!roll(c, Math.max(1, D.spellMiss - c.totalHit()))) return true;
+        if (!roll(c, Math.max(0, D.spellMiss - c.totalHit()))) return true;
         c.deal({ target: t!, source: 'drainLife', outcome: 'resist', school: 'shadow', amount: 0, white: false });
         return false;
       },
       onTick: (c, t) => {
         const u = t!;
         const crit = roll(c, critChance(c, 'drainLife', 'shadow'));
-        const amount = Math.max(1, Math.round((D.drainLife.tick + D.drainLife.coeff * c.spellPowerFor('shadow')) * damageMult(c, u, 'drainLife', 'shadow', true) * (crit ? critMultiplier(c, 'drainLife') : 1) * D.partialResist));
+        const amount = Math.max(1, Math.round((D.drainLife.tick + D.drainLife.coeff * c.spellPowerFor('shadow')) * damageMult(c, u, 'drainLife', 'shadow', true) * (crit ? critMultiplier(c, 'drainLife') : 1)));
         c.deal({ target: u, source: 'drainLife', outcome: crit ? 'crit' : 'hit', school: 'shadow', amount, white: false, periodic: true });
         healPlayer(c, amount);
         nightfall(c);
@@ -382,7 +381,7 @@ export const ABILITIES: Ability[] = [
       onTick: (c, t) => {
         const u = t!;
         const crit = roll(c, critChance(c, 'wrack', 'shadow'));
-        const amount = Math.max(1, Math.round((D.wrack.tick + D.wrack.coeff * c.spellPowerFor('shadow')) * damageMult(c, u, 'wrack', 'shadow', true) * (crit ? critMultiplier(c, 'wrack') : 1) * D.partialResist));
+        const amount = Math.max(1, Math.round((D.wrack.tick + D.wrack.coeff * c.spellPowerFor('shadow')) * damageMult(c, u, 'wrack', 'shadow', true) * (crit ? critMultiplier(c, 'wrack') : 1)));
         c.deal({ target: u, source: 'wrack', outcome: crit ? 'crit' : 'hit', school: 'shadow', amount, white: false, periodic: true });
         nightfall(c);
       },
@@ -442,7 +441,7 @@ export const ABILITIES: Ability[] = [
     id: 'shadowburn', name: 'Shadowburn', icon: 'shadowburn',
     cost: cost('shadowburn', D.shadowburn.mana), cooldown: D.shadowburn.cooldown,
     ...talent('shadowburn', 'Shadowburn'),
-    description: (c) => `Instant: ${D.shadowburn.min}-${D.shadowburn.max} Shadow damage plus spell power. All or nothing.${T(c).shadowAndFlame ? ` Shadow and Flame: +${2 * T(c).shadowAndFlame}% Fire damage for 20 sec.` : ''}`,
+    description: (c) => `Instant: ${D.shadowburn.min}-${D.shadowburn.max} Shadow damage plus spell power.${T(c).shadowAndFlame ? ` Shadow and Flame: +${2 * T(c).shadowAndFlame}% Fire damage for 20 sec.` : ''}`,
     use: (c, t) => {
       const r = directSpell(c, t!, 'shadowburn', 'shadow', between(c, D.shadowburn.min, D.shadowburn.max), D.shadowburn.coeff);
       if (r.outcome !== 'resist' && T(c).shadowAndFlame) c.applyAura(c.player, { id: 'shadowFlameFire', name: 'Shadow and Flame: Flame', icon: 'immolate', duration: D.shadowAndFlame.duration });
@@ -557,10 +556,9 @@ export function chances(c: Combat): { title: string; rows: [string, string][] }[
     {
       title: 'Your spells',
       rows: [
-        ['Miss (17% minus hit and Suppression)', pct(Math.max(1, D.spellMiss - c.totalHit()))],
+        ['Miss (17% minus hit and Suppression)', pct(Math.max(0, D.spellMiss - c.totalHit()))],
         ['Shadow crit / Fire crit', `${pct(critChance(c, 'shadowBolt', 'shadow'))} / ${pct(critChance(c, 'immolate', 'fire'))}`],
         ['Crit damage: Destruction spells / DoTs and drains', `${critMultiplier(c, 'shadowBolt').toFixed(1)}x / ${critMultiplier(c, 'corruption').toFixed(1)}x`],
-        ['Partial resists', `-${Math.round((1 - D.partialResist) * 100)}% on average (Immolate, Shadowburn, Siphon Life all or nothing)`],
       ],
     },
     { title: 'Procs', rows: procs },

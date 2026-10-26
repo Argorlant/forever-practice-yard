@@ -19,6 +19,28 @@ export const BOSS_RULES: AttackRules = {
 };
 
 /**
+ * Rage from damage taken, the rule wowsims/forever fitted to Forever combat
+ * logs (#356, gs Oct 21): 2.5 x (1 - A) x the hit before armor, blocks and
+ * absorbs (crits and crushing blows included) / c(attacker level), with A the
+ * armor reduction the game assumes for the attacker's level (40 % at 63) and
+ * c(L) = 0.0091107836 L^2 + 3.225598133 L + 4.2652911. The defender's own
+ * armor and health play no part.
+ */
+export function rageFromDamageTaken(raw: number, attackerLevel = 63): number {
+  const points: [number, number][] = [[42, 0.2], [44, 0.3], [46, 0.36], [50, 0.38], [63, 0.4]];
+  let armor = points[points.length - 1][1];
+  if (attackerLevel <= points[0][0]) armor = points[0][1];
+  else {
+    for (let i = 1; i < points.length; i++) {
+      const [a, b] = [points[i - 1], points[i]];
+      if (attackerLevel <= b[0]) { armor = a[1] + ((b[1] - a[1]) * (attackerLevel - a[0])) / (b[0] - a[0]); break; }
+    }
+  }
+  const l = attackerLevel;
+  return (raw * 2.5 * (1 - armor)) / (0.0091107836 * l * l + 3.225598133 * l + 4.2652911);
+}
+
+/**
  * Talent strings list the points per talent in tree order, trees separated
  * by '-' (the sims' format). `trees` holds the talent keys in that order.
  */

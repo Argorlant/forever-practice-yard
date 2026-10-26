@@ -5,7 +5,7 @@
 import type { Combat, Incoming } from '../../engine/combat';
 import type { Ability, Hit, Outcome, Spec, Unit } from '../../engine/types';
 import { LEADER_OF_THE_PACK } from '../../engine/raid';
-import { BOSS_RULES } from '../common';
+import { BOSS_RULES, rageFromDamageTaken } from '../common';
 import { BEAR_STATS } from './data';
 import {
   CONTROLS, D, SOURCES, YARD, attack, barkskin, bleed, faerieFire, faerieFireLeft, freeWithClearcasting, landed, note, omen,
@@ -15,20 +15,18 @@ import { buildById, buildLabel, buildsFor, summary, talentsFor, type Talents } f
 
 const T = (c: Combat): Talents => talentsFor(c.options.build, 'bear', c.options.talents);
 
-/** Rage from damage taken, shared with warriors (8 Oct model): raw x (1 - 39.3 %) x coefficient / 4,365. */
-const INCOMING = { coefficient: 10, expectedHealth: 4365, referenceArmor: 0.393 };
 const RAGE_POTION = { min: 45, max: 75, ap: 120, duration: 20, cooldown: 120 };
 const THREAT_PER_RAGE = 5;
 
 // ------------------------------------------------------------------- rage
-/** Rage from abilities and talents also makes threat: 5 per rage. */
+/** Rage from abilities and talents also makes threat: 5 per rage, times Bear Form's threat when it arrives (gs Oct 21). */
 function gainRage(c: Combat, n: number): void {
   c.addResource(n);
-  c.addThreat(n * THREAT_PER_RAGE, { ignoreStance: true });
+  c.addThreat(n * THREAT_PER_RAGE);
 }
 const swingRage = (crit: boolean) => D.bearRagePerSwing * (crit ? D.bearCritFactor : 1);
-const incomingRage = (c: Combat, raw: number) =>
-  (raw * (1 - INCOMING.referenceArmor) * Number(c.options.incomingRage ?? INCOMING.coefficient)) / INCOMING.expectedHealth;
+/** Rage from damage taken, shared with warriors: Forever's measured rule (gs Oct 21). */
+const incomingRage = (raw: number) => rageFromDamageTaken(raw);
 
 // --------------------------------------------------------------- helpers
 const talent = (key: keyof Talents, name: string) => ({
@@ -60,7 +58,7 @@ const abilities: Ability[] = [
     id: 'maul', name: 'Maul', icon: 'maul', gcd: 0, target: 'enemy', range: 'melee', onNextSwing: true,
     animation: 'cross',
     cost: freeWithClearcasting((c) => D.maul.cost - T(c).ferocity),
-    description: () => `Your next swing deals weapon damage plus ${D.maul.bonus} and extra threat. Press again to cancel. The rage is spent when it lands, and that swing gives no rage.`,
+    description: () => `Your next swing deals weapon damage plus ${D.maul.bonus} and extra threat. Pressing it again does not cancel it. The rage is spent when it lands, and that swing gives no rage.`,
     use: (c, t) => {
       useClearcasting(c);
       strike(c, t!, 'maul', c.weaponDamage('main') + D.maul.bonus);
@@ -251,7 +249,7 @@ function prepare(c: Combat): void {
   c.onIncoming.push((i: Incoming) => {
     // Unmitigated damage: crits and crushing blows give more, armor and Barkskin do not lower it; a dodge gives none.
     if (i.raw > 0) {
-      const rage = incomingRage(c, i.raw);
+      const rage = incomingRage(i.raw);
       c.addResource(rage);
       c.count('incomingRage', rage);
     }
@@ -321,7 +319,7 @@ function chances(c: Combat): { title: string; rows: [string, string][] }[] {
       rows: [
         ['Per landed swing / crit', `${swingRage(false).toFixed(2)} / ${swingRage(true).toFixed(1)} rage`],
         ['Misses, dodges, parries, Maul swings', '0 rage'],
-        ['Per hit taken: normal / crit / crushing blow (unmitigated damage)', [1, 2, 1.5].map((m) => incomingRage(c, m * avgHit).toFixed(1)).join(' / ') + ' rage'],
+        ['Per hit taken: normal / crit / crushing blow (before armor)', [1, 2, 1.5].map((m) => incomingRage(m * avgHit).toFixed(1)).join(' / ') + ' rage'],
         ['Hits you dodge or that miss you', '0 rage (Natural Reaction: +5 on a dodge)'],
       ],
     },
@@ -376,17 +374,16 @@ export const druidBear: Spec = {
   stats: BEAR_STATS,
   rules: BOSS_RULES,
   builds: buildsFor('bear').map((b) => ({ id: b.id, label: buildLabel(b), name: b.name, source: 'gunba/wow-forever-sim', talentString: b.talentString, stats: b.stats, bar: b.bar, tank: b.tank, trees: summary(talentsFor(b.id, 'bear')) })),
-  defaultOptions: { build: 'bear', wolfshead: true, incomingRage: INCOMING.coefficient },
+  defaultOptions: { build: 'bear', wolfshead: true },
   options: [
     { key: 'wolfshead', name: 'Wolfshead Helm (+5 rage from Enrage)', kind: 'toggle' },
-    { key: 'incomingRage', name: 'Rage from damage taken: coefficient (10 to 20, unconfirmed)', kind: 'number', step: 1 },
   ],
   sheet: { spellCrit: false, mainHand: 'Weapon (its DPS x 2.5 is your bear swing)' },
   bar: buildById('bear', 'bear').bar,
   welcome: 'Welcome to the Feral Bear practice yard. The dummy hits back, so rage from damage taken, dodges and Frenzied Regeneration work as in the game. Keep Lacerate at 5 stacks, Primal Bite on cooldown, Demoralizing Roar and Faerie Fire up, and Maul with spare rage.',
   help: `${CONTROLS}
-    Bear rage in WoW Forever is normalized: each landed white swing gives 11.25 rage (22.5 on a crit), every 2.5 sec. Misses, dodges, parries and the swing a Maul replaces give none. Hits you take give rage from their unmitigated damage (before armor and Barkskin): about 6 for a normal hit, 12 for a crit, 9 for a crushing blow; a dodge gives none, except Natural Reaction's 5.
-    Maul replaces your next swing: press once to queue, again to cancel. Primal Bite has a 6 sec cooldown (none during Berserk). Lacerate stacks 5 times and its hit grows with the stacks.
+    Bear rage in WoW Forever is normalized: each landed white swing gives 11.25 rage (22.5 on a crit), every 2.5 sec. Misses, dodges, parries and the swing a Maul replaces give none. Hits you take give rage from their damage before armor and Barkskin (Forever's measured rule): about 27 for a normal hit from the default dummy, 55 for a crit, 41 for a crushing blow; a dodge gives none, except Natural Reaction's 5.
+    Maul replaces your next swing: press once to queue it; pressing again does not cancel it. Primal Bite has a 6 sec cooldown (none during Berserk). Lacerate stacks 5 times and its hit grows with the stacks.
     The dummy attacks you: bears cannot parry or block, so dodge is your avoidance and crushing blows land 15% of the time. Your health is locked by default; unlock it to practice Frenzied Regeneration and Barkskin. Bear Form makes your damage cause 50% more threat.
     Clearcasting (Omen of Clarity) makes your next ability free. Blood Frenzy gives 5 rage on a crit, Natural Reaction 5 rage on a dodge.
     This is a practice tool: crit, proc and rage numbers follow WoW Forever; damage and threat are an approximation.`,
