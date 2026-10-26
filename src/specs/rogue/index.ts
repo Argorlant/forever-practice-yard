@@ -819,7 +819,7 @@ function review(c: Combat): { label: string; value: string; good?: boolean }[] {
 
 const POISONS = [
   { value: 'instant', label: 'Instant Poison VI' },
-  { value: 'deadly', label: 'Deadly Poison V' },
+  { value: 'deadly', label: 'Deadly Poison IV' },
   { value: 'none', label: 'None' },
 ];
 

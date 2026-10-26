@@ -47,15 +47,19 @@ const spellPower = (c: Combat) => c.stats.spellPower ?? 0;
 
 /**
  * Holy damage: base plus spell power at `coeff`, Vengeance and talents
- * (mod.damageFor), crit x2 on the melee table or x1.5 on the spell table.
- * Holy damage ignores armor, and a boss without resistances resists none of it (Oct 21).
+ * (mod.damageFor), Consecrated Ground on a marked target, crit x2 on the
+ * melee table or x1.5 on the spell table. Judgement of the Crusader's bonus
+ * comes after the damage multipliers: a crit doubles it, talents never scale
+ * it (both sims). Holy damage ignores armor, and a boss without resistances
+ * resists none of it (Oct 21).
  */
 export function holyDamage(c: Combat, t: Unit, id: string, base: number, coeff: number, outcome: Outcome,
   opts: { spellTable?: boolean } = {}): number {
   if (!landed(outcome)) return 0;
   const crit = outcome === 'crit' ? (opts.spellTable ? c.rules.spellCritMultiplier : c.rules.critMultiplier) : 1;
-  const d = (base + coeff * (spellPower(c) + c.bonusTaken(t, 'holy'))) * c.auraProduct('damageDone') * (c.mod.damageFor[id] ?? 1)
-    * crit;
+  const ground = c.aura(t, 'consecratedGround') ? 1 + D.consecratedGround.perPoint * T(c).consecratedGround : 1;
+  const d = ((base + coeff * spellPower(c)) * c.auraProduct('damageDone') * (c.mod.damageFor[id] ?? 1) * ground
+    + coeff * c.bonusTaken(t, 'holy')) * crit;
   return Math.max(1, Math.round(d));
 }
 
@@ -83,11 +87,16 @@ export const sealLeft = (c: Combat) => {
   return s ? c.aura(c.player, s)!.end - c.t : 0;
 };
 
-/** One seal at a time. With Twist of Light, replacing a seal banks a one-charge Echo of it. */
+/**
+ * One seal at a time. With Twist of Light, replacing a seal banks a one-charge Echo of it. Forever keeps one
+ * Echo at a time: a new Echo drops any other, and casting a seal drops its own Echo (gs Oct 21, from an in-game clip).
+ */
 function castSeal(c: Combat, id: SealId): void {
   const old = currentSeal(c);
   for (const s of SEALS) c.removeAura(c.player, s);
+  c.removeAura(c.player, ECHO[id]);
   if (old && old !== id && T(c).twistOfLight) {
+    for (const s of SEALS) c.removeAura(c.player, ECHO[s]);
     c.applyAura(c.player, { id: ECHO[old], name: `Echo of ${SEAL_NAMES[old]}`, icon: old, duration: Infinity });
   }
   c.applyAura(c.player, { id, name: `Seal of ${SEAL_NAMES[id]}`, icon: id, duration: D.sealDuration });
@@ -97,9 +106,9 @@ function castSeal(c: Combat, id: SealId): void {
 function sealProc(c: Combat, t: Unit, seal: SealId): void {
   const w = c.stats.mainHand;
   if (seal === 'sealOfRighteousness') {
-    // 18.8 per second of weapon speed, x1.2 two-handed or x0.85 one-handed; it only rolls for a crit.
+    // 18.8 per second of weapon speed, x1.2 two-handed or x(0.85 - 0.2 x the speed below 2.0) one-handed; it only rolls for a crit.
     const r = D.sealOfRighteousness;
-    const base = r.perSpeed * w.speed * (w.twoHand ? r.twoHand : r.oneHand);
+    const base = r.perSpeed * w.speed * (w.twoHand ? r.twoHand : r.oneHand - r.oneHandSlow * Math.max(0, 2 - w.speed));
     const outcome: Outcome = roll(c, c.critChance('sealOfRighteousness')) ? 'crit' : 'hit';
     const amount = holyDamage(c, t, 'sealOfRighteousness', base, w.twoHand ? r.coeff2h : r.coeff1h, outcome);
     c.deal({ target: t, source: 'sealOfRighteousness', outcome, school: 'holy', amount, white: false });
@@ -168,7 +177,7 @@ export const ABILITIES: Ability[] = [
     use: () => {},
   },
   seal('sealOfRighteousness', D.sealOfRighteousness.mana,
-    `Every landed white swing deals extra Holy damage: ${D.sealOfRighteousness.perSpeed} per second of weapon speed (x1.2 with a two-hander, x0.85 one-handed) plus spell power. It cannot miss.`),
+    `Every landed white swing deals extra Holy damage: ${D.sealOfRighteousness.perSpeed} per second of weapon speed (x1.2 with a two-hander, x0.85 one-handed and less below 2.0 speed) plus spell power. It cannot miss.`),
   seal('sealOfCommand', D.sealOfCommand.mana,
     `Your white swings can deal ${D.sealOfCommand.weapon * 100}% of weapon damage as Holy damage: ${D.sealOfCommand.ppm} procs per minute (slow weapons proc more per swing), 1 sec internal cooldown.`,
     talent('sealOfCommand', 'Seal of Command')),
@@ -188,7 +197,9 @@ export const ABILITIES: Ability[] = [
       const seal = currentSeal(c)!;
       const sj = T(c).sanctifiedJudgement;
       if (sj && roll(c, [0, 33, 66, 100][sj])) {
-        const back = c.cost(c.ability(seal)!) * 0.2 * sj;
+        // A share of the seal's base cost with its percent cost cut added on top, not taken off (gs Oct 21, measured).
+        const cut = 0.02 * T(c).benediction + 0.2 * T(c).twistOfLight;
+        const back = D[seal].mana * 0.2 * sj * (1 + cut);
         c.addResource(back);
         c.count('sanctifiedMana', back);
       }
@@ -237,15 +248,18 @@ export const ABILITIES: Ability[] = [
     id: 'consecration', name: 'Consecration', icon: 'consecration', gcd: D.gcd, target: 'self',
     animation: 'cast',
     cost: conduit(D.consecration.mana), cooldown: D.consecration.cooldown,
-    description: (c) => `Consecrates the ground for ${D.consecration.ticks} sec: each second, ${D.consecration.all} Holy damage to every enemy in it and ${D.consecration.first4} plus spell power more to the first 4. About ${Math.round((D.consecration.all + D.consecration.first4 + D.consecration.coeff * spellPower(c)) * D.consecration.ticks)} on one target. Each tick can miss but never crits.`,
+    description: (c) => `Consecrates the ground for ${D.consecration.ticks} sec: each second, ${D.consecration.all} Holy damage to every enemy in it and ${D.consecration.first4} plus spell power more to the first 4. About ${Math.round((D.consecration.all + D.consecration.first4 + D.consecration.coeff * spellPower(c)) * D.consecration.ticks)} on one target. Each tick rolls hit and crit (1.5x).${T(c).consecratedGround ? ` Consecrated Ground: your Holy spells deal ${D.consecratedGround.perPoint * 100 * T(c).consecratedGround}% more to the first ${D.consecratedGround.targets} enemies in it.` : ''}`,
     use: (c) => {
       const k = D.consecration;
       c.targets.filter((u) => u.health > 0 && c.inRange(u, 8)).forEach((u, i) => {
+        if (T(c).consecratedGround && i < D.consecratedGround.targets) {
+          c.applyAura(u, { id: 'consecratedGround', name: 'Consecrated Ground', icon: 'consecration', duration: D.consecratedGround.duration });
+        }
         c.applyAura(u, {
           id: 'consecration', name: 'Consecration', icon: 'consecration', duration: k.ticks, period: 1,
           onTick: (cc) => {
-            const outcome: Outcome = roll(cc, Math.max(0, cc.rules.spellMiss - cc.totalHit())) ? 'resist' : 'hit';
-            const amount = holyDamage(cc, u, 'consecration', k.all + (i < 4 ? k.first4 : 0), i < 4 ? k.coeff : 0, outcome);
+            const outcome = spellRoll(cc);
+            const amount = holyDamage(cc, u, 'consecration', k.all + (i < 4 ? k.first4 : 0), i < 4 ? k.coeff : 0, outcome, { spellTable: true });
             cc.deal({ target: u, source: 'consecration', outcome, school: 'holy', amount, white: false, periodic: true });
           },
         });
@@ -272,10 +286,12 @@ export const ABILITIES: Ability[] = [
     animation: 'throw',
     cost: conduit(D.hammerOfWrath.mana), cooldown: D.hammerOfWrath.cooldown,
     castTime: (c) => D.hammerOfWrath.cast - 0.5 * T(c).instrumentOfLaw,
+    // A completed cast restarts the melee swing (gs Oct 21: Hammer of Wrath and Holy Wrath do).
+    resetsSwing: true,
     requirements: (c) => (executePhase(c) ? null : 'The target must be below 20% health'),
     usable: executePhase,
     highlight: executePhase,
-    description: () => `A ${D.hammerOfWrath.cast} sec cast: hurls a hammer for ${D.hammerOfWrath.min}-${D.hammerOfWrath.max} Holy damage plus spell power. Only below 20% health; in Settings, start the dummy at 15% to practice it.`,
+    description: () => `A ${D.hammerOfWrath.cast} sec cast: hurls a hammer for ${D.hammerOfWrath.min}-${D.hammerOfWrath.max} Holy damage plus spell power. Restarts your swing. Only below 20% health; in Settings, start the dummy at 15% to practice it.`,
     use: (c, t) => {
       const h = D.hammerOfWrath;
       const outcome = c.rollSpecial(t!, 'hammerOfWrath', { noDodge: true });
@@ -433,29 +449,33 @@ export function prepare(c: Combat): void {
   c.mod.spellCrit = t.holyPower;
   c.mod.critFor.holyStrike = 3 * t.holyPower;
   // Weapon specializations: physical damage, and (gs) seal procs, Judgement of Command, Holy Strike and Hammer of Wrath.
+  // One-Handed Weapon Specialization raises every school but Consecration, Holy Shock and Retribution Aura (Oct 21).
   const weapon = twoHanded(c) ? 1 + 0.02 * t.twoHandedWeaponSpecialization : 1 + [0, 0.03, 0.07, 0.1][t.oneHandedWeaponSpecialization];
   c.mod.physicalDamage = weapon;
   const seals = 1 + 0.05 * t.improvedSeals;
   const mult = (id: string, n: number) => { c.mod.damageFor[id] = (c.mod.damageFor[id] ?? 1) * n; };
   for (const id of [...SEAL_SOURCES, ...JUDGEMENT_SOURCES]) mult(id, seals);
-  for (const id of [...SEAL_SOURCES, 'judgementOfCommand', 'holyStrike', 'hammerOfWrath']) mult(id, weapon);
+  const weaponHoly = twoHanded(c) ? [...SEAL_SOURCES, 'judgementOfCommand', 'holyStrike', 'hammerOfWrath']
+    : [...SEAL_SOURCES, ...JUDGEMENT_SOURCES, 'holyStrike', 'hammerOfWrath', 'exorcism', 'holyShield', 'lightsVigil'];
+  for (const id of weaponHoly) mult(id, weapon);
   mult('holyStrike', 1 + 0.2 * t.sacredArbiter);
-  mult('consecration', 1 + 0.05 * t.consecratedGround);
   c.mod.threatFor = { holyShield: D.holyShield.threat, holyStrike: 1 + 0.05 * t.ironCreed };
 
   c.registerSource('judgementOfRighteousness', 'Judgement of Righteousness', 'sealOfRighteousness');
   c.registerSource('judgementOfCommand', 'Judgement of Command', 'sealOfCommand');
   c.registerSource('judgementOfFury', 'Judgement of Fury', 'sealOfFury');
   c.trackedAuras.push('holyShield', 'righteousFury', 'vengeance');
-  c.trackedTargetAuras.push('consecration');
+  c.trackedTargetAuras.push('consecration', 'consecratedGround');
   if (c.spec.tank) righteousFury(c); // on before the pull
 
   // Landed weapon strikes: Vindication; white swings carry the seal and any banked Echoes.
   c.onHit.push((hit: Hit) => {
-    if (t.vindication) {
-      const v = D.vindication;
-      c.applyAura(hit.target, { id: 'vindication', name: 'Vindication', icon: 'vindication', duration: v.duration, apReduction: v.apPerRank * t.vindication });
+    const v = D.vindication;
+    if (t.vindication && (hit.white || hit.weaponStrike) && roll(c, ((v.ppm * c.stats.mainHand.speed) / 60) * 100)) {
       c.applyAura(c.player, { id: 'vindicationAp', name: 'Vindication', icon: 'vindication', duration: v.duration, attackPower: Math.round(c.stats.attackPower * 0.01 * t.vindication) });
+      if (!roll(c, Math.max(0, c.rules.spellMiss - c.totalHit()))) {
+        c.applyAura(hit.target, { id: 'vindication', name: 'Vindication', icon: 'vindication', duration: v.duration, apReduction: v.apPerRank * t.vindication });
+      }
     }
     if (!hit.white) return;
     c.count('whiteLanded');
@@ -551,7 +571,7 @@ export function chances(c: Combat): { title: string; rows: [string, string][] }[
   procs.push(['Seal of Righteousness', 'every landed white swing; rolls only for a crit']);
   if (tl.twistOfLight) procs.push(['Twist of Light', 'replacing a seal banks an Echo your next landed swing also applies']);
   if (tl.vengeance) procs.push(['Vengeance after any crit', `+${tl.vengeance}% Physical and Holy per stack, 3 stacks, 30 s`]);
-  if (tl.vindication) procs.push(['Vindication on every landed melee hit', `+${tl.vindication}% attack power, the dummy -${D.vindication.apPerRank * tl.vindication} attack power`]);
+  if (tl.vindication) procs.push(['Vindication per landed swing or melee special (5 a minute)', `${pct(((D.vindication.ppm * w.speed) / 60) * 100)}: +${tl.vindication}% attack power; the dummy -${D.vindication.apPerRank * tl.vindication} attack power if it lands (spell hit)`]);
   if (tl.reckoning) procs.push(['Reckoning: a charge after a block / a crit taken', `${D.reckoning.onBlock * tl.reckoning}% / ${D.reckoning.onCrit * tl.reckoning}% (blocks at most once per 1.5 s); up to ${D.reckoning.charges}, all fired by your next swing`]);
   if (tl.redoubt) procs.push(['Redoubt: +block after a hit taken', `${D.redoubt.chance * tl.redoubt}% for +${D.redoubt.block * tl.redoubt}% block (10 s or 5 blocks)`]);
   if (tl.shieldSpecialization) procs.push([`Shield Specialization: ${D.shieldSpecialization.manaPct * 100}% of your mana on a block`, `${[0, 33, 66, 100][tl.shieldSpecialization]}%, 3 s cooldown`]);

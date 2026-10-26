@@ -374,17 +374,20 @@ export const ABILITIES: Ability[] = [
     requirements: (c) => (c.aura(c.player, 'mongooseReady') ? null : 'Only after the target dodges or after Expose Prey'),
     usable: (c) => !!c.aura(c.player, 'mongooseReady'),
     highlight: (c) => !!c.aura(c.player, 'mongooseReady'),
-    description: (c) => `Normalized weapon damage plus ${D.mongooseBite.bonus}. Usable ${D.mongooseBite.dodgeWindow} sec after the target dodges${T(c).exposePrey ? `, or ${D.mongooseBite.window} sec after Expose Prey (${5 * T(c).exposePrey}% per landed hit on your marked target)` : ''}.${T(c).laceratingStrikes ? ' Lacerating Strikes: it also bleeds for 40% of its damage over 21 sec.' : ''}`,
+    description: (c) => `Normalized weapon damage plus ${D.mongooseBite.bonus}. Usable ${D.mongooseBite.dodgeWindow} sec after the target dodges${T(c).exposePrey ? `, or ${D.mongooseBite.window} sec after Expose Prey (${5 * T(c).exposePrey}% per landed hit on your marked target)` : ''}.${T(c).laceratingStrikes ? ' Lacerating Strikes: it also bleeds for 40% of its damage over 21 sec, plus what the last bleed had left.' : ''}`,
     use: (c, t) => {
       const u = t!;
       c.removeAura(c.player, 'mongooseReady');
       c.count('mongoose');
       const outcome = meleeStrike(c, u, 'mongooseBite', normalizedMelee(c) + D.mongooseBite.bonus);
       if (!landed(outcome) || !T(c).laceratingStrikes) return;
-      const total = (normalizedMelee(c) + D.mongooseBite.bonus) * (1 - c.armorReduction(u)) * D.laceratingStrikes.share;
+      // The running bleed's unticked damage rolls into the new one (MythicSim in game, gs Oct 21).
       const l = D.laceratingStrikes;
+      const old = c.aura(u, 'laceratingStrikes');
+      const unpaid = old ? (old.value ?? 0) * ((old.end - c.t) / old.duration) : 0;
+      const total = (normalizedMelee(c) + D.mongooseBite.bonus) * (1 - c.armorReduction(u)) * l.share + unpaid;
       c.applyAura(u, {
-        id: 'laceratingStrikes', name: 'Lacerating Strikes', icon: 'laceratingStrikes', duration: l.ticks * l.period, period: l.period, bleed: true,
+        id: 'laceratingStrikes', name: 'Lacerating Strikes', icon: 'laceratingStrikes', duration: l.ticks * l.period, period: l.period, bleed: true, value: total,
         onTick: (cc) => {
           const crit = cc.random() * 100 < cc.critChance('laceratingStrikes');
           const amount = Math.max(1, Math.round((total / l.ticks) * (crit ? cc.rules.critMultiplier : 1)));

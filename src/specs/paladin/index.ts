@@ -8,7 +8,7 @@ import { BOSS_RULES, CONTROLS } from '../common';
 import {
   ABILITIES, D, ECHO, SOURCES, T, chances, currentSeal, executePhase, onCooldown, prepare, regen, sealLeft, undeadDummy,
 } from './core';
-import { PROT_STATS, RET_STATS, SHOCK_STATS } from './data';
+import { PROT_STATS, RET_STATS } from './data';
 import { buildLabel, buildsFor, summary, talentsFor, type PaladinSpec } from './talents';
 
 type Row = { label: string; value: string; good?: boolean };
@@ -209,6 +209,16 @@ function shockSuggest(c: Combat): string | null {
   if (!seal) return primary;
   if (!p.autoAttacking && c.inRange(t)) return 'attack';
   if (ready('judgement') && c.inRange(t, D.judgement.range)) return 'judgement';
+  // gunba's Shockadin (Oct 21): Seal of Righteousness kept up, Consecration with mana to spare, Holy Strike before Holy Shock.
+  if (c.options.build === 'shockadin') {
+    if (sealLeft(c) <= 1) return seal;
+    if (ready('consecration') && mana >= 0.2) return 'consecration';
+    if (executePhase(c) && ready('hammerOfWrath')) return 'hammerOfWrath';
+    if (ready('holyStrike') && afford('holyStrike')) return 'holyStrike';
+    if (ready('holyShock') && afford('holyShock') && c.inRange(t, D.holyShock.range)) return 'holyShock';
+    if (potion) return 'manaPotion';
+    return null;
+  }
   // Light's Vigil just before Holy Shock comes back: the marked Shock leaves Holy Shock ready for a second one.
   const marked = !!c.aura(t, 'lightsVigil');
   const shockSoon = c.cooldownLeft('holyShock').left <= D.lightsVigil.cast + D.gcd;
@@ -244,17 +254,17 @@ function shockReview(c: Combat): Row[] {
 export const paladinShock: Spec = specFor('shock', {
   id: 'paladin-shock',
   specName: 'Shockadin',
-  stats: SHOCK_STATS,
-  defaultOptions: { build: 'shock', mana: 4235, spirit: 100, mp5: 0, lockMana: false, undeadDummy: false },
+  stats: RET_STATS,
+  defaultOptions: { build: 'shockadin', mana: 4235, spirit: 100, mp5: 0, lockMana: false, undeadDummy: false },
   options: MANA_OPTIONS,
   sheet: { spellCrit: 'Spell crit (gear + Intellect)', spellPower: 'Spell power (Holy)' },
   lowMana: (c) => c.cost(c.ability('holyShock')!),
-  welcome: 'Welcome to the Shockadin practice yard: a melee paladin with Holy Shock on a 10 sec cooldown. No WoW Forever sim models this build yet, so its talents and priority list are our proposal. Keep Seal of Command up, Judgement, Holy Shock and Holy Strike on cooldown, and save Divine Favor for a sure Holy Shock crit. Light\'s Vigil marks the dummy so your next Holy Shock hits twice and comes back at once.',
+  welcome: 'Welcome to the Shockadin practice yard: a melee paladin with Holy Shock on a 10 sec cooldown. Since Oct 21 gunba\'s sim has a Shockadin (23/0/28): keep Seal of Righteousness up, Judgement, Consecration with mana to spare, then Holy Strike and Holy Shock on cooldown. Our earlier proposals with Light\'s Vigil and Divine Favor are in Settings.',
   help: `${CONTROLS}
     ${HELP_COMMON}
     Holy Shock is a 21-point Holy talent with a 10 sec cooldown in WoW Forever (30 in Classic). Divine Precision gives it 18% hit, Holy Power 15% crit, and Divine Favor makes the next one crit. It costs a lot of mana: practice it as a burst on top of your melee.
     Light's Vigil (the 31-point Holy talent) is a 1.5 sec cast that marks the target: your next Holy Shock on it triggers no cooldown, deals extra Holy damage and refunds 75% of the Vigil's mana. Cast it while Holy Shock is ready, then Shock twice. Its damage is provisional: the sims disagree on whether it adds to Holy Shock or replaces it.
-    The build is our proposal (31/0/20); no sim has one yet. Expect changes, in particular to Light's Vigil. (Since Oct 15 Infusion of Light no longer adds 50% to Holy Shock; these builds never took it.)
+    gunba's Shockadin (Oct 21) keeps Seal of Righteousness up, judges, lays Consecration with mana to spare (Consecrated Ground: your Holy spells +10% on its targets), then Holy Strike and Holy Shock. Our proposals (31/0/20 with Light's Vigil, and a Shock-Ret hybrid) stay in Settings; expect changes to Light's Vigil. (Since Oct 15 Infusion of Light no longer adds 50% to Holy Shock; these builds never took it.)
     This is a practice tool: hit, crit and proc chances follow WoW Forever; damage numbers are an approximation.`,
   look: { clothColor: 0xe8e0c8, leatherColor: 0xb8902e, hood: false, plate: true },
   suggest: shockSuggest,

@@ -38,14 +38,14 @@ const FS_REENCODED = 'foreversim, re-encoded to the Oct 15 tree';
 const OURS = 'our proposal';
 // Mana: 1240 + 15 x Intellect (research → Default stats).
 export const BUILDS: Build[] = [
-  { id: 'elemental', spec: 'elemental', name: 'Elemental', talentString: '5503331000011351-054-05303', source: GS, stats: ELEMENTAL_STATS, bar: ELEMENTAL_BAR, options: { mana: 4376 } },
-  { id: 'elemental-fs', spec: 'elemental', name: 'Elemental with Water Shield', talentString: '3505331000011351-0500001-053050001', source: FS_REENCODED, stats: ELEMENTAL_STATS, bar: ELEMENTAL_BAR, options: { mana: 4376 } },
+  { id: 'elemental', spec: 'elemental', name: 'Elemental', talentString: '5503331000011351-055000001-05301', source: GS, stats: ELEMENTAL_STATS, bar: ELEMENTAL_BAR, options: { mana: 4376 } },
+  { id: 'elemental-fs', spec: 'elemental', name: 'Elemental', talentString: '5500331023001351-053002001-053', source: FS, stats: ELEMENTAL_STATS, bar: ELEMENTAL_BAR, options: { mana: 4376 } },
   { id: 'elemental-60', spec: 'elemental', name: 'Elemental "Level 60"', talentString: '5505331000001351--553302001', source: FS_REENCODED, stats: ELEMENTAL_STATS, bar: ELEMENTAL_BAR, options: { mana: 4376 } },
   { id: 'stormcaller', spec: 'elemental', name: 'Stormcaller (caster hybrid)', talentString: '553233100000034-055030021004002', source: GS, stats: STORMCALLER_STATS, bar: ELEMENTAL_BAR, options: { mana: 4556 } },
   { id: 'stormcaller-fs', spec: 'elemental', name: 'Stormcaller', talentString: '253533100000033-055030030004102', source: FS_REENCODED, stats: STORMCALLER_STATS, bar: ELEMENTAL_BAR, options: { mana: 4556 } },
   { id: 'enhancement', spec: 'enhancement', name: 'Enhancement', talentString: '453203102-053030031005102251', source: GS, stats: ENHANCEMENT_STATS, bar: ENHANCEMENT_BAR, options: { mana: 2623 } },
   { id: 'enhancement-60', spec: 'enhancement', name: 'Enhancement "Level 60"', talentString: '5505031-053030031005112251', source: `${GS} and ${FS}`, stats: ENHANCEMENT_STATS, bar: ENHANCEMENT_BAR, options: { mana: 2623 } },
-  { id: 'enhancement-fs', spec: 'enhancement', name: 'Enhancement', talentString: '2532031-055030030205112251', source: FS_REENCODED, stats: ENHANCEMENT_STATS, bar: ENHANCEMENT_BAR, options: { mana: 2623 } },
+  { id: 'enhancement-fs', spec: 'enhancement', name: 'Enhancement', talentString: '053503102-053030031005112251', source: FS, stats: ENHANCEMENT_STATS, bar: ENHANCEMENT_BAR, options: { mana: 2623 } },
   { id: 'tank', spec: 'tank', name: 'Off-tank (experimental)', talentString: '05350013-050230031355112201', source: OURS, stats: OFFTANK_STATS, bar: TANK_BAR, options: { mana: 2900 }, tank: true },
 ];
 

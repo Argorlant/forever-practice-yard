@@ -8,8 +8,9 @@ played Forever at level 60, a DPS number would only mislead. It works with keybo
 
 **Play it online:** https://argorlant.github.io/forever-practice-yard/
 
-Up to date with the October 15 beta update (client 1.60.1.70425): talent trees, builds and numbers follow the two sims'
-updates for it.
+Up to date with the October 21 server hotfixes (client 1.60.1.70450): talent trees, builds and numbers follow the two
+sims' updates for them. Spells are at the last trainer rank (the Ahn'Qiraj books need raids, which open on 9 December),
+raid buffs too; a boss without resistances resists no spell partly; the Mage's Frost tree lost Piercing Ice.
 > **Speculative, built on the sims.** WoW Forever's beta has closed and the game launches on 4 November 2026. The talents,
 > builds, rotations and numbers here follow the community sims ([wow-forever-sim](https://github.com/gunba/wow-forever-sim) and
 > [foreversim](https://github.com/laurencestokes/foreversim)) and our own reading of the beta, which stopped at level 30, so they
@@ -39,7 +40,8 @@ are in. Sources in [`research/warrior_forever.md`](research/warrior_forever.md).
 
 For **Protection** the dummy hits back (Settings → "The dummy attacks you"): it turns to face you
 and rolls miss, dodge, parry, block, crit and crushing blows against your tank sheet, like the sims'
-level 63 boss. Its hits give rage, blocks and dodges open Revenge, and Shield Block works.
+level 63 boss. Its hits give rage (the rule wowsims/forever fitted to Forever logs: 2.5 x (1 - 40 %) x the hit before
+armor and blocks / 243.6 for a level 63 attacker), blocks and dodges open Revenge, and Shield Block works.
 Your health is locked by default; unlock it to practice Shield Wall
 and Last Stand. To practice Execute, start the dummy at 15 % health and lock it.
 
@@ -96,10 +98,13 @@ fire while Auto Shot is on or a shot is cast, and the melee weapon is put away.
 
 **Melee weaving** is an advanced option for Marksmanship and Beast Mastery (Settings, off by default): Auto Shot and the
 melee swing of your two-handed glaive run together, and the distance decides which one fires. Rings on the ground mark
-melee range and Auto Shot's minimum range, and a cue above the bar says when to step in, Raptor Strike and step out. A
+melee range and Auto Shot's minimum range, and a cue above the bar says when to step in, which melee attack to press
+(Raptor Strike, Mongoose Bite, Strider Kick, Immolation Trap) and when to step out; weaving drops Aimed Shot for Arcane
+Shot and Multi-Shot at range. A
 third setting picks what a melee swing does to Auto Shot: Classic keeps the two timers independent (the default), the Forever
 beta restarts Auto Shot (what it does today, reported as a bug), Wrath links them both ways. The review counts weaves, the Auto Shot time they cost and
-the net damage. Neither sim models weaving, and with the beta rule it gains little.
+the net damage. Since Oct 21 gunba's sim weaves: its SV Weave (its top build) and MM Weave builds, in Settings, shoot from
+12 yards and step to 5 while the next Auto Shot is more than 1.5 s away, with no pet.
 
 The **Priest** comes as two damage specs (sources in [`research/priest_forever.md`](research/priest_forever.md)); pure healers are out of scope:
 
@@ -116,11 +121,12 @@ The **Mage** comes as three specs, with the sims' hybrids as builds (sources in 
 
 - **Arcane** (`?class=mage-arcane`): Arcane Blast stacks (15% of your Intellect as spell damage each, 15 s from the
   first, +175% to its own cost), Arcane Wrath, Arcane Missiles on Missile Barrage and as the filler (each missile rolls
-  its own hit, crit and procs), Clearcasting, Arcane Power and Presence of Mind.
+  its own hit and crit; since Oct 21 they proc neither Clearcasting nor Missile Barrage), Arcane Power and Presence of Mind.
 - **Fire** (`?class=mage-fire`): Heating Up (direct crits and every Fire Blast make the next Pyroblast up to 1.5 s), rolling Ignite, Fire Power,
   personal Fire Vulnerability from Scorch, Fire Blast and Combustion; Scorch, Fireball or Frostfire Bolt as the filler.
 - **Frost** (`?class=mage-frost`): Frostbolt, Fingers of Frost charges for Ice Lance x3 and Shatter, Winter's Chill
-  stacks for Cone of Cold within 10 yards, and Arcane Missiles and Arcane Blast for the Arcane-Frost build.
+  stacks (from Frostbolt and Fingers of Frost Ice Lances) for Cone of Cold within 10 yards, Ice Barrier and Frigid Power
+  (+3% Frost damage each), and Arcane Missiles and Arcane Blast for the Arcane-Frost build.
 
 Mage Armor and Arcane Meditation keep Spirit regen while casting; Evocation, Mana Ruby and potions are on the bar.
 
@@ -210,7 +216,8 @@ keys, Shift, Ctrl and Alt combine with them, and a bound direction no longer zoo
 as in WoW: binding it somewhere unbinds it elsewhere (bind A and D to strafe and they stop turning). Holding both mouse
 buttons runs forward. As in WoW, a press in the last 0.4 s of a cast or the global cooldown is queued and goes off the
 moment it ends. On-next-swing attacks (Heroic Strike, Cleave, Maul, Raptor Strike) keep a gold frame with a light
-running around it from the press until the swing lands, and the button flashes when it does.
+running around it from the press until the swing lands, and the button flashes when it does; as in Forever, pressing
+one again does not cancel it.
 
 **Spell effects.** Spells and blows have their own look: fire, frost, shadow, arcane, holy and nature missiles
 with trails and impacts that show the crit, Lightning Bolt as a real bolt, arrows and gun tracers, weapon trails

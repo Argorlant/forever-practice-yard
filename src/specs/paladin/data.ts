@@ -8,16 +8,17 @@ import type { Stats } from '../../engine/types';
 /**
  * Retribution: gs's ranked Ret sheet (Undead, modeled ilvl 65 gear), unbuffed.
  * Stats are gear + Agility + Strength; talents (Conviction, Precision) go on
- * top. Spell power already counts Champion of the Light (30 % of 200 Int since
- * Oct 15, was 60 %). gs re-geared Ret toward Strength and crit after the patch;
- * this is still the earlier Int and spell power sheet.
+ * top. Spell power already counts Champion of the Light (60 % of 200 Int: 30 %
+ * from Oct 15, 60 % again since a server hotfix on Oct 21). gs re-geared Ret
+ * toward Strength and crit after the patch; this is still the earlier Int and
+ * spell power sheet.
  */
 export const RET_STATS: Stats = {
   attackPower: 736,
   crit: 17.4,       // 22.4 on the sheet minus Conviction 5
   hit: 14.4,        // gear (Precision adds 2)
   spellCrit: 20.1,
-  spellPower: 198,  // 138 + Champion of the Light 3/3 (30 % of 200 Int, Oct 15)
+  spellPower: 258,  // 138 + Champion of the Light 3/3 (60 % of 200 Int, Oct 21 hotfix)
   mainHand: { name: 'Two-handed spell mace', type: 'mace', min: 187, max: 281, speed: 3.8, twoHand: true },
   offHand: null,
 };
@@ -55,8 +56,9 @@ export const DATA = {
   refund: 0.8,                // provisional: avoided Holy Strike refunds 80 %
   // Seals: 30 s, 1.5 s GCD, one at a time. Judgement does not use them up.
   sealDuration: 30,
-  // Oct 15: the seal took its spell power coefficient twice (gs sor.go); now 0.1, x1.1 with a two-hander.
-  sealOfRighteousness: { mana: 200, perSpeed: 18.8, twoHand: 1.2, oneHand: 0.85, coeff2h: 0.11, coeff1h: 0.1 },
+  // Per hit, measured on 18 weapons (gs Oct 21): x1.2 per second of speed with a two-hander (0.12 of spell power);
+  // one-handed x(0.85 - 0.2 x the speed below 2.0) (0.10 of spell power).
+  sealOfRighteousness: { mana: 200, perSpeed: 18.8, twoHand: 1.2, oneHand: 0.85, oneHandSlow: 0.2, coeff2h: 0.12, coeff1h: 0.1 },
   sealOfCommand: { mana: 210, ppm: 7, icd: 1, weapon: 0.7, coeff: 0.203 },
   sealOfFury: { mana: 200, damage: 35, coeff: 0.1, absorb: 0.5, absorbDuration: 30 },
   judgement: { mana: Math.round(BASE_MANA * 0.06), cooldown: 10, range: 10 },
@@ -65,7 +67,9 @@ export const DATA = {
   judgementOfFury: { min: 153, max: 167, coeff: 0.429, taunt: 4 },   // Oct 15: an instant's coefficient (was 0.45)
   judgementOfTheCrusader: 161, // Holy damage taken, scaled by each spell's coefficient
   holyStrike: { mana: 20, cooldown: 10, min: 81, max: 105, percent: 0.5, coeff: 0.429 * 0.5 },
-  consecration: { mana: 565, cooldown: 8, ticks: 8, all: 12, first4: 27, coeff: 0.042 },   // Oct 15: 0.042 per tick (was 0.095)
+  consecration: { mana: 565, cooldown: 8, ticks: 8, all: 12, first4: 27, coeff: 0.042 },   // Oct 15: 0.042 per tick (was 0.095); ticks can crit (Oct 21)
+  // Consecrated Ground: your Holy spells +5 % per point against the first 4 enemies in your Consecration, until 0.6 s after its last tick.
+  consecratedGround: { perPoint: 0.05, targets: 4, duration: 8.6 },
   exorcism: { mana: 345, cooldown: 15, min: 474, max: 530, coeff: 0.429, range: 30 },
   hammerOfWrath: { mana: 425, cooldown: 6, gcd: 1, cast: 1, min: 473, max: 523, coeff: 0.429, range: 30, threshold: 0.2 },
   holyShield: { mana: 240, cooldown: 10, duration: 10, block: 30, charges: 4, damage: 221, coeff: 0.08, threat: 1.2 },
@@ -80,7 +84,8 @@ export const DATA = {
   manaPotion: { min: 1350, max: 2250, cooldown: 120 },
   // Procs and passives
   vengeance: { duration: 30, stacks: 3 },
-  vindication: { apPerRank: 68, duration: 30 },
+  // Oct 21 (Forever logs): 5 procs a minute from swings and melee specials; the dummy's debuff rolls spell hit.
+  vindication: { apPerRank: 68, duration: 30, ppm: 5 },
   // Oct 15, Classic again: a block (at most once per 1.5 s) or a crit taken stores a charge, up to 4; your next swing fires them all.
   reckoning: { onBlock: 8, onCrit: 20, icd: 1.5, charges: 4 },
   redoubt: { chance: 2, block: 4, duration: 10, blocks: 5 },

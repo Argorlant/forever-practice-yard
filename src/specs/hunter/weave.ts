@@ -76,7 +76,8 @@ export function weaveCue(c: Combat): { text: string; tone: 'go' | 'hit' | 'back'
 
   if (c.inRange(u)) {
     if (!swung && !late) {
-      if (raptorReadyIn(c) === 0 && raptorAffordable(c) && c.queuedSwing !== 'raptorStrike') return { text: 'Raptor Strike', tone: 'hit' };
+      const id = meleeAttack(c);
+      if (id) return { text: c.ability(id)!.name, tone: 'hit' };
       return { text: 'Swing…', tone: 'hit' };
     }
     return { text: 'Step out', tone: 'back' };
@@ -90,8 +91,6 @@ export function weaveCue(c: Combat): { text: string; tone: 'go' | 'hit' | 'back'
   // The melee swing must be ready when you arrive (a 3.2 sec glaive swings rarely).
   if (c.swingLeft('main').left > travelIn + 0.3) return null;
   const window = travelIn + 0.15 + travelOut + 0.25;
-  // A cast is worth more than a weave: Aimed Shot stays at range when it comes up.
-  if (c.cooldownLeft('aimedShot').left < window && c.cost(c.ability('aimedShot')!) <= c.player.resource) return null;
   const go = { text: 'Step in', tone: 'go' as const };
   // Raptor Strike (~300 damage) is worth a late shot: go right after a shot leaves, under every rule.
   if (raptorReadyIn(c) <= travelIn && raptorAffordable(c)) return c.t - s.lastShot <= 0.6 ? go : null;
@@ -99,11 +98,21 @@ export function weaveCue(c: Combat): { text: string; tone: 'go' | 'hit' | 'back'
   return c.autoShotReset === 'classic' && toShot >= window ? go : null;
 }
 
-/** In melee the glow shows Raptor Strike; in the dead zone nothing; at range the usual list. */
+/** What to press in melee, in gs's weave order (Oct 21): Raptor Strike, Mongoose Bite, Strider Kick, Immolation Trap. */
+function meleeAttack(c: Combat): string | null {
+  if (raptorReadyIn(c) === 0 && raptorAffordable(c) && c.queuedSwing !== 'raptorStrike') return 'raptorStrike';
+  for (const id of ['mongooseBite', 'striderKick', 'immolationTrap']) {
+    const a = c.ability(id);
+    if (a && c.cooldownLeft(id).left === 0 && (a.usable?.(c) ?? true) && c.cost(a) <= c.player.resource) return id;
+  }
+  return null;
+}
+
+/** In melee the glow shows the melee attack to press; in the dead zone nothing; at range the usual list. */
 export function weaveSuggest(c: Combat, atRange: (c: Combat) => string | null): string | null {
   const u = c.target;
   if (!c.weaving || !u || u.health <= 0) return atRange(c);
-  if (c.inRange(u)) return raptorReadyIn(c) === 0 && raptorAffordable(c) && c.queuedSwing !== 'raptorStrike' ? 'raptorStrike' : null;
+  if (c.inRange(u)) return meleeAttack(c);
   if (!c.inRangedRange(u)) return null;
   return atRange(c);
 }

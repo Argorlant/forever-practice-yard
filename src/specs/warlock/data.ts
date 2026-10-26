@@ -34,9 +34,10 @@ export const DATA = {
   gcd: 1.5,
   baseMana: BASE_MANA,
   spellMiss: 17,
-  shadowBolt: { mana: 380, cast: 3, min: 253, max: 283, coeff: 0.857, speed: 20 },
-  immolate: { mana: 380, cast: 2, direct: 158, coeff: 0.2, tick: 55, tickCoeff: 0.13, ticks: 5, period: 3 },
-  corruption: { mana: 340, cast: 2, tick: 73, coeff: 0.2, ticks: 6, period: 3 },
+  // Trainer ranks since Oct 21 (gs): Shadow Bolt 10, Immolate 8 and Corruption 7 are Ahn'Qiraj books, and raids open on 9 December.
+  shadowBolt: { mana: 370, cast: 3, min: 237, max: 265, coeff: 0.857, speed: 20 },   // rank 9
+  immolate: { mana: 370, cast: 2, direct: 146, coeff: 0.2, tick: 52, tickCoeff: 0.13, ticks: 5, period: 3 },   // rank 7
+  corruption: { mana: 290, cast: 2, tick: 57, coeff: 0.2, ticks: 6, period: 3 },   // rank 6
   baneOfAgony: { mana: 215, ticks: 12, period: 2, blocks: [23, 46, 69], coeff: 0.133 },
   baneOfDoom: { mana: 300, cooldown: 60, delay: 60, damage: 1742, coeff: 4 },
   curseOfTheElements: { mana: 200, duration: 300 },

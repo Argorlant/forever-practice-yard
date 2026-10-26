@@ -111,7 +111,7 @@ export const BUILDS: Build[] = [
   { id: 'combat-backstab', name: 'Combat Backstab', source: GS, talentString: '005302005-30230320201515231-102', rotation: 'backstab', stats: DAGGER_STATS, bar: BACKSTAB_BAR },
   { id: 'mutilate-gs', name: 'Mutilate', source: GS, talentString: '0053031035140105-302303202014', rotation: 'mutilate', stats: DAGGER_STATS, bar: MUTILATE_BAR },
   { id: 'mutilate-fs', name: 'Mutilate', source: FS, talentString: '00530310551021051-302303202004', rotation: 'mutilate', stats: DAGGER_STATS, bar: MUTILATE_BAR },
-  { id: 'hemo-gs', name: 'Subtlety Hemorrhage', source: GS, talentString: '115303101104--5320003310013211501', rotation: 'hemorrhage', stats: DAGGER_STATS, bar: HEMO_BAR },
+  { id: 'hemo-gs', name: 'Subtlety Hemorrhage', source: GS, talentString: '005303103104--5320003310013211501', rotation: 'hemorrhage', stats: DAGGER_STATS, bar: HEMO_BAR },
   { id: 'hemo-fs', name: 'Subtlety Hemorrhage', source: FS, talentString: '125320101--5320003310013211551', rotation: 'hemorrhage', stats: DAGGER_STATS, bar: HEMO_BAR },
 ];
 

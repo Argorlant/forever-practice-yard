@@ -870,11 +870,13 @@ for (const sp of [shamanElemental, shamanEnhancement, shamanTank]) {
   const k = r.c.counters;
   const wf = r.c.meter.rows.get('windfuryWeapon');
   const totemSwings = r.c.meter.rows.get('melee_mh');
-  console.log(`Enhancement with locked mana: ${r.c.dps().toFixed(0)} DPS, ${k.windfury ?? 0} Windfury procs (${(wf?.hits ?? 0) + (wf?.misses ?? 0)} attacks), ${k.maelstromBolts ?? 0} 5-stack Lightning Bolts, ${k.stormstrikeCharges ?? 0} Stormstrike charges spent, ${k.clearcasting ?? 0} Clearcasting`);
+  console.log(`Enhancement with locked mana: ${r.c.dps().toFixed(0)} DPS, ${k.windfury ?? 0} Windfury procs (${(wf?.hits ?? 0) + (wf?.misses ?? 0)} attacks), ${k.maelstromBolts ?? 0} 5-stack Lightning Bolts, ${k.stormstrikeCharges ?? 0} Stormstrike charges spent and ${k.stormstrikeShocks ?? 0} Earth Shocks with the bonus, ${k.clearcasting ?? 0} Clearcasting`);
   if ((wf?.hits ?? 0) + (wf?.misses ?? 0) !== 2 * (k.windfury ?? 0)) failures.push('Windfury Weapon did not give two attacks per proc');
   if (!(k.windfury > 20)) failures.push('Windfury Weapon barely procced');
   if (!(k.maelstromBolts > 10)) failures.push('Enhancement cast few 5-stack Lightning Bolts');
-  if (!(k.stormstrikeCharges > 20)) failures.push('Stormstrike charges were rarely spent');
+  // Since Oct 21 Earth Shock takes the bonus without spending the charge: bolts spend it.
+  if (!(k.stormstrikeCharges + k.stormstrikeShocks > 20)) failures.push('Stormstrike charges were rarely used');
+  if (!(k.stormstrikeShocks > 5)) failures.push('Earth Shock never took the Stormstrike bonus');
   if (!totemSwings) failures.push('no melee swings');
   const ft = play(shamanEnhancement, { build: 'enhancement', options: { lockMana: true, imbue: 'flametongue' }, raid: [] });
   const ftRow = ft.c.meter.rows.get('flametongueWeapon');

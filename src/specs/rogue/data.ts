@@ -66,8 +66,9 @@ export const DATA = {
   sprintSpeed: 1.7,       // confirmed: +70 %
   relentlessEnergy: 25,
   sinisterStrike: { cost: 45, bonus: 68 },
-  backstab: { cost: 60, percent: 1.5, bonus: 150 },  // provisional: the tooltip says "plus 150", Classic said 225
-  eviscerate: { cost: 35, min: 54, max: 162, perCp: 170, apPerCp: 0.03 },  // AP share provisional (Classic)
+  // Trainer ranks since Oct 21 (both sims): Backstab 9, Eviscerate 9 and Deadly Poison V are Ahn'Qiraj books, and raids open on 9 December.
+  backstab: { cost: 60, percent: 1.5, bonus: 140 },  // rank 8 (rank 9's tooltip says "plus 150"; Classic said 225)
+  eviscerate: { cost: 35, min: 48, max: 144, perCp: 151, apPerCp: 0.03 },  // rank 8; AP share provisional (Classic)
   sliceAndDice: { cost: 25, base: 6, perCp: 3, haste: 0.3 },
   rupture: { cost: 25, tick: 35, tickPerCp: 4.73, apPerTick: [0.01, 0.02, 0.03, 0.03, 0.03], period: 2 },
   exposeArmor: { cost: 25, perCp: 450, duration: 30 },
@@ -87,7 +88,7 @@ export const DATA = {
   coldBlood: { cooldown: 180 },
   thistleTea: { energy: 100, cooldown: 300 },
   instantPoison: { chance: 20, min: 76, max: 100, ap: 0.005 },
-  deadlyPoison: { chance: 30, tick: 23, period: 3, duration: 12, maxStacks: 5 },
+  deadlyPoison: { chance: 30, tick: 18, period: 3, duration: 12, maxStacks: 5 },   // Deadly Poison IV
   hackAndSlashIcd: 0.2,
   mutilate: { cost: 60, bonus: 67, percent: 0.75, poisonedBonus: 0.2 },
   hemorrhage: { cost: 35, percent: 1, daggerPercent: 1.45, duration: 15, ruptureBonus: 0.15 },

@@ -53,11 +53,12 @@ export const DATA = {
   aimedShot: { mana: 310, cast: 2, cooldown: 6, bonus: 166 },
   multiShot: { mana: Math.round(BASE_MANA * 0.139), cast: 0, cooldown: 6, targets: 3 },   // instant since client 70425 (gs; testers fire it on the move)
   arcaneShot: { mana: 190, cooldown: 6, damage: 217, rap: 0.11 },          // RAP share: fs from beta logs (gs none)
-  serpentSting: { mana: 250, ticks: 5, period: 3, tick: 111, rap: 0.035 }, // RAP share per tick: fs
+  // Rank 8 (gs Oct 21): rank 9 is an Ahn'Qiraj book, and raids open on 9 December. RAP: the Forever notes' 10 % over the sting (fs; gs 3 % a tick).
+  serpentSting: { mana: 230, ticks: 5, period: 3, tick: 83, rap: 0.02 },
   sniperShot: { mana: 365, cast: 4, cooldown: 15, bonus: 295, range: 45 },
-  huntersMark: { mana: 60, duration: 120, rap: 71 },
+  huntersMark: { mana: 60, duration: 120, rap: 143 },   // rank 4: 143 since a server hotfix (was 71, below rank 3's 98)
   rapidFire: { mana: 100, cooldown: 300, duration: 15, haste: 0.4 },
-  aspectOfTheHawk: { mana: 120, rap: 120 },
+  aspectOfTheHawk: { mana: 120, rap: 55 },   // rank 6 (gs Oct 21): 55 in the client, rank 5 is 90; rank 7's 120 is an Ahn'Qiraj book
   aspectOfTheBeast: { mana: 110, ap: 110 },
   trueshotAura: { mana: 425, rap: 75 },
   bestialWrath: { mana: Math.round(BASE_MANA * 0.12), cooldown: 120, duration: 18, damage: 1.5 },
@@ -67,8 +68,8 @@ export const DATA = {
   mongooseBite: { mana: 65, cooldown: 5, bonus: 57, window: 10, dodgeWindow: 5 },
   striderKick: { mana: Math.round(BASE_MANA * 0.0581), cooldown: 8 },
   wingClip: { mana: 80, damage: 50 },
-  // Oct 15: Fire traps scale with attack power (gs, provisional: 10 % of the higher of AP and RAP, fixed when placed).
-  immolationTrap: { mana: 245, cooldown: 30, total: 690, ticks: 5, period: 3, apShare: 0.1 },
+  // Fire traps scale with 13 % of the higher of attack power and ranged attack power, fixed when placed (MythicSim in game, gs Oct 21).
+  immolationTrap: { mana: 245, cooldown: 30, total: 690, ticks: 5, period: 3, apShare: 0.13 },
   laceratingStrikes: { share: 0.4, ticks: 7, period: 3 },
   quickShots: { haste: 0.3, duration: 12 },
   manaPotion: { min: 1350, max: 2250, cooldown: 120 },

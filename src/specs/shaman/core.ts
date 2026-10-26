@@ -75,7 +75,8 @@ function spellMult(c: Combat, t: Unit, id: string): number {
 
 /**
  * One spell hit: 17 % miss minus hit, crit, Elemental Fury's crit damage. The Stormstrike
- * charge adds 20 % to your next Lightning Bolt, Chain Lightning or Earth Shock (not an Overload copy).
+ * charge adds 20 % to your next Lightning Bolt, Chain Lightning or Earth Shock (not an Overload copy);
+ * Earth Shock takes the bonus without spending the charge (MythicSim in game, gs Oct 21).
  */
 function spellHit(c: Combat, t: Unit, id: string, school: School, base: number, coeff: number,
   opts: { charge?: boolean; scale?: number; direct?: boolean } = {}): { outcome: Outcome; amount: number } {
@@ -86,8 +87,10 @@ function spellHit(c: Combat, t: Unit, id: string, school: School, base: number, 
     let m = spellMult(c, t, id) * (opts.scale ?? 1);
     if (opts.charge && c.aura(t, 'stormstrike')) {
       m *= 1 + D.stormstrike.bonus;
-      c.removeAura(t, 'stormstrike');
-      c.count('stormstrikeCharges');
+      if (id !== 'earthShock') {
+        c.removeAura(t, 'stormstrike');
+        c.count('stormstrikeCharges');
+      } else c.count('stormstrikeShocks');
     }
     amount = Math.max(1, Math.round((base + coeff * c.spellPowerFor(school)) * m
       * (outcome === 'crit' ? elementalFury(c) : 1)));
@@ -300,7 +303,7 @@ export const ABILITIES: Ability[] = [
     id: 'stormstrike', name: 'Stormstrike', icon: 'stormstrike', gcd: D.gcd, target: 'enemy', range: 'melee',
     cost: cost('stormstrike', D.stormstrike.mana), cooldown: D.stormstrike.cooldown,
     ...talent('stormstrike', 'Stormstrike'),
-    description: (c) => `Instant: a main-hand weapon hit. Your next Lightning Bolt, Chain Lightning or Earth Shock within 12 sec deals 20% more (personal); a spell that misses keeps the charge.${T(c).improvedStormstrike ? ` Improved Stormstrike: ${50 * T(c).improvedStormstrike}% chance to keep 50% of your Spirit regen while casting for 15 sec.` : ''} 8 sec cooldown.`,
+    description: (c) => `Instant: a main-hand weapon hit. Your next Lightning Bolt or Chain Lightning within 12 sec deals 20% more (personal); Earth Shocks in the meantime get the 20% too and keep the charge, and a spell that misses keeps it.${T(c).improvedStormstrike ? ` Improved Stormstrike: ${50 * T(c).improvedStormstrike}% chance to keep 50% of your Spirit regen while casting for 15 sec.` : ''} 8 sec cooldown.`,
     use: (c, t) => {
       const u = t!;
       const outcome = c.rollSpecial(u, 'stormstrike');
