@@ -3,8 +3,8 @@
 // Every call fails soft (private windows, blocked storage): the yard then
 // keeps its own models.
 export interface StoredModel {
-  /** The files as loaded: a .glb, or a .gltf with its .bin and textures. */
-  files: { name: string; type: string; data: Blob }[];
+  /** The files as loaded: a .glb, a .gltf with its .bin and textures, or what a map export's zone uses (paths kept). */
+  files: { name: string; type?: string; data: Blob }[];
   label: string;
   /** Quarter turns to face the way the yard expects. */
   rotation: number;

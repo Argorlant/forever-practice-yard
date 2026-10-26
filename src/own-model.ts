@@ -4,6 +4,7 @@
 // optional and the yard's own stay the default. The files stay in this browser
 // (src/ui/model-store.ts); the site never sends or hosts them.
 import { loadModelSource, type ModelFile, type ModelSource } from './scene/custom-model';
+import { isMapExport, loadMapSource } from './scene/wow-map';
 import { deleteModel, getModel, putModel, type StoredModel } from './ui/model-store';
 
 const EXPORT_LINK = '<a href="https://github.com/Kruithne/wow.export" target="_blank" rel="noopener">wow.export</a>';
@@ -38,7 +39,7 @@ export class OwnModel {
     getModel(slot.key).then(async (s) => {
       if (!s) return;
       this.stored = s;
-      await this.build(s.files);
+      await this.build(s.files, true);
     }).finally(() => { this.busy = false; this.draw(); this.onChange(); });
   }
 
@@ -53,14 +54,24 @@ export class OwnModel {
     void putModel(this.slot.key, this.stored);
   }
 
-  private async build(files: ModelFile[]): Promise<boolean> {
+  /** Reads the files; returns the ones to keep (a map export keeps only what the zone uses) and a label, or null. */
+  private async build(files: ModelFile[], restoring = false): Promise<{ keep: ModelFile[]; label: string | null } | null> {
     try {
+      if (this.slot.kind === 'place' && isMapExport(files)) {
+        const map = await loadMapSource(files, restoring);
+        this.source?.dispose();
+        this.source = map.source;
+        const mb = map.keep.reduce((n, f) => n + f.data.size, 0) / 1e6;
+        this.status = [this.describe(map.source), `${mb.toFixed(0)} MB kept in this browser.`, ...map.notes].join(' ');
+        this.error = false;
+        return { keep: map.keep, label: map.label };
+      }
       const source = await loadModelSource(files);
       this.source?.dispose();
       this.source = source;
       this.status = this.describe(source);
       this.error = false;
-      return true;
+      return { keep: files, label: null };
     } catch (err) {
       console.error(err);
       const msg = err instanceof Error ? err.message : String(err);
@@ -71,7 +82,7 @@ export class OwnModel {
       this.status = lost ? `It needs ${name}: choose it together with the .gltf (select all of the export's files at once).`
         : `Could not read this model: ${msg}`;
       this.error = true;
-      return false;
+      return null;
     }
   }
 
@@ -81,8 +92,9 @@ export class OwnModel {
     if (this.slot.kind === 'place') {
       let triangles = 0;
       source.scene.traverse((o) => {
-        const g = (o as { geometry?: { index: { count: number } | null; attributes: { position: { count: number } } } }).geometry;
-        if (g) triangles += (g.index ? g.index.count : g.attributes.position.count) / 3;
+        const m = o as { geometry?: { index: { count: number } | null; attributes: { position: { count: number } } }; isInstancedMesh?: boolean; count?: number };
+        const g = m.geometry;
+        if (g) triangles += ((g.index ? g.index.count : g.attributes.position.count) / 3) * (m.isInstancedMesh ? m.count ?? 1 : 1);
       });
       return `${Math.round(triangles).toLocaleString('en')} triangles. Walk to where the dummy should stand and press Put the dummy here.${files}`;
     }
@@ -96,17 +108,19 @@ export class OwnModel {
     return (missing.length ? `${text} Not found: ${missing.join(', ')}; there it uses the closest one it has, or none.` : text) + files;
   }
 
+  /** Files picked, dropped, or from a folder (named by their path in it, as a map export needs). */
   private async load(list: File[]): Promise<void> {
     if (!list.length || this.busy) return;
     this.busy = true;
-    this.status = 'Reading the model…';
+    this.status = list.length > 20 ? `Reading ${list.length} files…` : 'Reading the model…';
     this.error = false;
     this.draw();
-    const files = list.map((f) => ({ name: f.name, type: f.type, data: f as Blob }));
-    if (await this.build(files)) {
-      const main = files.find((f) => /\.gl(b|tf)$/i.test(f.name))!;
+    const files = list.map((f) => ({ name: pathOf(f), type: f.type, data: f as Blob }));
+    const built = await this.build(files);
+    if (built) {
+      const main = files.find((f) => /\.gl(b|tf)$/i.test(f.name));
       const turns = this.slot.kind === 'figure' ? this.source!.defaultTurns : 0;
-      this.stored = { files, label: main.name, rotation: turns, enabled: true };
+      this.stored = { files: built.keep, label: built.label ?? main?.name ?? 'model', rotation: turns, enabled: true };
       if (!(await putModel(this.slot.key, this.stored))) {
         this.status += ' This browser would not keep it (a private window, or no room), so it lasts until you reload.';
       }
@@ -167,6 +181,18 @@ export class OwnModel {
     input.addEventListener('change', () => void this.load([...(input.files ?? [])]));
     pick.append(input);
     buttons.append(pick);
+    if (this.slot.kind === 'place') {
+      // A zone: wow.export's export folder, with the tiles and every model they place.
+      const folder = el('label', 'hud-btn small file-btn', 'Load a map folder…');
+      folder.title = "wow.export's export folder (its Settings → Export Directory)";
+      const dirInput = document.createElement('input');
+      dirInput.type = 'file';
+      dirInput.webkitdirectory = true;
+      dirInput.disabled = this.busy;
+      dirInput.addEventListener('change', () => void this.load([...(dirInput.files ?? [])]));
+      folder.append(dirInput);
+      buttons.append(folder);
+    }
     if (s && this.source) {
       const turn = el('button', 'hud-btn small', 'Turn 90°');
       turn.title = this.slot.kind === 'place' ? 'Turn the place around the dummy' : 'If it faces sideways or away';
@@ -194,9 +220,37 @@ export class OwnModel {
     box.ondrop = (e) => {
       e.preventDefault();
       box.classList.remove('drop');
-      void this.load([...(e.dataTransfer?.files ?? [])]);
+      if (e.dataTransfer) void droppedFiles(e.dataTransfer).then((list) => this.load(list));
     };
   }
+}
+
+/** A file's path in the folder it was picked from (or just its name). */
+const paths = new WeakMap<File, string>();
+const pathOf = (f: File) => paths.get(f) || f.webkitRelativePath || f.name;
+
+/** Files dropped, folders included (walked through, keeping each file's path). */
+async function droppedFiles(dt: DataTransfer): Promise<File[]> {
+  const entries = [...dt.items].map((i) => i.webkitGetAsEntry?.()).filter((e): e is FileSystemEntry => !!e);
+  if (!entries.some((e) => e.isDirectory)) return [...dt.files];
+  const out: File[] = [];
+  const walk = async (entry: FileSystemEntry): Promise<void> => {
+    if (entry.isFile) {
+      const file = await new Promise<File>((ok, fail) => (entry as FileSystemFileEntry).file(ok, fail));
+      paths.set(file, entry.fullPath.replace(/^\//, ''));
+      out.push(file);
+      return;
+    }
+    const reader = (entry as FileSystemDirectoryEntry).createReader();
+    // A directory reader hands out its entries in batches until an empty one.
+    for (;;) {
+      const batch = await new Promise<FileSystemEntry[]>((ok, fail) => reader.readEntries(ok, fail));
+      if (!batch.length) break;
+      for (const e of batch) await walk(e);
+    }
+  };
+  for (const e of entries) await walk(e);
+  return out;
 }
 
 /** The Settings section: what these are, then one part per slot. */

@@ -215,10 +215,14 @@ GLB from the arrow next to its Export button:
 - **Cat and Bear Form:** the Models tab, `creature/druidcat/druidcat.m2` and `creature/druidbear/druidbear.m2` (Tauren:
   `druidcattauren.m2`, `druidbeartauren.m2`).
 - **Training dummy:** `creature/object/woodendummy.m2`; it plays its own wounds when hit, a bigger one on a crit.
-- **The yard:** a building, an arena or a raid room from the Models tab's WMO filter, such as
-  `stranglegladiatorarena.wmo` (the Gurubashi Arena). You walk on its floors (stairs and ramps too); where it has none,
-  such as an arena pit that is the map's ground, the grass stands in. Walk to a spot and press Put the dummy here to set
-  the dummies there.
+- **The yard:** a zone or a building. For a zone, Shift+click map tiles in the Maps tab (Goldshire is Azeroth 31, 49)
+  and Export OBJ, then press Load a map folder… and pick wow.export's export folder (your browser may call it an
+  upload; nothing leaves your computer). The terrain, its trees and props and its buildings with their furniture are
+  placed as wow.export's Blender importer places them, trees and props drawn as instances; a whole city such as
+  Stormwind is left out (too big for a browser), and only the files the zone uses are kept. For a building, an arena or
+  a raid room, export a WMO from the Models tab as GLB, such as `stranglegladiatorarena.wmo` (the Gurubashi Arena).
+  You walk on the ground and the floors (stairs and ramps too); where a building has none, such as an arena pit that is
+  the map's ground, the grass stands in. Walk to a spot and press Put the dummy here to set the dummies there.
 
 WoW's animation names (wow.export's "Run (ID 5 variation 0)", Attack1H, SpellCastDirected, AttackBow…, or their
 AnimationData numbers) are matched to what you do; abilities with an animation of their own use it (Claw, Rake, Rip,
@@ -250,7 +254,7 @@ Then open http://127.0.0.1:5180.
 | --- | --- |
 | `src/engine` | The combat engine, shared by every class: event clock, smooth regeneration, GCD and spell queue, casts, cooldowns, auras, dual-wield auto attacks, attack and spell tables, armor, the attacking dummy, raid buffs and debuffs (`raid.ts`). |
 | `src/specs/<class>` | One class (`rogue`, `warrior`, `druid`, `paladin`, `hunter`, `priest`, `mage`, `warlock`, `shaman`): `data.ts` holds every number with its source; `talents.ts` the sims' builds; the spec files define abilities, procs and the priority list. |
-| `src/scene` | The 3D yard (three.js): world, dummy, character, WoW-style controls and spell effects; `custom-model.ts` and `custom-place.ts` draw models and places of your own (wired in `src/own-model.ts`). |
+| `src/scene` | The 3D yard (three.js): world, dummy, character, WoW-style controls and spell effects; `custom-model.ts`, `custom-place.ts` and `wow-map.ts` draw models, places and zones of your own (wired in `src/own-model.ts`). |
 | `src/ui` | HUD, action bar, floating combat text, rotation panel and settings. |
 | `research` | Sourced notes on each spec's WoW Forever mechanics. |
 

@@ -8,8 +8,11 @@ export interface World {
   camera: THREE.PerspectiveCamera;
   update(dt: number, t: number): void;
   resize(): void;
-  /** Shows or hides the yard built in code (fence, pines, torches, the flagstones), for a place of the player's own; the grass stays as the ground under it. */
-  setEnvironment(visible: boolean): void;
+  /**
+   * Shows or hides the yard built in code (fence, pines, torches, the flagstones), for a place of the
+   * player's own; the grass stays as the ground under it unless the place has terrain of its own.
+   */
+  setEnvironment(visible: boolean, grass?: boolean): void;
 }
 
 /** Seeded pseudo-random numbers, so the yard always looks the same. */
@@ -362,8 +365,9 @@ export function createWorld(container: HTMLElement): World {
 
   return {
     renderer, scene, camera, resize,
-    setEnvironment(visible) {
+    setEnvironment(visible, grass = true) {
       env.visible = visible;
+      ground.visible = visible || grass;
       // Just under a place's own floors, so they do not flicker against it.
       ground.position.y = visible ? 0 : -0.04;
     },

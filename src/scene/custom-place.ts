@@ -18,24 +18,31 @@ export class CustomPlace {
   /** The spot of the model under the dummies, in the model's own units. */
   anchor: THREE.Vector3;
   readonly triangles: number;
+  /** A zone brings its own terrain; a building or an arena may stand on the yard's grass. */
+  readonly hasGround: boolean;
 
   constructor(source: ModelSource, anchor: number[] | null, quarterTurns: number) {
     const scene = source.scene.clone();
     let triangles = 0;
+    let hasGround = false;
     scene.traverse((o) => {
       const m = o as THREE.Mesh;
       if (!m.isMesh) return;
       m.castShadow = true;
       m.receiveShadow = true;
       const index = m.geometry.index;
-      triangles += (index ? index.count : m.geometry.attributes.position.count) / 3;
-      if ((m as THREE.SkinnedMesh).isSkinnedMesh) return;
+      const copies = (m as THREE.InstancedMesh).isInstancedMesh ? (m as THREE.InstancedMesh).count : 1;
+      triangles += ((index ? index.count : m.geometry.attributes.position.count) / 3) * copies;
+      if (m.name === 'ground') hasGround = true;
+      // Trees and props are not floors (nor is anything that moves).
+      if ((m as THREE.SkinnedMesh).isSkinnedMesh || copies > 1 || (m as THREE.InstancedMesh).isInstancedMesh) return;
       // Floors to walk on: a bounding volume tree makes each look-down a few microseconds.
       if (!m.geometry.boundsTree) m.geometry.boundsTree = new MeshBVH(m.geometry);
       m.raycast = acceleratedRaycast;
       this.floors.push(m);
     });
     this.triangles = Math.round(triangles);
+    this.hasGround = hasGround;
     // WoW units are yards.
     this.scale = source.fromWowExport ? 0.9144 : 1;
     this.inner.scale.setScalar(this.scale);

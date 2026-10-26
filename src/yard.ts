@@ -160,7 +160,7 @@ const ownDummy = new OwnModel({
 });
 const ownYard = new OwnModel({
   key: 'yard', title: 'The yard', kind: 'place',
-  hint: `Models tab, WMO filter: a building, an arena or a raid room, such as ${CODE('stranglegladiatorarena.wmo')} (the Gurubashi Arena), then Export GLB. Then walk to where the dummy should stand and press Put the dummy here.`,
+  hint: `A zone: Maps tab, Shift+click a map tile (Goldshire is Azeroth 31, 49), Export OBJ, then Load a map folder… here and pick wow.export's export folder (its Settings → Export Directory). Your browser may call this an upload: nothing leaves your computer. Or a building, an arena or a raid room: Models tab, WMO filter, such as ${CODE('stranglegladiatorarena.wmo')} (the Gurubashi Arena), Export GLB. Then walk to where the dummy should stand and press Put the dummy here.`,
 });
 const ownSlots = [ownPlayer, ...Object.values(ownForms), ownDummy, ownYard];
 /** The copies drawn now: yours, else null for the yard's own. */
@@ -230,8 +230,9 @@ function applyPlace(): void {
     world.scene.add(place.root);
     if (!ownYard.anchor) ownYard.setAnchor(place.anchor.toArray());
   }
-  world.setEnvironment(!place);
-  controls.arenaRadius = place ? 60 : FENCE;
+  world.setEnvironment(!place, !place?.hasGround);
+  // In a place of your own you can walk off to find a spot for the dummy.
+  controls.arenaRadius = place ? 400 : FENCE;
   standOnFloors();
 }
 /** Dummies and you on the floor where you are. */

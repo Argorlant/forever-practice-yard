@@ -8,7 +8,7 @@ import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { clone as cloneSkinned } from 'three/examples/jsm/utils/SkeletonUtils.js';
 import type { Locomotion } from './character';
 
-export interface ModelFile { name: string; data: Blob }
+export interface ModelFile { name: string; type?: string; data: Blob }
 
 /** Each locomotion state's animations, best first. */
 const LOCO: Record<Locomotion, string[]> = {
