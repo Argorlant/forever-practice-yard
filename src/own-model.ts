@@ -27,7 +27,7 @@ export class OwnModel {
   /** The model to draw for the player: yours if there is one and it is switched on. */
   get active(): CustomModel | null { return this.stored?.enabled ? this.model : null; }
 
-  private async build(files: ModelFile[], rotation: number): Promise<boolean> {
+  private async build(files: ModelFile[], rotation?: number): Promise<boolean> {
     try {
       const m = await loadCustomModel(files, rotation);
       this.model?.dispose();
@@ -58,9 +58,9 @@ export class OwnModel {
     this.error = false;
     this.draw();
     const files = list.map((f) => ({ name: f.name, type: f.type, data: f as Blob }));
-    if (await this.build(files, 0)) {
+    if (await this.build(files)) {
       const main = files.find((f) => /\.gl(b|tf)$/i.test(f.name))!;
-      this.stored = { files, label: main.name, rotation: 0, enabled: true };
+      this.stored = { files, label: main.name, rotation: this.model!.turns, enabled: true };
       if (!(await putModel(this.key, this.stored))) {
         this.status += ' This browser would not keep it (a private window, or no room), so it lasts until you reload.';
       }
@@ -95,7 +95,7 @@ export class OwnModel {
     if (!sec?.isConnected) return;
     sec.querySelector('.own-model')?.remove();
     const box = el('div', 'own-model');
-    box.append(el('p', 'note', `Optional: play with your own character instead of the yard's. Export it from your own game files with ${EXPORT_LINK} or a similar tool, as glTF with its animations, then load the .glb (or the .gltf with its .bin and textures). It stays in this browser: nothing is uploaded. Druid forms keep the yard's animals.`));
+    box.append(el('p', 'note', `Optional: play with your own character instead of the yard's. In ${EXPORT_LINK}, which reads your own game files: open your WoW folder, dress your character in the Characters tab, tick Export animations and pick Export GLB (the arrow next to Export glTF). Load that .glb here (or a .gltf with its .bin and textures). Helmets and shoulder pads go back on their attachment points. It stays in this browser: nothing is uploaded. Druid forms keep the yard's animals.`));
     const s = this.stored;
     if (s) {
       const row = el('label', 'field toggle');

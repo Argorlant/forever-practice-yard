@@ -53,16 +53,25 @@ const IDS: Record<number, string> = {
   61: 'emoteeat',
 };
 
-/** "Attack1H_0", "Run (5)", "Stand_0_0", "17_0", "Sword_Regular_A" → "attack1h", "run", "stand", "attack1h", "swordregulara". */
+/**
+ * "Walk (ID 4 variation 0)" (wow.export), "Attack1H_0", "Run (5)", "Stand_0_0", "17_0", "Sword_Regular_A"
+ * → "walk", "attack1h", "run", "stand", "attack1h", "swordregulara".
+ */
 export function animKey(name: string): string {
   const n = name.trim();
+  const squash = (s: string) => s.toLowerCase().replace(/[^a-z0-9]/g, '');
+  const tagged = n.match(/^(.*?)\s*\(ID\s*(\d+)(?:\s*variation\s*\d+)?\)$/i);
+  if (tagged) return tagged[1] ? squash(tagged[1]) : IDS[Number(tagged[2])] ?? `id${tagged[2]}`;
   const id = n.match(/^(?:anim(?:ation)?[\s_-]*)?(\d+)(?:[\s_-]+\d+)*$/i);
   if (id) return IDS[Number(id[1])] ?? `id${id[1]}`;
-  return n.replace(/(?:[\s_-]*[([]?\d+[)\]]?)+$/, '').toLowerCase().replace(/[^a-z0-9]/g, '');
+  return squash(n.replace(/(?:[\s_-]*[([]?\d+[)\]]?)+$/, ''));
 }
 
-/** Loads a .glb, or a .gltf with its .bin and textures, from the player's files. */
-export async function loadCustomModel(files: ModelFile[], quarterTurns = 0): Promise<CustomModel> {
+/**
+ * Loads a .glb, or a .gltf with its .bin and textures, from the player's files. Without quarter turns
+ * given, a wow.export model is turned to face forward (WoW models face +X; the yard looks down +Z).
+ */
+export async function loadCustomModel(files: ModelFile[], quarterTurns?: number): Promise<CustomModel> {
   const main = files.find((f) => /\.glb$/i.test(f.name)) ?? files.find((f) => /\.gltf$/i.test(f.name));
   if (!main) throw new Error('Choose a .glb file, or a .gltf with its .bin and textures.');
   const urls = new Map<string, string>();
@@ -75,7 +84,8 @@ export async function loadCustomModel(files: ModelFile[], quarterTurns = 0): Pro
   manager.onError = (url) => { lost.push(fileName(url)); };
   try {
     const gltf = await new GLTFLoader(manager).loadAsync(urls.get(main.name.toLowerCase())!);
-    const model = new CustomModel(gltf.scene, gltf.animations, quarterTurns);
+    const turns = quarterTurns ?? (/wow\.export/i.test(String(gltf.asset?.generator ?? '')) ? 3 : 0);
+    const model = new CustomModel(gltf.scene, gltf.animations, turns);
     model.missingFiles.push(...new Set(lost));
     return model;
   } finally {
@@ -117,6 +127,10 @@ export class CustomModel {
   readonly missing: string[] = [];
   /** Files the model asked for and was not given (textures). */
   readonly missingFiles: string[] = [];
+  /** Quarter turns it is drawn with. */
+  turns = 0;
+  /** Helmets and shoulder pads put back on their attachment points (see attachItems). */
+  readonly attachedItems: number;
   readonly animationCount: number;
 
   constructor(scene: THREE.Object3D, animations: THREE.AnimationClip[], quarterTurns = 0) {
@@ -124,6 +138,7 @@ export class CustomModel {
       const m = o as THREE.Mesh;
       if (m.isMesh) { m.castShadow = true; m.receiveShadow = true; m.frustumCulled = false; }
     });
+    this.attachedItems = attachItems(scene);
     // Upright (some exports are Z-up), sized (WoW units are yards; otherwise a human's height) and on the ground.
     let box = new THREE.Box3().setFromObject(scene);
     const size = box.getSize(new THREE.Vector3());
@@ -199,7 +214,10 @@ export class CustomModel {
   }
 
   /** Quarter turns around the vertical, for exports that face another way. */
-  setQuarterTurns(n: number): void { this.holder.rotation.y = (((n % 4) + 4) % 4) * (Math.PI / 2); }
+  setQuarterTurns(n: number): void {
+    this.turns = ((n % 4) + 4) % 4;
+    this.holder.rotation.y = this.turns * (Math.PI / 2);
+  }
 
   setLocomotion(state: Locomotion, groundSpeed = 0): void {
     const chosen = this.loco.has(state) ? state : this.loco.has('idle') ? 'idle' : null;
@@ -291,6 +309,69 @@ export class CustomModel {
   }
 }
 
+/** Item models wow.export leaves loose, by mesh name, and the bone their attachment point hangs from. */
+const ITEM_SLOTS: [RegExp, RegExp][] = [
+  [/^Head_Item/i, /^bone_Head$/i],
+  [/^Shoulder[\s_]*\(?L\)?_Item/i, /^bone_ArmL$/i],
+  [/^Shoulder[\s_]*\(?R\)?_Item/i, /^bone_ArmR$/i],
+];
+
+/**
+ * wow.export draws a helmet or a shoulder pad (a separate item model) around its attachment point, but
+ * leaves it at the model's feet instead of on that point. The point is a bone of its own under the head
+ * (or upper arm) that moves no vertices: the highest one (the arm's other one is the elbow). Each item goes
+ * on its bone, so it also follows the animations. Returns how many meshes moved.
+ */
+function attachItems(scene: THREE.Object3D): number {
+  const moved: [THREE.Object3D, RegExp][] = [];
+  scene.traverse((o) => {
+    const slot = (o as THREE.Mesh).isMesh && !(o as THREE.SkinnedMesh).isSkinnedMesh && ITEM_SLOTS.find(([re]) => re.test(o.name));
+    if (slot) moved.push([o, slot[1]]);
+  });
+  if (!moved.length) return 0;
+  // Bones that move vertices.
+  const used = new Set<THREE.Object3D>();
+  scene.traverse((o) => {
+    const m = o as THREE.SkinnedMesh;
+    if (!m.isSkinnedMesh) return;
+    const index = m.geometry.getAttribute('skinIndex');
+    const weight = m.geometry.getAttribute('skinWeight');
+    if (!index || !weight) return;
+    for (let i = 0; i < index.count; i++) {
+      for (let k = 0; k < 4; k++) if (weight.getComponent(i, k) > 0) used.add(m.skeleton.bones[index.getComponent(i, k)]);
+    }
+  });
+  scene.updateMatrixWorld(true);
+  const pos = new THREE.Vector3();
+  const pointUnder = (parentName: RegExp): THREE.Object3D | null => {
+    let parent: THREE.Object3D | null = null;
+    scene.traverse((o) => { if (!parent && (o as THREE.Bone).isBone && parentName.test(o.name)) parent = o; });
+    if (!parent) return null;
+    // wow.export may put each bone under a pivot node of its own (bone_104_p → bone_104).
+    const bones = (parent as THREE.Object3D).children
+      .map((c) => ((c as THREE.Bone).isBone ? c : c.children.find((g) => (g as THREE.Bone).isBone)))
+      .filter((b): b is THREE.Object3D => !!b && !used.has(b));
+    let best: THREE.Object3D | null = null;
+    let bestY = -Infinity;
+    for (const b of bones) {
+      const y = b.getWorldPosition(pos).y;
+      if (y > bestY) { best = b; bestY = y; }
+    }
+    return best;
+  };
+  let count = 0;
+  for (const [mesh, parentName] of moved) {
+    const point = pointUnder(parentName);
+    if (!point) continue;
+    point.add(mesh);
+    mesh.position.set(0, 0, 0);
+    mesh.quaternion.identity();
+    mesh.scale.set(1, 1, 1);
+    count++;
+  }
+  return count;
+}
+
 /** The bones from the chest up (a spine or chest bone and everything under it), or null if the skeleton names none. */
 function upperBody(scene: THREE.Object3D): Set<string> | null {
   const find = (re: RegExp) => {
@@ -298,7 +379,9 @@ function upperBody(scene: THREE.Object3D): Set<string> | null {
     scene.traverse((o) => { if (!hit && (o as THREE.Bone).isBone && re.test(o.name)) hit = o; });
     return hit as THREE.Object3D | null;
   };
-  const top = find(/spine[\s_.-]*0?[2-3]|chest|upperbody|torso/i) ?? find(/spine/i);
+  // WoW's SpineUp, then the usual rigs' upper spine (spine_02, Spine2), chest, and any spine at all.
+  const top = [/spine[\s_.-]*up/i, /spine[\s_.-]*0?[23]\b/i, /upper[\s_.-]*(body|chest)|torso/i, /chest$/i, /spine/i]
+    .reduce<THREE.Object3D | null>((hit, re) => hit ?? find(re), null);
   if (!top) return null;
   const names = new Set<string>();
   top.traverse((o) => { if (o.name) names.add(o.name); });

@@ -1017,6 +1017,7 @@ console.log(`Talent layouts checked for ${SPECS.reduce((n, s) => n + (s.builds?.
 {
   // Your own model: the animation names exports use, read as the yard's.
   const names: [string, string][] = [
+    ['Walk (ID 4 variation 0)', 'walk'], ['Attack1H (ID 17 variation 1)', 'attack1h'], ['ReadySpellDirected (ID 51 variation 0)', 'readyspelldirected'],
     ['Stand', 'stand'], ['Stand_0', 'stand'], ['Run (5)', 'run'], ['Walk_0_0', 'walk'], ['Attack1H [17]', 'attack1h'],
     ['17', 'attack1h'], ['47_0', 'firebow'], ['Anim_53', 'spellcastdirected'], ['Ready2H', 'ready2h'],
     ['WalkBackwards_1', 'walkbackwards'], ['Sword_Regular_A', 'swordregulara'], ['Jog_Fwd_Loop', 'jogfwdloop'],
