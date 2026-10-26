@@ -1058,9 +1058,11 @@ console.log(`Talent layouts checked for ${SPECS.reduce((n, s) => n + (s.builds?.
   const [a, b] = CRACKS[3];
   const crack = fightAt((a.x + b.x) / 2, (a.z + b.z) / 2, true);
   if (!crack.f.review.lava) failures.push('Onyxia: the lava missed a crack');
-  // Doing nothing with real health: the whelps win.
+  // The whelp tanks hold most whelps and their groups kill them; the loose ones keep biting an idle player.
+  if (idle.f.review.whelpsAtYou >= idle.f.review.whelpsSpawned / 2) failures.push(`Onyxia: ${idle.f.review.whelpsAtYou} of ${idle.f.review.whelpsSpawned} whelps came at you`);
+  if (idle.f.review.whelpsKilled < idle.f.review.whelpsSpawned - idle.f.review.whelpsAtYou) failures.push('Onyxia: the whelp groups did not kill the whelps they held');
+  if (idle.f.review.whelpBites < 20) failures.push(`Onyxia: loose whelps bit an idle player only ${idle.f.review.whelpBites} times`);
   const wipe = fightAt(ROOM.start.x, ROOM.start.z, false);
-  if (wipe.f.review.won || !wipe.f.over) failures.push('Onyxia: an idle player survived the whelps');
   // Phase two's Deep Breath: standing in the middle, on every line across the room, burns five or six times (wiki).
   let line = fightAt(0, 0, true);
   let breaths = 0;
@@ -1092,7 +1094,7 @@ console.log(`Talent layouts checked for ${SPECS.reduce((n, s) => n + (s.builds?.
     }
   }
   Math.random = realRandom;
-  console.log(`Onyxia: ${idle.f.review.time.toFixed(0)} s idle with the raid, ${idle.f.review.whelpsSpawned} whelps, ${idle.f.review.fears} fears, ${perBreath} Deep Breath hits a breath in the middle; idle with real health dies in phase ${wipe.f.review.phase}`);
+  console.log(`Onyxia: ${idle.f.review.time.toFixed(0)} s idle with the raid, ${idle.f.review.whelpsSpawned} whelps, ${idle.f.review.fears} fears, ${perBreath} Deep Breath hits a breath in the middle; idle with real health: ${wipe.f.review.won ? 'survives' : `dies in phase ${wipe.f.review.phase}`}, bitten ${wipe.f.review.whelpBites} times by ${wipe.f.review.whelpsAtYou} loose whelps`);
 }
 if (failures.length) {
   console.error(`FAILED:\n  ${failures.join('\n  ')}`);

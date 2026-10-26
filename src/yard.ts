@@ -355,7 +355,7 @@ function setFight(id: string): void {
     combat.encounter = true;
     fightView = new OnyxiaView(fight, {
       scene: world.scene, camera: world.camera, vfx, hud, floaters, controls, combat, enemies: dummies, modelUrl: MODEL_URL,
-      tankLook: tanking() ? null : specById('warrior').look, healerLook: specById('priest-smite').look,
+      tankLook: tanking() ? null : specById('warrior').look, whelpTankLook: specById('warrior').look, healerLook: specById('priest-smite').look,
       playerPos, groundAt: (x, z) => groundY(x, z, 3), onEnd: (r) => showFightReview(app, r, () => fullReset()),
     });
     dragonSources();
@@ -718,6 +718,8 @@ combat.on('note', ({ text, kind }) => {
 });
 
 combat.on('death', (u) => {
+  // An encounter's adds die by the dozen (the whelp groups kill most): only its boss gets the word.
+  if (fight && u !== fight.boss) return;
   const d = dummyOf(u);
   if (d) floaters.note('Defeated!', d.headPosition, 'ft-buff');
 });

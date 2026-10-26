@@ -12,9 +12,11 @@ export interface Point { x: number; z: number }
 
 export interface Whelp {
   unit: Unit;
-  /** Wing beats, for the view: a whelp is never still. */
+  /** Its next bite. */
   swingAt: number;
   diedAt: number | null;
+  /** Held by the whelp tank at this cave (ROOM.holders), or null: it got loose and comes at you. */
+  holder: number | null;
 }
 
 export type Pose = 'asleep' | 'ground' | 'takeoff' | 'flying' | 'landing' | 'dead';
@@ -32,6 +34,9 @@ export interface Review {
   fears: number;
   whelpsSpawned: number;
   whelpsKilled: number;
+  /** Whelps that got loose and came at you, and how many of those you killed. */
+  whelpsAtYou: number;
+  whelpsAtYouKilled: number;
   whelpBites: number;
 }
 
@@ -63,6 +68,8 @@ export const ROOM = {
   radius: 44,
   caves: [{ x: 41, z: 2 }, { x: -41, z: 2 }] as Point[],
   tank: { x: 0, z: 11 },
+  /** Where the whelp tanks hold the whelps, at each cave's mouth (the raid's whelp groups). */
+  holders: [{ x: 35, z: 2 }, { x: -35, z: 2 }] as Point[],
   healer: { x: -16, z: -24 },
   start: { x: -20, z: 1 },
   /** Where she hovers in phase 2: six spots around the room (the wiki's six positions). */
@@ -83,6 +90,8 @@ export const CRACKS: [Point, Point][] = ([
 // Ours: her health for one player and a raid's steady damage, so the fight takes about four minutes.
 const HEALTH = 300_000;
 const RAID_DPS: Record<number, number> = { 1: 1100, 2: 550, 3: 1100 };
+/** Ours: the whelp groups' area damage on each whelp their tank holds (about fifteen seconds to kill one). */
+const WHELP_AOE = 110;
 // Wiki: phase two at 65 %, phase three at 40 %.
 const PHASE_2 = 0.65;
 const PHASE_3 = 0.40;
@@ -151,7 +160,10 @@ export class OnyxiaFight {
   }
 
   static emptyReview(): Review {
-    return { won: false, time: 0, phase: 0, flameBreath: 0, tailSweep: 0, deepBreath: 0, fireball: 0, lava: 0, fears: 0, whelpsSpawned: 0, whelpsKilled: 0, whelpBites: 0 };
+    return {
+      won: false, time: 0, phase: 0, flameBreath: 0, tailSweep: 0, deepBreath: 0, fireball: 0, lava: 0, fears: 0,
+      whelpsSpawned: 0, whelpsKilled: 0, whelpsAtYou: 0, whelpsAtYouKilled: 0, whelpBites: 0,
+    };
   }
 
   on<K extends keyof Events>(type: K, fn: (d: Events[K]) => void): void {
@@ -266,7 +278,7 @@ export class OnyxiaFight {
       // Wiki: "small groups" of "five or so" whelps, usually early in phase three.
       if (this.next.p3whelps !== undefined && t >= this.next.p3whelps) {
         delete this.next.p3whelps;
-        this.spawnWhelps(5);
+        this.spawnWhelps(5, 2);
       }
     }
   }
@@ -321,7 +333,8 @@ export class OnyxiaFight {
     this.flight = { from: { x: this.boss.x, z: this.boss.z }, to: spotOf(3), start: this.t, end: this.t + 4, alt: [0, ROOM.altitude] };
     this.combat.enemyAttacks.on = false;
     // Wiki: "a large spawn" from each pit at the phase start, then "periodically" small ones (counts and timer ours).
-    this.spawnWhelps(8);
+    // The whelp tanks at the caves take most of them; a few get loose and come at you.
+    this.spawnWhelps(8, 3);
     this.next.whelps = this.t + 25;
     this.next.fireball = this.t + 5.5;
     this.fireballs = 0;
@@ -332,7 +345,7 @@ export class OnyxiaFight {
     const t = this.t;
     if (t >= this.next.whelps) {
       this.next.whelps = t + 25;
-      this.spawnWhelps(4);
+      this.spawnWhelps(4, 1);
     }
     if (this.flight) return;
     if (t >= this.next.fireball && this.fireballs < 5) {
@@ -450,43 +463,66 @@ export class OnyxiaFight {
   }
 
   // ------------------------------------------------------------ whelps
-  private spawnWhelps(n: number): void {
+  /** `n` whelps from both caves; `loose` of them come at you, the rest go to their cave's whelp tank. */
+  private spawnWhelps(n: number, loose: number): void {
     const list: Whelp[] = [];
+    // Which of them get loose: any, at random.
+    const order = Array.from({ length: n }, (_, i) => i).sort(() => Math.random() - 0.5);
+    const atYou = new Set(order.slice(0, loose));
     for (let i = 0; i < n; i++) {
-      const cave = ROOM.caves[i % 2];
+      const side = i % 2;
+      const cave = ROOM.caves[side];
       const unit: Unit = {
         id: 200 + this.review.whelpsSpawned, name: 'Onyxian Whelp', level: 60,
         // Ours: the wiki gives no whelp numbers.
         health: 1600, maxHealth: 1600, armor: 1200, auras: new Map(),
         x: cave.x + rand(-2, 2), z: cave.z + rand(-3, 3), facing: 0, radius: 0.7, stayDead: true,
       };
-      const w: Whelp = { unit, swingAt: this.t + rand(0.5, 1.5), diedAt: null };
+      const w: Whelp = { unit, swingAt: this.t + rand(0.5, 1.5), diedAt: null, holder: atYou.has(i) ? null : side };
       this.whelps.push(w);
       list.push(w);
       this.review.whelpsSpawned++;
+      if (w.holder === null) this.review.whelpsAtYou++;
     }
     this.combat.targets = this.units;
     this.emit('whelps', list);
   }
 
-  /** Whelps fly at you and bite; the dead ones fall and go. */
+  /**
+   * Whelps fly at whoever they are after: the loose ones at you, biting; the others at their whelp tank,
+   * whose group's area damage wears them down. The dead ones fall and go.
+   */
   private moveWhelps(dt: number, you: Point): void {
     let changed = false;
     for (const w of this.whelps) {
       const u = w.unit;
       if (u.health <= 0) {
-        if (w.diedAt === null) { w.diedAt = this.t; this.review.whelpsKilled++; }
+        if (w.diedAt === null) {
+          w.diedAt = this.t;
+          this.review.whelpsKilled++;
+          if (w.holder === null) this.review.whelpsAtYouKilled++;
+        }
         continue;
       }
-      const dx = you.x - u.x, dz = you.z - u.z;
+      // Around their tank they spread out a little, each at its own spot.
+      const goal = w.holder === null ? you : {
+        x: ROOM.holders[w.holder].x + Math.sin(u.id * 2.4) * 1.6,
+        z: ROOM.holders[w.holder].z + Math.cos(u.id * 2.4) * 1.6,
+      };
+      const dx = goal.x - u.x, dz = goal.z - u.z;
       const d = Math.hypot(dx, dz);
-      u.facing = Math.atan2(dx, dz);
-      const reach = 1.4;
+      const reach = w.holder === null ? 1.4 : 0.3;
       if (d > reach) {
         // Ours: they fly at a run (6 m/s).
         const step = Math.min(d - reach, 6 * dt);
         u.x += (dx / d) * step;
         u.z += (dz / d) * step;
+        u.facing = Math.atan2(dx, dz);
+      } else if (w.holder !== null) {
+        const h = ROOM.holders[w.holder];
+        u.facing = Math.atan2(h.x - u.x, h.z - u.z);
+        this.combat.damageUnit(u, WHELP_AOE * dt);
+        if (this.t >= w.swingAt) { w.swingAt = this.t + 1.5; this.emit('bite', w); }
       } else if (this.t >= w.swingAt) {
         w.swingAt = this.t + 1.5;
         this.review.whelpBites++;
@@ -525,7 +561,14 @@ export class OnyxiaFight {
     this.combat.enemyAttacks.on = false;
     this.combat.fearedUntil = -Infinity;
     // A win: the raid finishes the whelps still flying.
-    if (won) for (const w of this.whelps) if (w.unit.health > 0) { w.unit.health = 0; w.diedAt = this.t; }
+    if (won) {
+      for (const w of this.whelps) {
+        if (w.unit.health <= 0) continue;
+        w.unit.health = 0;
+        w.diedAt = this.t;
+        this.review.whelpsKilled++;
+      }
+    }
     if (!won) this.emit('yell', 'Learn your place, mortal!');
     this.emit('end', this.review);
   }

@@ -29,6 +29,8 @@ export interface ViewDeps {
   modelUrl: string;
   /** The tank's look, or null when you are the tank. */
   tankLook: CharacterLook | null;
+  /** The whelp tanks' look, at the caves. */
+  whelpTankLook: CharacterLook;
   healerLook: CharacterLook;
   playerPos(): THREE.Vector3;
   /** The floor's height at (x, z): flat in the built-in lair, the place's own floors in yours. */
@@ -50,6 +52,8 @@ export class OnyxiaView {
   private boss: DragonFigure;
   private whelps = new Map<Whelp, DragonFigure>();
   private tank: Character | null = null;
+  /** The whelp tanks at the caves, holding the whelps their groups kill. */
+  private whelpTanks: { body: Character; swing: number; clap: number }[] = [];
   private healer = new Character();
   private stripe: THREE.Mesh | null = null;
   private deepBreath: { from: Point; to: Point; start: number; end: number; laid: number } | null = null;
@@ -76,6 +80,14 @@ export class OnyxiaView {
         tank.setWeapons('sword', null, { shield: true });
         d.scene.add(tank.root);
       }).catch(() => { /* idem */ });
+    }
+    for (let i = 0; i < ROOM.holders.length; i++) {
+      const body = new Character();
+      this.whelpTanks.push({ body, swing: i * 0.7, clap: 2 + i * 2.5 });
+      body.load(d.modelUrl, d.whelpTankLook).then(() => {
+        body.setWeapons('axe', null, { shield: true });
+        d.scene.add(body.root);
+      }).catch(() => { /* the fight goes on without the drawing */ });
     }
     this.listen();
     this.syncEnemies();
@@ -269,6 +281,20 @@ export class OnyxiaView {
       if (fighting && (this.tankSwing -= dt) <= 0) { this.tankSwing = 2; tk.swing(); }
       tk.update(dt);
     }
+    // The whelp tanks: swinging and Thunder Clapping while they hold whelps, facing the room otherwise.
+    this.whelpTanks.forEach((wt, i) => {
+      const h = ROOM.holders[i];
+      const held = f.whelps.filter((w) => w.holder === i && w.unit.health > 0 && Math.hypot(w.unit.x - h.x, w.unit.z - h.z) < 3);
+      wt.body.root.position.set(h.x, this.d.groundAt(h.x, h.z), h.z);
+      const look = held[0]?.unit ?? { x: 0, z: 0 };
+      wt.body.root.rotation.y = Math.atan2(look.x - h.x, look.z - h.z);
+      wt.body.setLocomotion(held.length ? 'ready' : 'idle', 0);
+      if (held.length) {
+        if ((wt.swing -= dt) <= 0) { wt.swing = 1.6; wt.body.swing(); }
+        if ((wt.clap -= dt) <= 0) { wt.clap = 5; vfx.thunderClap(this.floor(h.x, h.z), 6); }
+      }
+      wt.body.update(dt);
+    });
     this.healer.root.position.set(ROOM.healer.x, this.d.groundAt(ROOM.healer.x, ROOM.healer.z), ROOM.healer.z);
     this.healer.root.rotation.y = Math.atan2(you.x - ROOM.healer.x, you.z - ROOM.healer.z);
     this.healerCast -= dt;
@@ -335,6 +361,7 @@ export class OnyxiaView {
     this.boss.dispose();
     this.lair.dispose();
     this.tank?.root.removeFromParent();
+    for (const wt of this.whelpTanks) wt.body.root.removeFromParent();
     this.healer.root.removeFromParent();
     this.d.enemies.length = 0;
   }

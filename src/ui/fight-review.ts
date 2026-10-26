@@ -13,7 +13,8 @@ export function showFightReview(parent: HTMLElement, r: Review, again: () => voi
     ['Fireballs', `${r.fireball}×`, null],
     ['Lava', `${r.lava}×`, r.lava ? 'After the fear, step off the glowing cracks.' : null],
     ['Feared', `${r.fears}×`, r.fears ? 'Berserker Rage, Fear Ward or Will of the Forsaken keep you from fleeing.' : null],
-    ['Whelps killed', `${r.whelpsKilled} of ${r.whelpsSpawned}`, r.whelpsSpawned - r.whelpsKilled > 4 ? 'Kill the whelps fast, with area damage if you have it: they bite you while they live.' : null],
+    ['Loose whelps you killed', `${r.whelpsAtYouKilled} of ${r.whelpsAtYou}`,
+      r.whelpsAtYou - r.whelpsAtYouKilled >= 2 || r.whelpBites > 25 ? 'The whelp tanks hold most of them; kill the ones that come at you quickly: they bite while they live.' : null],
   ];
   const overlay = document.createElement('div');
   overlay.className = 'modal-overlay';
