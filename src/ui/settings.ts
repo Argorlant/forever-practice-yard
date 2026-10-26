@@ -86,7 +86,7 @@ export class SettingsDialog {
   /** Set while waiting for a key press to rebind. */
   capturing: ((code: string | null, e: KeyboardEvent | WheelEvent) => void) | null = null;
   classes: ClassPicker | null = null;
-  /** Fills the "Your own model" section (src/own-model.ts). */
+  /** Fills the "Your own models" section (src/own-model.ts). */
   ownModel: ((sec: HTMLElement) => void) | null = null;
 
   constructor(
@@ -207,8 +207,8 @@ export class SettingsDialog {
     // Hunters: the bow, gun or crossbow (what it looks like in your hands, and its damage and speed).
     if (p.stats.ranged) this.weapon(ch, 'Ranged weapon', 'ranged');
 
-    // A model of your own, instead of the yard's.
-    if (this.ownModel) this.ownModel(this.section('Your own model'));
+    // Models of your own, instead of the yard's.
+    if (this.ownModel) this.ownModel(this.section('Your own models'));
 
     // How often things happen, from the engine with the current gear.
     if (this.spec.chances) {

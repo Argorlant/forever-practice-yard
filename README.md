@@ -207,15 +207,25 @@ with trails and impacts that show the crit, Lightning Bolt as a real bolt, arrow
 hands while you cast, the Drain Life and Mind Flay streams, and the auras you wear (Lightning Shield's orbs, Holy
 Shield, Shadowform). It is all particles (`src/scene/vfx.ts`) driven by the engine's events (`src/combat-vfx.ts`).
 
-**Your own model (optional).** Settings → "Your own model" draws a character of your own instead of the yard's. In
-[wow.export](https://github.com/Kruithne/wow.export), which reads your own game files: open your WoW folder, dress the
-character in the Characters tab (Item Sets equips a whole tier set), tick Export animations and pick Export GLB from the
-arrow next to Export glTF. Load that `.glb` (or a `.gltf` with its `.bin` and textures; dropping the files on the section
-works too). WoW's animation names (wow.export's "Run (ID 5 variation 0)", Attack1H, SpellCastDirected, AttackBow…, or
-their AnimationData numbers) are matched to what you do in the yard, attacks and casts play on the upper body while you
-run, wow.export's helmets and shoulder pads (left at the feet in its glTF) go back on their attachment bones, the model is
-turned to face forward, and Turn 90° fixes any other export that faces another way. The files stay in your browser (IndexedDB, one model per class): the site never uploads,
-hosts or shares them, and the yard's own model stays the default. Druid forms keep the yard's animals.
+**Your own models (optional).** Settings → "Your own models" draws models from your own game files instead of the
+yard's: your character, the druid's Cat and Bear Forms, the training dummy and the yard itself. Export them with
+[wow.export](https://github.com/Kruithne/wow.export), which reads your own game files (open your WoW folder in it), as
+GLB from the arrow next to its Export button:
+- **Your character:** the Characters tab (Item Sets equips a whole tier set), with Export animations ticked.
+- **Cat and Bear Form:** the Models tab, `creature/druidcat/druidcat.m2` and `creature/druidbear/druidbear.m2` (Tauren:
+  `druidcattauren.m2`, `druidbeartauren.m2`).
+- **Training dummy:** `creature/object/woodendummy.m2`; it plays its own wounds when hit, a bigger one on a crit.
+- **The yard:** a building, an arena or a raid room from the Models tab's WMO filter, such as
+  `stranglegladiatorarena.wmo` (the Gurubashi Arena). You walk on its floors (stairs and ramps too); where it has none,
+  such as an arena pit that is the map's ground, the grass stands in. Walk to a spot and press Put the dummy here to set
+  the dummies there.
+
+WoW's animation names (wow.export's "Run (ID 5 variation 0)", Attack1H, SpellCastDirected, AttackBow…, or their
+AnimationData numbers) are matched to what you do; abilities with an animation of their own use it (Claw, Rake, Rip,
+Ravage, Pounce, Maul, Swipe, Bash, Whirlwind, Shield Bash, Kick, the shouts and roars). Attacks and casts play on the
+upper body while you run, wow.export's helmets and shoulder pads (left at the feet in its glTF) go back on their
+attachment bones, models are turned to face forward, and Turn 90° fixes any other export. The files stay in your
+browser (IndexedDB): the site never uploads, hosts or shares them, and the yard's own models stay the default.
 
 The engine is shared, so more specs plug in as data.
 
@@ -240,7 +250,7 @@ Then open http://127.0.0.1:5180.
 | --- | --- |
 | `src/engine` | The combat engine, shared by every class: event clock, smooth regeneration, GCD and spell queue, casts, cooldowns, auras, dual-wield auto attacks, attack and spell tables, armor, the attacking dummy, raid buffs and debuffs (`raid.ts`). |
 | `src/specs/<class>` | One class (`rogue`, `warrior`, `druid`, `paladin`, `hunter`, `priest`, `mage`, `warlock`, `shaman`): `data.ts` holds every number with its source; `talents.ts` the sims' builds; the spec files define abilities, procs and the priority list. |
-| `src/scene` | The 3D yard (three.js): world, dummy, character, WoW-style controls and spell effects; `custom-model.ts` draws a model of your own (wired in `src/own-model.ts`). |
+| `src/scene` | The 3D yard (three.js): world, dummy, character, WoW-style controls and spell effects; `custom-model.ts` and `custom-place.ts` draw models and places of your own (wired in `src/own-model.ts`). |
 | `src/ui` | HUD, action bar, floating combat text, rotation panel and settings. |
 | `research` | Sourced notes on each spec's WoW Forever mechanics. |
 
@@ -259,6 +269,7 @@ Then open http://127.0.0.1:5180.
   Library 1 and 2 (CC0).
 - Ability icons © Blizzard Entertainment, used so the buttons look as they do in the game.
 - Dummy portrait: [game-icons.net](https://game-icons.net) by Lorc (CC BY 3.0).
+- Floors of your own places: [three-mesh-bvh](https://github.com/gkjohnson/three-mesh-bvh) (MIT).
 - Combat formulas follow [WoWSims](https://github.com/wowsims/classic) (MIT) and its WoW Forever
   forks [foreversim](https://github.com/laurencestokes/foreversim) and
   [wow-forever-sim](https://github.com/gunba/wow-forever-sim).

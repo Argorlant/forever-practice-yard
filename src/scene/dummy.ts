@@ -1,5 +1,7 @@
-// Straw training dummy on a post, built in code. It wobbles when hit.
+// Straw training dummy on a post, built in code. It wobbles when hit. A model
+// of the player's own can stand in for it (Settings → Your own models).
 import * as THREE from 'three';
+import type { CustomModel } from './custom-model';
 
 export class Dummy {
   readonly root = new THREE.Group();
@@ -10,6 +12,10 @@ export class Dummy {
   private wobble = 0;
   private wobbleVel = 0;
   private wobbleAxis = new THREE.Vector3(1, 0, 0);
+  /** The parts built in code, hidden while a model of your own stands in. */
+  private built: THREE.Object3D[] = [];
+  private builtPickables: THREE.Object3D[] = [];
+  private model: CustomModel | null = null;
 
   constructor() {
     const wood = new THREE.MeshStandardMaterial({ color: 0x6b4a2f, roughness: 0.9, flatShading: true });
@@ -83,6 +89,8 @@ export class Dummy {
     this.sway.add(shield);
 
     this.root.traverse((o) => { if ((o as THREE.Mesh).isMesh) this.pickables.push(o); });
+    this.built = [...this.root.children];
+    this.builtPickables = [...this.pickables];
 
     // Selection ring on the ground, red for an enemy.
     this.ring = new THREE.Mesh(
@@ -97,14 +105,32 @@ export class Dummy {
 
   setSelected(on: boolean): void { this.ring.visible = on; }
 
+  /** A model of your own instead of the straw dummy, or null for the straw one. */
+  setModel(model: CustomModel | null): void {
+    this.model?.dispose();
+    this.model = model;
+    for (const o of this.built) o.visible = !model;
+    this.pickables.length = 0;
+    if (model) {
+      this.root.add(model.root);
+      model.setLocomotion('idle');
+      model.root.traverse((o) => { if ((o as THREE.Mesh).isMesh) this.pickables.push(o); });
+    } else {
+      this.pickables.push(...this.builtPickables);
+    }
+  }
+
   /** A lunge forward when it swings at the player. */
   attack(): void {
     this.wobbleAxis.set(1, 0, 0);
     this.wobbleVel += 3.2;
+    this.model?.play('strike1');
   }
 
   /** Kicks the wobble; from = world position of the attacker. */
   hit(from: THREE.Vector3, strength = 1): void {
+    // A model of your own plays its own wound (a crit has a bigger one).
+    this.model?.play(strength > 1.2 ? 'critReact' : 'hitReact');
     const local = this.root.worldToLocal(from.clone());
     // Lean away from the attacker: axis perpendicular to the push.
     this.wobbleAxis.set(local.z, 0, -local.x).normalize().negate();
@@ -113,7 +139,7 @@ export class Dummy {
 
   /** Head height, for floating combat text. */
   get headPosition(): THREE.Vector3 {
-    return this.root.localToWorld(new THREE.Vector3(0, 2.35, 0));
+    return this.root.localToWorld(new THREE.Vector3(0, this.model ? this.model.height + 0.3 : 2.35, 0));
   }
 
   update(dt: number, t: number): void {
@@ -121,6 +147,7 @@ export class Dummy {
     this.wobbleVel += (-60 * this.wobble - 7 * this.wobbleVel) * dt;
     this.wobble += this.wobbleVel * dt;
     this.sway.quaternion.setFromAxisAngle(this.wobbleAxis, this.wobble * 0.25);
+    this.model?.update(dt);
     const ring = this.ring.material as THREE.MeshBasicMaterial;
     ring.opacity = 0.7 + Math.sin(t * 4) * 0.15;
   }

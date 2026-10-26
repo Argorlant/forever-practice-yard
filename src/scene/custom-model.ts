@@ -5,6 +5,7 @@
 // are matched to the yard's states, and the yard's own names work too.
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
+import { clone as cloneSkinned } from 'three/examples/jsm/utils/SkeletonUtils.js';
 import type { Locomotion } from './character';
 
 export interface ModelFile { name: string; data: Blob }
@@ -41,8 +42,22 @@ const ACTIONS: Record<string, { names: string[]; rate: number }> = {
   throw: { names: ['attackthrown', 'throw', 'overhandthrow'], rate: 1.5 },
   block: { names: ['shieldblock', 'parry1h', 'parryunarmed', 'block', 'swordblock'], rate: 1.5 },
   hitReact: { names: ['combatwound', 'wound', 'hitchest'], rate: 1.1 },
-  cast: { names: ['spellcastdirected', 'spellcastomni', 'spellcast', 'spellsimpleshoot'], rate: 1 },
+  critReact: { names: ['combatcritical', 'combatwound', 'wound', 'hitchest'], rate: 1.1 },
+  cast: { names: ['spellcastdirected', 'spellcastomni', 'spellcast', 'spellsimpleshoot', 'battleroar'], rate: 1 },
   shoot: { names: ['firebow', 'attackbow', 'attackrifle', 'firecrossbow', 'pistolshoot'], rate: 1.4 },
+};
+/** Abilities WoW gives an animation of their own, tried before the yard's generic one (cat and bear forms too). */
+const ABILITY_ANIMS: Record<string, string[]> = {
+  claw: ['druidcatclaw'], shred: ['druidcatclaw'], rake: ['druidcatrake'], rip: ['druidcatrip'], ferociousBite: ['druidcatrip'],
+  ravage: ['druidcatravage'], pounce: ['druidcatpounce'], cower: ['druidcatcower'],
+  maul: ['druidbearmaul'], swipe: ['druidbearswipe'], bash: ['druidbearbash'], primalBite: ['druidbearbite'],
+  demoralizingRoar: ['battleroar'], battleShout: ['battleroar'], demoralizingShout: ['battleroar'],
+  whirlwind: ['whirlwind'], shieldBash: ['shieldbash'], kick: ['kick'], pummel: ['kick'],
+};
+/** What Settings reports as found or missing. */
+const MOMENTS: Record<string, string[]> = {
+  stand: LOCO.idle, run: LOCO.run, 'run backwards': ['walkbackwards', 'walkback'], attack: ACTIONS.strike1.names,
+  cast: ACTIONS.cast.names, shoot: ACTIONS.shoot.names, jump: LOCO.air, wound: ACTIONS.hitReact.names,
 };
 /** AnimationData ids, for exports that name animations by number. */
 const IDS: Record<number, string> = {
@@ -67,11 +82,8 @@ export function animKey(name: string): string {
   return squash(n.replace(/(?:[\s_-]*[([]?\d+[)\]]?)+$/, ''));
 }
 
-/**
- * Loads a .glb, or a .gltf with its .bin and textures, from the player's files. Without quarter turns
- * given, a wow.export model is turned to face forward (WoW models face +X; the yard looks down +Z).
- */
-export async function loadCustomModel(files: ModelFile[], quarterTurns?: number): Promise<CustomModel> {
+/** Loads a .glb, or a .gltf with its .bin and textures, from the player's files. */
+export async function loadModelSource(files: ModelFile[]): Promise<ModelSource> {
   const main = files.find((f) => /\.glb$/i.test(f.name)) ?? files.find((f) => /\.gltf$/i.test(f.name));
   if (!main) throw new Error('Choose a .glb file, or a .gltf with its .bin and textures.');
   const urls = new Map<string, string>();
@@ -84,12 +96,41 @@ export async function loadCustomModel(files: ModelFile[], quarterTurns?: number)
   manager.onError = (url) => { lost.push(fileName(url)); };
   try {
     const gltf = await new GLTFLoader(manager).loadAsync(urls.get(main.name.toLowerCase())!);
-    const turns = quarterTurns ?? (/wow\.export/i.test(String(gltf.asset?.generator ?? '')) ? 3 : 0);
-    const model = new CustomModel(gltf.scene, gltf.animations, turns);
-    model.missingFiles.push(...new Set(lost));
-    return model;
+    return new ModelSource(gltf.scene, gltf.animations, /wow\.export/i.test(String(gltf.asset?.generator ?? '')), [...new Set(lost)]);
   } finally {
     for (const u of urls.values()) URL.revokeObjectURL(u);
+  }
+}
+
+/** A loaded model file, from which the yard draws as many copies as it needs (one per dummy). */
+export class ModelSource {
+  constructor(
+    readonly scene: THREE.Object3D,
+    readonly animations: THREE.AnimationClip[],
+    /** wow.export: WoW units (yards), models facing +X, helmets left at the feet. */
+    readonly fromWowExport: boolean,
+    /** Files the model asked for and was not given (textures). */
+    readonly missingFiles: string[],
+  ) {}
+
+  /** Quarter turns that make it face forward: WoW models face +X; the yard looks down +Z. */
+  get defaultTurns(): number { return this.fromWowExport ? 3 : 0; }
+
+  /** A copy that moves on its own (a character, a form, a dummy). */
+  figure(quarterTurns = this.defaultTurns): CustomModel {
+    return new CustomModel(cloneSkinned(this.scene), this.animations, quarterTurns);
+  }
+
+  dispose(): void {
+    this.scene.traverse((o) => {
+      const m = o as THREE.Mesh;
+      if (!m.isMesh) return;
+      m.geometry.dispose();
+      for (const mat of Array.isArray(m.material) ? m.material : [m.material]) {
+        for (const v of Object.values(mat)) if (v instanceof THREE.Texture) v.dispose();
+        mat.dispose();
+      }
+    });
   }
 }
 
@@ -114,7 +155,7 @@ export class CustomModel {
   private loco = new Map<Locomotion, Loop>();
   private sums = new Map<THREE.AnimationAction, number>();
   private current: Locomotion = 'idle';
-  private shot: { action: THREE.AnimationAction; elapsed: number; length: number; upperOnly: boolean } | null = null;
+  private shot: { action: THREE.AnimationAction; elapsed: number; length: number; upperOnly: boolean; ability: boolean } | null = null;
   private bodyYaw = 0;
   private bodyYawTarget = 0;
   private swingToggle = false;
@@ -122,11 +163,8 @@ export class CustomModel {
   private hands: { l: THREE.Object3D | null; r: THREE.Object3D | null };
   /** Bones above the waist: one-shots play on them only, so the legs keep running. */
   private upperBones: Set<string> | null;
-  /** For Settings: which of the yard's moments found an animation. */
-  readonly found: string[] = [];
-  readonly missing: string[] = [];
-  /** Files the model asked for and was not given (textures). */
-  readonly missingFiles: string[] = [];
+  /** Standing height in meters. */
+  readonly height: number;
   /** Quarter turns it is drawn with. */
   turns = 0;
   /** Helmets and shoulder pads put back on their attachment points (see attachItems). */
@@ -149,6 +187,7 @@ export class CustomModel {
     this.holder.add(scene);
     box = new THREE.Box3().setFromObject(this.holder);
     this.holder.position.y = -box.min.y;
+    this.height = box.max.y - box.min.y;
     this.setQuarterTurns(quarterTurns);
     this.body.add(this.holder);
     this.root.add(this.body);
@@ -170,10 +209,6 @@ export class CustomModel {
       const on = state === 'idle' ? 1 : 0;
       this.loco.set(state, { lower, upper, weight: on, target: on, natural: CLIP_SPEED[animKey(clip.name)] });
     }
-    for (const [label, names] of [['stand', LOCO.idle], ['run', LOCO.run], ['run backwards', LOCO.back.slice(0, 2)],
-      ['attack', ACTIONS.strike1.names], ['cast', ACTIONS.cast.names], ['shoot', ACTIONS.shoot.names], ['jump', LOCO.air]] as [string, string[]][]) {
-      (this.pick(names) ? this.found : this.missing).push(label);
-    }
     const bone = (re: RegExp) => {
       let hit: THREE.Object3D | null = null;
       scene.traverse((o) => { if (!hit && re.test(o.name)) hit = o; });
@@ -183,6 +218,12 @@ export class CustomModel {
       r: bone(/hand[\s_.-]*r(ight)?\b|r(ight)?[\s_.-]*hand|handr/i),
       l: bone(/hand[\s_.-]*l(eft)?\b|l(eft)?[\s_.-]*hand|handl/i),
     };
+  }
+
+  /** For Settings: whether one of the yard's moments ('stand', 'run', 'attack', 'wound'…) has an animation. */
+  has(moment: string): boolean {
+    const names = MOMENTS[moment];
+    return !!names && !!this.pick(names);
   }
 
   /** The first animation found, by exact name, else by a name that ends with it ("HumanMale_Stand"). */
@@ -238,10 +279,21 @@ export class CustomModel {
 
   setBodyYaw(yaw: number): void { this.bodyYawTarget = yaw; }
 
+  /** An ability: WoW's own animation for it if the model has one (Maul, Claw, Whirlwind), else the yard's. */
+  playAbility(id: string, animation?: string): void {
+    const own = ABILITY_ANIMS[id] && this.pick(ABILITY_ANIMS[id]);
+    const def = animation ? ACTIONS[animation] : undefined;
+    const clip = own || (def && this.pick(def.names));
+    if (clip) this.playClip(clip, own ? 1.2 : def!.rate, true);
+  }
+
   play(name: string): void {
     const def = ACTIONS[name];
     const clip = def && this.pick(def.names);
-    if (!clip) return;
+    if (clip) this.playClip(clip, def.rate);
+  }
+
+  private playClip(clip: THREE.AnimationClip, rate: number, ability = false): void {
     // Without an upper-body split a one-shot takes the whole body: skip it on the run.
     if (!this.upperBones && this.moving) return;
     if (this.shot) this.shot.action.stop();
@@ -250,14 +302,16 @@ export class CustomModel {
     action.reset();
     action.setLoop(THREE.LoopOnce, 1);
     action.clampWhenFinished = true;
-    action.timeScale = def.rate;
+    action.timeScale = rate;
     action.setEffectiveWeight(0);
     action.play();
-    this.shot = { action, elapsed: 0, length: clip.duration / def.rate, upperOnly: !!parts.upper };
+    this.shot = { action, elapsed: 0, length: clip.duration / rate, upperOnly: !!parts.upper, ability };
   }
 
   /** Auto attack swing: alternates the main-hand and off-hand attacks. */
   swing(): void {
+    // An ability's own blow is not cut short by the auto attack that lands with it.
+    if (this.shot?.ability && this.shot.elapsed < this.shot.length * 0.8) return;
     this.swingToggle = !this.swingToggle;
     this.play(this.swingToggle ? 'strike1' : 'strike2');
   }
@@ -294,18 +348,10 @@ export class CustomModel {
     this.mixer.update(dt);
   }
 
+  /** Takes the copy out of the scene; its geometry and textures belong to the ModelSource. */
   dispose(): void {
     this.root.removeFromParent();
     this.mixer.stopAllAction();
-    this.root.traverse((o) => {
-      const m = o as THREE.Mesh;
-      if (!m.isMesh) return;
-      m.geometry.dispose();
-      for (const mat of Array.isArray(m.material) ? m.material : [m.material]) {
-        for (const v of Object.values(mat)) if (v instanceof THREE.Texture) v.dispose();
-        mat.dispose();
-      }
-    });
   }
 }
 

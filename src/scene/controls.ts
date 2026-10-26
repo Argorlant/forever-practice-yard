@@ -50,6 +50,12 @@ export class Controls {
   /** Speed multiplier from auras (Sprint, stealth). */
   speedMultiplier: () => number = () => 1;
   obstacles: { x: number; z: number; r: number }[] = [];
+  /** How far from the center you can go (the fence; a place of your own is bigger). */
+  arenaRadius = ARENA_RADIUS;
+  /** The floor under (x, z) for someone at height y: flat at 0 in the yard; a place of your own has its own floors. */
+  ground: (x: number, z: number, y: number) => number = () => 0;
+  /** The floor under you, updated every frame. */
+  private floor = 0;
   /** A click or tap that did not drag; button 0 left, 2 right. */
   onClick: (clientX: number, clientY: number, button: number) => void = () => {};
   /** A turn of the wheel bound to an action button: true if it was used, and then the camera does not zoom. */
@@ -78,7 +84,7 @@ export class Controls {
     return Object.values(this.bindings).includes(code) || code === 'Space';
   }
   jump(): void {
-    if (this.y <= 0 && this.vy <= 0) this.vy = JUMP_SPEED;
+    if (this.y <= this.floor + 0.02 && this.vy <= 0) this.vy = JUMP_SPEED;
   }
   setJoystick(x: number, y: number): void { this.joy.x = x; this.joy.y = y; }
 
@@ -178,21 +184,26 @@ export class Controls {
     }
     // Stay inside the fence and out of the dummies.
     const r = Math.hypot(this.x, this.z);
-    if (r > ARENA_RADIUS) { this.x *= ARENA_RADIUS / r; this.z *= ARENA_RADIUS / r; }
+    if (r > this.arenaRadius) { this.x *= this.arenaRadius / r; this.z *= this.arenaRadius / r; }
     for (const o of this.obstacles) {
       const dx = this.x - o.x, dz = this.z - o.z;
       const d = Math.hypot(dx, dz), min = o.r + PLAYER_RADIUS;
       if (d < min && d > 1e-4) { this.x = o.x + (dx / d) * min; this.z = o.z + (dz / d) * min; }
     }
-    // Jump.
-    if (this.y > 0 || this.vy > 0) {
+    // Jump and fall; on the ground, follow it up steps and down slopes (a drop of more than a step is a fall).
+    this.floor = this.ground(this.x, this.z, this.y);
+    const grounded = this.vy <= 0 && this.y - this.floor < 0.35;
+    if (grounded) {
+      this.y = this.floor;
+      this.vy = 0;
+    } else {
       this.vy -= GRAVITY * dt;
       this.y += this.vy * dt;
-      if (this.y <= 0) { this.y = 0; this.vy = 0; }
+      if (this.y <= this.floor) { this.y = this.floor; this.vy = 0; }
     }
 
     this.placeCamera(dt);
-    return { moving, backwards: fwd < -0.05, speed, airborne: this.y > 0.02, bodyYaw };
+    return { moving, backwards: fwd < -0.05, speed, airborne: this.y > this.floor + 0.02, bodyYaw };
   }
 
   private placeCamera(_dt: number): void {
@@ -201,7 +212,7 @@ export class Controls {
     const horiz = Math.cos(this.camPitch) * this.camDist;
     this.camera.position.set(
       target.x - Math.sin(yaw) * horiz,
-      Math.max(0.3, target.y + Math.sin(this.camPitch) * this.camDist),
+      Math.max(this.floor + 0.3, target.y + Math.sin(this.camPitch) * this.camDist),
       target.z - Math.cos(yaw) * horiz,
     );
     this.camera.lookAt(target);

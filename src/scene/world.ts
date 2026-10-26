@@ -8,6 +8,8 @@ export interface World {
   camera: THREE.PerspectiveCamera;
   update(dt: number, t: number): void;
   resize(): void;
+  /** Shows or hides the yard built in code (fence, pines, torches, the flagstones), for a place of the player's own; the grass stays as the ground under it. */
+  setEnvironment(visible: boolean): void;
 }
 
 /** Seeded pseudo-random numbers, so the yard always looks the same. */
@@ -287,6 +289,10 @@ export function createWorld(container: HTMLElement): World {
   sun.shadow.normalBias = 0.03;
   scene.add(sun);
 
+  // The yard itself, apart from the sky and the light: a place of your own can replace it.
+  const env = new THREE.Group();
+  scene.add(env);
+
   // Ground: grass around, a circle of flagstones in the middle.
   const grass = grassTexture();
   grass.repeat.set(40, 40);
@@ -307,7 +313,7 @@ export function createWorld(container: HTMLElement): World {
   plaza.rotation.x = -Math.PI / 2;
   plaza.position.y = 0.01;
   plaza.receiveShadow = true;
-  scene.add(plaza);
+  env.add(plaza);
   const curb = new THREE.Mesh(
     new THREE.RingGeometry(12.5, 13.1, 64),
     new THREE.MeshStandardMaterial({ color: 0x4c4136, roughness: 1 }),
@@ -315,9 +321,9 @@ export function createWorld(container: HTMLElement): World {
   curb.rotation.x = -Math.PI / 2;
   curb.position.y = 0.015;
   curb.receiveShadow = true;
-  scene.add(curb);
+  env.add(curb);
 
-  scene.add(fence(15, 0.22));
+  env.add(fence(15, 0.22));
 
   const rnd = seeded(42);
   for (let i = 0; i < 46; i++) {
@@ -325,23 +331,23 @@ export function createWorld(container: HTMLElement): World {
     const d = 19 + rnd() * 30;
     const p = pine(rnd);
     p.position.set(Math.sin(a) * d, 0, Math.cos(a) * d);
-    scene.add(p);
+    env.add(p);
   }
-  scene.add(props(rnd));
+  env.add(props(rnd));
 
   const torches: ReturnType<typeof torch>[] = [];
   for (let i = 0; i < 6; i++) {
     const a = (i / 6) * Math.PI * 2 + Math.PI / 6;
     const t = torch();
     t.group.position.set(Math.sin(a) * 11.5, 0, Math.cos(a) * 11.5);
-    scene.add(t.group);
+    env.add(t.group);
     torches.push(t);
   }
   for (const [x, z, color] of [[-4, 12.2, 0x7b1d1d], [4, 12.2, 0x1d3b7b]] as const) {
     const b = banner(color);
     b.position.set(x, 0, z);
     b.rotation.y = Math.PI;
-    scene.add(b);
+    env.add(b);
   }
 
   function resize() {
@@ -356,6 +362,11 @@ export function createWorld(container: HTMLElement): World {
 
   return {
     renderer, scene, camera, resize,
+    setEnvironment(visible) {
+      env.visible = visible;
+      // Just under a place's own floors, so they do not flicker against it.
+      ground.position.y = visible ? 0 : -0.04;
+    },
     update(_dt, t) {
       torches.forEach((tc, i) => {
         const f = 0.85 + Math.sin(t * 9 + i * 1.7) * 0.08 + Math.sin(t * 23 + i) * 0.05;

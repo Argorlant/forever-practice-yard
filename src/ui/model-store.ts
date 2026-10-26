@@ -1,6 +1,7 @@
-// A player's own models, kept in this browser only (IndexedDB), one per
-// class: nothing is uploaded. Every call fails soft (private windows, blocked
-// storage): the yard then keeps its own model.
+// A player's own models, kept in this browser only (IndexedDB): a character
+// per class, the druid's forms, the dummy and the yard. Nothing is uploaded.
+// Every call fails soft (private windows, blocked storage): the yard then
+// keeps its own models.
 export interface StoredModel {
   /** The files as loaded: a .glb, or a .gltf with its .bin and textures. */
   files: { name: string; type: string; data: Blob }[];
@@ -8,6 +9,8 @@ export interface StoredModel {
   /** Quarter turns to face the way the yard expects. */
   rotation: number;
   enabled: boolean;
+  /** A place: the spot of it where the dummies stand, in the model's own units. */
+  anchor?: number[];
 }
 
 const DB = 'fpy-own-models';

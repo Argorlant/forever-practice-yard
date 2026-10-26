@@ -5,12 +5,14 @@ import { Combat } from './engine/combat';
 import type { Unit } from './engine/types';
 import { Beast } from './scene/beast';
 import { Character, type Locomotion } from './scene/character';
+import { CustomModel } from './scene/custom-model';
+import { CustomPlace } from './scene/custom-place';
 import { Controls, DEFAULT_MOVE } from './scene/controls';
 import { Dummy } from './scene/dummy';
 import { Totems } from './scene/totems';
 import { Vfx } from './scene/vfx';
 import { wireVfx } from './combat-vfx';
-import { OwnModel } from './own-model';
+import { OwnModel, ownModelsSection } from './own-model';
 import { createWorld } from './scene/world';
 import { SPECS, specById } from './specs';
 import { UI, fmt } from './strings';
@@ -96,6 +98,9 @@ const controls = new Controls(world.renderer.domElement, world.camera);
 controls.bindings = prefs.move;
 // Ranged specs start further back.
 if (spec.startDistance) controls.z = -spec.startDistance * 0.9144;
+/** Where you start, and the fence's radius (a place of your own is bigger). */
+const START_Z = controls.z;
+const FENCE = controls.arenaRadius;
 const character = new Character();
 world.scene.add(character.root);
 // Druid forms: animal models shown instead of the humanoid.
@@ -132,13 +137,60 @@ function syncMinion(): void {
 // Shaman totems, drawn where they were dropped.
 const totems = new Totems(world.scene);
 
-// A model of the player's own (Settings → Your own model), kept in this browser for the class.
-const own = new OwnModel(classKey(spec.className), world.scene);
+// ------------------------------------------------------ your own models
+// Models from the player's own game files (Settings → Your own models), kept in
+// this browser: the character (per class), the druid's forms, the dummy and the yard.
+const CODE = (s: string) => `<code>${s}</code>`;
+const ownPlayer = new OwnModel({
+  key: classKey(spec.className), title: 'Your character', kind: 'figure',
+  moments: ['stand', 'run', 'run backwards', 'attack', 'cast', 'shoot', 'jump'],
+  hint: 'Characters tab: dress your character (Item Sets puts on a whole tier set), tick Export animations, then Export GLB. Helmets and shoulder pads go back on their attachment points.',
+});
+const ownForms: { cat?: OwnModel; bear?: OwnModel } = {};
+for (const kind of ['cat', 'bear'] as const) {
+  if (!spec.forms?.[kind]) continue;
+  ownForms[kind] = new OwnModel({
+    key: `form-${kind}`, title: kind === 'cat' ? 'Cat Form' : 'Bear Form', kind: 'figure', moments: ['stand', 'run', 'attack', 'jump'],
+    hint: `Models tab: ${CODE(`creature/druid${kind}/druid${kind}.m2`)} (Tauren: ${CODE(`druid${kind}tauren.m2`)}), then Export GLB.`,
+  });
+}
+const ownDummy = new OwnModel({
+  key: 'dummy', title: 'Training dummy', kind: 'figure', moments: ['stand', 'wound'],
+  hint: `Models tab: ${CODE('creature/object/woodendummy.m2')}, then Export GLB.`,
+});
+const ownYard = new OwnModel({
+  key: 'yard', title: 'The yard', kind: 'place',
+  hint: `Models tab, WMO filter: a building, an arena or a raid room, such as ${CODE('stranglegladiatorarena.wmo')} (the Gurubashi Arena), then Export GLB. Then walk to where the dummy should stand and press Put the dummy here.`,
+});
+const ownSlots = [ownPlayer, ...Object.values(ownForms), ownDummy, ownYard];
+/** The copies drawn now: yours, else null for the yard's own. */
+let ownCharacter: CustomModel | null = null;
+const ownForm: { cat?: CustomModel | null; bear?: CustomModel | null } = {};
+let place: CustomPlace | null = null;
+
+/** A fresh copy of a slot's model, hidden until it is the one in use; the old copy goes. */
+function figureOf(slot: OwnModel, old: CustomModel | null | undefined): CustomModel | null {
+  old?.dispose();
+  if (!slot.on) return null;
+  const m = slot.source!.figure(slot.turns);
+  m.root.visible = false;
+  world.scene.add(m.root);
+  return m;
+}
+ownPlayer.onChange = () => { ownCharacter = figureOf(ownPlayer, ownCharacter); };
+for (const [kind, slot] of Object.entries(ownForms) as ['cat' | 'bear', OwnModel][]) {
+  slot.onChange = () => { ownForm[kind] = figureOf(slot, ownForm[kind]); };
+}
+
+/** The floor under (x, z): flat in the yard, the place's own floors in yours. */
+const groundY = (x: number, z: number, y = 0) => place?.groundAt(x, z, y) ?? 0;
+controls.ground = groundY;
 
 /** The model that stands for the player right now. */
 const avatar = () => {
   const form = spec.form?.(combat) ?? null;
-  return (form && beasts[form]) || own.active || character;
+  if (form) return ownForm[form] || beasts[form] || character;
+  return ownCharacter || character;
 };
 
 // Dummies.
@@ -149,7 +201,8 @@ function layoutDummies(n: number): void {
   const xs = n === 1 ? [0] : n === 2 ? [-1.5, 1.5] : [-2.8, 0, 2.8];
   xs.forEach((x, i) => {
     const dummy = new Dummy();
-    dummy.root.position.set(x, 0, 0);
+    dummy.root.position.set(x, groundY(x, 0), 0);
+    dressDummy(dummy);
     world.scene.add(dummy.root);
     const unit: Unit = {
       id: i, name: UI.dummy, level: 63, health: prefs.enemy.health, maxHealth: prefs.enemy.health,
@@ -161,6 +214,46 @@ function layoutDummies(n: number): void {
   controls.obstacles = dummies.map((d) => ({ x: d.unit.x, z: d.unit.z, r: 0.45 }));
   select(dummies[n === 3 ? 1 : 0].unit);
 }
+
+/** The dummy's own look: the straw one, or a model of yours. */
+function dressDummy(dummy: Dummy): void {
+  dummy.setModel(ownDummy.on ? ownDummy.source!.figure(ownDummy.turns) : null);
+}
+ownDummy.onChange = () => { for (const d of dummies) dressDummy(d.dummy); };
+
+/** The yard built in code, or a place of yours around the dummies. */
+function applyPlace(): void {
+  place?.dispose();
+  place = null;
+  if (ownYard.on) {
+    place = new CustomPlace(ownYard.source!, ownYard.anchor, ownYard.turns);
+    world.scene.add(place.root);
+    if (!ownYard.anchor) ownYard.setAnchor(place.anchor.toArray());
+  }
+  world.setEnvironment(!place);
+  controls.arenaRadius = place ? 60 : FENCE;
+  standOnFloors();
+}
+/** Dummies and you on the floor where you are. */
+function standOnFloors(): void {
+  for (const d of dummies) d.dummy.root.position.y = groundY(d.unit.x, d.unit.z);
+  controls.y = groundY(controls.x, controls.z, controls.y);
+}
+ownYard.onChange = applyPlace;
+ownYard.actions = [{
+  label: 'Put the dummy here',
+  title: "The floor where you stand becomes the yard's center, where the dummies stand",
+  run: () => {
+    if (!place) return;
+    ownYard.setAnchor(place.centerOn(controls.x, controls.z, controls.y));
+    // Back to the start, facing the dummy.
+    controls.x = 0;
+    controls.z = START_Z;
+    controls.facing = 0;
+    standOnFloors();
+    settings.close();
+  },
+}];
 
 function select(u: Unit | null): void {
   if (combat.target !== u) combat.stopAutoAttack();
@@ -290,7 +383,7 @@ const settings = new SettingsDialog(app, spec, prefs, combat, (what) => {
   persist();
 });
 
-settings.ownModel = (sec) => own.panel(sec);
+settings.ownModel = (sec) => ownModelsSection(sec, ownSlots);
 
 // Switching class reloads the page with ?class=.
 settings.classes = {
@@ -442,8 +535,11 @@ combat.on('damage', (hit) => {
   }
 });
 combat.on('swing', () => avatar().swing());
-combat.on('ability', ({ animation }) => {
-  if (animation) avatar().play(animation);
+combat.on('ability', ({ id, animation }) => {
+  const a = avatar();
+  // Models of your own have WoW's animation for some abilities (Maul, Claw, Whirlwind).
+  if (a instanceof CustomModel) a.playAbility(id, animation);
+  else if (animation) a.play(animation);
 });
 combat.on('shot', () => avatar().play('shoot'));
 combat.on('petAttack', ({ kind }) => {
@@ -467,7 +563,7 @@ const fx = wireVfx(combat, vfx, {
   feet: playerPos,
   hand: (side) => {
     const a = avatar();
-    const p = a === character || a === own.model ? a.handPosition(side) : null;
+    const p = a === character || a instanceof CustomModel ? a.handPosition(side) : null;
     if (p) return p;
     // Animal forms: in front of the chest.
     return playerPos().add(new THREE.Vector3(Math.sin(controls.facing) * 0.5, 1.1, Math.cos(controls.facing) * 0.5));
@@ -615,7 +711,7 @@ function frame(): void {
   combat.update(dt);
 
   const active = avatar();
-  for (const a of [character, own.model, beasts.cat, beasts.bear]) if (a) a.root.visible = a === active;
+  for (const a of [character, ownCharacter, ownForm.cat, ownForm.bear, beasts.cat, beasts.bear]) if (a) a.root.visible = a === active;
   active.root.position.set(controls.x, controls.y, controls.z);
   active.root.rotation.y = controls.facing;
   active.setBodyYaw(move.moving ? move.bodyYaw : 0);
@@ -643,7 +739,7 @@ function updatePet(dt: number): void {
   const st = combat.pet;
   pet.root.visible = st.out && Number.isFinite(st.x);
   if (!pet.root.visible) return;
-  pet.root.position.set(st.x, 0, st.z);
+  pet.root.position.set(st.x, groundY(st.x, st.z), st.z);
   pet.root.rotation.y = st.facing;
   // 6.4 m/s is the run (7 yards per second); following a sprinting owner it runs faster.
   pet.setLocomotion(st.moving ? 'run' : st.attacking ? 'ready' : 'idle', st.moving ? 6.4 * Math.max(1, combat.moveSpeed()) : 0);
@@ -663,4 +759,7 @@ character.load(MODEL_URL, spec.look).then(() => {
 });
 
 // Debug handle for automated checks.
-(window as unknown as { yard: unknown }).yard = { combat, controls, character, own, world, vfx, prefs: () => prefs };
+(window as unknown as { yard: unknown }).yard = {
+  combat, controls, character, world, vfx, prefs: () => prefs,
+  own: { slots: ownSlots, player: () => ownCharacter, forms: ownForm, place: () => place, dummies: () => dummies },
+};
