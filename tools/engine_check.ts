@@ -14,7 +14,9 @@ import { warlockAffliction, warlockDemonology, warlockDestruction } from '../src
 import { warrior } from '../src/specs/warrior';
 import { SPECS } from '../src/specs';
 import { classKey, decode, pointsPerTree, treesOf } from '../src/ui/talents-data';
-import { canAdd, canRemove, encode, isValid, parseTalents } from '../src/ui/talent-rules';
+import {
+  canAdd, canRemove, decodeOrder, defaultOrder, encode, encodeOrder, isValid, levelFor, parseTalents, pointsOf, repairOrder,
+} from '../src/ui/talent-rules';
 import { animKey } from '../src/scene/custom-model';
 import { CRACKS, OnyxiaFight, ROOM } from '../src/encounters/onyxia';
 import * as druidTalents from '../src/specs/druid/talents';
@@ -1014,6 +1016,28 @@ console.log(`Talent layouts checked for ${SPECS.reduce((n, s) => n + (s.builds?.
   if (canAdd('paladin', shockadin, 2, 0)) failures.push('a 52nd point could be spent');
   if (encode(shockadin) !== '55003013200131151--05223331001') failures.push(`encode gives ${encode(shockadin)}`);
   if (parseTalents('paladin', '5555555555555555555') !== null) failures.push('an illegal link was accepted');
+  // The planner's leveling order: every published build gets a legal order of all its points, and a link gives it back.
+  let orders = 0;
+  for (const sp of SPECS) {
+    const cls = classKey(sp.className);
+    for (const b of sp.builds ?? []) {
+      if (!b.talentString) continue;
+      const order = defaultOrder(cls, decode(cls, b.talentString));
+      if (encode(pointsOf(cls, order)) !== encode(decode(cls, b.talentString))) failures.push(`${sp.id}/${b.id}: the planner's order leaves points out`);
+      const back = decodeOrder(cls, encodeOrder(cls, order));
+      if (!back || encodeOrder(cls, back) !== encodeOrder(cls, order)) failures.push(`${sp.id}/${b.id}: the order's link reads back differently`);
+      orders++;
+    }
+  }
+  // Taking back an early point moves a later one that needed it until it fits again.
+  const arms = treesOf('warrior')[0].talents;
+  const row1 = arms.findIndex((t) => t.row === 1 && !t.req);
+  const early: [number, number][] = [[0, 0], [0, 0], [0, 0], [0, 1], [0, 1], [0, row1], [0, 1]];
+  const fixed = repairOrder('warrior', early.filter((_, k) => k !== 0));
+  if (fixed.length !== 6 || fixed[4][1] !== 1 || fixed[5][1] !== row1) failures.push(`the order kept a point too early: ${JSON.stringify(fixed)}`);
+  if (decodeOrder('warrior', '!!') !== null || decodeOrder('warrior', 'z'.repeat(52)) !== null) failures.push('a broken order link was accepted');
+  if (levelFor(1) !== 10 || levelFor(51) !== 60) failures.push('talent points come at the wrong levels');
+  console.log(`Talent planner: ${orders} builds ordered level by level`);
 }
 {
   // Your own model: the animation names exports use, read as the yard's.

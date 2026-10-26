@@ -191,6 +191,17 @@ prerequisites at full rank). Your talents replace the build's, which keeps its g
 priority list reads your talents, and abilities a talent unlocks get a button. *Copy link* shares the class, build and
 talents (`?class=…&build=…&talents=…`).
 
+**Talent planner.** `?planner=<class>` (the *Talent planner* button on the first screen, or *Planner* on a build) is a
+talent calculator for every class with the same rules, and it keeps the order you spend points in: the leveling order lists
+the level each point comes at (one a level from 10, 51 at 60), and taking a point back moves the later points that needed
+it until they fit again. The tooltips give each rank's text, what a talent needs, and what WoW Forever changed in it
+(★ marks the talents new in Forever); a panel lists the new talents the build takes and the Classic talents the trees no
+longer have. Start from one of the sims' builds (its order is made up: main tree from the top, then the others) or compare
+with one (the other build's rank shows on every talent where they differ). The link (`?planner=<class>&o=…`) holds the
+order, one letter per point; *Practise as …* opens the yard with the nearest of the sims' builds (its gear and action bar)
+and your talents. The notes come from the research sheets: `node tools/talent_notes.mjs` rebuilds
+`src/ui/talent-notes.json`.
+
 **Action bars and keys.** Up to four rows of 8 buttons (2 to 4 shown, in Settings or the Spellbook). Rows 3 and 4 start with
 the build's abilities that have no other button (Charge and Intercept for a warrior), row 3 on Shift+1-8. The Spellbook lists
 every ability to drag onto a button; dragging a button off the bar clears it. The Keys button turns on key binding: hover a
@@ -274,7 +285,7 @@ Then open http://127.0.0.1:5180.
 | `src/specs/<class>` | One class (`rogue`, `warrior`, `druid`, `paladin`, `hunter`, `priest`, `mage`, `warlock`, `shaman`): `data.ts` holds every number with its source; `talents.ts` the sims' builds; the spec files define abilities, procs and the priority list. |
 | `src/scene` | The 3D yard (three.js): world, dummy, character, WoW-style controls and spell effects; `custom-model.ts`, `custom-place.ts` and `wow-map.ts` draw models, places and zones of your own (wired in `src/own-model.ts`). |
 | `src/encounters` | Boss encounters: their rules, without drawing (`onyxia.ts`); `src/encounter-view.ts` draws them (`scene/dragon.ts`, `scene/lair.ts`). |
-| `src/ui` | HUD, action bar, floating combat text, rotation panel and settings. |
+| `src/ui` | HUD, action bar, floating combat text, rotation panel and settings; the first screen (`picker.ts`) and the talent planner (`planner.ts`). |
 | `research` | Sourced notes on each spec's WoW Forever mechanics. |
 
 ### Adding a spec

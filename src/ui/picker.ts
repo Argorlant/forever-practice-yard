@@ -10,7 +10,7 @@ import { talentTreesHtml } from './talent-tree';
 import { classKey, mainTree } from './talents-data';
 
 /** WoW's class order and colours. */
-const CLASSES: { name: string; color: string }[] = [
+export const CLASSES: { name: string; color: string }[] = [
   { name: 'Warrior', color: '#c79c6e' }, { name: 'Paladin', color: '#f58cba' }, { name: 'Hunter', color: '#abd473' },
   { name: 'Rogue', color: '#fff569' }, { name: 'Priest', color: '#ffffff' }, { name: 'Shaman', color: '#2a8cff' },
   { name: 'Mage', color: '#69ccf0' }, { name: 'Warlock', color: '#9482c9' }, { name: 'Druid', color: '#ff7d0a' },
@@ -72,6 +72,10 @@ export function showPicker(app: HTMLElement): void {
       again.href = `?class=${lastSpec.id}`;
       root.append(again);
     }
+    const planner = h('a', 'hud-btn picker-last', 'Talent planner') as HTMLAnchorElement;
+    planner.href = `?planner=${load<string>('fpy.planner') ?? classKey(lastSpec?.className ?? 'warrior')}`;
+    planner.title = "Any class's talent trees, with the level each point comes at and what WoW Forever changed";
+    root.append(planner);
     root.append(h('p', 'picker-note', INSPIRATION_HTML));
     root.append(h('p', 'picker-note', `${SUPPORT_HTML}<br>Not affiliated with or endorsed by Blizzard Entertainment.`));
   };
@@ -90,10 +94,13 @@ export function showPicker(app: HTMLElement): void {
         const pts = build.talentString ? split(build.talentString).join('/') : '';
         const info = h('div', 'build-info', `<b>${build.name ?? build.label}</b><span>${pts}</span><small>${build.source ?? ''}</small>`);
         const talents = h('button', 'hud-btn small', 'Talents');
+        const plan = h('a', 'hud-btn small', 'Planner') as HTMLAnchorElement;
+        plan.href = `?planner=${classKey(className)}&spec=${spec.id}&build=${encodeURIComponent(build.id)}`;
+        plan.title = 'Open these talents in the talent planner';
         const play = h('a', 'hud-btn small play', 'Play') as HTMLAnchorElement;
         play.href = `?class=${spec.id}&build=${encodeURIComponent(build.id)}`;
         const actions = h('div', 'build-actions');
-        actions.append(talents, play);
+        actions.append(talents, plan, play);
         const trees = h('div', 'build-trees hidden');
         talents.addEventListener('click', () => {
           if (!trees.innerHTML && build.talentString) trees.innerHTML = talentTreesHtml(classKey(className), build.talentString);

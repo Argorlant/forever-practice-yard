@@ -407,6 +407,73 @@ img.wow-icon { width: 100%; height: 100%; display: block; object-fit: cover; tra
 .talent-list { margin-top: 8px; }
 .talent-list summary { cursor: pointer; color: var(--muted); font-size: 12px; }
 @media (max-width: 600px) { .talent-graphic { --tal: 30px; gap: 6px; } .build-card { grid-template-columns: 1fr; } }
+
+/* ------------------------------------------------------ the talent planner */
+.planner > * { max-width: 1060px; }
+.planner .picker-sub { max-width: 760px; }
+.planner .picker-back { width: fit-content; margin-left: max(0px, calc((100% - 1060px) / 2)); text-decoration: none; }
+.planner-classes { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; margin-bottom: 12px; }
+.planner-class { display: flex; align-items: center; gap: 6px; padding: 4px 10px 4px 4px; cursor: pointer; font: inherit; font-size: 13px;
+  background: rgba(20, 16, 12, .85); border: 1px solid rgba(138, 109, 51, .5); border-radius: 6px; }
+.planner-class .wow-icon { width: 24px; height: 24px; border-radius: 4px; }
+.planner-class:hover { border-color: var(--gold-dim); }
+.planner-class.active { border-color: var(--gold); background: #3a2d18; }
+.planner-bar { position: sticky; top: -32px; z-index: 5; padding: 6px 8px; background: rgba(11, 9, 8, .92); border: 1px solid rgba(138, 109, 51, .4); border-radius: 6px; }
+.planner-bar .points i { color: #e8dcc0; }
+.planner-select { max-width: 190px; padding: 4px 6px; font: inherit; font-size: 12px; color: #e8dcc0; background: #1a1410; border: 1px solid var(--gold-dim); border-radius: 4px; }
+.planner-bar .play { text-decoration: none; border-color: var(--gold); color: #fff; background: #4a3a1e; }
+.planner-bar button[disabled] { opacity: .45; cursor: default; }
+.planner-trees { margin-top: 4px; }
+.planner .talent-graphic { --tal: 40px; min-width: 600px; }
+.planner .tt-grid { gap: 10px; }
+.tt-reset { margin-left: 6px; padding: 0 6px; font: inherit; font-size: 14px; line-height: 18px; color: var(--muted); cursor: pointer;
+  background: rgba(0, 0, 0, .5); border: 1px solid #4a3a2a; border-radius: 4px; }
+.tt-reset:hover { color: #fff; border-color: var(--gold-dim); }
+.tal-new { position: absolute; top: -7px; right: -6px; font-size: 12px; line-height: 1; color: #ffd84a; text-shadow: 0 0 2px #000, 0 0 3px #000; pointer-events: none; }
+.tal-cmp { position: absolute; left: -6px; top: -6px; min-width: 13px; padding: 0 2px; border-radius: 3px; font-size: 10px; font-weight: 700; line-height: 13px;
+  text-align: center; background: #0b0908; pointer-events: none; }
+.tal-cmp.more { color: #7fc8ff; border: 1px solid #2e6a9a; }
+.tal-cmp.less { color: #ff9a8a; border: 1px solid #8a3a2e; }
+.tal-tip { position: fixed; z-index: 50; width: 300px; padding: 10px 12px; display: none; flex-direction: column; gap: 3px; pointer-events: none;
+  background: rgba(10, 12, 26, .97); border: 1px solid #5c6a8a; border-radius: 6px; font-size: 13px; line-height: 1.35; }
+.tal-tip.show { display: flex; }
+.tip-head { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+.tip-head b { font-size: 15px; color: #fff; }
+.tip-head span { color: #c9c9c9; font-size: 12px; white-space: nowrap; }
+.tip-new { color: #ffd84a; }
+.tip-req { color: #ff4a3a; }
+.tip-desc { color: #ffd100; }
+.tip-next { color: #fff; margin-top: 4px; }
+.tip-change { color: #a9d7ff; margin-top: 4px; }
+.tip-change b { color: #7fc8ff; }
+.tip-muted { color: #9aa7c4; font-size: 12px; }
+.tip-hint { color: #6fef6f; font-size: 12px; margin-top: 4px; }
+.planner-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 16px; }
+.planner-box { padding: 10px 12px; background: rgba(20, 16, 12, .85); border: 1px solid rgba(138, 109, 51, .5); border-radius: 8px; }
+.planner-box h2 { margin: 0 0 8px; font: 18px Georgia, 'Palatino Linotype', serif; color: var(--gold); }
+.planner-box h2 span { color: #ffd84a; }
+.planner-note { color: var(--muted); font-size: 13px; margin: 0 0 8px; }
+.planner-note.small { font-size: 11px; margin: 8px 0 0; }
+.planner-order { list-style: none; margin: 0; padding: 0; columns: 2; column-gap: 16px; font-size: 13px; }
+.planner-order li { display: flex; align-items: center; gap: 6px; padding: 2px 0; break-inside: avoid; }
+.planner-order .lv { min-width: 42px; color: var(--gold); font-variant-numeric: tabular-nums; }
+.planner-order .wow-icon { width: 18px; height: 18px; border-radius: 3px; }
+.planner-order small { margin-left: auto; color: var(--muted); }
+.planner-chips { display: flex; flex-wrap: wrap; gap: 4px; }
+.planner-chips .chip { display: inline-flex; align-items: center; gap: 4px; padding: 2px 6px 2px 2px; font-size: 12px; color: var(--muted);
+  border: 1px solid #3a2f22; border-radius: 4px; }
+.planner-chips .chip .wow-icon { width: 18px; height: 18px; border-radius: 3px; filter: grayscale(1) brightness(.6); }
+.planner-chips .chip.on { color: #fff; border-color: var(--gold-dim); }
+.planner-chips .chip.on .wow-icon { filter: none; }
+.planner-gone { margin-top: 10px; font-size: 13px; }
+.planner-gone summary { cursor: pointer; color: var(--muted); }
+.planner-gone ul { margin: 6px 0 0; padding-left: 18px; color: #c9bfa8; }
+@media (max-width: 760px) {
+  .planner-cols { grid-template-columns: 1fr; }
+  .planner-order { columns: 1; }
+  .planner .talent-graphic { --tal: 34px; min-width: 540px; }
+  .planner-bar { position: static; }
+}
 /* What the tool is and is not: speculative, built on the sims. */
 .disclaimer-box { max-width: 760px; margin: 0 auto 24px; padding: 12px 16px; border: 1px solid var(--gold-dim); border-radius: 8px;
   background: rgba(40, 30, 12, .55); color: var(--muted); font-size: 13px; line-height: 1.5; }

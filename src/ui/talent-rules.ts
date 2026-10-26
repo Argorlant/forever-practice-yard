@@ -57,3 +57,60 @@ export function parseTalents(cls: string, s: string | null): string | null {
   const points = decode(cls, s);
   return isValid(cls, points) ? encode(points) : null;
 }
+
+/** The level the first talent point comes at; one more point every level after it, 51 by level 60. */
+export const FIRST_LEVEL = 10;
+/** The level a build of this many points needs. */
+export const levelFor = (points: number) => (points ? FIRST_LEVEL - 1 + points : 1);
+
+/** A leveling order: the talent each point went to, level by level, as [tree, talent]. */
+export type Order = [number, number][];
+
+const LETTERS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_';
+
+/** An order for a link: one letter per point, the talent's place counting through the three trees. */
+export function encodeOrder(cls: string, order: Order): string {
+  const start = treesOf(cls).reduce<number[]>((a, t, i) => [...a, (a[i] ?? 0) + t.talents.length], [0]);
+  return order.map(([i, j]) => LETTERS[start[i] + j]).join('');
+}
+
+/** Points to the talents an order took. */
+export function pointsOf(cls: string, order: Order): Points {
+  const points = treesOf(cls).map((tree) => tree.talents.map(() => 0));
+  for (const [i, j] of order) points[i][j]++;
+  return points;
+}
+
+/** An order kept to the rules point by point: a point that cannot go yet waits for those after it (taking back an early point can leave a later one too soon). Points that never fit are dropped. */
+export function repairOrder(cls: string, order: Order): Order {
+  const points = treesOf(cls).map((tree) => tree.talents.map(() => 0));
+  const pending = [...order];
+  const out: Order = [];
+  for (;;) {
+    const k = pending.findIndex(([i, j]) => canAdd(cls, points, i, j));
+    if (k < 0) return out;
+    const [i, j] = pending.splice(k, 1)[0];
+    points[i][j]++;
+    out.push([i, j]);
+  }
+}
+
+/** A link's order, if every letter is a talent of the class; kept to the rules. */
+export function decodeOrder(cls: string, s: string | null): Order | null {
+  if (!s || s.length > MAX_POINTS || ![...s].every((c) => LETTERS.includes(c))) return null;
+  const places = treesOf(cls).flatMap((tree, i) => tree.talents.map((_, j): [number, number] => [i, j]));
+  const order = [...s].map((c) => places[LETTERS.indexOf(c)]);
+  return order.every(Boolean) ? repairOrder(cls, order) : null;
+}
+
+/** An order for a build that came without one: its main tree from the top, then the others, most points first. */
+export function defaultOrder(cls: string, points: Points): Order {
+  const trees = treesOf(cls);
+  const byPoints = trees.map((_, i) => i).sort((a, b) => points[b].reduce((x, y) => x + y, 0) - points[a].reduce((x, y) => x + y, 0));
+  const order: Order = [];
+  for (const i of byPoints) {
+    const talents = trees[i].talents.map((t, j) => ({ t, j })).sort((a, b) => a.t.row - b.t.row || a.t.col - b.t.col);
+    for (const { j } of talents) for (let r = 0; r < points[i][j]; r++) order.push([i, j]);
+  }
+  return repairOrder(cls, order);
+}

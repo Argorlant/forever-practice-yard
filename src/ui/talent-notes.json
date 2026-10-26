@@ -1,0 +1,1304 @@
+{
+ "warrior": {
+  "talents": {
+   "improvedTacticalMastery": {
+    "change": "Was 'Tactical Mastery'; base 10 rage is now baseline, talent adds 3/point (max 25)."
+   },
+   "improvedOverpower": {
+    "change": "Moved to row 2."
+   },
+   "deepWounds": {
+    "change": "Rolling bleed, no attack power, cannot crit; required for Impale again (8 Oct)."
+   },
+   "spearingStrike": {
+    "new": true
+   },
+   "twoHandedWeaponSpecialization": {
+    "change": "3 ranks, 1/2/3% (Classic 5 ranks, 1-5%)."
+   },
+   "bloodthrill": {
+    "new": true
+   },
+   "weaponmaster": {
+    "new": true
+   },
+   "improvedSlam": {
+    "change": "Moved from Fury, 2 points: -0.25 s cast and GCD and -1.5 s cooldown per point; Slam no longer interrupts the swing."
+   },
+   "boomingVoice": {
+    "change": "Now +radius and -5%/point shout rage cost (durations baseline)."
+   },
+   "lingeringRage": {
+    "new": true
+   },
+   "unbridledWrath": {
+    "change": "12%/point (60%), 1 rage for all weapons since 1 Oct."
+   },
+   "furiousPrecision": {
+    "new": true
+   },
+   "bloodCraze": {
+    "change": "Also triggered by hits over 20% of max health; Bloodthirst trigger removed 1 Oct."
+   },
+   "dualWieldSpecialization": {
+    "change": "Off-hand damage 5%/point plus off-hand rage (gs curve 10%/point, unconfirmed); the 20%/point rage and the off-hand hit were removed on 1 Oct."
+   },
+   "ragingBlows": {
+    "new": true
+   },
+   "enrage": {
+    "change": "Redesigned: 30% chance on any damage taken, rank scales the Physical damage bonus 2-10%."
+   },
+   "improvedBerserkerRage": {
+    "change": "Moved to row 5."
+   },
+   "flurry": {
+    "change": "Max 25% (was 30%); Death Wish is now the prerequisite (1 Oct)."
+   },
+   "goreDrinker": {
+    "new": true
+   },
+   "bloodthirst": {
+    "change": "45% AP + 48, no heal, +10% movement speed."
+   },
+   "improvedBloodrage": {
+    "change": "Now increases all rage from Bloodrage; moved to row 1."
+   },
+   "shieldSpecialization": {
+    "change": "Rage per block proc 5 (was 1)."
+   },
+   "ironWill": {
+    "change": "Moved to Protection row 1; reduces stun and fear duration."
+   },
+   "anticipation": {
+    "change": "+4 defense per point (was +2)."
+   },
+   "improvedRevenge": {
+    "change": "Redesigned: +20/40/60% Revenge damage (was a stun chance)."
+   },
+   "lastStand": {
+    "change": "3 min cooldown (Classic 10 min)."
+   },
+   "masterOfDefense": {
+    "new": true
+   },
+   "improvedDisarm": {
+    "change": "Now reduces Disarm's cooldown."
+   },
+   "defiance": {
+    "change": "Requires a shield."
+   },
+   "vanguard": {
+    "new": true
+   },
+   "improvedShieldWall": {
+    "change": "Now reduces the cooldown by 5.5/11 min."
+   },
+   "focusedRage": {
+    "new": true
+   },
+   "bastion": {
+    "new": true
+   },
+   "shieldSlam": {
+    "change": "Rank 4 640-670 + block value."
+   }
+  },
+  "removed": [
+   "Axe/Mace/Sword/Polearm Specialization (folded into Weaponmaster)",
+   "Improved Battle Shout, Improved Demoralizing Shout (baseline)",
+   "Improved Shield Block, Improved Taunt (baseline)",
+   "One-Handed Weapon Specialization",
+   "Toughness (removed 1 Oct)",
+   "Improved Cleave (removed 1 Oct; Raging Blows discounts Cleave)",
+   "Boundless Rage (removed 1 Oct)",
+   "Precision (replaced by Furious Precision, 1 Oct)"
+  ]
+ },
+ "paladin": {
+  "talents": {
+   "healingLight": {
+    "change": "3 ranks; now also boosts Holy Shock heals."
+   },
+   "spiritualFocus": {
+    "change": "2 ranks (35/70%); now also covers Light's Vigil. Wowhead raw text prints 14%."
+   },
+   "improvedSeals": {
+    "new": true,
+    "change": "Replaces Improved Seal of Righteousness: +5/10/15% damage of Seal of Righteousness, Command and Fury and their Judgements. Wowhead raw text prints 3%."
+   },
+   "unyieldingFaith": {
+    "change": "2 ranks, now Fear and Disorient (15/30%)."
+   },
+   "voiceOfTruth": {
+    "new": true,
+    "change": "New active: immune to Silence and Interrupt for 6 s, 3 min cooldown."
+   },
+   "reverence": {
+    "new": true,
+    "change": "New: 10/20/30% of mana regeneration continues while casting."
+   },
+   "purifyingPower": {
+    "new": true,
+    "change": "New to Classic (TBC talent): Cleanse/Purify -10/20% mana, Exorcism and Holy Wrath cooldown -17/33%. Wowhead raw text prints 50%."
+   },
+   "infusionOfLight": {
+    "new": true,
+    "change": "New: Holy Shock / Flash of Light crits cut the next Holy Light cast by 0.5/1.0 s within 15 s. Bug #260: currently also +50% Holy Shock damage (fix announced for 15 Oct)."
+   },
+   "illumination": {
+    "change": "Heal crits of Flash of Light, Holy Light, Light's Vigil or Holy Shock: 20%/rank chance to regain 50% of the base cost."
+   },
+   "divinePrecision": {
+    "new": true,
+    "change": "New: +6/12/18% hit with the Holy spell family (gs includes melee Holy Strike). Requires Holy Shock."
+   },
+   "holyShock": {
+    "change": "Moved up to the 21-point slot; 4 ranks, 10 s cooldown (was 30 s), ~10% less damage."
+   },
+   "consecratedGround": {
+    "new": true,
+    "change": "New: +5/10% Holy damage against the first 4 enemies in your Consecration."
+   },
+   "holyPower": {
+    "change": "Holy Shock and (since 24 Sep) Holy Strike +3% crit per point; other spells +1% per point."
+   },
+   "lightsVigil": {
+    "new": true,
+    "change": "New 31-point talent (see abilities.lightsVigil)."
+   },
+   "redoubt": {
+    "change": "Procs on any landed melee hit (Classic: on being crit), 2% chance per point; +4% block per point (1 Oct, was 6%) for 10 s or 5 blocks."
+   },
+   "precision": {
+    "change": "Now +1% hit per point for spells as well as melee."
+   },
+   "improvedSealOfFury": {
+    "new": true,
+    "change": "New: mana when Seal of Fury's absorb is fully used (60 at 60, +15% per attacker level above you, max +45%); no threat."
+   },
+   "improvedRighteousFury": {
+    "change": "Reworked: -2/4/6% damage taken while Righteous Fury is up (Classic: +threat)."
+   },
+   "shieldSpecialization": {
+    "change": "3 ranks: block value +10/20/30% and 33/66/100% chance on block to restore 6% of maximum mana (3 s ICD, no threat since 8 Oct)."
+   },
+   "sacredDuty": {
+    "new": true,
+    "change": "New to Classic (TBC): +2/4% Stamina, Divine Shield / Divine Protection / Templar's Bulwark -30/60 s."
+   },
+   "swiftJudgement": {
+    "new": true,
+    "change": "New active (see abilities.swiftJudgement)."
+   },
+   "oneHandedWeaponSpecialization": {
+    "change": "3 ranks, 3/7/10% (Classic 5 x 2%). Wowhead raw text prints 2%."
+   },
+   "templarsBulwark": {
+    "new": true,
+    "change": "New active (see abilities.templarsBulwark)."
+   },
+   "reckoning": {
+    "change": "Extra attack 8%/point after a block and 20%/point after a non-periodic crit taken, 1.5 s ICD (8 Oct). Classic: 20%/point on any crit, stored."
+   },
+   "ironCreed": {
+    "new": true,
+    "change": "New: Holy Strike threat +5%/point; with Righteous Fury, Holy Strike gives -2%/point damage taken for 6 s. Wowhead raw text prints 30%/15%; fs uses 3%/point."
+   },
+   "holyShield": {
+    "change": "+30% block (1 Oct), 4 charges, 221 damage per block at 0.08 SP, 20% extra threat."
+   },
+   "benediction": {
+    "change": "-2% mana per point on ALL instant spells and abilities (Classic: seals and judgements, 3%/point)."
+   },
+   "holyConduit": {
+    "new": true,
+    "change": "New: -20/40% mana for Consecration, Holy Wrath, Exorcism and Hammer of Wrath."
+   },
+   "vindication": {
+    "change": "3 ranks: on every landed damaging melee attack, target AP -68/136/204 and your AP +1/2/3% for 30 s."
+   },
+   "sanctifiedJudgement": {
+    "new": true,
+    "change": "New to Classic (TBC): Judgement 33/66/100% chance to refund 20/40/60% of the current seal's cost."
+   },
+   "pursuitOfJustice": {
+    "change": "2 ranks, +8/15% movement speed."
+   },
+   "eyeForAnEye": {
+    "change": "2 ranks, 5/10% of crit damage taken reflected (Classic 15/30%). Wowhead raw text prints 15%."
+   },
+   "sacredArbiter": {
+    "new": true,
+    "change": "New: Holy Strike +20% (24 Sep, was 10%) and refreshes all Judgements on the target."
+   },
+   "twoHandedWeaponSpecialization": {
+    "change": "2/4/6% (24 Sep, beta had 3/6/9%), Physical in fs; gs also applies it to seal procs, Judgement of Command and Holy Strike."
+   },
+   "vengeance": {
+    "change": "Reworked: +1/2/3% Physical and Holy damage per stack, 3 stacks, 30 s, after any non-periodic crit (24 Sep). Wowhead raw text prints 5%."
+   },
+   "championOfTheLight": {
+    "new": true,
+    "change": "New: spell damage = 20/40/60% of Intellect (1 Oct, was 33/66/100%; never healing). Wowhead raw text prints 100%."
+   },
+   "instrumentOfLaw": {
+    "new": true,
+    "change": "New: Hammer of Wrath cast -0.5/1.0 s; all threat -10/20% while Righteous Fury is off."
+   },
+   "twistOfLight": {
+    "new": true,
+    "change": "New capstone: seals -20% mana (24 Sep) and Echoes (see sealRules.twistOfLight)."
+   }
+  },
+  "removed": [
+   "Improved Seal of Righteousness (-> Improved Seals)",
+   "Consecration (baseline)",
+   "Improved Lay on Hands",
+   "Improved Blessing of Wisdom",
+   "Lasting Judgement",
+   "Improved Devotion Aura",
+   "Blessing of Kings (baseline)",
+   "Improved Concentration Aura",
+   "Blessing of Sanctuary (spell removed)",
+   "Improved Blessing of Might",
+   "Improved Seal of the Crusader (baked into the Judgement)",
+   "Improved Retribution Aura",
+   "Sanctity Aura (no longer trained)",
+   "Improved Holy Strike (beta only, removed 24 Sep)",
+   "Crusade (beta only, removed in client 70009)"
+  ]
+ },
+ "hunter": {
+  "talents": {
+   "deadlyAspects": {
+    "change": "Formerly Improved Aspect of the Hawk. Hawk: Auto Shot 2%/point -> Quick Shots (+30% ranged speed, 12 s). New Beast half: melee white hits -> Quick Strikes (+30% melee speed)."
+   },
+   "enduranceTraining": {
+    "change": "Now includes Thick Hide: pet health and armor +3%/point; no longer boosts the hunter."
+   },
+   "focusedFire": {
+    "new": true,
+    "change": "New: +1%/point damage for hunter and pet while the pet is active."
+   },
+   "improvedAspectOfTheMonkey": {
+    "change": "3 ranks (was 5); twice the dodge; the pet gets 50% of the aspect."
+   },
+   "pathfinding": {
+    "change": "Moved to row 2: Cheetah/Pack speed +3%/point."
+   },
+   "bestialSwiftness": {
+    "change": "No longer outdoors-only: pet speed +30%."
+   },
+   "unleashedFury": {
+    "change": "3%/point (was 4%); also hawks."
+   },
+   "improvedMendPet": {
+    "change": "Also lowers Mend Pet cost (bug #316: currently raises it)."
+   },
+   "ferocity": {
+    "change": "2%/point pet crit (was 3%); also hawks."
+   },
+   "summonHawk": {
+    "new": true,
+    "change": "New 16-point milestone: dive bomb + 18 s hawk, two at once, cooldown shared with Arcane Shot."
+   },
+   "spiritBond": {
+    "change": "Rank 2: 1% health every 5 s."
+   },
+   "intimidation": {
+    "change": "Now needs Bestial Swiftness; the pet's next attack gains +100% crit; 8% base mana; 15 s window."
+   },
+   "bestialDiscipline": {
+    "change": "Pet Focus regen +10%/point and 25%/point casting mana regen for the hunter."
+   },
+   "hawkEye": {
+    "change": "Moved to row 1: +2 yd/point."
+   },
+   "improvedConcussiveShot": {
+    "change": "4%/point stun chance (fixed 8 Oct)."
+   },
+   "lethalAttacks": {
+    "change": "Formerly Lethal Shots; row 1; +1%/point crit with all attacks."
+   },
+   "improvedStings": {
+    "change": "Formerly Improved Serpent Sting; Serpent Sting +6/13/20%, Viper Sting cooldown -2/4/6 s, Scorpid Sting +15/30/45 s."
+   },
+   "efficiency": {
+    "change": "Row 2; 3%/point (15% at 5/5); Stings and melee abilities too (not Sniper Shot or Strider Kick)."
+   },
+   "carefulAim": {
+    "new": true,
+    "change": "New: AP and RAP +20%/point of Intellect."
+   },
+   "rapidKilling": {
+    "new": true,
+    "change": "New: Rapid Fire -1/-2 min; a kill gives the next Shot +20% for 20 s."
+   },
+   "improvedArcaneShot": {
+    "change": "-0.3 s/point (1.5 s); Arcane only, not Summon Hawk."
+   },
+   "loneWolf": {
+    "new": true,
+    "change": "New 11-point milestone: +20% damage with all attacks while no pet is active."
+   },
+   "trueshotAura": {
+    "change": "Moved from row 7 to row 4 (Blizzard calls it the 21-point milestone; in gs's tree row 4 needs 15 points); ranged AP only; new low ranks (talent rank 1 = 30 RAP)."
+   },
+   "mortalShots": {
+    "change": "Now needs Careful Aim: +6%/point ranged crit damage bonus."
+   },
+   "rapidRecuperation": {
+    "new": true,
+    "change": "New: Serpent Sting hit -> 25/50% casting regen for 15 s; needs Rapid Killing."
+   },
+   "barrage": {
+    "change": "3/7/10% (was 5/10/15%); now Aimed Shot too, plus Multi-Shot and Volley."
+   },
+   "sniperShot": {
+    "new": true,
+    "change": "New 31-point milestone (needs Trueshot Aura): 4 s cast Shot, 15 s, 45 yd."
+   },
+   "improvedTracking": {
+    "new": true,
+    "change": "New: replaces Monster/Humanoid Slaying; +1%/point damage to the tracked type."
+   },
+   "deflection": {
+    "change": "1%/point parry (1 Oct; was 2%)."
+   },
+   "entrapment": {
+    "change": "Always triggers; points add root duration (1-5 s); diminishing returns (8 Oct)."
+   },
+   "savageStrikes": {
+    "change": "Client: melee abilities +2/4% crit; Blizzard article: all melee damage +2/4% (conflict)."
+   },
+   "survivalist": {
+    "change": "Moved to row 2: health +2%/point."
+   },
+   "improvedWingClip": {
+    "change": "3 ranks reach 20% root chance."
+   },
+   "cleverTraps": {
+    "change": "Freezing/Frost duration and Immolation/Explosive damage +15%/point."
+   },
+   "surefooted": {
+    "change": "Row 3; +1%/point hit for all attacks; snare duration -10%/point."
+   },
+   "survivalTactics": {
+    "change": "Formerly Trap Mastery; trap and Feign Death hit +5%/point."
+   },
+   "predatorsEdge": {
+    "new": true,
+    "change": "New: melee crit damage +6%/point and off-hand damage +10%/point."
+   },
+   "counterattack": {
+    "change": "Row 4, 16-point milestone; weapon-based damage."
+   },
+   "resourcefulness": {
+    "new": true,
+    "change": "New (absorbs Killer Instinct, Wyvern Sting, Improved Feign Death): traps and melee -30/60% cost; crits 50/100% chance of 50% casting regen for 30 s."
+   },
+   "exposePrey": {
+    "new": true,
+    "change": "New: 5/10% per landed attack on your marked target opens Mongoose Bite for 10 s."
+   },
+   "survivalistsDiscipline": {
+    "new": true,
+    "change": "New: trap and Deterrence cooldown -20/40%."
+   },
+   "striderKick": {
+    "new": true,
+    "change": "New 21-point milestone: 100% weapon damage, 8 s, +30% speed for 3 s."
+   },
+   "lightningReflexes": {
+    "change": "2%/point Agility (was 3%; fs still 3%)."
+   },
+   "laceratingStrikes": {
+    "new": true,
+    "change": "New 31-point milestone: Mongoose Bite bleeds 40% of its damage over 21 s."
+   }
+  },
+  "removed": [
+   "Improved Eyes of the Beast (baseline)",
+   "Thick Hide (into Endurance Training)",
+   "Improved Hunter's Mark (baseline)",
+   "Aimed Shot (baseline at 20)",
+   "Improved Scorpid Sting",
+   "Monster Slaying and Humanoid Slaying (into Improved Tracking)",
+   "Killer Instinct, Wyvern Sting, Improved Feign Death (into Resourcefulness)"
+  ]
+ },
+ "rogue": {
+  "talents": {
+   "mutilate": {
+    "new": true
+   },
+   "venom": {
+    "new": true
+   },
+   "puncturingWounds": {
+    "new": true
+   },
+   "flawlessExecution": {
+    "new": true
+   },
+   "hackAndSlash": {
+    "new": true
+   },
+   "quietus": {
+    "new": true
+   },
+   "cutthroat": {
+    "new": true
+   },
+   "thousandCuts": {
+    "new": true
+   }
+  },
+  "removed": []
+ },
+ "priest": {
+  "talents": {
+   "powerInLight": {
+    "new": true,
+    "change": "New: Smite and Penance +2%/point vs targets with your Holy Fire."
+   },
+   "wandSpecialization": {
+    "change": "Now 2 ranks (13/25%); not simulated."
+   },
+   "twinDisciplines": {
+    "new": true,
+    "change": "New: instant spells +1%/point (scope disputed)."
+   },
+   "silentResolve": {
+    "change": "Absorbed Unbreakable Will: also shortens stuns, fears and silences."
+   },
+   "holyPrecision": {
+    "new": true,
+    "change": "New: +6%/point Holy hit."
+   },
+   "mentalStrength": {
+    "change": "Now +3%/point Intellect (was max mana)."
+   },
+   "martyrdom": {
+    "change": "Focused Casting after a crit taken; not simulated."
+   },
+   "mentalAgility": {
+    "change": "Moved to row 3, 3 ranks; also covers Smite and Holy Fire."
+   },
+   "innerFocus": {
+    "change": "Crit no longer on periodic effects (1 Oct)."
+   },
+   "improvedPowerWordShield": {
+    "change": "Slightly more per point (7/14/20%)."
+   },
+   "meditation": {
+    "change": "Stronger: 17/33/50% regen while casting."
+   },
+   "improvedInnerFire": {
+    "change": "More armor and charges."
+   },
+   "improvedManaBurn": {
+    "change": "Bigger cast-time cut."
+   },
+   "soulWarding": {
+    "new": true,
+    "change": "New 16-point talent: PW:S -4 s cooldown, -15% cost."
+   },
+   "penance": {
+    "new": true,
+    "change": "New 21-point talent: 2 s channel, 12 s cooldown."
+   },
+   "renewedHope": {
+    "new": true,
+    "change": "New: heal crit on Weakened Soul targets."
+   },
+   "divineAegis": {
+    "new": true,
+    "change": "New: crit heals leave an absorb (stacks to a cap, #286)."
+   },
+   "powerInfusion": {
+    "change": "20% base mana; +20% damage and healing."
+   },
+   "twilightFocus": {
+    "change": "Formerly Healing Focus: pushback protection on all spells, 3 ranks."
+   },
+   "holySpecialization": {
+    "change": "+1%/point Holy crit."
+   },
+   "divineFury": {
+    "change": "Smite, Holy Fire, Heal and Greater Heal -0.1 s/point."
+   },
+   "holyNova": {
+    "change": "Six ranks now."
+   },
+   "blessedRecovery": {
+    "change": "Also triggers on hits above 30% max health."
+   },
+   "inspiration": {
+    "change": "All non-periodic crit heals."
+   },
+   "improvedHealing": {
+    "change": "Also discounts Penance and Prayer of Mending."
+   },
+   "searingLight": {
+    "change": "Redesigned: +2/5% all Holy damage and free Holy Nova procs from Holy Fire ticks."
+   },
+   "bindingHeal": {
+    "new": true,
+    "change": "New 16-point talent."
+   },
+   "litanyOfLight": {
+    "new": true,
+    "change": "New: mana back when alternating heals."
+   },
+   "spiritOfRedemption": {
+    "change": "No longer +5% Spirit."
+   },
+   "spiritualGuidance": {
+    "change": "Damage half cut to 1/3/5/6/8% of Spirit; healing 5%/point."
+   },
+   "spiritualHealing": {
+    "change": "Now 3 ranks."
+   },
+   "prayerOfMending": {
+    "new": true,
+    "change": "New 31-point talent."
+   },
+   "shadowFocus": {
+    "change": "Row 1; now Shadow hit instead of resist reduction."
+   },
+   "shadowReach": {
+    "change": "Row 2, 2 ranks."
+   },
+   "improvedPsychicScream": {
+    "change": "Now requires Blackout."
+   },
+   "improvedMindFlay": {
+    "new": true,
+    "change": "New: +10/20% damage, +5/10 yd, weaker slow."
+   },
+   "darkInspiration": {
+    "new": true
+   },
+   "vampiricEmbrace": {
+    "change": "16-point talent: 30 s, 1 min cooldown, party healing."
+   },
+   "shadowWeaving": {
+    "change": "Personal, +2% per stack (was a 3%/stack raid debuff)."
+   },
+   "silence": {
+    "change": "No longer requires Improved Psychic Scream."
+   },
+   "devouringContagion": {
+    "new": true,
+    "change": "New: -25/50% DP cost; spreads on death."
+   },
+   "earlyDemise": {
+    "new": true,
+    "change": "New: +15/30% SWD crit at <= 20% health."
+   },
+   "darkness": {
+    "change": "Now all Shadow damage."
+   },
+   "shadowform": {
+    "change": "+10% Shadow, -50% Shadow cost, 2.0x Shadow crits, non-healing spells castable."
+   }
+  },
+  "removed": [
+   "Unbreakable Will (merged into Silent Resolve)",
+   "Improved Power Word: Fortitude",
+   "Divine Spirit (baseline at 30)",
+   "Force of Will",
+   "Improved Prayer of Healing",
+   "Lightwell",
+   "Improved Vampiric Embrace"
+  ]
+ },
+ "shaman": {
+  "talents": {
+   "convection": {
+    "change": "Also reduces Lava Burst's cost."
+   },
+   "concussion": {
+    "change": "No longer applies to Frost Shock or Flame Shock."
+   },
+   "elementalDevastation": {
+    "change": "Moved to row 2 so Enhancement can take it; triggers only from direct harmful spell crits."
+   },
+   "reverberation": {
+    "change": "Moved from row 3 to row 2."
+   },
+   "elementalAlacrity": {
+    "change": "Formerly Lightning Mastery: row 3, 3 ranks, -0.17/0.33/0.5 s on LB, CL and Lava Burst."
+   },
+   "callOfFlame": {
+    "change": "Also increases Flame Shock, Fire Nova and Lava Burst damage."
+   },
+   "elementalFocus": {
+    "change": "Lower trigger chance on low-rank spells (Blizzard)."
+   },
+   "improvedFireNova": {
+    "change": "Formerly Improved Fire Totems: +10/20% Fire Nova damage and -2/4 s cooldown."
+   },
+   "eyeOfTheStorm": {
+    "change": "Redesigned: pushback resistance for LB, CL and Lava Burst."
+   },
+   "earthbound": {
+    "new": true,
+    "change": "New 21-point milestone: Earthbind Totem roots for 5 s on cast."
+   },
+   "elementalReach": {
+    "change": "Formerly Storm Reach: +3/6 yd LB, CL, Fire Nova, Lava Burst; +8/15 yd Flame Shock."
+   },
+   "lavaBurst": {
+    "new": true,
+    "change": "New 31-point milestone (ranks 2-3 from the spellbook at 50 and 60)."
+   },
+   "lightningOverload": {
+    "new": true,
+    "change": "New: 3/7/10% free half-damage copy of LB or CL, no threat."
+   },
+   "elementalFury": {
+    "change": "Moved to row 6, requires Call of Thunder; 20% crit bonus per point (5 ranks)."
+   },
+   "earthsGrasp": {
+    "change": "Moved from Elemental to Enhancement row 1."
+   },
+   "thunderingStrikes": {
+    "change": "Row 1; crit for all spells and attacks."
+   },
+   "ancestralKnowledge": {
+    "change": "Intellect % instead of max mana."
+   },
+   "mentalDexterity": {
+    "new": true,
+    "change": "New: AP from Intellect."
+   },
+   "improvedGhostWolf": {
+    "change": "Rank 2 makes Ghost Wolf instant; usable indoors."
+   },
+   "elementalWeapons": {
+    "change": "Moved to row 3."
+   },
+   "shamanisticFocus": {
+    "new": true,
+    "change": "New 11-point milestone: flat -45% shock and Lightning Shield cost."
+   },
+   "anticipation": {
+    "change": "Dodge doubled (2/4/6%)."
+   },
+   "toughness": {
+    "change": "Stamina % instead of armor."
+   },
+   "flurry": {
+    "change": "5%/point (25% max, was 30%); requires Mental Dexterity."
+   },
+   "stormstrike": {
+    "change": "16-point milestone; 8 s, 125 mana, personal +20% to the next LB/CL/ES."
+   },
+   "spiritWeapons": {
+    "change": "Formerly Parry (21 points): parry plus a Rockbiter-dependent threat modifier."
+   },
+   "mentalQuickness": {
+    "new": true,
+    "change": "New: spell damage from Intellect."
+   },
+   "improvedStormstrike": {
+    "new": true,
+    "change": "New: casting regen and Stormstrike resets."
+   },
+   "maelstromWeapon": {
+    "new": true,
+    "change": "New: stacks that make Lightning Bolt faster and cheaper."
+   },
+   "rageOfTheFarseer": {
+    "new": true,
+    "change": "New 31-point milestone: +30% melee speed 25 s, 3 min (no cast speed since 70009)."
+   },
+   "tidalFocus": {
+    "change": "Also +1%/point hit for all spells and attacks."
+   },
+   "mindfulness": {
+    "new": true,
+    "change": "New: 17/33/50% mana regen while casting."
+   },
+   "naturalGrace": {
+    "change": "Formerly Healing Grace: reduces all spell threat."
+   },
+   "improvedReincarnation": {
+    "change": "Also +2/4% max health."
+   },
+   "healingFocus": {
+    "change": "Full effect at 3 points."
+   },
+   "waterShield": {
+    "new": true,
+    "change": "New 11-point milestone."
+   },
+   "tidalMastery": {
+    "change": "No longer affects Lightning spells."
+   },
+   "restorativeTotems": {
+    "change": "Healing Stream bonus doubled; still improves Mana Spring (#215 open)."
+   },
+   "manaTideTotem": {
+    "change": "Moved to the 16-point milestone."
+   },
+   "healingWay": {
+    "change": "Redesigned: Healing Wave healing %."
+   },
+   "riptide": {
+    "new": true,
+    "change": "New 31-point milestone (healing)."
+   }
+  },
+  "removed": [
+   "Shield Specialization (Enhancement; #276 says the 'baseline' listing was a typo)",
+   "Enhancing Totems (baseline)",
+   "Two-Handed Axes and Maces (baseline)",
+   "Weapon Mastery (baseline per the deep dive, disputed by #280)",
+   "Improved Weapon Totems (baseline)",
+   "Nature's Guidance (Restoration)",
+   "Totemic Mastery (Restoration)"
+  ]
+ },
+ "mage": {
+  "talents": {
+   "wandSpecialization": {
+    "change": "Two ranks for the same 25% (was 5)."
+   },
+   "arcaneFocus": {
+    "change": "Redesigned: +1% Arcane hit per point (Classic: reduced Arcane resists). Wowhead prints the raw 2%."
+   },
+   "improvedChanneling": {
+    "change": "Formerly Improved Arcane Missiles; also protects Arcane Blast casts (14%/point) from damage interruption."
+   },
+   "missileBarrage": {
+    "new": true,
+    "change": "New 16-point talent: Arcane Blast 40%, Fireball/Frostbolt/Frostfire Bolt 20%: next Arcane Missiles free, missiles every 0.5 s, 15 s."
+   },
+   "arcaneSubtlety": {
+    "change": "Row 2; -8/-15 target resistance to all your spells, Arcane threat -15/-30%."
+   },
+   "magicAbsorption": {
+    "change": "Resists +5/10 and 1/2% mana on a full resist, now with a 1 s internal cooldown."
+   },
+   "arcaneConcentration": {
+    "change": "2%/point Clearcasting after a landed damage spell; 1 s ICD (client 11213). Lower chance with much lower-rank spells. Wowhead prints a raw 100%."
+   },
+   "arcaneResilience": {
+    "change": "Row 2, two points: armor = 25/50% of Intellect."
+   },
+   "arcaneGeometry": {
+    "new": true,
+    "change": "New row-3 talent: Arcane spell range +3/+6 yd. gs draws the wrong icon (Flame Throwing)."
+   },
+   "arcaneImpact": {
+    "change": "Formerly Improved Arcane Explosion; +2/4/6% crit for all Arcane spells."
+   },
+   "arcaneBlast": {
+    "new": true,
+    "change": "New 11-point talent: 2.5 s cast, 364-424 Arcane, stacking +10% to your other spells and +175% to its own cost (4 stacks, 8 s)."
+   },
+   "arcaneShielding": {
+    "change": "Formerly Improved Mana Shield; also +25/50% Mage Armor resistances."
+   },
+   "improvedCounterspell": {
+    "change": "One point always silences (2 s), two points 4 s."
+   },
+   "arcaneMeditation": {
+    "change": "17/33/50% regen while casting (Classic 5/10/15%); now requires Arcane Concentration."
+   },
+   "arcaneWrath": {
+    "new": true
+   },
+   "presenceOfMind": {
+    "change": "Next spell with a cast time under 10 s is instant; 3 min."
+   },
+   "arcaneMind": {
+    "change": "Redesigned: +2..10% Intellect and +20..100% Arcane crit damage bonus (Arcane crits 2.0x at 5/5)."
+   },
+   "arcaneInstability": {
+    "change": "+1/2/3% damage and crit; no longer needs Presence of Mind."
+   },
+   "arcanePower": {
+    "change": "+30% damage, +30% mana cost, 15 s, 3 min; now requires Presence of Mind."
+   },
+   "incineration": {
+    "change": "Formerly Incinerate; row 1; +2/4/6% crit on Fire Blast, Scorch, Ice Lance and Arcane Blast."
+   },
+   "improvedFireball": {
+    "change": "-0.1 s/point on Fireball and Frostfire Bolt. Wowhead rounds the raw -0.5 s to \"1 sec\"."
+   },
+   "ignite": {
+    "change": "8%/point of the crit over 4 s (2 ticks); unique per mage, no damage lost to close crits (rolls over), does not double dip % modifiers (24 Sep)."
+   },
+   "flameThrowing": {
+    "change": "+3/+6 yd Fire spell range."
+   },
+   "impact": {
+    "change": "3/7/10% 2 s stun on direct Fire hits; not from Flamestrike periodic damage (8 Oct). Bosses immune."
+   },
+   "burningSoul": {
+    "change": "Three points: 23/47/70% pushback protection, -10/20/30% Fire threat."
+   },
+   "improvedFlamestrike": {
+    "change": "+5/10/15% Flamestrike crit."
+   },
+   "improvedScorch": {
+    "change": "33/66/100% per landed Scorch; Fire Vulnerability is personal (+3% of YOUR Fire damage per stack, 5 stacks, 30 s); no second resist roll (1 Oct)."
+   },
+   "improvedFireWard": {
+    "change": "10/20% Fire Ward reflect."
+   },
+   "hotStreak": {
+    "new": true,
+    "change": "New: Fireball/Frostfire Bolt/Fire Blast/Scorch non-periodic crits give -25% cast time on the next Pyroblast, 3 stacks, 20 s (was 15 s before 24 Sep); renamed Heating Up on 1 Oct.",
+    "was": "Hot Streak (beta name until 1 Oct)"
+   },
+   "masterOfElements": {
+    "change": "Fire and Frost crits refund 10/20/30% of base cost; 9 ms ICD (client)."
+   },
+   "criticalMass": {
+    "change": "+2/4/6% Fire crit."
+   },
+   "blastWave": {
+    "change": "No longer requires Pyroblast; rank 5 453-533, 45 s."
+   },
+   "firePower": {
+    "change": "+2..10% Fire damage (not Ignite)."
+   },
+   "combustion": {
+    "change": "+10% Fire crit per Fire hit until 3 non-periodic Fire crits (4 earlier in the beta, until 1 Oct); 3 min."
+   },
+   "frostWarding": {
+    "change": "Frost/Ice Armor +15/30%; Frost Ward reflect 10/20%."
+   },
+   "improvedFrostbolt": {
+    "change": "-0.1 s/point (2.5 s at 5/5). Wowhead prints \"0 sec\" (raw)."
+   },
+   "elementalPrecision": {
+    "change": "Redesigned: +1% Fire and Frost hit per point (Classic: reduced resists). Wowhead prints the raw 6%."
+   },
+   "iceShards": {
+    "change": "+20..100% Frost crit damage bonus (2.0x at 5/5); also reaches Frostfire Bolt."
+   },
+   "permafrost": {
+    "change": "Chill duration +11/22/33% (was +1/2/3 s), slow +3/7/10%."
+   },
+   "improvedFrostNova": {
+    "change": "Frost Nova -2/-4 s."
+   },
+   "frostbite": {
+    "change": "5/10/15% freeze on Chill; bosses immune; 0% with rank-1 Frostbolt at 60 (1 Oct)."
+   },
+   "piercingIce": {
+    "change": "+2/4/6% Frost damage (Frostfire Bolt DoT: flat 2% in gs)."
+   },
+   "frostChanneling": {
+    "change": "Row 3; -5/10/15% Frost mana cost, -10/20/30% Frost threat."
+   },
+   "iceLance": {
+    "new": true,
+    "change": "New 11-point talent: instant, 136-161 Frost, x4 against Frozen targets (or with Fingers of Frost); 160 mana."
+   },
+   "improvedBlizzard": {
+    "change": "Chill slow 15/30/40% (Classic up to 65%), 1.5 s; can proc Fingers of Frost."
+   },
+   "arcticReach": {
+    "change": "Frostbolt/Blizzard range and Nova/Cone radius +10/20%."
+   },
+   "iceBlock": {
+    "change": "Row 4, the 16-point talent; 10 s, 5 min, 15 mana."
+   },
+   "shatter": {
+    "change": "+17/33/50% crit against Frozen targets; no longer needs Improved Frost Nova. Wowhead prints a raw 1%."
+   },
+   "improvedConeOfCold": {
+    "change": "+12/23/35% Cone of Cold damage (Wowhead prints the raw 15%)."
+   },
+   "coldSnap": {
+    "change": "Row 5, the 21-point talent; resets all your Frost cooldowns; 10 min (Blizzard: up from 5)."
+   },
+   "fingersOfFrost": {
+    "new": true,
+    "change": "New: Chill effects have a 15% chance (both ranks) to give 1/2 charges that treat the target as Frozen, 15 s. Requires Ice Lance."
+   },
+   "wintersChill": {
+    "change": "20%/point per landed Frost spell; personal debuff, +2% crit per stack for YOUR Frostbolt and Ice Lance only, 1 stack per point (5 at 5/5), 15 s; no second resist roll (1 Oct). Wowhead prints \"0%\"."
+   },
+   "iceBarrier": {
+    "change": "Rank 4 absorbs 819 at 60 (Wowhead prints 835 at 64); 30 s cooldown, 1 min; no pushback while it holds."
+   }
+  },
+  "removed": [
+   "Magic Attunement (baseline)"
+  ]
+ },
+ "warlock": {
+  "talents": {
+   "improvedLifeTap": {
+    "change": "Moved to row 1; boosts the Spirit-based Life Tap."
+   },
+   "suppression": {
+    "change": "Redesigned: +1% hit and -4% threat per point (Classic: Affliction spell resist)."
+   },
+   "improvedCorruption": {
+    "change": "Now also +2% damage per point."
+   },
+   "soulHarvesting": {
+    "change": "Renamed from Improved Drain Soul; mana regen after a Drain Soul kill (bug #95 fixed).",
+    "was": "Improved Drain Soul (Forever display name: Soul Harvest)"
+   },
+   "improvedDrains": {
+    "new": true,
+    "change": "New: Drain Life, Drain Soul and Wrack damage."
+   },
+   "improvedBaneOfAgony": {
+    "change": "Renamed; 2 points, 5/10%.",
+    "was": "Improved Curse of Agony"
+   },
+   "felConcentration": {
+    "change": "3 points; covers Wrack."
+   },
+   "amplifyCurse": {
+    "change": "Affects Banes of Agony too; not Doom."
+   },
+   "pandemic": {
+    "new": true,
+    "change": "New in Forever: crit damage bonus on DoTs and drains."
+   },
+   "malevolence": {
+    "new": true,
+    "change": "New in Forever."
+   },
+   "nightfall": {
+    "change": "Now triggered by Drain Soul, Drain Life and Wrack ticks too."
+   },
+   "curseOfExhaustion": {
+    "change": "16-point gold talent, 30% slow."
+   },
+   "siphonLife": {
+    "change": "21-point gold talent."
+   },
+   "soulSiphon": {
+    "new": true,
+    "change": "New Forever version: per other Affliction effect, max 3."
+   },
+   "shadowMastery": {
+    "change": "Bonus reduced to 1%/point."
+   },
+   "wrack": {
+    "new": true,
+    "change": "New 31-point talent (channel)."
+   },
+   "improvedHealthFunnel": {
+    "change": "Row 1; usable at any demon health."
+   },
+   "improvedImp": {
+    "change": "No longer affects Blood Pact; hidden -300/-700/-1000 dummy (WL-006)."
+   },
+   "demonicEmbrace": {
+    "change": "No longer lowers Spirit."
+   },
+   "unholyPower": {
+    "change": "Row 1, reduced to 2%/point."
+   },
+   "demonicAegis": {
+    "new": true,
+    "change": "New: Demon Skin/Armor +15%/point."
+   },
+   "felVitality": {
+    "new": true,
+    "change": "New: merges Fel Intellect and Fel Stamina for demons and adds your mana."
+   },
+   "demonicEnergies": {
+    "new": true,
+    "change": "New: pet healing and Life Tap mana to the demon."
+   },
+   "improvedSayaad": {
+    "change": "Renamed from Improved Succubus."
+   },
+   "demonicSacrifice": {
+    "change": "Pairings reversed (Imp Shadow, Succubus Fire, Voidwalker mana, Felhunter health), 2 h, 11-point gold talent."
+   },
+   "masterSummoner": {
+    "change": "Row 3."
+   },
+   "decimation": {
+    "new": true,
+    "change": "New in Forever (Wrath-era name, new execute effect)."
+   },
+   "felDomination": {
+    "change": "16-point gold talent needing Master Summoner; 5 min cooldown."
+   },
+   "demonicBrand": {
+    "new": true,
+    "change": "New: Searing Pain brands for pet bonus damage."
+   },
+   "improvedFelhunter": {
+    "new": true,
+    "change": "New in Forever."
+   },
+   "soulLink": {
+    "change": "21-point gold talent."
+   },
+   "demonicKnowledge": {
+    "new": true,
+    "change": "New: % of level as spell power for you and the demon."
+   },
+   "masterDemonologist": {
+    "change": "Redesigned: damage done or damage taken per demon."
+   },
+   "demonicPact": {
+    "new": true,
+    "change": "New 31-point talent (keeps the sacrifice buff)."
+   },
+   "destructiveReach": {
+    "change": "Row 1; all damaging spells."
+   },
+   "improvedShadowBolt": {
+    "change": "Personal debuff, no charges, 12 s."
+   },
+   "bane": {
+    "change": "Row 1; also Incinerate."
+   },
+   "moltenSkin": {
+    "new": true,
+    "change": "New: -2%/point damage taken."
+   },
+   "cataclysm": {
+    "change": "Row 2; -3/6/10% Destruction mana cost."
+   },
+   "aftermath": {
+    "change": "Redesigned: Immolate initial damage +10%/point; Conflagrate daze."
+   },
+   "ruin": {
+    "change": "5 points, +20% crit bonus each."
+   },
+   "intensity": {
+    "change": "3 points; all Destruction spells."
+   },
+   "agonizingFlames": {
+    "new": true,
+    "change": "New: Destruction damage and Searing Pain crit."
+   },
+   "conflagrate": {
+    "change": "16-point gold talent; 6 ranks."
+   },
+   "pyroclasm": {
+    "change": "Wording clarified."
+   },
+   "baneOfHavoc": {
+    "new": true,
+    "change": "New 21-point talent."
+   },
+   "fireAndBrimstone": {
+    "new": true,
+    "change": "New: Conflagrate crit."
+   },
+   "shadowAndFlame": {
+    "new": true,
+    "change": "New: Conflagrate/Shadowburn school buffs, keeps Immolate, refunds shards."
+   },
+   "incinerate": {
+    "new": true,
+    "change": "New 31-point talent."
+   }
+  },
+  "removed": [
+   "Improved Curse of Weakness",
+   "Improved Drain Life",
+   "Improved Drain Mana",
+   "Improved Curse of Exhaustion",
+   "Dark Pact",
+   "Improved Healthstone",
+   "Fel Intellect",
+   "Fel Stamina",
+   "Improved Subjugate Demon",
+   "Improved Firestone",
+   "Improved Spellstone",
+   "Improved Firebolt",
+   "Improved Lash of Pain",
+   "Devastation",
+   "Improved Immolate",
+   "Emberstorm",
+   "Improved Searing Pain"
+  ]
+ },
+ "druid": {
+  "talents": {
+   "improvedWrath": {
+    "change": "Now also lowers Wrath's mana cost by 10% per point."
+   },
+   "genesis": {
+    "new": true,
+    "change": "New row-1 talent: +1% periodic damage and healing per point."
+   },
+   "moonglow": {
+    "change": "Moved to row 2; now all damaging spells, no longer heals. 8/17/25%."
+   },
+   "improvedMoonfire": {
+    "change": "Now 2 points (was 5) for the same 10% damage / 10% crit."
+   },
+   "naturesMajesty": {
+    "new": true,
+    "change": "New: +2/4% crit with spells and melee."
+   },
+   "naturesReach": {
+    "change": "Moved to row 2; now also +2/4% hit (spells and melee)."
+   },
+   "improvedEntanglingRoots": {
+    "change": "Redesigned (more Roots damage). Not relevant on a dummy."
+   },
+   "naturesSplendor": {
+    "new": true,
+    "change": "New 11-point talent: Moonfire +3 s, Insect Swarm +2 s (and HoTs)."
+   },
+   "insectSwarm": {
+    "change": "Moved from Restoration; now the Balance 16-point talent."
+   },
+   "vengeance": {
+    "change": "Now all damaging spells; +20% crit damage bonus per point."
+   },
+   "overgrowth": {
+    "new": true,
+    "change": "New: Entangling Roots on up to 3 targets."
+   },
+   "naturesGrace": {
+    "change": "Redesigned: 3 s of +10% cast speed and -10% GCD after a non-periodic spell crit."
+   },
+   "eclipse": {
+    "new": true,
+    "change": "New (from Season of Discovery): Wrath gives 2 Starfire charges, -0.17/0.33/0.5 s each."
+   },
+   "moonfury": {
+    "change": "Now all Arcane/Nature damage; 2% per point."
+   },
+   "moonkinForm": {
+    "change": "Aura now crit for all attacks, exclusive with Leader of the Pack; Omen chance x2; all non-healing spells castable."
+   },
+   "ferocity": {
+    "change": "Now also lowers Primal Bite's Rage cost."
+   },
+   "heartOfTheWild": {
+    "change": "Moved to row 1; Int/Str gains reduced (10% at 5/5), Bear Stamina +20% unchanged."
+   },
+   "feralSwiftness": {
+    "change": "Was Feline Swiftness: indoor speed, and the dodge applies in every form."
+   },
+   "feralInstinct": {
+    "change": "No longer bear threat; now +10% Swipe damage per point."
+   },
+   "brutalImpact": {
+    "change": "Also lowers Bash's cooldown."
+   },
+   "thickHide": {
+    "change": "Redesigned: flat armor per level plus armor per Defense point above 5 x level, multiplied by the form."
+   },
+   "shreddingAttacks": {
+    "change": "Was Improved Shred: -6 Energy Shred and -1 Rage Lacerate per point; row 3."
+   },
+   "savageFury": {
+    "change": "Moved to row 3; now includes Shred, but 5% per point (Classic 10%)."
+   },
+   "feralCharge": {
+    "change": "Also teaches Feral Charge (Cat): 30 s leap behind the target."
+   },
+   "sharpenedClaws": {
+    "change": "Now 2 points (was 3) for 6% crit in forms."
+   },
+   "shiftingPower": {
+    "new": true,
+    "change": "New 16-point talent (1 Oct): +40 Energy for 55% base mana, 16 s cooldown, Cat Form only."
+   },
+   "mangle": {
+    "new": true,
+    "change": "Primal Bite (was Mangle, renamed 24 Sep): Bear-only 20-Rage attack, 6 s cooldown, very high threat."
+   },
+   "primalFury": {
+    "change": "Blood Frenzy: Classic Blood Frenzy (combo point) and Primal Fury (Rage) merged into one 2-point talent."
+   },
+   "improvedShiftingPower": {
+    "new": true,
+    "change": "New (1 Oct): Shifting Power cooldown -4/-8 s."
+   },
+   "leaderOfThePack": {
+    "change": "Crit now applies to all attacks and spells; exclusive with Moonkin Form."
+   },
+   "predatoryInstincts": {
+    "new": true,
+    "change": "Natural Instinct (renamed 8 Oct): +10/20% melee crit damage bonus, and 12/25% of Intellect as healing."
+   },
+   "naturalReaction": {
+    "new": true,
+    "change": "New: +1% dodge per point and 20% per point to gain 5 Rage on a dodge."
+   },
+   "rendAndTear": {
+    "new": true,
+    "change": "New: +2% melee ability damage per point against bleeding targets."
+   },
+   "berserk": {
+    "new": true,
+    "change": "New 31-point talent (from WotLK/SoD): 15 s, 3 min."
+   },
+   "naturesFocus": {
+    "change": "Row 1; now covers all Arcane and Nature casts."
+   },
+   "furor": {
+    "change": "Cat half redesigned (Energy carry-over, no 40-Energy proc); Bear half unchanged."
+   },
+   "naturalist": {
+    "change": "Was Improved Healing Touch; now also +1% all damage per point (absorbs Natural Weapons)."
+   },
+   "subtlety": {
+    "change": "Row 2, 3 points, now also Arcane/Nature damage threat."
+   },
+   "naturalShapeshifter": {
+    "change": "Moved from Balance: -10% shapeshift (and Shifting Power) mana per point."
+   },
+   "reflection": {
+    "change": "Stronger: 17/33/50% regen while casting."
+   },
+   "giftOfNature": {
+    "change": "Moved to row 3."
+   },
+   "giftOfTheEarthmother": {
+    "new": true,
+    "change": "New 11-point talent (healing)."
+   },
+   "swiftmend": {
+    "change": "Moved to the 16-point slot; no longer consumes the HoT."
+   },
+   "livingSpirit": {
+    "new": true,
+    "change": "New: +5% Spirit per point."
+   },
+   "improvedTranquility": {
+    "change": "Also -30/60% Tranquility cooldown."
+   },
+   "improvedRegrowth": {
+    "change": "Now requires Improved Rejuvenation."
+   },
+   "wildGrowth": {
+    "new": true,
+    "change": "New 31-point talent (healing)."
+   }
+  },
+  "removed": [
+   "Nature's Grasp (baseline at 10)",
+   "Improved Nature's Grasp",
+   "Natural Weapons (into Naturalist)",
+   "Improved Thorns (baseline)",
+   "Omen of Clarity (baseline at 20)",
+   "Feral Aggression (Demoralizing Roar baseline)",
+   "Faerie Fire (Feral) (spell removed; normal Faerie Fire usable in forms)",
+   "Improved Mark of the Wild (baseline)",
+   "Improved Enrage (baseline)",
+   "Improved Healing Touch (became Naturalist)",
+   "King of the Jungle (added in beta, removed 1 Oct)",
+   "Tiger's Fury spell (removed 1 Oct)"
+  ]
+ }
+}
