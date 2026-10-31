@@ -1,6 +1,6 @@
 // Feral Cat for WoW Forever: smooth Energy, combo points, Shifting Power (the
 // Forever "powershift", paid in mana), Omen of Clarity, Blood Frenzy and
-// Berserk. Numbers in ./data.ts, builds in ./talents.ts; sources in
+// Predatory Discipline. Numbers in ./data.ts, builds in ./talents.ts; sources in
 // research/druid_forever.md.
 import type { Combat } from '../../engine/combat';
 import type { Ability, Hit, Outcome, Spec, Unit } from '../../engine/types';
@@ -30,19 +30,18 @@ const shredCost = (c: Combat) => D.shred.cost - 6 * T(c).shreddingAttacks;
 const clawCost = (c: Combat) => D.claw.cost - T(c).ferocity;
 const rakeCost = (c: Combat) => D.rake.cost - T(c).ferocity;
 const shiftingPowerMana = (c: Combat) => Math.round(D.shiftingPower.mana * (1 - 0.1 * T(c).naturalShapeshifter));
-const shiftingPowerCooldown = (c: Combat) => D.shiftingPower.cooldown - 4 * T(c).improvedShiftingPower - (c.options.howlingIdol ? 0.5 : 0);
+const shiftingPowerCooldown = (c: Combat) => D.shiftingPower.cooldown - (c.options.howlingIdol ? 0.5 : 0);
 const shiftingPowerEnergy = (c: Combat) => D.shiftingPower.energy + (c.options.wolfshead ? 5 : 0);
 const ripTicks = (c: Combat) => D.rip.ticks + (c.options.idolOfTheDream ? 1 : 0);
 const ripTick = (c: Combat, cp: number) => D.rip.tick + D.rip.tickPerCp * cp + c.attackPower() * D.rip.apPerCp * Math.min(cp, 4);
 
 /**
- * A combo point builder. Berserk makes builders crit; with Blood Frenzy a
- * builder crit adds a combo point. An avoided builder refunds 80 %.
+ * A combo point builder. With Blood Frenzy a builder crit adds a combo point.
+ * An avoided builder refunds 80 %.
  */
 function builder(c: Combat, t: Unit, id: string, base: number, opts: { ignoreArmor?: boolean } = {}): Outcome {
-  const berserk = !!c.aura(c.player, 'berserk');
   // Ravage is marked No Active Defense: never dodged or parried (foreversim, Oct 22).
-  const outcome = c.rollSpecial(t, id, { forceCrit: berserk, noDodge: id === 'ravage' });
+  const outcome = c.rollSpecial(t, id, { noDodge: id === 'ravage' });
   useClearcasting(c);
   if (!landed(outcome)) {
     c.refund(D.catRefund);
@@ -137,16 +136,17 @@ const abilities: Ability[] = [
     usable: hasPoints,
     description: (c) => {
       const f = D.ferociousBite;
-      return `Finishing move: ${f.min}-${f.max} damage plus ${f.perCp} and ${f.apPerCp * 100}% of attack power per combo point, and ${f.perEnergy} per extra Energy, which it spends too. 5 points: ${f.min + 5 * f.perCp}-${f.max + 5 * f.perCp} plus ${Math.round(c.attackPower() * f.apPerCp * 5)}.`;
+      const keep = T(c).predatoryDiscipline > 0;
+      return `Finishing move: ${f.min}-${f.max} damage plus ${f.perCp} and ${f.apPerCp * 100}% of attack power per combo point, and ${f.perEnergy} per extra Energy, which it ${keep ? 'keeps (Predatory Discipline)' : 'spends too'}. 5 points: ${f.min + 5 * f.perCp}-${f.max + 5 * f.perCp} plus ${Math.round(c.attackPower() * f.apPerCp * 5)}.`;
     },
     use: (c, t) => {
       const u = t!;
       const done = finisher(c, u, 'ferociousBite');
       if (!done) return;
       const f = D.ferociousBite;
-      // The extra Energy is only spent when the bite lands.
+      // The extra Energy is only spent when the bite lands; Predatory Discipline (Oct 30) keeps it.
       const extra = c.player.resource;
-      c.player.resource = 0;
+      if (!T(c).predatoryDiscipline) c.player.resource = 0;
       const base = f.min + c.random() * (f.max - f.min) + done.cp * (f.perCp + f.apPerCp * c.attackPower()) + f.perEnergy * extra;
       const amount = c.physicalDamage(u, 'ferociousBite', base, done.outcome);
       c.deal({ target: u, source: 'ferociousBite', outcome: done.outcome, school: 'physical', amount, white: false, hand: 'main', weaponStrike: true });
@@ -169,13 +169,6 @@ const abilities: Ability[] = [
       if (!c.manaLocked) c.count('shiftingPowerMana', shiftingPowerMana(c));
       note(c, `+${n} Energy`, 'resource');
     },
-  },
-  {
-    id: 'berserk', name: 'Berserk', icon: 'berserk', gcd: 0, target: 'self',
-    cooldown: D.berserk.cooldown,
-    ...talent('berserk', 'Berserk'),
-    description: () => `For ${D.berserk.duration} sec your Shred, Claw, Rake, Ravage and Pounce always crit; with Blood Frenzy each of them awards 2 combo points.`,
-    use: (c) => { c.applyAura(c.player, { id: 'berserk', name: 'Berserk', icon: 'berserk', duration: D.berserk.duration }); },
   },
   faerieFire({ gcd: D.catGcd, cooldown: D.faerieFire.cooldown }),
   {
@@ -259,7 +252,7 @@ function prepare(c: Combat): void {
   c.mod.crit = 3 * t.sharpenedClaws + 2 * t.naturesMajesty;
   c.mod.hit = 2 * t.naturesReach;
   c.mod.threat = D.catThreat;
-  c.mod.physicalDamage = 1 + 0.01 * t.naturalist;
+  c.mod.physicalDamage = 1 + 0.02 * t.naturalist;   // Naturalist 2 % a point since the Oct 30 hotfix
   c.mod.vsBleeding = 0.02 * t.rendAndTear;
   for (const id of ['shred', 'claw', 'rake']) c.mod.damageFor[id] = 1 + 0.05 * t.savageFury;
   // Natural Instinct: ability crits only, not white hits.
@@ -289,7 +282,6 @@ function suggest(c: Combat): string | null {
   if (c.stealthed()) return 'ravage';
   if (!p.inCombat && ready('prowl')) return 'prowl';
   if (c.options.thistleTea !== false && p.inCombat && energy <= 10 && ready('thistleTea')) return 'thistleTea';
-  if (p.inCombat && tl.berserk && ready('berserk')) return 'berserk';
   if (c.options.faerieFire && faerieFireLeft(c, t) <= 0 && ready('faerieFire')) return 'faerieFire';
   // gs since 27 Oct: Ferocious Bite at 4 points with Rip up for 5 s, low energy and no Clearcasting; Rake (it scales
   // with attack power) before Rip; Rip at 4 points, not on Clearcasting; Shifting Power at 50 energy; Shred, pooling
@@ -297,7 +289,8 @@ function suggest(c: Combat): string | null {
   const rip = c.aura(t, 'rip');
   const ripLeft = rip ? rip.end - c.t : 0;
   const cc = clearcasting(c);
-  if (cp >= 4 && ripLeft >= 5 && energy <= 45 && !cc) return 'ferociousBite';
+  // Predatory Discipline (Oct 30) keeps the extra Energy, so the bite no longer waits for low Energy (the yard's reading).
+  if (cp >= 4 && ripLeft >= 5 && (energy <= 45 || tl.predatoryDiscipline) && !cc) return 'ferociousBite';
   if (cp < 5 && !c.aura(t, 'rake') && energy >= c.cost(c.ability('rake')!)) return 'rake';
   if (cp >= 4 && !rip && !cc) return 'rip';
   const enoughMana = c.manaLocked || p.mana >= shiftingPowerMana(c);
@@ -325,7 +318,6 @@ function chances(c: Combat): { title: string; rows: [string, string][] }[] {
       title: 'Your attacks',
       rows: [
         ['Crit chance (gear + talents, minus 4.8% vs a +3 boss)', pct(c.critChance('shred'))],
-        ['Crit with Berserk (Shred, Claw, Rake, Ravage)', '100%'],
         ['Auto attack: miss / dodge / glancing', `${pct(r.specialMiss - hit)} / ${pct(c.dodgeChance())} / ${pct(r.glanceChance)}`],
         ['Abilities: miss / dodge', `${pct(r.specialMiss - hit)} / ${pct(c.dodgeChance())}`],
         ['Parry and block if you stand in front', `${pct(r.parryFromFront)} / 5.0%`],
@@ -404,9 +396,9 @@ export const druidCat: Spec = {
   welcome: 'Welcome to the Feral Cat practice yard. Energy flows smoothly, Shifting Power is the Forever powershift (paid in mana) and Omen of Clarity is baseline. Open with Prowl and Ravage from behind, keep Rip up, bite at 5 points and Shred everything else.',
   help: `${CONTROLS}
     Energy regenerates smoothly at 10 per second. The global cooldown is 1.0 sec for every cat attack. A cat swings every 1.0 sec for your weapon's DPS plus AP/14; Shred and Claw use the same weapon damage.
-    Shifting Power gives 40 Energy (45 with Wolfshead Helm) for 684 mana, every 8 sec with Improved Shifting Power, and cannot be used at full Energy. Mana is the second bar: Judgement of Wisdom on the dummy gives mana back on your hits, Blessing of Wisdom and Mana Spring Totem add 8 and 5 per second (all three are on by default under Raid buffs and debuffs), Major Mana Potions do the rest; you can also lock it.
-    Clearcasting (Omen of Clarity, baseline) makes your next attack free. With Blood Frenzy a builder crit adds a combo point; Berserk makes every builder crit for 15 sec.
-    Shred needs you behind the target; Claw works from any side. Ravage and Pounce open from Prowl. Rip and Rake ticks can crit and ignore armor. Ferocious Bite spends your extra Energy too.
+    Shifting Power gives 40 Energy (45 with Wolfshead Helm) for 684 mana, every 8 sec (Oct 30 hotfix; Improved Shifting Power is gone), and cannot be used at full Energy. Mana is the second bar: Judgement of Wisdom on the dummy gives mana back on your hits, Blessing of Wisdom and Mana Spring Totem add 8 and 5 per second (all three are on by default under Raid buffs and debuffs), Major Mana Potions do the rest; you can also lock it.
+    Clearcasting (Omen of Clarity, baseline) makes your next attack free. With Blood Frenzy a builder crit adds a combo point. Berserk is gone since the Oct 30 hotfix.
+    Shred needs you behind the target; Claw works from any side. Ravage and Pounce open from Prowl. Rip and Rake ticks can crit and ignore armor. Ferocious Bite spends your extra Energy too, unless you have Predatory Discipline (Oct 30), which keeps it and still adds the damage.
     The yellow glow follows the WoW Forever sims' cat list: Rip at 4+ points when it is missing, Ferocious Bite at 5 points while Rip has 5+ sec left, Shifting Power at 60 Energy or less, Shred.
     This is a practice tool: crit and proc chances follow WoW Forever; damage numbers are an approximation.`,
   look: { clothColor: 0x2f4a2a, leatherColor: 0x4a3a28, hood: false },

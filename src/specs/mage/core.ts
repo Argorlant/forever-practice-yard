@@ -69,8 +69,8 @@ export function regen(c: Combat): number {
 }
 
 // --------------------------------------------------------------- spell table
-/** Arcane Focus +1 % hit per point to Arcane, Elemental Precision +2 % per point to Fire and Frost (3 ranks since Oct 21). */
-const schoolHit = (c: Combat, school: School) => (school === 'arcane' ? T(c).arcaneFocus : school === 'fire' || school === 'frost' ? 2 * T(c).elementalPrecision : 0);
+/** Precision: +2 % hit per point with every spell (Oct 30 hotfix; it was Fire and Frost only, and Arcane Focus is gone). */
+const schoolHit = (c: Combat, _school: School) => 2 * T(c).precision;
 
 interface SpellOpts {
   /** Frostfire Bolt: Fire and Frost at once. */
@@ -103,7 +103,7 @@ const FIRE_EFFECTS = ['ignite', 'fireVulnerability', 'fireballDot', 'pyroblastDo
 function damageMult(c: Combat, t: Unit, id: string, school: School, o: SpellOpts): number {
   const tl = T(c);
   let add = 0.01 * tl.arcaneInstability;
-  if (isFrost(school, o)) add += D.iceBarrier.frost * ((c.aura(c.player, 'iceBarrier') ? 1 : 0) + (c.aura(c.player, 'frigidPower') ? 1 : 0));
+  if (isFrost(school, o)) add += (c.aura(c.player, 'iceBarrier') ? D.iceBarrier.frost : 0) + (c.aura(c.player, 'frigidPower') ? D.iceBarrier.frigid : 0);
   if (arcanePower(c)) add += D.arcanePower.damage;
   if (id === 'coneOfCold') add += D.wintersChill.coneBonus * stacksOf(c, t, 'wintersChill');
   let m = 1 + add;
@@ -262,8 +262,8 @@ export const ABILITIES: Ability[] = [
     id: 'fireball', name: 'Fireball', icon: 'fireball', range: 35,
     projectile: { color: 0xff7a2a, speed: D.fireball.speed, style: 'fire' },
     cost: cost(D.fireball.mana),
-    castTime: castTime((c) => D.fireball.cast - 0.1 * T(c).improvedFireball),
-    description: (c) => `A ${(D.fireball.cast - 0.1 * T(c).improvedFireball).toFixed(1)} sec cast: ${D.fireball.min}-${D.fireball.max} Fire damage plus spell power, then ${D.fireball.dot * D.fireball.dotTicks} over ${D.fireball.dotTicks * D.fireball.dotPeriod} sec.`,
+    castTime: castTime((c) => D.fireball.cast - 0.1 * T(c).accelerant),
+    description: (c) => `A ${(D.fireball.cast - 0.1 * T(c).accelerant).toFixed(1)} sec cast: ${D.fireball.min}-${D.fireball.max} Fire damage plus spell power, then ${D.fireball.dot * D.fireball.dotTicks} over ${D.fireball.dotTicks * D.fireball.dotPeriod} sec.`,
     use: (c, t) => {
       const u = t!;
       spend(c, D.fireball.cast);
@@ -344,7 +344,7 @@ export const ABILITIES: Ability[] = [
     cost: arcaneBlastCost,
     castTime: castTime(() => D.arcaneBlast.cast),
     ...talent('arcaneBlast', 'Arcane Blast'),
-    description: (c) => `A ${D.arcaneBlast.cast} sec cast: ${D.arcaneBlast.min}-${D.arcaneBlast.max} Arcane damage plus ${Math.round(D.arcaneBlast.coeff * 100)}% of spell power. Each cast adds a stack (max ${D.arcaneBlast.stacks}): +${Math.round(D.arcaneBlast.intPerStack * intellect(c))} spell damage (15% of your Intellect) for every spell, and +175% to Arcane Blast's own cost. The stacks last ${D.arcaneBlast.duration} sec from the first and nothing spends them. Stacks now: ${abStacks(c)}.`,
+    description: (c) => `A ${D.arcaneBlast.cast} sec cast: ${D.arcaneBlast.min}-${D.arcaneBlast.max} Arcane damage plus ${Math.round(D.arcaneBlast.coeff * 100)}% of spell power. Each cast adds a stack (max ${D.arcaneBlast.stacks}): +${Math.round(D.arcaneBlast.intPerStack * intellect(c))} spell damage (${D.arcaneBlast.intPerStack * 100}% of your Intellect) for every spell, and +${D.arcaneBlast.perStack * 100}% to Arcane Blast's own cost. The stacks last ${D.arcaneBlast.duration} sec from the first and nothing spends them. Stacks now: ${abStacks(c)}.`,
     use: (c, t) => {
       spend(c, D.arcaneBlast.cast);
       const a = D.arcaneBlast;
@@ -361,7 +361,8 @@ export const ABILITIES: Ability[] = [
     projectile: { color: 0xc890ff, speed: 26, style: 'arcane' },
     cost: cost(D.arcaneWrath.mana),
     cooldown: D.arcaneWrath.cooldown,
-    castTime: castTime(() => D.arcaneWrath.cast),
+    // Accelerant shortens it too (Oct 30).
+    castTime: castTime((c) => D.arcaneWrath.cast - 0.1 * T(c).accelerant),
     ...talent('arcaneWrath', 'Arcane Wrath'),
     description: (c) => `A ${D.arcaneWrath.cast} sec cast: ${D.arcaneWrath.min}-${D.arcaneWrath.max} Arcane damage plus spell power, as if you had ${Math.round(D.arcaneWrath.maxManaPct * 100)}% of your maximum mana (${Math.round(D.arcaneWrath.maxManaPct * c.player.maxResource)}) more. ${D.arcaneWrath.cooldown} sec cooldown. New in WoW Forever (Oct 15).`,
     use: (c, t) => {
@@ -375,7 +376,7 @@ export const ABILITIES: Ability[] = [
     cost: cost(D.coneOfCold.mana, { frost: true }),
     cooldown: D.coneOfCold.cooldown,
     highlight: (c) => !!c.target && T(c).wintersChill > 0 && stacksOf(c, c.target, 'wintersChill') >= T(c).wintersChill,
-    description: (c) => `Instant, ${D.coneOfCold.range} yards in front of you: ${D.coneOfCold.min}-${D.coneOfCold.max} Frost damage plus spell power. Your Winter's Chill stacks add 5% damage and 7% of spell power each and are spent (${c.target ? stacksOf(c, c.target, 'wintersChill') : 0} on your target). ${D.coneOfCold.cooldown} sec cooldown.`,
+    description: (c) => `Instant, ${D.coneOfCold.range} yards in front of you: ${D.coneOfCold.min}-${D.coneOfCold.max} Frost damage plus spell power. Your Winter's Chill stacks add ${D.wintersChill.coneBonus * 100}% damage and 7% of spell power each and are spent (${c.target ? stacksOf(c, c.target, 'wintersChill') : 0} on your target). ${D.coneOfCold.cooldown} sec cooldown.`,
     use: (c, t) => {
       spend(c, 0);
       const k = D.coneOfCold;
@@ -391,9 +392,10 @@ export const ABILITIES: Ability[] = [
     id: 'iceLance', name: 'Ice Lance', icon: 'iceLance',
     projectile: { color: 0xb0e8ff, speed: 38, style: 'frost' },
     cost: cost(D.iceLance.mana, { frost: true }),
+    cooldown: D.iceLance.cooldown,
     ...talent('iceLance', 'Ice Lance'),
     highlight: (c) => !!c.aura(c.player, 'fingersOfFrost'),
-    description: () => `Instant: ${D.iceLance.min}-${D.iceLance.max} Frost damage plus spell power, ${D.iceLance.frozen} times as much with Fingers of Frost (bosses cannot be frozen otherwise).`,
+    description: () => `Instant: ${D.iceLance.min}-${D.iceLance.max} Frost damage plus spell power, ${D.iceLance.frozen} times as much with Fingers of Frost (bosses cannot be frozen otherwise). ${D.iceLance.cooldown} sec cooldown since the Oct 30 hotfix.`,
     use: (c, t) => {
       spend(c, 0);
       resolve(c, t!, 'iceLance', 'frost', between(c, D.iceLance.min, D.iceLance.max), D.iceLance.coeff, {}, D.iceLance.frozen);
@@ -403,7 +405,7 @@ export const ABILITIES: Ability[] = [
     id: 'frostfireBolt', name: 'Frostfire Bolt', icon: 'frostfireBolt',
     projectile: { color: 0xc080ff, speed: 26, style: 'frost' },
     cost: cost(D.frostfireBolt.mana),
-    castTime: castTime((c) => D.frostfireBolt.cast - 0.1 * T(c).improvedFireball),
+    castTime: castTime((c) => D.frostfireBolt.cast - 0.1 * T(c).accelerant),
     description: () => `A ${D.frostfireBolt.cast} sec cast: ${D.frostfireBolt.min}-${D.frostfireBolt.max} Fire and Frost damage plus spell power (your higher one), then ${D.frostfireBolt.dot * D.frostfireBolt.dotTicks} over ${D.frostfireBolt.dotTicks * D.frostfireBolt.dotPeriod} sec. New and baseline in WoW Forever: both schools' talents apply.`,
     use: (c, t) => {
       const u = t!;
@@ -419,7 +421,7 @@ export const ABILITIES: Ability[] = [
     cooldown: D.iceBarrier.cooldown,
     ...talent('iceBarrier', 'Ice Barrier'),
     highlight: (c) => !!c.aura(c.player, 'iceBarrier'),
-    description: () => `A shield for ${D.iceBarrier.duration / 60} min: +${D.iceBarrier.frost * 100}% Frost damage while it holds, and Frigid Power +${D.iceBarrier.frost * 100}% Frost damage for 1 min (server hotfix, Oct 21). The dummy never breaks it. ${D.iceBarrier.cooldown} sec cooldown.`,
+    description: () => `A shield for ${D.iceBarrier.duration / 60} min: Frigid Power +${D.iceBarrier.frigid * 100}% Frost damage for 1 min, and +${D.iceBarrier.frost * 100}% more while the shield holds (Oct 30 hotfix). The dummy never breaks it. ${D.iceBarrier.cooldown} sec cooldown.`,
     use: (c) => {
       c.applyAura(c.player, { id: 'iceBarrier', name: 'Ice Barrier', icon: 'iceBarrier', duration: D.iceBarrier.duration });
       c.applyAura(c.player, { id: 'frigidPower', name: 'Frigid Power', icon: 'iceBarrier', duration: 60 });
@@ -518,7 +520,7 @@ export function chances(c: Combat): { title: string; rows: [string, string][] }[
   if (tl.ignite) procs.push(['Ignite', `${8 * tl.ignite}% of a Fire crit over 4 s, rolling`]);
   if (tl.improvedScorch) procs.push(['Fire Vulnerability per Scorch', `${[0, 33, 66, 100][tl.improvedScorch]}%: +3% of your Fire damage, 5 stacks`]);
   if (tl.fingersOfFrost) procs.push(['Fingers of Frost per landed Frostbolt or Cone of Cold', `${D.fingersOfFrost.chance}%: ${tl.fingersOfFrost} charge(s), Ice Lance x${D.iceLance.frozen}, Shatter +${[0, 17, 33, 50][tl.shatter]}% crit`]);
-  if (tl.wintersChill) procs.push(["Winter's Chill per landed Frostbolt or Fingers of Frost Ice Lance", `${D.wintersChill.chance * tl.wintersChill}%: +5% damage and +7% of spell power on your next Cone of Cold per stack, ${tl.wintersChill} stacks`]);
+  if (tl.wintersChill) procs.push(["Winter's Chill per landed Frostbolt or Fingers of Frost Ice Lance", `${D.wintersChill.chance * tl.wintersChill}%: +${D.wintersChill.coneBonus * 100}% damage and +7% of spell power on your next Cone of Cold per stack, ${tl.wintersChill} stacks`]);
   if (c.raid.has('judgementOfWisdom')) procs.push(['Judgement of Wisdom: +59 mana', '50% per landed direct spell']);
   return [
     { title: 'Your spells', rows },

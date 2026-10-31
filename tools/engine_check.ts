@@ -273,9 +273,9 @@ function play(sp: Spec, opts: { build?: string; seconds?: number; seed?: number;
 
 console.log('Druid builds (5 min, own gear, priority list, default raid buffs):');
 const DRUID_MUST_USE: Record<string, string[]> = {
-  cat: ['prowl', 'ravage', 'shred', 'rip', 'ferociousBite', 'shiftingPower', 'berserk', 'faerieFire'],
-  'cat-feral': ['shred', 'rip', 'ferociousBite', 'shiftingPower', 'berserk'],
-  bear: ['primalBite', 'lacerate', 'maul', 'demoralizingRoar', 'faerieFire', 'druidEnrage', 'barkskin', 'berserk'],
+  cat: ['prowl', 'ravage', 'shred', 'rip', 'ferociousBite', 'shiftingPower', 'faerieFire'],
+  'cat-feral': ['shred', 'rip', 'ferociousBite', 'shiftingPower'],
+  bear: ['primalBite', 'lacerate', 'maul', 'demoralizingRoar', 'faerieFire', 'druidEnrage', 'barkskin'],
   moonkin: ['wrath', 'starfire', 'moonfire', 'insectSwarm'],
   balance: ['wrath', 'starfire', 'moonfire', 'insectSwarm'],
 };
@@ -381,17 +381,9 @@ for (const sp of [druidCat, druidBear, druidBalance]) {
 console.log('Paladin builds (5 min, own gear, priority list, default raid buffs):');
 const PALADIN_MUST_USE: Record<string, string[]> = {
   ret: ['sealOfCommand', 'sealOfRighteousness', 'judgement', 'holyStrike', 'consecration'],
-  'ret-physical': ['sealOfCommand', 'sealOfRighteousness', 'judgement', 'holyStrike'],
-  'ret-fs': ['sealOfCommand', 'judgement', 'holyStrike'],
-  'ret-deep': ['sealOfCommand', 'judgement', 'holyStrike'],
   // Righteous Fury is on before the pull.
   prot: ['sealOfRighteousness', 'judgement', 'holyShield', 'consecration', 'holyStrike', 'swiftJudgement'],
-  'prot-human': ['judgement', 'holyShield', 'consecration', 'holyStrike'],
-  'prot-dwarf': ['judgement', 'holyShield', 'consecration', 'holyStrike'],
-  'prot-fs': ['judgement', 'holyShield', 'holyStrike'],
-  'prot-deep': ['judgement', 'holyShield', 'holyStrike'],
-  shock: ['sealOfCommand', 'judgement', 'holyShock', 'divineFavor', 'holyStrike', 'lightsVigil'],
-  'shock-ret': ['sealOfCommand', 'judgement', 'holyShock', 'holyStrike'],
+  shockadin: ['sealOfRighteousness', 'judgement', 'holyShock', 'divineFavor', 'holyStrike', 'consecration'],
 };
 for (const sp of [paladinRet, paladinProt, paladinShock]) {
   for (const b of sp.builds ?? []) {
@@ -404,15 +396,16 @@ for (const sp of [paladinRet, paladinProt, paladinShock]) {
     if (r.c.player.resource < -1e-6) failures.push(`${b.label}: mana went negative`);
   }
 }
-// Retribution: Seal of Command at 7 per minute (44 % of landed swings at 3.8 s, a bit less with its 1 s cooldown); twisting carries both seals.
+// Retribution: Seal of Command at 7 per minute (44 % of its chances at 3.8 s, a bit less with its 1 s cooldown); Unsealed
+// Wrath's twist releases about one stored seal per swing (three Command copies, then one Righteousness, every four swings).
 {
   const r = play(paladinRet, { build: 'ret', options: { lockMana: true } });
   const k = r.c.counters;
-  const perSwing = (k.sealOfCommandProcs ?? 0) / (k.whiteLanded ?? 1);
-  const twisted = (k.twistedSwings ?? 0) / (k.whiteLanded ?? 1);
-  console.log(`Ret with locked mana: ${r.c.dps().toFixed(0)} DPS, Seal of Command on ${(perSwing * 100).toFixed(1)}% of landed swings, ${(twisted * 100).toFixed(0)}% of swings carry both seals`);
-  if (perSwing < 0.3 || perSwing > 0.56) failures.push(`Seal of Command on ${(perSwing * 100).toFixed(1)}% of landed swings, expected about 40%`);
-  if (twisted < 0.5) failures.push(`only ${(twisted * 100).toFixed(0)}% of Ret swings carried both seals`);
+  const perChance = (k.sealOfCommandProcs ?? 0) / (k.commandRolls ?? 1);
+  const stored = (k.storedSeals ?? 0) / (k.whiteLanded ?? 1);
+  console.log(`Ret with locked mana: ${r.c.dps().toFixed(0)} DPS, Seal of Command on ${(perChance * 100).toFixed(1)}% of its chances, ${stored.toFixed(2)} stored seals released per swing`);
+  if (perChance < 0.3 || perChance > 0.56) failures.push(`Seal of Command on ${(perChance * 100).toFixed(1)}% of its chances, expected about 44%`);
+  if (stored < 0.7) failures.push(`only ${stored.toFixed(2)} stored seals released per Ret swing`);
   // Judgement keeps the seal in Forever.
   const c = r.c;
   c.clearCooldown('judgement');
@@ -439,19 +432,14 @@ for (const sp of [paladinRet, paladinProt, paladinShock]) {
   const holyThreat = c.meter.threat;
   c.clearMeter();
   c.deal({ target: dummy, source: 'melee_mh', outcome: 'hit', school: 'physical', amount: 1000, white: true, hand: 'main' });
-  if (Math.abs(c.meter.threat - 1000) > 1e-6 || Math.abs(holyThreat - 1000 * 1.9 * 1.25) > 1e-6) failures.push(`Prot threat: Holy Strike ${holyThreat}, white ${c.meter.threat}; expected 2375 and 1000`);
+  if (Math.abs(c.meter.threat - 1000) > 1e-6 || Math.abs(holyThreat - 1000 * 1.9 * 1.3) > 1e-6) failures.push(`Prot threat: Holy Strike ${holyThreat}, white ${c.meter.threat}; expected 2470 and 1000`);
 }
 // Shockadin: Holy Shock about every 10 s.
 {
-  const r = play(paladinShock, { build: 'shock', options: { lockMana: true } });
+  const r = play(paladinShock, { build: 'shockadin', options: { lockMana: true } });
   const shocks = r.used.holyShock ?? 0;
-  const vigils = r.c.counters.vigils ?? 0;
-  const spent = r.c.counters.vigilShocks ?? 0;
-  console.log(`Shockadin with locked mana: ${r.c.dps().toFixed(0)} DPS, ${shocks} Holy Shocks in 5 min, ${spent} of ${vigils} Light's Vigils spent`);
+  console.log(`Shockadin with locked mana: ${r.c.dps().toFixed(0)} DPS, ${shocks} Holy Shocks in 5 min`);
   if (shocks < 25) failures.push(`only ${shocks} Holy Shocks in 5 minutes`);
-  // A Vigil'd Shock leaves Holy Shock ready, so each Vigil brings a second Shock right after it.
-  if (vigils < 20 || spent < vigils - 1) failures.push(`Light's Vigil: ${spent} of ${vigils} spent`);
-  if (shocks < 2 * spent - 1) failures.push(`Light's Vigil should double the Holy Shocks: ${shocks} with ${spent} Vigils`);
 }
 
 // ----------------------------------------------------------------- hunter
@@ -1022,11 +1010,11 @@ console.log(`Talent layouts checked for ${SPECS.reduce((n, s) => n + (s.builds?.
   const shock = treesOf('paladin')[0].talents.findIndex((t) => t.key === 'holyShock');
   const vigil = treesOf('paladin')[0].talents.findIndex((t) => t.key === 'lightsVigil');
   if (canAdd('paladin', holy, 0, shock)) failures.push('Holy Shock could be taken with no points in Holy');
-  const shockadin = decode('paladin', '55003013200131151--05223331001');
+  const shockadin = decode('paladin', '55025210222021011--052333010012');
   if (canRemove('paladin', shockadin, 0, shock)) failures.push("Holy Shock could be removed under Light's Vigil");
   if (!canRemove('paladin', shockadin, 0, vigil)) failures.push("Light's Vigil could not be removed");
   if (canAdd('paladin', shockadin, 2, 0)) failures.push('a 52nd point could be spent');
-  if (encode(shockadin) !== '55003013200131151--05223331001') failures.push(`encode gives ${encode(shockadin)}`);
+  if (encode(shockadin) !== '55025210222021011--052333010012') failures.push(`encode gives ${encode(shockadin)}`);
   if (parseTalents('paladin', '5555555555555555555') !== null) failures.push('an illegal link was accepted');
   // The planner's leveling order: every published build gets a legal order of all its points, and a link gives it back.
   let orders = 0;

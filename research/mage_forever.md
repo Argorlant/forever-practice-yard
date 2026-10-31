@@ -2,6 +2,16 @@
 
 Research date: 11 Oct 2026. The machine-readable version is `mage_forever.json` in this folder. Every number there has a source link and a confidence label. It covers Arcane, Fire and Frost, the hybrids the sims and guides run (Arcane-Frost, Fire/Frost, the experimental Frostfire build) and the new baseline Frostfire Bolt. Healing does not apply, and no source shows a tank or off-role mage build.
 
+## Live hotfix of 30 October (Wowhead)
+
+Read from Wowhead's Forever talent calculator and tooltips; the sims have not published it yet, so the yard's mage
+builds are its own re-spends of the sims' lists (provisional). **Arcane Focus** is gone; **Precision** (ex-Elemental
+Precision) gives +2 % hit a point with every spell; **Accelerant** (ex-Improved Fireball) also shortens Arcane Wrath;
+Improved Channeling, Arcane Resilience (3 ranks), Missile Barrage and Improved Fire Blast moved; Incineration has 5 ranks,
+Critical Mass 3. Spells: Arcane Blast stacks give 12 % of Intellect (was 15 %), +100 % cost a stack (was 175 %) and last
+18 s (was 15 s); Ice Lance has an 8 s cooldown and deals x4 to frozen targets (was x3, no cooldown); Winter's Chill +20 %
+a stack to Cone of Cold (was 5 %); Ice Barrier: Frigid Power +15 % Frost damage for 1 min, +5 % more while the shield holds.
+
 ## The five things that matter most
 
 1. **Arcane Blast is the new core of Arcane.** It is the Arcane 11-point talent: a 2.5 s cast for 364-424 Arcane at 0.714, costing 15% of base mana (182) **+175% per stack**. Each cast adds a stack (max 4, 8 s) that gives **+10% damage to your *other* spells**. The next other damage spell spends every stack. The gs loop is Arcane Blast x3 (182 + 500 + 819 mana), then Frostbolt at +30%. **Missile Barrage** (16-point talent) procs 40% of the time from Arcane Blast and 20% from Fireball, Frostbolt and Frostfire Bolt (gs rolls on the landed hit, fs on cast completion). It makes the next Arcane Missiles free and twice as fast (5 missiles in 2.5 s). Clearcasting is 2% per point with a 1 s internal cooldown. The sims disagree on whether Missiles benefit from the stacks: gs says yes, while the client mask and fs say no.

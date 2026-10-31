@@ -6,7 +6,7 @@ import { decodeTalents, talentSplit, talentSummary } from '../common';
 import { MELEE_STATS, RANGED_STATS } from './data';
 
 const TREES = [
-  ['deadlyAspects', 'enduranceTraining', 'focusedFire', 'improvedAspectOfTheMonkey', 'pathfinding', 'improvedRevivePet',
+  ['deadlyAspects', 'enduranceTraining', 'focusedFire', 'improvedAspectOfTheMonkey', 'improvedRevivePet', 'pathfinding',
     'bestialSwiftness', 'unleashedFury', 'improvedMendPet', 'ferocity', 'summonHawk', 'spiritBond', 'intimidation',
     'bestialDiscipline', 'frenzy', 'bestialWrath'],
   ['hawkEye', 'improvedConcussiveShot', 'lethalAttacks', 'improvedStings', 'efficiency', 'carefulAim', 'rapidKilling',

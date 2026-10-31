@@ -71,7 +71,7 @@ export const DATA = {
   slam: { cost: 15, cooldown: 18, cast: 1.5, bonus: 87, threat: 140 },
   execute: { cost: 15, base: 600, perRage: 15, threshold: 0.2 },
   overpower: { cost: 5, cooldown: 5, bonus: 35, window: 5 },
-  revenge: { cost: 5, cooldown: 5, min: 109, max: 133, window: 5 },   // rank 5; threat 2.25x its damage, no flat part
+  revenge: { cost: 5, cooldown: 5, min: 109, max: 133, ap: 0.25, window: 5 },   // rank 5, +25 % of attack power (Oct 30 hotfix); threat 2.25x its damage
   shieldSlam: { cost: 20, cooldown: 6, min: 640, max: 670, threat: 508 },
   shieldBlock: { cost: 10, cooldown: 5, block: 75, duration: 7, charges: 2 },
   sunderArmor: { cost: 15, armor: 450, stacks: 5, duration: 30, threat: 206, threatAp: 0.05 },   // threat 206 + 5 % of attack power

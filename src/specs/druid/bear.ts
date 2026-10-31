@@ -34,7 +34,6 @@ const talent = (key: keyof Talents, name: string) => ({
   usable: (c: Combat) => T(c)[key] > 0,
 });
 const others = (c: Combat, t: Unit, yards = 8) => c.targets.filter((u) => u !== t && u.health > 0 && c.inRange(u, yards));
-const berserk = (c: Combat) => !!c.aura(c.player, 'berserk');
 
 /** A bear attack: avoided attacks refund 80 % (Swipe none). Threat multipliers come from mod.threatFor. */
 function strike(c: Combat, t: Unit, id: string, base: number, opts: { refund?: boolean } = {}): Outcome {
@@ -68,19 +67,20 @@ const abilities: Ability[] = [
     id: 'primalBite', name: 'Primal Bite', icon: 'primalBite', gcd: D.bearGcd, target: 'enemy', range: 'melee',
     animation: 'stab',
     cost: freeWithClearcasting((c) => D.primalBite.cost - T(c).ferocity),
-    cooldown: (c) => (berserk(c) ? 0 : D.primalBite.cooldown),
+    cooldown: D.primalBite.cooldown,
     ...talent('primalBite', 'Primal Bite'),
-    description: () => `Bite for weapon damage plus ${D.primalBite.bonus} and high threat. ${D.primalBite.cooldown} sec cooldown; during Berserk no cooldown and it hits 3 targets.`,
+    description: () => `Bite for weapon damage plus ${D.primalBite.bonus} and high threat. ${D.primalBite.cooldown} sec cooldown.`,
     use: (c, t) => {
       useClearcasting(c);
-      const targets = berserk(c) ? [t!, ...others(c, t!).slice(0, 2)] : [t!];
-      for (const u of targets) strike(c, u, 'primalBite', c.weaponDamage('main') + D.primalBite.bonus, { refund: u === t });
+      strike(c, t!, 'primalBite', c.weaponDamage('main') + D.primalBite.bonus);
     },
   },
   {
     id: 'lacerate', name: 'Lacerate', icon: 'lacerate', gcd: D.bearGcd, target: 'enemy', range: 'melee',
     animation: 'strike1',
     cost: freeWithClearcasting((c) => D.lacerate.cost - T(c).shreddingAttacks),
+    // A Feral talent since the Oct 30 hotfix (it needs Savage Fury 2/2).
+    ...talent('lacerate', 'Lacerate'),
     description: (c) => `A bleed that stacks ${D.lacerate.stacks} times: ${D.lacerate.tick} damage per stack every ${D.lacerate.period} sec for ${D.lacerate.duration} sec. The hit deals ${D.lacerate.hitPerStack * 100}% of weapon damage per stack already on the target. High threat. Stacks now: ${lacerateStacks(c, c.target)}.`,
     use: (c, t) => {
       const u = t!;
@@ -130,16 +130,6 @@ const abilities: Ability[] = [
         id: 'druidEnrage', name: 'Enrage', icon: 'druidEnrage', duration: e.duration, period: 1, playerArmor: 0.84,
         onTick: (cc) => gainRage(cc, e.perSecond),
       });
-    },
-  },
-  {
-    id: 'berserk', name: 'Berserk', icon: 'berserk', gcd: 0, target: 'self',
-    cooldown: D.berserk.cooldown,
-    ...talent('berserk', 'Berserk'),
-    description: () => `For ${D.berserk.duration} sec Primal Bite has no cooldown and hits up to 3 targets.`,
-    use: (c) => {
-      c.applyAura(c.player, { id: 'berserk', name: 'Berserk', icon: 'berserk', duration: D.berserk.duration });
-      c.clearCooldown('primalBite');
     },
   },
   {
@@ -219,7 +209,7 @@ function prepare(c: Combat): void {
   c.mod.hit = 2 * t.naturesReach;
   c.mod.threat = D.bearThreat;
   c.mod.threatFor = { maul: D.maul.threat, primalBite: D.primalBite.threat, lacerate: D.lacerate.threat, swipe: D.swipe.threat };
-  c.mod.physicalDamage = 1 + 0.01 * t.naturalist;
+  c.mod.physicalDamage = 1 + 0.02 * t.naturalist;   // Naturalist 2 % a point since the Oct 30 hotfix
   c.mod.vsBleeding = 0.02 * t.rendAndTear;
   c.mod.damageFor = { maul: 1 + 0.05 * t.savageFury, swipe: (1 + 0.05 * t.savageFury) * (1 + 0.1 * t.feralInstinct) };
   for (const id of ABILITY_SOURCES) c.mod.critMultiplierFor[id] = c.rules.critMultiplier + 0.1 * t.naturalInstinct;
@@ -274,7 +264,6 @@ function suggest(c: Combat): string | null {
   if (!p.autoAttacking && c.inRange(t)) return 'attack';
   if (!c.playerHealthLocked && p.health / p.maxHealth < 0.3 && rage >= 10 && ready('frenziedRegeneration')) return 'frenziedRegeneration';
   if (c.enemyAttacks.on && ready('barkskin')) return 'barkskin';
-  if (p.inCombat && tl.berserk && ready('berserk')) return 'berserk';
   if (p.inCombat && rage <= 60 && ready('druidEnrage')) return 'druidEnrage';
   // Demoralizing Shout from the raid does the same job.
   let demoLeft = 0;
@@ -284,9 +273,9 @@ function suggest(c: Combat): string | null {
   if (tl.primalBite && ready('primalBite') && rage >= cost('primalBite')) return 'primalBite';
   if (others(c, t).length >= 1 && rage >= 15) return 'swipe';
   const lac = c.aura(t, 'lacerate');
-  if ((!lac || (lac.stacks ?? 0) < 5 || lac.end - c.t <= 4.5) && rage >= cost('lacerate')) return 'lacerate';
+  if (tl.lacerate && (!lac || (lac.stacks ?? 0) < 5 || lac.end - c.t <= 4.5) && rage >= cost('lacerate')) return 'lacerate';
   if (!c.queuedSwing && rage >= 25) return 'maul';
-  if (rage >= cost('lacerate') + 15) return 'lacerate';
+  if (tl.lacerate && rage >= cost('lacerate') + 15) return 'lacerate';
   return null;
 }
 
@@ -383,7 +372,7 @@ export const druidBear: Spec = {
   welcome: 'Welcome to the Feral Bear practice yard. The dummy hits back, so rage from damage taken, dodges and Frenzied Regeneration work as in the game. Keep Lacerate at 5 stacks, Primal Bite on cooldown, Demoralizing Roar and Faerie Fire up, and Maul with spare rage.',
   help: `${CONTROLS}
     Bear rage in WoW Forever is normalized: each landed white swing gives 11.25 rage (22.5 on a crit), every 2.5 sec. Misses, dodges, parries and the swing a Maul replaces give none. Hits you take give rage from their damage before armor and Barkskin (Forever's measured rule): about 27 for a normal hit from the default dummy, 55 for a crit, 41 for a crushing blow; a dodge gives none, except Natural Reaction's 5.
-    Maul replaces your next swing: press once to queue it; pressing again does not cancel it. Primal Bite has a 6 sec cooldown (none during Berserk). Lacerate stacks 5 times and its hit grows with the stacks.
+    Maul replaces your next swing: press once to queue it; pressing again does not cancel it. Primal Bite has a 6 sec cooldown (Berserk is gone since the Oct 30 hotfix). Lacerate is a Feral talent since Oct 30; it stacks 5 times and its hit grows with the stacks.
     The dummy attacks you: bears cannot parry or block, so dodge is your avoidance and crushing blows land 15% of the time. Your health is locked by default; unlock it to practice Frenzied Regeneration and Barkskin. Bear Form makes your damage cause 50% more threat.
     Clearcasting (Omen of Clarity) makes your next ability free. Blood Frenzy gives 5 rage on a crit, Natural Reaction 5 rage on a dodge.
     This is a practice tool: crit, proc and rage numbers follow WoW Forever; damage and threat are an approximation.`,

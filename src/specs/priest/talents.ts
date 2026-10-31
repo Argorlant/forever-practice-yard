@@ -11,7 +11,7 @@ const TREES = [
     'mentalAgility', 'innerFocus', 'improvedPowerWordShield', 'meditation', 'improvedInnerFire', 'improvedManaBurn', 'soulWarding',
     'penance', 'renewedHope', 'divineAegis', 'powerInfusion'],
   ['twilightFocus', 'improvedRenew', 'holySpecialization', 'spellWarding', 'divineFury', 'holyNova', 'blessedRecovery', 'inspiration',
-    'holyReach', 'improvedHealing', 'searingLight', 'bindingHeal', 'litanyOfLight', 'spiritOfRedemption', 'spiritualGuidance',
+    'holyReach', 'improvedHealing', 'searingLight', 'holyBinding', 'litanyOfLight', 'spiritOfRedemption', 'spiritualGuidance',
     'spiritualHealing', 'prayerOfMending'],
   ['shadowFocus', 'blackout', 'spiritTap', 'improvedMindBlast', 'improvedShadowWordPain', 'shadowReach', 'improvedPsychicScream',
     'mindFlay', 'improvedMindFlay', 'darkInspiration', 'vampiricEmbrace', 'shadowWeaving', 'silence', 'devouringContagion',
@@ -29,7 +29,7 @@ const NAMES: Record<TalentKey, string> = {
   powerInfusion: 'Power Infusion',
   twilightFocus: 'Twilight Focus', improvedRenew: 'Improved Renew', holySpecialization: 'Holy Specialization', spellWarding: 'Spell Warding',
   divineFury: 'Divine Fury', holyNova: 'Holy Nova', blessedRecovery: 'Blessed Recovery', inspiration: 'Inspiration', holyReach: 'Holy Reach',
-  improvedHealing: 'Improved Healing', searingLight: 'Searing Light', bindingHeal: 'Binding Heal', litanyOfLight: 'Litany of Light',
+  improvedHealing: 'Improved Healing', searingLight: 'Searing Light', holyBinding: 'Holy Binding', litanyOfLight: 'Litany of Light',
   spiritOfRedemption: 'Spirit of Redemption', spiritualGuidance: 'Spiritual Guidance', spiritualHealing: 'Spiritual Healing', prayerOfMending: 'Prayer of Mending',
   shadowFocus: 'Shadow Focus', blackout: 'Blackout', spiritTap: 'Spirit Tap',
   improvedShadowWordPain: 'Improved Shadow Word: Pain', shadowReach: 'Shadow Reach', improvedMindBlast: 'Improved Mind Blast',
@@ -39,7 +39,7 @@ const NAMES: Record<TalentKey, string> = {
 };
 
 const NEW_IN_FOREVER = new Set<TalentKey>(['powerInLight', 'twinDisciplines', 'holyPrecision', 'soulWarding', 'penance', 'renewedHope',
-  'divineAegis', 'bindingHeal', 'litanyOfLight', 'prayerOfMending', 'improvedMindFlay', 'darkInspiration', 'devouringContagion', 'earlyDemise']);
+  'divineAegis', 'holyBinding', 'litanyOfLight', 'prayerOfMending', 'improvedMindFlay', 'darkInspiration', 'devouringContagion', 'earlyDemise']);
 
 export type PriestSpec = 'shadow' | 'smite';
 

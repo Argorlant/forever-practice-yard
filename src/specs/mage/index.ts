@@ -123,7 +123,7 @@ export const mageArcane: Spec = specFor('arcane', {
   welcome: 'Welcome to the Arcane practice yard (WoW Forever after the Oct 15 patch). Build four Arcane Blasts: each one costs more and gives you spell damage for 15 sec. Then Arcane Wrath on cooldown and Arcane Missiles as the filler, Missiles at once when Missile Barrage lights them; Arcane Power and Presence of Mind together.',
   help: `${CONTROLS}
     ${HELP_COMMON}
-    Arcane in WoW Forever since Oct 15: Arcane Blast is a 1.5 sec cast; each one adds a stack (max 4) worth 15% of your Intellect as spell damage for every spell, and +175% to Blast's own cost. The stacks last 15 sec from the first and nothing spends them, so the loop is four Blasts, then Arcane Wrath (16 points: a 3.5 sec cast with 5% of your maximum mana as extra spell damage, 6 sec cooldown) and Missiles until they fall off. Missile Barrage (2 points: per point 20% from Arcane Blast, 10% from Arcane Wrath or Frostbolt) makes the next Arcane Missiles free and twice as fast; each missile rolls its own hit and crit, and since Oct 21 missiles proc neither Missile Barrage nor Clearcasting. Clearcasting makes the next spell free: best on a 3- or 4-stack Arcane Blast. Arcane Mind makes Arcane crits 2.0x.
+    Arcane in WoW Forever since Oct 15: Arcane Blast is a 1.5 sec cast; each one adds a stack (max 4) worth 12% of your Intellect as spell damage for every spell, and +100% to Blast's own cost (Oct 30 hotfix; it was 15% and +175%). The stacks last 18 sec from the first and nothing spends them, so the loop is four Blasts, then Arcane Wrath (16 points: a 3.5 sec cast with 5% of your maximum mana as extra spell damage, 6 sec cooldown) and Missiles until they fall off. Missile Barrage (2 points: per point 20% from Arcane Blast, 10% from Arcane Wrath or Frostbolt) makes the next Arcane Missiles free and twice as fast; each missile rolls its own hit and crit, and since Oct 21 missiles proc neither Missile Barrage nor Clearcasting. Clearcasting makes the next spell free: best on a 3- or 4-stack Arcane Blast. Arcane Mind makes Arcane crits 2.0x.
     This is a practice tool: hit, crit and proc chances follow WoW Forever; damage numbers are an approximation.`,
   look: { clothColor: 0x6a4aa0, leatherColor: 0x30264a, hood: true, robe: true },
   suggest: arcaneSuggest,
@@ -171,7 +171,7 @@ function fireSuggest(c: Combat): string | null {
   if (p.inCombat && tl.combustion && ready('combustion')) return 'combustion';
   if (tl.pyroblast && stacksOf(c, p, 'heatingUp') >= 3) return 'pyroblast';
   // A Fire/Frost build of your own with Ice Lance: Fingers of Frost charges go to Ice Lance, as for Frost.
-  if (tl.iceLance && c.aura(p, 'fingersOfFrost') && !c.casting) return 'iceLance';
+  if (tl.iceLance && c.aura(p, 'fingersOfFrost') && !c.casting && ready('iceLance')) return 'iceLance';
   if (ready('fireBlast')) return 'fireBlast';
   if (tl.improvedScorch && (!fv || (fv.stacks ?? 0) < 5 || fv.end - c.t <= 5)) return 'scorch';
   const filler = String(c.options.fireFiller ?? 'scorch');
@@ -226,7 +226,7 @@ function frostSuggest(c: Combat): string | null {
   const tool = manaTool(c, 0.15);
   if (tool) return tool;
   if (tl.iceBarrier && !c.aura(p, 'iceBarrier') && ready('iceBarrier')) return 'iceBarrier';
-  if (tl.iceLance && c.aura(p, 'fingersOfFrost') && !c.casting) return 'iceLance';
+  if (tl.iceLance && c.aura(p, 'fingersOfFrost') && !c.casting && ready('iceLance')) return 'iceLance';
   if (tl.wintersChill && stacksOf(c, t, 'wintersChill') >= tl.wintersChill && ready('coneOfCold') && c.inRange(t, D.coneOfCold.range)) return 'coneOfCold';
   if (tl.missileBarrage && c.aura(p, 'missileBarrage')) return 'arcaneMissiles';
   const stacks = Math.min(4, abStacks(c) + (c.casting?.id === 'arcaneBlast' ? 1 : 0));
@@ -258,10 +258,10 @@ export const mageFrost: Spec = specFor('frost', {
   defaultOptions: { build: 'frost', mana: 4203, spirit: D.spirit, mp5: D.mp5, lockMana: false },
   options: OPTIONS,
   lowMana: (c) => c.cost(c.ability('frostbolt')!),
-  welcome: 'Welcome to the Frost practice yard. Frostbolt is your spell; Fingers of Frost (15% per Frostbolt) gives two charges that make Ice Lance hit three times as hard and crit far more. Winter\'s Chill stacks from Frostbolt and Fingers of Frost Ice Lances for Cone of Cold: stand within 10 yards and cast it at full stacks. Keep Ice Barrier up: +3% Frost damage, and Frigid Power another 3%. The Arcane-Frost build also fires Arcane Missiles on Missile Barrage and keeps Arcane Blast\'s stacks up.',
+  welcome: 'Welcome to the Frost practice yard. Frostbolt is your spell; Fingers of Frost (15% per Frostbolt) gives two charges that make Ice Lance hit four times as hard and crit far more (8 sec cooldown since Oct 30). Winter\'s Chill stacks from Frostbolt and Fingers of Frost Ice Lances for Cone of Cold: stand within 10 yards and cast it at full stacks. Keep Ice Barrier up: Frigid Power +15% Frost damage, and +5% more while the shield holds. The Arcane-Frost build also fires Arcane Missiles on Missile Barrage and keeps Arcane Blast\'s stacks up.',
   help: `${CONTROLS}
     ${HELP_COMMON}
-    Frost in WoW Forever: bosses cannot be frozen, so Fingers of Frost is how Shatter works: each landed Frostbolt has a 15% chance to give 2 charges; each damage spell spends one (+50% crit with Shatter, Ice Lance x3 since Oct 15). Winter's Chill (server hotfix, Oct 21): each landed Frostbolt or Fingers of Frost Ice Lance has 20% per point to add a stack, up to the talent's rank; each stack adds 5% damage and 7% of spell power to your next Cone of Cold, which spends them. Ice Barrier (Oct 21): +3% Frost damage while the shield holds and Frigid Power +3% for 1 min. Elemental Precision is 3 ranks of 2% hit again. Cone of Cold reaches 10 yards: the sims stand that close. Ice Shards makes Frost crits 2.0x.
+    Frost in WoW Forever: bosses cannot be frozen, so Fingers of Frost is how Shatter works: each landed Frostbolt has a 15% chance to give 2 charges; each damage spell spends one (+50% crit with Shatter; Ice Lance x4 with an 8 sec cooldown since the Oct 30 hotfix). Winter's Chill: each landed Frostbolt or Fingers of Frost Ice Lance has 20% per point to add a stack, up to the talent's rank; each stack adds 20% damage (5% before Oct 30) and 7% of spell power to your next Cone of Cold, which spends them. Ice Barrier (Oct 30): Frigid Power +15% Frost damage for 1 min and +5% more while the shield holds. Precision (Elemental Precision until Oct 30) gives 2% hit per point with every spell. Cone of Cold reaches 10 yards: the sims stand that close. Ice Shards makes Frost crits 2.0x.
     This is a practice tool: hit, crit and proc chances follow WoW Forever; damage numbers are an approximation.`,
   look: { clothColor: 0x3a6aa0, leatherColor: 0x1a2a4a, hood: true, robe: true },
   suggest: frostSuggest,

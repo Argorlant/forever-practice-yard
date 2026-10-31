@@ -11,8 +11,11 @@ played Forever at level 60, a DPS number would only mislead. It works with keybo
 Up to date with the two sims' October 27-28 updates (launch racials, re-searched builds and priority lists, live
 hotfixes through client 1.60.1.70658): spells at the last trainer rank (the Ahn'Qiraj books need raids, which open on
 9 December), raid buffs too; a boss without resistances resists no spell partly; the Mage's Frost tree without Piercing
-Ice; Human Ruthless at 1 % and no Orc Savage in the race sheets. The October 30 talent tree changes (Druid, Mage,
-Paladin) are not in the sims yet, so not here either.
+Ice; Human Ruthless at 1 % and no Orc Savage in the race sheets. The live hotfix of October 30 rebuilt the Druid, Mage
+and Paladin trees (and moved or renamed a Hunter and a Priest talent); the sims have not published it yet, so the yard
+reads those trees and their tooltips from Wowhead's WoW Forever calculator (`tools/wowhead_trees.mjs`, data in
+`research/wowhead/`) and re-spends the sims' builds on them. Those builds and the Ret and Shockadin loops are the yard's,
+**provisional**, until the sims publish theirs.
 > **Speculative, built on the sims.** WoW Forever's beta has closed and the game launches on 4 November 2026. The talents,
 > builds, rotations and numbers here follow the community sims ([wow-forever-sim](https://github.com/gunba/wow-forever-sim) and
 > [foreversim](https://github.com/laurencestokes/foreversim)) and our own reading of the beta, which stopped at level 30, so they
@@ -52,12 +55,12 @@ The **Druid** comes as three specs (sources in [`research/druid_forever.md`](res
 - **Feral Cat** (`?class=druid-cat`): smooth energy, combo points and a 1.0 s GCD. Shifting Power is
   Forever's powershift: +40 energy for mana, without leaving Cat Form. Mana is a second bar, with
   options for the pool, its regeneration, Wolfshead Helm, Howling Idol and a lock. Omen of Clarity
-  is baseline (2 procs per minute, 10 s cooldown). Blood Frenzy and Berserk are in, plus the Prowl →
-  Ravage/Pounce opener, Rip and Rake ticks that can crit, and Ferocious Bite spending the extra
-  energy.
+  is baseline (2 procs per minute, 10 s cooldown). Blood Frenzy and Predatory Discipline (Ferocious Bite
+  keeps the extra energy) are in, plus the Prowl → Ravage/Pounce opener and Rip and Rake ticks that can crit.
+  Berserk and Improved Shifting Power are gone since Oct 30; Shifting Power has an 8 s cooldown.
 - **Feral Bear** (`?class=druid-bear`): treated like Protection, so the dummy attacks you.
   Normalized rage (11.25 per landed swing, 22.5 on a crit), rage from hits taken, Natural Reaction
-  on dodges, Lacerate stacks, Primal Bite, Maul on the next swing, Enrage, Frenzied Regeneration,
+  on dodges, Lacerate stacks (a Feral talent since Oct 30), Primal Bite, Maul on the next swing, Enrage, Frenzied Regeneration,
   Barkskin, threat x1.5 and a Mighty Rage Potion.
 - **Balance** (`?class=druid-balance`): the Wrath → Starfire → Starfire loop. Eclipse charges make
   Starfire faster; Nature's Grace gives haste on spell crits. Moonfire and Insect Swarm ticks can
@@ -70,16 +73,15 @@ In WoW Forever, Judgement is off the global cooldown and keeps the seal; damage 
 baseline Holy Strike roll on the melee table:
 
 - **Retribution** (`?class=paladin-ret`): a slow two-hander with Seal of Command (7 procs per minute, 1 s cooldown)
-  and Seal of Righteousness. With Twist of Light, replacing a seal leaves an Echo that your next swing also
-  applies, so the hint swaps seals once per swing. Vengeance and Vindication are in, and the review counts
-  swings that carried both seals.
+  and Seal of Righteousness. Since Oct 30 Unsealed Wrath replaces Twist of Light: each landed swing stores a copy
+  of your seal (up to 3), and the first swing with another seal releases them, so the hint swings three times with
+  Command and once with Righteousness. Vengeance and Vindication are in, and the review counts the released seals.
 - **Protection** (`?class=paladin-prot`): the dummy attacks you. Righteous Fury (Holy threat x1.9), Holy Shield
   (+30 % block, 4 charges, Holy damage per block), Redoubt, Reckoning (up to 4 charges your next swing fires),
-  Shield Specialization mana on blocks,
-  Templar's Bulwark (an absorb shield) and Swift Judgement.
-- **Shockadin** (`?class=paladin-shock`): a melee paladin with Holy Shock on a 10 s cooldown, Divine Favor,
-  Divine Precision and Light's Vigil (the marked Holy Shock triggers no cooldown, so you Shock twice). No sim
-  models it yet, so the build (31/0/20) is our proposal.
+  Shield Specialization mana on blocks, Shieldsworn (Holy Strike every 6 s, triggering Holy Shield and Shield
+  Specialization), Templar's Bulwark (an absorb shield) and Swift Judgement, a second Judgement since Oct 30.
+- **Shockadin** (`?class=paladin-shock`): a melee paladin with Holy Shock on a 10 s cooldown, Divine Favor and
+  Divine Precision: gunba's 23/0/28 list. Light's Vigil only works on allies since Oct 30, so our Vigil builds are gone.
 
 Exorcism needs an Undead or Demon dummy (Settings → Options); Hammer of Wrath works below 20 % health.
 
@@ -191,7 +193,8 @@ plays. Pick them on the welcome screen or later in Settings:
 The first screen picks the class (WoW's class icons) and then a build, grouped by spec, with its three talent trees drawn
 like the game's talent frame (hover a talent for what it does). `?class=warrior` opens a class directly; Settings shows the
 current build's trees and links back to the first screen. `npm run talents` rebuilds the tree layouts from gunba's sim
-(`tools/talent_layout.mjs`), and `npm run icons` fetches their icons.
+(`tools/talent_layout.mjs`); `node tools/wowhead_trees.mjs` then lays the Oct 30 trees from Wowhead over them, and
+`npm run icons` fetches their icons.
 
 **Your own talents.** In Settings, *Edit talents* turns the build's talent frame into a calculator: left click adds a
 point, right click (or *Remove* on a touch screen) takes one back, under the game's rules (51 points, five per row,

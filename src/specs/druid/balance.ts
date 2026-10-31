@@ -35,10 +35,10 @@ function regen(c: Combat): number {
 // ----------------------------------------------------------------- spells
 const spellPower = (c: Combat) => c.stats.spellPower ?? 0;
 const vengeance = (c: Combat) => c.rules.spellCritMultiplier + 0.1 * T(c).vengeance;
-/** Moonfury +2 % per point to Arcane and Nature, Naturalist +1 % per point to everything (the engine adds Curse of the Elements). */
+/** Moonfury +2 % per point to Arcane and Nature, Naturalist +2 % per point to everything since Oct 30 (the engine adds Curse of the Elements). */
 function schoolMult(c: Combat, _t: Unit, school: School): number {
   const moonfury = school === 'arcane' || school === 'nature' ? 1 + 0.02 * T(c).moonfury : 1;
-  return moonfury * (1 + 0.01 * T(c).naturalist);
+  return moonfury * (1 + 0.02 * T(c).naturalist);
 }
 
 /** Spell table: miss 17 % minus hit (no floor in Forever), then crit from spell crit and auras. */
@@ -66,14 +66,14 @@ function directSpell(c: Combat, t: Unit, id: string, school: School, base: numbe
   return outcome;
 }
 
-/** A damage over time spell: ticks can crit and re-read spell power (Forever client flag); Genesis +1 % per point. */
+/** A damage over time spell: ticks can crit and re-read spell power (Forever client flag); Genesis +2 % per point since Oct 30. */
 function dot(c: Combat, t: Unit, id: string, name: string, school: School, ticks: number, period: number,
   perTick: (cc: Combat) => number, opts: { extraCrit?: number; mult?: number } = {}): void {
   c.applyAura(t, {
     id, name, icon: id, duration: ticks * period, period,
     onTick: (cc) => {
       const crit = roll(cc, cc.spellCritChance(opts.extraCrit));
-      const mult = schoolMult(cc, t, school) * (opts.mult ?? 1) * (1 + 0.01 * T(cc).genesis);
+      const mult = schoolMult(cc, t, school) * (opts.mult ?? 1) * (1 + 0.02 * T(cc).genesis);
       const amount = Math.round(perTick(cc) * mult * (crit ? vengeance(cc) : 1));
       cc.deal({ target: t, source: id, outcome: crit ? 'crit' : 'hit', school, amount, white: false, periodic: true });
     },

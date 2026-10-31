@@ -66,7 +66,8 @@ function shadowSuggest(c: Combat): string | null {
   const tl = T(c);
   const { p, ready, afford, potion } = ctx(c);
   if (tl.shadowform && !shadowform(c)) return 'shadowform';
-  const healthy = c.playerHealthLocked || p.health / p.maxHealth > 0.3;
+  // Shadow Word: Death's backlash takes 30 % of your health (Oct 30): keep a margin above it.
+  const healthy = c.playerHealthLocked || p.health / p.maxHealth > D.shadowWordDeath.backlash + 0.1;
   const deathReady = ready('shadowWordDeath') && afford('shadowWordDeath') && healthy;
   const left = (id: string) => (c.aura(t, id)?.end ?? c.t) - c.t;
   const plagueDue = left('devouringPlague') <= 5 && ready('devouringPlague') && afford('devouringPlague');

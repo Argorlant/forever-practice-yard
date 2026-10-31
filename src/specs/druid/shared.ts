@@ -51,11 +51,11 @@ export const freeWithClearcasting = (base: (c: Combat) => number) => (c: Combat)
 /**
  * A bleed: ticks ignore armor, can crit and re-read attack power each tick
  * (Forever client flag). Rend and Tear counts (the target is bleeding),
- * Genesis adds 1 % periodic damage per point.
+ * Genesis adds 2 % periodic damage per point (1 % before the Oct 30 hotfix).
  */
 export function bleed(c: Combat, t: Unit, id: string, name: string, ticks: number, period: number,
   perTick: (cc: Combat, stacks: number) => number, opts: { genesis?: number; stacks?: number } = {}): void {
-  const genesis = 1 + 0.01 * (opts.genesis ?? 0);
+  const genesis = 1 + 0.02 * (opts.genesis ?? 0);   // 2 % a point since the Oct 30 hotfix (was 1 %)
   c.applyAura(t, {
     id, name, icon: id, duration: ticks * period, period, bleed: true, stacks: opts.stacks,
     onTick: (cc, a) => {

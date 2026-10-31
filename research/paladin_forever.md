@@ -2,6 +2,25 @@
 
 Research date: 10 Oct 2026. The machine-readable version is `paladin_forever.json` in this folder. Every number there has a source link and a confidence label. Covers Retribution, Protection (tank) and a Shockadin (Holy Shock damage hybrid). Holy healing is out of scope (its talents are listed only because talent strings need them).
 
+## Live hotfix of 30 October (Wowhead)
+
+Read from Wowhead's Forever talent calculator and tooltips; the sims have not published it yet,
+so the yard's builds and the Ret and Shockadin loops are provisional. **Gone**: Twist of Light, Instrument of Law, One-Handed
+Weapon Specialization, Improved Seal of Fury, Voice of Truth. **New**: Unsealed Wrath (Ret 31: each melee attack stores a copy of
+your active seal for 15 s, up to 3; landing an attack with a different seal consumes them, each with the stored seal's normal
+chance), Shieldsworn (Prot 31: Holy Strike -4 s, strikes with your shield and triggers Holy Shield and Shield Specialization
+without using charges or cooldowns, blocks spells for 6 s), Oath of Light and Boundless Light (healing), Stoicism, Turn Evil.
+**Moved**: Divine Intellect to Protection, Holy Conduit to Holy, Unyielding Faith to Retribution. **Changed**: Conviction 3 ranks,
++2 % crit a point with attacks and spells; Improved Seals 5 ranks, 3 % a point; Reverence 2 ranks, 15 % a point; Divine Precision
+2 ranks, 4 % a point; Holy Power now raises healing crits only; Light's Vigil only on allies (it heals); Champion of the Light 5
+ranks, 12 % of Intellect and -0.2 s Hammer of Wrath cast a point; Two-Handed Weapon Specialization +2 % physical damage a point
+and 7/14/20 % less threat with a two-hander (no longer seals or Holy Strike); Vindication no longer raises your attack power;
+Swift Judgement is a second Judgement (1 min cooldown, own cooldown, keeps the seal); Redoubt +6 % block a point (10 % chance);
+Shield Specialization 2 ranks (50/100 %); Improved Righteous Fury 3 % a point; Iron Creed 3 ranks (+10 % Holy Strike threat,
+-2 % damage taken a point); Sacred Duty no longer adds Stamina. Spell ranks from the tooltips: Holy Shield rank 3 deals 153 a
+block (240 mana), Hammer of Wrath rank 3 489-538 (425 mana). The yard's reading of Unsealed Wrath: white swings store and
+release, and a stored Seal of Command ignores its 1 s internal cooldown.
+
 ## The five things that matter most
 
 1. **Judgement no longer eats the seal.** Judgement (20271) is off the GCD, 10 s cooldown (8 s with Improved Judgement 2/2), costs 6% of base mana (91) and "does not consume the Seal". The seal still lasts 30 s. Judgements of Righteousness, Command and Fury now roll on the **melee table** (miss and 2.0x crit, never dodged/parried/blocked). Debuff judgements (Crusader, Wisdom, Light) last 40 s and **every landed melee strike refreshes them**.

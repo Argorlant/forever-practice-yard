@@ -225,12 +225,12 @@ const abilities: Ability[] = [
     requirements: (c) => needsStance(c, 'defensive') ?? (c.aura(c.player, 'revengeReady') ? null : 'Only after you block, dodge or parry'),
     usable: (c) => stanceOf(c) === 'defensive' && !!c.aura(c.player, 'revengeReady'),
     highlight: (c) => !!c.aura(c.player, 'revengeReady'),
-    description: (c) => `Usable for ${D.revenge.window} sec after you block, dodge or parry. Deals ${Math.round(D.revenge.min * (1 + 0.2 * T(c).improvedRevenge))}-${Math.round(D.revenge.max * (1 + 0.2 * T(c).improvedRevenge))} damage and a lot of threat.`,
+    description: (c) => `Usable for ${D.revenge.window} sec after you block, dodge or parry. Deals ${Math.round(D.revenge.min * (1 + 0.2 * T(c).improvedRevenge))}-${Math.round(D.revenge.max * (1 + 0.2 * T(c).improvedRevenge))} plus ${D.revenge.ap * 100}% of attack power and a lot of threat.`,
     use: (c, t) => {
       c.removeAura(c.player, 'revengeReady');
       c.count('revengeUsed');
       const r = D.revenge;
-      const base = (r.min + c.random() * (r.max - r.min)) * (1 + 0.2 * T(c).improvedRevenge);
+      const base = (r.min + c.random() * (r.max - r.min) + r.ap * c.attackPower()) * (1 + 0.2 * T(c).improvedRevenge);
       strike(c, t!, 'revenge', base);
     },
   },

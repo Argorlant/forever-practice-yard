@@ -43,12 +43,14 @@ export const DATA = {
   pyroblast: { mana: 440, cast: 6, min: 520, max: 646, coeff: 1, dot: 53, dotCoeff: 0.15, dotTicks: 4, dotPeriod: 3, range: 35 },
   arcaneMissiles: { mana: 595, duration: 5, missiles: 5, damage: 175, coeff: 0.286 },   // rank 7
   // Oct 15 redesign (gs arcane_blast.go): 1.5 s cast, damage and coefficient -40%; each cast adds a stack (4, 15 s from
-  // the first, not refreshed, not spent) worth 15% of your Intellect as spell damage; cost still +175% per stack.
-  arcaneBlast: { manaPct: 0.15, perStack: 1.75, cast: 1.5, min: 218, max: 254, coeff: 0.429, stacks: 4, duration: 15, intPerStack: 0.15 },
+  // the first, not refreshed, not spent) worth a share of your Intellect as spell damage. Live hotfix of Oct 30 (Wowhead): 12 % of
+  // Intellect a stack (was 15 %), +100 % cost a stack (was 175 %), 18 s (was 15 s).
+  arcaneBlast: { manaPct: 0.15, perStack: 1, cast: 1.5, min: 218, max: 254, coeff: 0.429, stacks: 4, duration: 18, intPerStack: 0.12 },
   // Oct 15, Arcane 16-point talent, rank 4 (gs): as if you had 5% of your maximum mana more spell damage; 6 s cooldown.
   arcaneWrath: { mana: 395, cast: 3.5, cooldown: 6, min: 406, max: 496, coeff: 1, maxManaPct: 0.05 },
-  // Ice Lance vs Frozen (Fingers of Frost): x3 since Oct 15 (was x4). Coefficient provisional: gs 0.10, fs 0.143.
-  iceLance: { mana: 160, min: 136, max: 161, coeff: 0.1, frozen: 3 },
+  // Ice Lance vs Frozen (Fingers of Frost): +300 % (x4) and an 8 s cooldown since the Oct 30 hotfix (x3 and none before).
+  // Coefficient provisional: gs 0.10, fs 0.143.
+  iceLance: { mana: 160, min: 136, max: 161, coeff: 0.1, frozen: 4, cooldown: 8 },
   // Rank 5 (gs frost_area.go): 10 yd; Improved Cone of Cold +12/23/35%. Winter's Chill feeds it since Oct 15.
   coneOfCold: { mana: 555, min: 328, max: 358, coeff: 0.129, cooldown: 10, range: 10, improved: [0, 0.12, 0.23, 0.35] },
   frostfireBolt: { mana: 370, cast: 3, min: 270, max: 314, coeff: 0.814, dot: 19, dotTicks: 3, dotPeriod: 3 },
@@ -67,9 +69,9 @@ export const DATA = {
   fireVulnerability: { stacks: 5, duration: 30, perStack: 0.03 },
   // Server hotfix (gs Oct 21): 20% per point from a landed Frostbolt or Fingers of Frost Ice Lance; stacks to the talent's rank,
   // each +5% damage and +0.07 spell power coefficient on your next Cone of Cold, which spends them.
-  wintersChill: { duration: 15, chance: 20, coneBonus: 0.05, coneCoeff: 0.07 },
-  // Server hotfix (gs Oct 21): +3% Frost damage while the shield holds (a dummy never breaks it) and Frigid Power +3% for 1 min.
-  iceBarrier: { mana: 480, cooldown: 30, duration: 60, frost: 0.03 },   // rank 4
+  wintersChill: { duration: 15, chance: 20, coneBonus: 0.2, coneCoeff: 0.07 },   // +20 % a stack since the Oct 30 hotfix (was 5 %)
+  // Oct 30 hotfix (Wowhead): Frigid Power +15 % Frost damage for 1 min, +5 % more while the shield holds (a dummy never breaks it).
+  iceBarrier: { mana: 480, cooldown: 30, duration: 60, frost: 0.05, frigid: 0.15 },   // rank 4
   // Oct 15: 1/2/3% Fire damage per point for each of your Fire effects on the target (Ignite, Fire Vulnerability, Fireball and Pyroblast burns), up to 4.
   firePower: { perEffect: 0.01, maxEffects: 4 },
   // Improved Fire Blast (Wake of Fire's slot since Oct 15): -1/-2 s cooldown, +8/15 yd range.

@@ -2,6 +2,18 @@
 
 Research date: 10 Oct 2026. The machine-readable version is `druid_forever.json` in this folder. Every number there has a source link and a confidence label. Covers Feral Cat, Feral Bear (tank) and Balance. Restoration is out of scope (its talents are listed only because talent strings need them).
 
+## Live hotfix of 30 October (Wowhead)
+
+Read from Wowhead's Forever talent calculator and tooltips; the sims have not published it yet. Feral rebuilt:
+**Berserk** and **Improved Shifting Power** are gone; **Shifting Power** has an 8 s cooldown and moved to row 7 (it needs
+the new **Predatory Discipline**, 1 point, row 4: Ferocious Bite no longer spends the extra Energy but still deals the
+extra damage); **Lacerate** is a talent (row 4, needs Savage Fury 2/2); **Primal Bite** moved to row 7 (needs Leader of
+the Pack); **Furor** moved to Feral and **Heart of the Wild** to Restoration. **Genesis** is 2 % a point (was 1 %),
+**Naturalist** 2 % a point (was 1 %). Restoration: **Bloom** replaces Gift of the Earthmother; Reflection and Subtlety
+swapped places. The yard re-spent the sims' cat and bear builds (Berserk's and Improved Shifting Power's points went to
+Feral Swiftness and Predatory Discipline; provisional); the Balance builds keep their talents. Tooltips show rank 1
+numbers for Primal Bite, Lacerate and Insect Swarm, so the yard keeps its rank numbers.
+
 ## The five things that matter most
 
 1. **Tiger's Fury is gone** (1 Oct). The new Feral talent **Shifting Power** is the Forever "powershift": Cat Form only, costs 55% of base mana (684 at 60, the same as Cat Form), gives **+40 Energy**, 16 s cooldown (8 s with Improved Shifting Power 2/2, 7 s with Howling Idol), 1.0 s GCD, **cannot be used at full Energy**. Wolfshead Helm adds 5 Energy.

@@ -1,46 +1,46 @@
-// WoW Forever paladin talents and the builds the sims use. Order: gunba's
-// current tree (ui/core/talents/trees/paladin.json, same as fs), Holy 17,
-// Protection 16, Retribution 17. See research/paladin_forever.md → Talents and Builds.
+// WoW Forever paladin talents and the builds the sims use. Order: Wowhead's
+// Forever calculator after the live hotfix of 30 October (Holy 17,
+// Protection 17, Retribution 17); the sims' builds are re-spent for it until
+// they publish theirs. See research/paladin_forever.md → Talents and Builds.
 import type { Binding, Stats } from '../../engine/types';
 import { decodeTalents, talentSplit, talentSummary } from '../common';
 import { PROT_STATS, RET_STATS, SHOCK_STATS } from './data';
 
 const TREES = [
-  ['divineStrength', 'divineIntellect', 'healingLight', 'spiritualFocus', 'improvedSeals', 'unyieldingFaith', 'voiceOfTruth',
-    'reverence', 'purifyingPower', 'infusionOfLight', 'illumination', 'divineFavor', 'divinePrecision', 'holyShock',
-    'consecratedGround', 'holyPower', 'lightsVigil'],
-  ['toughness', 'redoubt', 'precision', 'guardiansFavor', 'anticipation', 'improvedSealOfFury', 'improvedRighteousFury',
-    'shieldSpecialization', 'sacredDuty', 'swiftJudgement', 'oneHandedWeaponSpecialization', 'improvedHammerOfJustice',
-    'templarsBulwark', 'reckoning', 'ironCreed', 'holyShield'],
-  ['deflection', 'benediction', 'improvedJudgement', 'holyConduit', 'conviction', 'vindication', 'sanctifiedJudgement',
-    'sealOfCommand', 'pursuitOfJustice', 'eyeForAnEye', 'sacredArbiter', 'twoHandedWeaponSpecialization', 'vengeance',
-    'repentance', 'championOfTheLight', 'instrumentOfLaw', 'twistOfLight'],
+  ['spiritualFocus', 'divineStrength', 'healingLight', 'reverence', 'improvedSeals', 'purifyingPower', 'divineFavor', 'illumination',
+    'holyConduit', 'divinePrecision', 'infusionOfLight', 'oathOfLight', 'consecratedGround', 'holyShock', 'boundlessLight', 'holyPower',
+    'lightsVigil'],
+  ['divineIntellect', 'redoubt', 'precision', 'guardiansFavor', 'sacredDuty', 'templarsBulwark', 'improvedHammerOfJustice',
+    'shieldSpecialization', 'toughness', 'swiftJudgement', 'improvedRighteousFury', 'anticipation', 'stoicism', 'holyShield', 'reckoning',
+    'ironCreed', 'shieldsworn'],
+  ['deflection', 'benediction', 'improvedJudgement', 'conviction', 'sanctifiedJudgement', 'vindication', 'unyieldingFaith',
+    'sealOfCommand', 'pursuitOfJustice', 'eyeForAnEye', 'sacredArbiter', 'twoHandedWeaponSpecialization', 'turnEvil', 'repentance',
+    'vengeance', 'championOfTheLight', 'unsealedWrath'],
 ] as const;
 
 export type TalentKey = (typeof TREES)[number][number];
 export type Talents = Record<TalentKey, number>;
 
 const NAMES: Record<TalentKey, string> = {
-  divineStrength: 'Divine Strength', divineIntellect: 'Divine Intellect', healingLight: 'Healing Light', spiritualFocus: 'Spiritual Focus',
-  improvedSeals: 'Improved Seals', unyieldingFaith: 'Unyielding Faith', voiceOfTruth: 'Voice of Truth', reverence: 'Reverence',
-  purifyingPower: 'Purifying Power', infusionOfLight: 'Infusion of Light', illumination: 'Illumination', divineFavor: 'Divine Favor',
-  divinePrecision: 'Divine Precision', holyShock: 'Holy Shock', consecratedGround: 'Consecrated Ground', holyPower: 'Holy Power',
+  spiritualFocus: 'Spiritual Focus', divineStrength: 'Divine Strength', healingLight: 'Healing Light', reverence: 'Reverence',
+  improvedSeals: 'Improved Seals', purifyingPower: 'Purifying Power', divineFavor: 'Divine Favor', illumination: 'Illumination',
+  holyConduit: 'Holy Conduit', divinePrecision: 'Divine Precision', infusionOfLight: 'Infusion of Light', oathOfLight: 'Oath of Light',
+  consecratedGround: 'Consecrated Ground', holyShock: 'Holy Shock', boundlessLight: 'Boundless Light', holyPower: 'Holy Power',
   lightsVigil: "Light's Vigil",
-  toughness: 'Toughness', redoubt: 'Redoubt', precision: 'Precision', guardiansFavor: "Guardian's Favor", anticipation: 'Anticipation',
-  improvedSealOfFury: 'Improved Seal of Fury', improvedRighteousFury: 'Improved Righteous Fury', shieldSpecialization: 'Shield Specialization',
-  sacredDuty: 'Sacred Duty', swiftJudgement: 'Swift Judgement', oneHandedWeaponSpecialization: 'One-Handed Weapon Specialization',
-  improvedHammerOfJustice: 'Improved Hammer of Justice', templarsBulwark: "Templar's Bulwark", reckoning: 'Reckoning', ironCreed: 'Iron Creed',
-  holyShield: 'Holy Shield',
-  deflection: 'Deflection', benediction: 'Benediction', improvedJudgement: 'Improved Judgement', holyConduit: 'Holy Conduit',
-  conviction: 'Conviction', vindication: 'Vindication', sanctifiedJudgement: 'Sanctified Judgement', sealOfCommand: 'Seal of Command',
+  divineIntellect: 'Divine Intellect', redoubt: 'Redoubt', precision: 'Precision', guardiansFavor: "Guardian's Favor", sacredDuty: 'Sacred Duty',
+  templarsBulwark: "Templar's Bulwark", improvedHammerOfJustice: 'Improved Hammer of Justice', shieldSpecialization: 'Shield Specialization',
+  toughness: 'Toughness', swiftJudgement: 'Swift Judgement', improvedRighteousFury: 'Improved Righteous Fury', anticipation: 'Anticipation',
+  stoicism: 'Stoicism', holyShield: 'Holy Shield', reckoning: 'Reckoning', ironCreed: 'Iron Creed', shieldsworn: 'Shieldsworn',
+  deflection: 'Deflection', benediction: 'Benediction', improvedJudgement: 'Improved Judgement', conviction: 'Conviction',
+  sanctifiedJudgement: 'Sanctified Judgement', vindication: 'Vindication', unyieldingFaith: 'Unyielding Faith', sealOfCommand: 'Seal of Command',
   pursuitOfJustice: 'Pursuit of Justice', eyeForAnEye: 'Eye for an Eye', sacredArbiter: 'Sacred Arbiter',
-  twoHandedWeaponSpecialization: 'Two-Handed Weapon Specialization', vengeance: 'Vengeance', repentance: 'Repentance',
-  championOfTheLight: 'Champion of the Light', instrumentOfLaw: 'Instrument of Law', twistOfLight: 'Twist of Light',
+  twoHandedWeaponSpecialization: 'Two-Handed Weapon Specialization', turnEvil: 'Turn Evil', repentance: 'Repentance', vengeance: 'Vengeance',
+  championOfTheLight: 'Champion of the Light', unsealedWrath: 'Unsealed Wrath',
 };
 
-const NEW_IN_FOREVER = new Set<TalentKey>(['improvedSeals', 'voiceOfTruth', 'reverence', 'purifyingPower', 'infusionOfLight',
-  'divinePrecision', 'consecratedGround', 'lightsVigil', 'improvedSealOfFury', 'sacredDuty', 'swiftJudgement', 'templarsBulwark',
-  'ironCreed', 'holyConduit', 'sanctifiedJudgement', 'sacredArbiter', 'championOfTheLight', 'instrumentOfLaw', 'twistOfLight']);
+const NEW_IN_FOREVER = new Set<TalentKey>(['improvedSeals', 'reverence', 'purifyingPower', 'infusionOfLight', 'divinePrecision',
+  'oathOfLight', 'consecratedGround', 'boundlessLight', 'lightsVigil', 'sacredDuty', 'swiftJudgement', 'templarsBulwark', 'stoicism',
+  'ironCreed', 'shieldsworn', 'holyConduit', 'sanctifiedJudgement', 'sacredArbiter', 'turnEvil', 'championOfTheLight', 'unsealedWrath']);
 
 export type PaladinSpec = 'ret' | 'prot' | 'shock';
 
@@ -63,24 +63,18 @@ const RET_BAR = bar(['holyStrike', 'judgement', 'sealOfCommand', 'sealOfRighteou
   'attack', 'layOnHands']);
 const PROT_BAR = bar(['holyStrike', 'judgement', 'holyShield', 'consecration', 'sealOfRighteousness', 'sealOfFury', 'righteousFury', 'templarsBulwark',
   'attack', 'swiftJudgement', 'hammerOfWrath', 'layOnHands', 'exorcism', 'manaPotion']);
-const SHOCK_BAR = bar(['holyShock', 'holyStrike', 'judgement', 'sealOfCommand', 'divineFavor', 'consecration', 'exorcism', 'hammerOfWrath',
-  'attack', 'sealOfRighteousness', 'manaPotion', 'layOnHands', 'lightsVigil']);
+const SHOCK_BAR = bar(['holyShock', 'holyStrike', 'judgement', 'sealOfRighteousness', 'divineFavor', 'consecration', 'exorcism', 'hammerOfWrath',
+  'attack', 'sealOfCommand', 'manaPotion', 'layOnHands']);
 
 const GS = 'gunba/wow-forever-sim';
-const FS = 'foreversim';
+// The Oct 30 trees rebuilt the paladin: Twist of Light, Instrument of Law, One-Handed Weapon Specialization,
+// Improved Seal of Fury and Voice of Truth are gone, Unsealed Wrath and Shieldsworn are the new 31-point talents,
+// and several talents moved trees or changed ranks. The yard re-spent gs's three lists on them.
+const RESPENT = `${GS}, re-spent by the yard for the Oct 30 trees`;
 export const BUILDS: Build[] = [
-  { id: 'ret', spec: 'ret', name: 'Retribution', talentString: '55003003-2-05225331001330311', source: GS, stats: RET_STATS, bar: RET_BAR },
-  { id: 'ret-physical', spec: 'ret', name: 'Physical Retribution', talentString: '55003003-1-05225331001330321', source: GS, stats: RET_STATS, bar: RET_BAR },
-  { id: 'ret-fs', spec: 'ret', name: 'Retribution', talentString: '550030022001--05225231001330321', source: FS, stats: RET_STATS, bar: RET_BAR },
-  { id: 'ret-deep', spec: 'ret', name: 'Retribution, deep', talentString: '51003--55225331201331321', source: FS, stats: RET_STATS, bar: RET_BAR },
-  { id: 'prot', spec: 'prot', name: 'Protection (Undead)', talentString: '-5520513321301551-15102', source: GS, stats: PROT_STATS, bar: PROT_BAR, tank: true },
-  { id: 'prot-human', spec: 'prot', name: 'Protection (Human)', talentString: '-5521513321301551-152', source: GS, stats: PROT_STATS, bar: PROT_BAR, tank: true },
-  { id: 'prot-dwarf', spec: 'prot', name: 'Protection (Dwarf)', talentString: '-5520513321301551-15003', source: GS, stats: PROT_STATS, bar: PROT_BAR, tank: true },
-  { id: 'prot-fs', spec: 'prot', name: 'Protection, Holy dip', talentString: '55003-5530513321301501', source: FS, stats: PROT_STATS, bar: PROT_BAR, tank: true },
-  { id: 'prot-deep', spec: 'prot', name: 'Protection, deep', talentString: '-5532513321301551-15', source: FS, stats: PROT_STATS, bar: PROT_BAR, tank: true },
-  { id: 'shockadin', spec: 'shock', name: 'Shockadin', talentString: '550030032101012--052153300012303', source: GS, stats: RET_STATS, bar: SHOCK_BAR },
-  { id: 'shock', spec: 'shock', name: "Shockadin with Light's Vigil", talentString: '55003013200131151--05223331001', source: 'our proposal', stats: SHOCK_STATS, bar: SHOCK_BAR },
-  { id: 'shock-ret', spec: 'shock', name: 'Shock-Ret hybrid', talentString: '55003013200101--0522513100133031', source: 'our proposal', stats: RET_STATS, bar: SHOCK_BAR },
+  { id: 'ret', spec: 'ret', name: 'Retribution (Unsealed Wrath)', talentString: '050250002-501-05233301001301351', source: RESPENT, stats: RET_STATS, bar: RET_BAR },
+  { id: 'prot', spec: 'prot', name: 'Protection (Shieldsworn)', talentString: '-55302102513501531-0522', source: RESPENT, stats: PROT_STATS, bar: PROT_BAR, tank: true },
+  { id: 'shockadin', spec: 'shock', name: 'Shockadin', talentString: '05025210221021--0523330100130133', source: RESPENT, stats: SHOCK_STATS, bar: SHOCK_BAR },
 ];
 
 export const buildsFor = (spec: PaladinSpec) => BUILDS.filter((b) => b.spec === spec);

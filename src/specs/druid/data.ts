@@ -56,8 +56,7 @@ export const DATA = {
   rip: { cost: 30, tick: 15, tickPerCp: 25.5, apPerCp: 0.01, ticks: 6, period: 2 },
   // Rank 4 (gs Oct 21): rank 5 is an Ahn'Qiraj book, and raids open on 9 December.
   ferociousBite: { cost: 35, min: 45, max: 95, perCp: 128, apPerCp: 0.03, perEnergy: 2.5 },
-  shiftingPower: { mana: 684, energy: 40, cooldown: 16 },
-  berserk: { cooldown: 180, duration: 15 },
+  shiftingPower: { mana: 684, energy: 40, cooldown: 8 },   // 8 s since the Oct 30 hotfix (16 s, 8 with Improved Shifting Power 2/2)
   faerieFire: { cooldown: 6, armor: 505, duration: 40, mana: 115 },
   ravage: { cost: 60, bonus: 98, percent: 3.5 },
   pounce: { cost: 50, total: 150, ticks: 6, period: 3, stun: 2 },

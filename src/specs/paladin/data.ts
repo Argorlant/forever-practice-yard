@@ -15,10 +15,10 @@ import type { Stats } from '../../engine/types';
  */
 export const RET_STATS: Stats = {
   attackPower: 736,
-  crit: 17.4,       // 22.4 on the sheet minus Conviction 5
-  hit: 14.4,        // gear (Precision adds 2)
+  crit: 17.4,       // 22.4 on the sheet minus Conviction 5/5 (Conviction 3/3 adds 6 to melee and spells since Oct 30)
+  hit: 14.4,        // gear (Precision adds 1)
   spellCrit: 20.1,
-  spellPower: 258,  // 138 + Champion of the Light 3/3 (60 % of 200 Int, Oct 21 hotfix)
+  spellPower: 258,  // 138 + Champion of the Light 5/5 (60 % of 200 Int; 3/3 gave the same before the Oct 30 trees)
   mainHand: { name: 'Two-handed spell mace', type: 'mace', min: 187, max: 281, speed: 3.8, twoHand: true },
   offHand: null,
 };
@@ -26,7 +26,7 @@ export const RET_STATS: Stats = {
 /** Protection: the research's round demo sheet (gs UI default, rounded up), one-hander and shield. */
 export const PROT_STATS: Stats = {
   attackPower: 600,
-  crit: 20.5,       // gear + Agility (Conviction 2 goes on top)
+  crit: 20.5,       // gear + Agility (Conviction 2/3 adds 4 since Oct 30)
   hit: 14.4,        // gear (Precision adds 2)
   spellCrit: 20.6,
   spellPower: 250,
@@ -36,13 +36,13 @@ export const PROT_STATS: Stats = {
   tank: { health: 7000, armor: 8000, defense: 320, dodge: 6, parry: 7, block: 7, blockValue: 70 },
 };
 
-/** Shockadin (our proposal): the ranked Ret gear with the 31/0/20 build. */
+/** Shockadin: the ranked Ret gear with the 23/0/28 build, whose Champion of the Light is 3/5 since Oct 30. */
 export const SHOCK_STATS: Stats = {
   attackPower: 736,
-  crit: 17.4,       // gear + Agility (Conviction 3 goes on top)
+  crit: 17.4,       // gear + Agility (Conviction 3/3 adds 6)
   hit: 14.4,
-  spellCrit: 20.1,  // Holy Power adds 5 % to every spell, 15 % to Holy Shock
-  spellPower: 138,  // no Champion of the Light in this build
+  spellCrit: 20.1,  // gear + Intellect (Holy Power adds healing crit only since Oct 30)
+  spellPower: 210,  // 138 + Champion of the Light 3/5 (36 % of 200 Int)
   mainHand: { name: 'Two-handed spell mace', type: 'mace', min: 187, max: 281, speed: 3.8, twoHand: true },
   offHand: null,
 };
@@ -67,31 +67,34 @@ export const DATA = {
   judgementOfFury: { min: 153, max: 167, coeff: 0.429, taunt: 4 },   // Oct 15: an instant's coefficient (was 0.45)
   judgementOfTheCrusader: 161, // Holy damage taken, scaled by each spell's coefficient
   holyStrike: { mana: 20, cooldown: 10, min: 81, max: 105, percent: 0.5, coeff: 0.429 * 0.5 },
+  shieldsworn: { cooldown: 4 },   // Oct 30: Holy Strike -4 s, and it triggers Holy Shield and Shield Specialization
   consecration: { mana: 565, cooldown: 8, ticks: 8, all: 12, first4: 27, coeff: 0.042 },   // Oct 15: 0.042 per tick (was 0.095); ticks can crit (Oct 21)
   // Consecrated Ground: your Holy spells +5 % per point against the first 4 enemies in your Consecration, until 0.6 s after its last tick.
   consecratedGround: { perPoint: 0.05, targets: 4, duration: 8.6 },
   exorcism: { mana: 345, cooldown: 15, min: 474, max: 530, coeff: 0.429, range: 30 },
-  hammerOfWrath: { mana: 425, cooldown: 6, gcd: 1, cast: 1, min: 473, max: 523, coeff: 0.429, range: 30, threshold: 0.2 },
-  holyShield: { mana: 240, cooldown: 10, duration: 10, block: 30, charges: 4, damage: 221, coeff: 0.08, threat: 1.2 },
+  // Rank 3, Wowhead Oct 30 (489-538, was 473-523). Champion of the Light cuts the cast 0.2 s per point (instant at 5/5).
+  hammerOfWrath: { mana: 425, cooldown: 6, gcd: 1, cast: 1, min: 489, max: 538, coeff: 0.429, range: 30, threshold: 0.2 },
+  // Rank 3, Wowhead Oct 30: 153 Holy per block (the yard had 221).
+  holyShield: { mana: 240, cooldown: 10, duration: 10, block: 30, charges: 4, damage: 153, coeff: 0.08, threat: 1.2 },
   righteousFury: { mana: Math.round(BASE_MANA * 0.3), duration: 1800, holyThreat: 1.9 },   // Oct 15: +90% (back from 60%)
   templarsBulwark: { mana: 110, cooldown: 300, duration: 8, absorb: 1, forbearance: 60 },
-  swiftJudgement: { cooldown: 60 },
+  swiftJudgement: { cooldown: 60 },   // Oct 30: a second Judgement with its own 1 min cooldown, no mana
   holyShock: { mana: 325, cooldown: 10, min: 334, max: 362, coeff: 0.429, range: 20 },
-  // Holy 31 (rank 3 at 60). Provisional: gunba adds the strike to Holy Shock's damage, foreversim replaces it.
-  lightsVigil: { mana: 1340, cast: 1.5, cooldown: 6, mark: 30, min: 380, max: 410, coeff: 0.429, refund: 0.75, range: 20 },
   divineFavor: { mana: Math.round(BASE_MANA * 0.04), cooldown: 120 },
   layOnHands: { cooldown: 1200 },
   manaPotion: { min: 1350, max: 2250, cooldown: 120 },
   // Procs and passives
   vengeance: { duration: 30, stacks: 3 },
   // Oct 21 (Forever logs): 5 procs a minute from swings and melee specials; the dummy's debuff rolls spell hit.
+  // Since Oct 30 it no longer raises your own attack power.
   vindication: { apPerRank: 68, duration: 30, ppm: 5 },
+  // Oct 30: each landed swing stores a copy of your seal (15 s, up to 3); a swing with another seal releases them.
+  unsealedWrath: { duration: 15, stacks: 3 },
   // Oct 15, Classic again: a block (at most once per 1.5 s) or a crit taken stores a charge, up to 4; your next swing fires them all.
   reckoning: { onBlock: 8, onCrit: 20, icd: 1.5, charges: 4 },
-  redoubt: { chance: 2, block: 4, duration: 10, blocks: 5 },
-  shieldSpecialization: { manaPct: 0.04, icd: 3 },   // Oct 15: 4% (was 6%)
+  redoubt: { chance: 10, block: 6, duration: 10, blocks: 5 },   // Oct 30: 10 %, +6 % block per point (was 4 %)
+  shieldSpecialization: { manaPct: 0.04, icd: 3 },   // Oct 15: 4% (was 6%); 2 ranks (50/100 %) since Oct 30
   ironCreed: { duration: 6 },
-  improvedSealOfFuryMana: 87,  // 60 at 60, +15 % per attacker level above you (boss +3)
   // Mana
   spirit: 100,                 // provisional: Spirit regen 6.25 + Spi/8 per second outside the five-second rule
 };

@@ -53,7 +53,7 @@ export const DATA = {
   // Oct 15: 24 sec (was 1 min), the length of its DoT.
   devouringPlague: { mana: 985, cooldown: 24, ticks: 8, period: 3, tick: 106, coeff: 0.1 },
   // Oct 15: 18 sec (the client had 15).
-  shadowWordDeath: { mana: 340, cooldown: 18, min: 444, max: 472, coeff: 0.429, backlash: 0.1 },
+  shadowWordDeath: { mana: 340, cooldown: 18, min: 444, max: 472, coeff: 0.429, backlash: 0.3 },   // backlash 30 % since the Oct 30 hotfix (was 10 %)
   shadowform: { mana: Math.round(BASE_MANA * 0.4), damage: 1.1, cost: 0.5, critMultiplier: 2 },
   innerFocus: { cooldown: 180, crit: 25 },
   powerInfusion: { mana: Math.round(BASE_MANA * 0.2), cooldown: 180, duration: 15, damage: 1.2 },
