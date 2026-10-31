@@ -69,8 +69,8 @@ const SHOCK_BAR = bar(['holyShock', 'holyStrike', 'judgement', 'sealOfCommand', 
 const GS = 'gunba/wow-forever-sim';
 const FS = 'foreversim';
 export const BUILDS: Build[] = [
-  { id: 'ret', spec: 'ret', name: 'Retribution', talentString: '55003-231-05225331001330301', source: GS, stats: RET_STATS, bar: RET_BAR },
-  { id: 'ret-physical', spec: 'ret', name: 'Physical Retribution', talentString: '52003002-231-05225331001330311', source: GS, stats: RET_STATS, bar: RET_BAR },
+  { id: 'ret', spec: 'ret', name: 'Retribution', talentString: '55003003-2-05225331001330311', source: GS, stats: RET_STATS, bar: RET_BAR },
+  { id: 'ret-physical', spec: 'ret', name: 'Physical Retribution', talentString: '55003003-1-05225331001330321', source: GS, stats: RET_STATS, bar: RET_BAR },
   { id: 'ret-fs', spec: 'ret', name: 'Retribution', talentString: '550030022001--05225231001330321', source: FS, stats: RET_STATS, bar: RET_BAR },
   { id: 'ret-deep', spec: 'ret', name: 'Retribution, deep', talentString: '51003--55225331201331321', source: FS, stats: RET_STATS, bar: RET_BAR },
   { id: 'prot', spec: 'prot', name: 'Protection (Undead)', talentString: '-5520513321301551-15102', source: GS, stats: PROT_STATS, bar: PROT_BAR, tank: true },
@@ -78,7 +78,7 @@ export const BUILDS: Build[] = [
   { id: 'prot-dwarf', spec: 'prot', name: 'Protection (Dwarf)', talentString: '-5520513321301551-15003', source: GS, stats: PROT_STATS, bar: PROT_BAR, tank: true },
   { id: 'prot-fs', spec: 'prot', name: 'Protection, Holy dip', talentString: '55003-5530513321301501', source: FS, stats: PROT_STATS, bar: PROT_BAR, tank: true },
   { id: 'prot-deep', spec: 'prot', name: 'Protection, deep', talentString: '-5532513321301551-15', source: FS, stats: PROT_STATS, bar: PROT_BAR, tank: true },
-  { id: 'shockadin', spec: 'shock', name: 'Shockadin', talentString: '550030032101012--052252300012303', source: GS, stats: RET_STATS, bar: SHOCK_BAR },
+  { id: 'shockadin', spec: 'shock', name: 'Shockadin', talentString: '550030032101012--052153300012303', source: GS, stats: RET_STATS, bar: SHOCK_BAR },
   { id: 'shock', spec: 'shock', name: "Shockadin with Light's Vigil", talentString: '55003013200131151--05223331001', source: 'our proposal', stats: SHOCK_STATS, bar: SHOCK_BAR },
   { id: 'shock-ret', spec: 'shock', name: 'Shock-Ret hybrid', talentString: '55003013200101--0522513100133031', source: 'our proposal', stats: RET_STATS, bar: SHOCK_BAR },
 ];

@@ -158,14 +158,16 @@ export const execute = (c: Combat) => !!c.target && c.target.health / c.target.m
 // -------------------------------------------------------------------- demon
 const petSp = (c: Combat) => D.pet.spShare * c.spellPowerFor('shadow');
 const petAp = (c: Combat) => D.pet.apBase + D.pet.apShare * c.spellPowerFor('shadow');
-const petMult = (c: Combat) => (1 + 0.02 * T(c).unholyPower) * (c.aura(c.player, 'soulLink') ? D.soulLink : 1);
+/** Unholy Power, Soul Link, and the Orc racial Command (+5 % demon damage at launch; the sheets are Orc). */
+const petMult = (c: Combat) => (1 + 0.02 * T(c).unholyPower) * (c.aura(c.player, 'soulLink') ? D.soulLink : 1) * D.pet.command;
 
 /** A demon's hit: melee table from behind for the Succubus, the spell table for spells; Demonic Brand adds a hit. */
 function petHit(c: Combat, u: Unit, source: string, base: number, kind: 'melee' | 'spell', school: School): void {
   let outcome: Outcome = 'hit';
   if (kind === 'melee') {
     let x = c.random() * 100;
-    if ((x -= Math.max(0, c.rules.specialMiss - c.totalHit())) < 0) outcome = 'miss';
+    // A demon's melee hit is 8/17 of your spell hit (gs Oct 27).
+    if ((x -= Math.max(0, c.rules.specialMiss - (c.totalHit() * 8) / 17)) < 0) outcome = 'miss';
     else if ((x -= c.rules.dodge) < 0) outcome = 'dodge';
     else if (source === 'petMelee' && (x -= c.rules.glanceChance) < 0) outcome = 'glance';
     else if (roll(c, D.pet.crit + c.stats.crit - c.rules.critSuppression)) outcome = 'crit';

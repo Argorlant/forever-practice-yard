@@ -9,21 +9,22 @@ const SAGEBLADE = { name: 'Sageblade', type: 'sword' as const, min: 58, max: 109
 
 /**
  * gs's UI default gear (real Forever items), Orc, unbuffed. Spell crit is
- * base + Intellect + gear + the Bloodvine set + Orc Savage (+1 % since Oct 15;
- * talents go on top: Arcane Instability, Arcane Impact, Critical Mass, Incineration).
+ * base + Intellect + gear + the Bloodvine set (Orc Savage's +1 % is gone at
+ * launch, Oct 26; talents go on top: Arcane Instability, Arcane Impact,
+ * Critical Mass, Incineration).
  */
 export const ARCANE_STATS: Stats = {
-  attackPower: 100, crit: 6, hit: 7.9, spellCrit: 12.2,
+  attackPower: 100, crit: 5, hit: 7.9, spellCrit: 11.2,
   spellPower: 192, spellPowerBySchool: { arcane: 13 },
   mainHand: SAGEBLADE, offHand: null, health: 2230,
 };
 export const FIRE_STATS: Stats = {
-  attackPower: 100, crit: 6, hit: 6.9, spellCrit: 11.9,
+  attackPower: 100, crit: 5, hit: 6.9, spellCrit: 10.9,
   spellPower: 192, spellPowerBySchool: { fire: 52 },
   mainHand: { name: 'Searing Golden Blade', type: 'dagger', min: 58, max: 109, speed: 1.8 }, offHand: null, health: 2090,
 };
 export const FROST_STATS: Stats = {
-  attackPower: 100, crit: 6, hit: 7.9, spellCrit: 11.9,
+  attackPower: 100, crit: 5, hit: 7.9, spellCrit: 10.9,
   spellPower: 192, spellPowerBySchool: { frost: 13 },
   mainHand: SAGEBLADE, offHand: null, health: 2230,
 };

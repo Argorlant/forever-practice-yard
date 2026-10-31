@@ -9,29 +9,29 @@ const PERSUADER = { name: 'Persuader', type: 'mace' as const, min: 89, max: 167,
 
 /**
  * gs's UI default gear (real Forever items), Orc, unbuffed. Hit and crit are
- * gear, Intellect/Agility and Orc Savage (+1 % melee and spell crit since Oct 15): Tidal Focus and Thundering Strikes are
+ * gear and Intellect/Agility (Orc Savage's +1 % crit is gone at launch, Oct 26): Tidal Focus and Thundering Strikes are
  * added from the talents. Spell power includes Mental Quickness where the
  * build has it, attack power Mental Dexterity (both scale with Intellect).
  */
 export const ELEMENTAL_STATS: Stats = {
-  attackPower: 296, crit: 10.3, hit: 6.9, spellCrit: 11.8,
+  attackPower: 296, crit: 9.3, hit: 6.9, spellCrit: 10.8,
   spellPower: 228, spellPowerBySchool: { nature: 10 },
   mainHand: PERSUADER, offHand: null, shield: true, health: 2510,
 };
 /** Stormcaller: the same gear; Mental Quickness turns 30 % of Intellect into spell power, Mental Dexterity 100 % into attack power. */
 export const STORMCALLER_STATS: Stats = {
-  ...ELEMENTAL_STATS, attackPower: 517, spellCrit: 12.0, spellPower: 294,
+  ...ELEMENTAL_STATS, attackPower: 517, spellCrit: 11.0, spellPower: 294,
 };
-/** Enhancement: Forest Defender's Axe (two-handed), Orc (Savage: +1 % crit with everything since Oct 15, was axes only). */
+/** Enhancement: Forest Defender's Axe (two-handed), Orc (no Savage at launch: its +1 % crit is gone since Oct 26). */
 export const ENHANCEMENT_STATS: Stats = {
-  attackPower: 732, crit: 13.5, hit: 4.9, spellCrit: 8.9,
+  attackPower: 732, crit: 12.5, hit: 4.9, spellCrit: 7.9,
   spellPower: 56,
   mainHand: { name: "Forest Defender's Axe", type: 'axe', twoHand: true, min: 162, max: 244, speed: 3.3 },
   offHand: null, health: 2960,
 };
 /** Off-tank (our proposal): one-handed mace and shield; the tank sheet includes Anticipation, Toughness and Spirit Weapons' parry. */
 export const OFFTANK_STATS: Stats = {
-  attackPower: 640, crit: 10.5, hit: 4.9, spellCrit: 7.9,
+  attackPower: 640, crit: 9.5, hit: 4.9, spellCrit: 6.9,
   spellPower: 56,
   mainHand: { name: 'Persuader', type: 'mace', min: 89, max: 167, speed: 2.8 },
   offHand: null, shield: true,

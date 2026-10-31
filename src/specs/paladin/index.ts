@@ -62,7 +62,11 @@ const MANA_OPTIONS = [
 ];
 
 // ----------------------------------------------------------- Retribution
-/** gs's ranked Ret list ("Basic Ret") with the practice yard's opener. */
+/**
+ * gs's Ret lists since 27 Oct ("Basic Ret" and "Physical Ret") with the practice yard's opener. Twist of Light: Seal of
+ * Righteousness just before a swing while Seal of Command is up (the swing carries both), then Seal of Command again
+ * once its Echo is spent. Physical Ret judges only Seal of Command.
+ */
 function retSuggest(c: Combat): string | null {
   const t = c.target;
   if (!t || t.health <= 0) return null;
@@ -72,19 +76,28 @@ function retSuggest(c: Combat): string | null {
   const primary = tl.sealOfCommand ? 'sealOfCommand' : 'sealOfRighteousness';
   if (!seal) return primary;
   if (!p.autoAttacking && c.inRange(t)) return 'attack';
-  if (ready('holyStrike') && afford('holyStrike')) return 'holyStrike';
-  if (ready('judgement') && c.inRange(t, D.judgement.range)) return 'judgement';
-  if (sealLeft(c) <= 1) return seal;
-  // Twist of Light: one swap per swing. With no Echo banked, switch to the other seal; the next
-  // landed swing then carries the new seal and the Echo of the old one.
-  const banked = !!c.aura(p, ECHO.sealOfCommand) || !!c.aura(p, ECHO.sealOfRighteousness);
-  if (tl.twistOfLight && tl.sealOfCommand && mana >= 0.15 && !banked && (seal === 'sealOfCommand' || seal === 'sealOfRighteousness')) {
-    return seal === 'sealOfCommand' ? 'sealOfRighteousness' : 'sealOfCommand';
-  }
+  const twist = !!tl.twistOfLight && !!tl.sealOfCommand;
+  const echoOfCommand = !!c.aura(p, ECHO.sealOfCommand);
+  const judgeIn = c.cooldownLeft('judgement').left;
+  const canJudge = ready('judgement') && c.inRange(t, D.judgement.range);
+  const refresh = twist ? 'sealOfRighteousness' : seal;
   if (executePhase(c) && ready('hammerOfWrath')) return 'hammerOfWrath';
+  if (c.options.build === 'ret-physical') {
+    if (twist && !echoOfCommand && seal === 'sealOfRighteousness' && judgeIn <= 5.9) return 'sealOfCommand';
+    if (ready('holyStrike') && afford('holyStrike')) return 'holyStrike';
+    if (canJudge && (!twist || seal === 'sealOfCommand')) return 'judgement';
+    if (sealLeft(c) <= 1) return refresh;
+    if (twist && seal === 'sealOfCommand' && judgeIn > 0.5) return 'sealOfRighteousness';
+  } else {
+    if (canJudge) return 'judgement';
+    if (ready('holyStrike') && afford('holyStrike')) return 'holyStrike';
+    if (sealLeft(c) <= 1) return refresh;
+    if (twist && seal === 'sealOfCommand' && c.swingLeft('main').left <= 3) return 'sealOfRighteousness';
+  }
   if (undeadDummy(c) && ready('exorcism') && mana >= 0.3) return 'exorcism';
   if (potion) return 'manaPotion';
-  if (ready('consecration') && mana >= (c.raid.has('judgementOfWisdom') ? 0.2 : 0.5)) return 'consecration';
+  if (ready('consecration') && mana >= 0.1) return 'consecration';
+  if (twist && c.options.build !== 'ret-physical' && !echoOfCommand && seal === 'sealOfRighteousness') return 'sealOfCommand';
   return null;
 }
 
@@ -208,17 +221,19 @@ function shockSuggest(c: Combat): string | null {
   const primary = tl.sealOfCommand ? 'sealOfCommand' : 'sealOfRighteousness';
   if (!seal) return primary;
   if (!p.autoAttacking && c.inRange(t)) return 'attack';
-  if (ready('judgement') && c.inRange(t, D.judgement.range)) return 'judgement';
-  // gunba's Shockadin (Oct 21): Seal of Righteousness kept up, Consecration with mana to spare, Holy Strike before Holy Shock.
+  // gunba's Shockadin (since 27 Oct): Seal of Righteousness kept up, Consecration with mana to spare, then Judgement,
+  // Hammer of Wrath, Holy Strike and Holy Shock.
   if (c.options.build === 'shockadin') {
     if (sealLeft(c) <= 1) return seal;
     if (ready('consecration') && mana >= 0.2) return 'consecration';
+    if (ready('judgement') && c.inRange(t, D.judgement.range)) return 'judgement';
     if (executePhase(c) && ready('hammerOfWrath')) return 'hammerOfWrath';
     if (ready('holyStrike') && afford('holyStrike')) return 'holyStrike';
     if (ready('holyShock') && afford('holyShock') && c.inRange(t, D.holyShock.range)) return 'holyShock';
     if (potion) return 'manaPotion';
     return null;
   }
+  if (ready('judgement') && c.inRange(t, D.judgement.range)) return 'judgement';
   // Light's Vigil just before Holy Shock comes back: the marked Shock leaves Holy Shock ready for a second one.
   const marked = !!c.aura(t, 'lightsVigil');
   const shockSoon = c.cooldownLeft('holyShock').left <= D.lightsVigil.cast + D.gcd;

@@ -241,9 +241,12 @@ function suggest(c: Combat): string | null {
   }
   // Short on mana: skip what you cannot pay for; Wrath (30 mana) keeps you casting.
   const afford = (id: string) => c.cost(c.ability(id)!) <= p.resource;
-  if (tl.insectSwarm && !c.aura(t, 'insectSwarm') && afford('insectSwarm')) return 'insectSwarm';
+  // gs since 27 Oct: Insect Swarm in its last second, Moonfire when it is down, Starfire on Eclipse (not for a charge
+  // the Starfire being cast already takes), Wrath.
+  const swarmLeft = (c.aura(t, 'insectSwarm')?.end ?? c.t) - c.t;
+  if (tl.insectSwarm && swarmLeft <= 1 && c.casting?.id !== 'insectSwarm' && afford('insectSwarm')) return 'insectSwarm';
   if (!c.aura(t, 'moonfire') && afford('moonfire')) return 'moonfire';
-  if (eclipseCharges(c) >= 1 && afford('starfire')) return 'starfire';
+  if (eclipseCharges(c) - (c.casting?.id === 'starfire' ? 1 : 0) >= 1 && afford('starfire')) return 'starfire';
   return 'wrath';
 }
 

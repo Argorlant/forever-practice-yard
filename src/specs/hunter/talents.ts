@@ -74,16 +74,16 @@ const SV_BAR = bar(['raptorStrike', 'mongooseBite', 'striderKick', 'immolationTr
 const GS = 'gunba/wow-forever-sim';
 const FS = 'foreversim';
 export const BUILDS: Build[] = [
-  { id: 'mm', spec: 'mm', name: 'Marksmanship (ranged), Lone Wolf', talentString: '5-0053452011523051-50004', source: GS, stats: RANGED_STATS, bar: MM_BAR, pet: false, options: { meleeWeaving: false } },
+  { id: 'mm', spec: 'mm', name: 'Marksmanship (ranged), with a pet', talentString: '502-0053552001523051-50002', source: GS, stats: RANGED_STATS, bar: MM_BAR, pet: true, options: { meleeWeaving: false } },
   // gs since Oct 21: Auto Shot from 12 yards, a step to 5 for the melee attacks while the next shot is over 1.5 s away, no pet.
-  { id: 'sv-weave', spec: 'mm', name: 'SV Weave', talentString: '-00530501105-530200230050121151', source: GS, stats: RANGED_STATS, bar: WEAVE_BAR, pet: false, options: { meleeWeaving: true } },
-  { id: 'mm-weave', spec: 'mm', name: 'MM Weave', talentString: '-105305131150003-5502000300501101', source: GS, stats: RANGED_STATS, bar: WEAVE_BAR, pet: false, options: { meleeWeaving: true } },
+  { id: 'sv-weave', spec: 'mm', name: 'SV Weave', talentString: '-00530510105-530200230050122141', source: GS, stats: RANGED_STATS, bar: WEAVE_BAR, pet: false, options: { meleeWeaving: true } },
+  { id: 'mm-weave', spec: 'mm', name: 'MM Weave', talentString: '-005305031050302-5302002300501201', source: GS, stats: RANGED_STATS, bar: WEAVE_BAR, pet: false, options: { meleeWeaving: true } },
   { id: 'mm-fs', spec: 'mm', name: 'Marksmanship with a pet', talentString: '-3050552301503151-50024001', source: FS, stats: RANGED_STATS, bar: MM_BAR, pet: true, options: { meleeWeaving: false } },
   { id: 'mm-p1', spec: 'mm', name: 'Marksmanship, Beast Mastery dip', talentString: '5023000501-0050550501503051', source: FS, stats: RANGED_STATS, bar: MM_BAR, pet: true, options: { meleeWeaving: false } },
   { id: 'sv-ranged', spec: 'mm', name: 'Survival talents, ranged rotation', talentString: '-005055-550230031051220151', source: FS, stats: RANGED_STATS, bar: MM_BAR, pet: true, options: { meleeWeaving: false } },
-  { id: 'bm', spec: 'bm', name: 'Beast Mastery', talentString: '5320001505101251-00531510005', source: GS, stats: RANGED_STATS, bar: BM_BAR, pet: true },
+  { id: 'bm', spec: 'bm', name: 'Beast Mastery', talentString: '5320001505101251-00532500005', source: GS, stats: RANGED_STATS, bar: BM_BAR, pet: true },
   { id: 'bm-fs', spec: 'bm', name: 'Beast Mastery', talentString: '5520001505121251-0050551', source: FS, stats: RANGED_STATS, bar: BM_BAR, pet: true },
-  { id: 'sv', spec: 'sv', name: 'Survival, melee', talentString: '502-0050051-500230230250022151', source: GS, stats: MELEE_STATS, bar: SV_BAR, pet: true, melee: true },
+  { id: 'sv', spec: 'sv', name: 'Survival, melee', talentString: '502-005205-500230230050122151', source: GS, stats: MELEE_STATS, bar: SV_BAR, pet: true, melee: true },
   { id: 'sv-pet', spec: 'sv', name: 'Pet/Melee', talentString: '53200005001-0050051-5302002300501201', source: GS, stats: MELEE_STATS, bar: SV_BAR, pet: true, melee: true },
 ];
 

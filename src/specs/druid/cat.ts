@@ -10,7 +10,7 @@ import { BOSS_RULES } from '../common';
 import { CAT_STATS } from './data';
 import {
   CONTROLS, D, SOURCES, attack, bleed, faerieFire, faerieFireLeft, freeWithClearcasting, landed, manaPotion, note, omen,
-  resetState, roll, useClearcasting,
+  clearcasting, resetState, roll, useClearcasting,
 } from './shared';
 import { buildById, buildLabel, buildsFor, summary, talentsFor, type Talents } from './talents';
 
@@ -41,7 +41,8 @@ const ripTick = (c: Combat, cp: number) => D.rip.tick + D.rip.tickPerCp * cp + c
  */
 function builder(c: Combat, t: Unit, id: string, base: number, opts: { ignoreArmor?: boolean } = {}): Outcome {
   const berserk = !!c.aura(c.player, 'berserk');
-  const outcome = c.rollSpecial(t, id, { forceCrit: berserk });
+  // Ravage is marked No Active Defense: never dodged or parried (foreversim, Oct 22).
+  const outcome = c.rollSpecial(t, id, { forceCrit: berserk, noDodge: id === 'ravage' });
   useClearcasting(c);
   if (!landed(outcome)) {
     c.refund(D.catRefund);
@@ -150,7 +151,7 @@ const abilities: Ability[] = [
       const amount = c.physicalDamage(u, 'ferociousBite', base, done.outcome);
       c.deal({ target: u, source: 'ferociousBite', outcome: done.outcome, school: 'physical', amount, white: false, hand: 'main', weaponStrike: true });
       c.count('bites');
-      if (done.cp >= 5) c.count('bitesAt5');
+      if (done.cp >= 4) c.count('bitesAt4');
     },
   },
   {
@@ -195,7 +196,7 @@ const abilities: Ability[] = [
     description: () => `Pounce: stuns the target for ${D.pounce.stun} sec and bleeds it for ${D.pounce.total} over ${D.pounce.ticks * D.pounce.period} sec. Must be prowling and behind. Awards 1 combo point.`,
     use: (c, t) => {
       const u = t!;
-      const outcome = c.rollSpecial(u, 'pounce');
+      const outcome = c.rollSpecial(u, 'pounce', { noDodge: true });
       useClearcasting(c);
       if (!landed(outcome)) {
         c.refund(D.catRefund);
@@ -290,14 +291,19 @@ function suggest(c: Combat): string | null {
   if (c.options.thistleTea !== false && p.inCombat && energy <= 10 && ready('thistleTea')) return 'thistleTea';
   if (p.inCombat && tl.berserk && ready('berserk')) return 'berserk';
   if (c.options.faerieFire && faerieFireLeft(c, t) <= 0 && ready('faerieFire')) return 'faerieFire';
+  // gs since 27 Oct: Ferocious Bite at 4 points with Rip up for 5 s, low energy and no Clearcasting; Rake (it scales
+  // with attack power) before Rip; Rip at 4 points, not on Clearcasting; Shifting Power at 50 energy; Shred, pooling
+  // energy at 5 points when Rip is about to fall off.
   const rip = c.aura(t, 'rip');
-  if (cp >= 5 && rip && rip.end - c.t >= 5) return 'ferociousBite';
-  if (cp >= 4 && !rip) return 'rip';
-  // gs keeps Rake up since it scales with attack power (Oct 16).
+  const ripLeft = rip ? rip.end - c.t : 0;
+  const cc = clearcasting(c);
+  if (cp >= 4 && ripLeft >= 5 && energy <= 45 && !cc) return 'ferociousBite';
   if (cp < 5 && !c.aura(t, 'rake') && energy >= c.cost(c.ability('rake')!)) return 'rake';
+  if (cp >= 4 && !rip && !cc) return 'rip';
   const enoughMana = c.manaLocked || p.mana >= shiftingPowerMana(c);
-  if (tl.shiftingPower && energy <= 60 && ready('shiftingPower') && enoughMana) return 'shiftingPower';
+  if (tl.shiftingPower && energy <= 50 && ready('shiftingPower') && enoughMana) return 'shiftingPower';
   if (!c.manaLocked && p.inCombat && p.mana < shiftingPowerMana(c) && ready('manaPotion')) return 'manaPotion';
+  if (cp >= 5 && rip && ripLeft < 3 && !cc) return null;
   return c.behind(t) ? 'shred' : 'claw';
 }
 
@@ -353,7 +359,7 @@ function review(c: Combat): { label: string; value: string; good?: boolean }[] {
   const rows: { label: string; value: string; good?: boolean }[] = [
     { label: 'Rip uptime', value: pctOf(uptime('uptime:target:rip')), good: uptime('uptime:target:rip') >= 0.75 },
     { label: 'Energy wasted at full', value: `${Math.round(wasted)} (${Math.round(perMinute)}/min)`, good: perMinute < 30 },
-    { label: 'Ferocious Bites at 5 points', value: bites ? `${k.bitesAt5 ?? 0} of ${bites}` : '-', good: bites === 0 || (k.bitesAt5 ?? 0) / bites >= 0.8 },
+    { label: 'Ferocious Bites at 4+ points', value: bites ? `${k.bitesAt4 ?? 0} of ${bites}` : '-', good: bites === 0 || (k.bitesAt4 ?? 0) / bites >= 0.8 },
     { label: 'Shifting Power casts', value: String(k.shiftingPower ?? 0) },
     { label: 'Clearcasting procs / used', value: `${k.clearcasting ?? 0} / ${k.clearcastingUsed ?? 0}` },
   ];

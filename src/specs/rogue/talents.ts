@@ -93,13 +93,13 @@ const KEYS = ['Digit1', 'Digit2', 'Digit3', 'Digit4', 'Digit5', 'Digit6', 'Digit
 const bar = (ids: (string | null)[]): Binding[] => ids.map((id, i) => ({ id, key: KEYS[i] }));
 
 const COMBAT_BAR = bar(['sinisterStrike', 'eviscerate', 'sliceAndDice', 'rupture', 'exposeArmor', 'bladeFlurry', 'adrenalineRush', 'coldBlood',
-  'kick', 'kidneyShot', 'thistleTea', 'feint', 'stealth', 'cheapShot', 'sprint', 'vanish']);
+  'kick', 'kidneyShot', 'thistleTea', 'feint', 'stealth', 'garrote', 'sprint', 'vanish']);
 const BACKSTAB_BAR = bar(['backstab', 'eviscerate', 'sliceAndDice', 'rupture', 'exposeArmor', 'bladeFlurry', 'adrenalineRush', 'coldBlood',
   'kick', 'kidneyShot', 'thistleTea', 'feint', 'stealth', 'ambush', 'sprint', 'vanish']);
 const MUTILATE_BAR = bar(['mutilate', 'eviscerate', 'sliceAndDice', 'rupture', 'exposeArmor', 'venom', 'coldBlood', 'thistleTea',
-  'kick', 'kidneyShot', 'gouge', 'feint', 'stealth', 'ambush', 'sprint', 'vanish']);
+  'kick', 'kidneyShot', 'gouge', 'feint', 'stealth', 'garrote', 'sprint', 'vanish']);
 const HEMO_BAR = bar(['hemorrhage', 'eviscerate', 'sliceAndDice', 'rupture', 'ghostlyStrike', 'premeditation', 'preparation', 'thistleTea',
-  'kick', 'kidneyShot', 'cheapShot', 'feint', 'stealth', 'ambush', 'sprint', 'vanish']);
+  'kick', 'kidneyShot', 'garrote', 'feint', 'stealth', 'ambush', 'sprint', 'vanish']);
 
 const GS = 'gunba/wow-forever-sim';
 const FS = 'foreversim';
@@ -109,9 +109,9 @@ export const BUILDS: Build[] = [
   { id: 'combat-fs', name: 'Combat Swords', source: FS, talentString: '00530310501-32003311201515231', rotation: 'combat', stats: STATS, bar: COMBAT_BAR },
   { id: 'combat-iea', name: 'Combat, Improved Expose Armor', source: GS, talentString: '005303125-32003311201515131', rotation: 'combatIea', stats: STATS, bar: COMBAT_BAR, options: { exposeArmorDuty: true } },
   { id: 'combat-backstab', name: 'Combat Backstab', source: GS, talentString: '005302005-30230320201515231-102', rotation: 'backstab', stats: DAGGER_STATS, bar: BACKSTAB_BAR },
-  { id: 'mutilate-gs', name: 'Mutilate', source: GS, talentString: '0053031035140105-302303202014', rotation: 'mutilate', stats: DAGGER_STATS, bar: MUTILATE_BAR },
+  { id: 'mutilate-gs', name: 'Mutilate', source: GS, talentString: '0053031033150105-302303202015', rotation: 'mutilate', stats: DAGGER_STATS, bar: MUTILATE_BAR },
   { id: 'mutilate-fs', name: 'Mutilate', source: FS, talentString: '00530310551021051-302303202004', rotation: 'mutilate', stats: DAGGER_STATS, bar: MUTILATE_BAR },
-  { id: 'hemo-gs', name: 'Subtlety Hemorrhage', source: GS, talentString: '005303103104--5320003310013211501', rotation: 'hemorrhage', stats: DAGGER_STATS, bar: HEMO_BAR },
+  { id: 'hemo-gs', name: 'Subtlety Hemorrhage', source: GS, talentString: '005303103005--3320203310013211501', rotation: 'hemorrhage', stats: DAGGER_STATS, bar: HEMO_BAR },
   { id: 'hemo-fs', name: 'Subtlety Hemorrhage', source: FS, talentString: '125320101--5320003310013211551', rotation: 'hemorrhage', stats: DAGGER_STATS, bar: HEMO_BAR },
 ];
 

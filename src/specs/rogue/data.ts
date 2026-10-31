@@ -28,9 +28,9 @@ export const RULES: AttackRules = {
  */
 export const STATS: Stats = {
   attackPower: 594,
-  crit: 13.1,     // Agility 236 / 29 + 4 % gear + Orc Savage 1 (Oct 15)
+  crit: 12.1,     // Agility 236 / 29 + 4 % gear (Orc Savage's +1 % is gone at launch, Oct 26)
   hit: 7.9,       // gear
-  spellCrit: 5,   // gear and Orc Savage: Agility does not count for poisons
+  spellCrit: 4,   // gear: Agility does not count for poisons
   mainHand: { name: 'Ironwood Blade', type: 'sword', min: 79, max: 148, speed: 2.4 },
   offHand: { name: 'Persuader', type: 'mace', min: 89, max: 167, speed: 2.8 },
 };

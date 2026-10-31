@@ -75,8 +75,8 @@ const PROT_BAR = bar(['shieldSlam', 'revenge', 'sunderArmor', 'heroicStrike', 's
 export const BUILDS: Build[] = [
   { id: 'fury-dw', name: 'Fury, dual wield', talentString: '30305213002-25053005112010501-1', rotation: 'fury', stance: 'berserker', stats: FURY_STATS, bar: FURY_BAR },
   { id: 'fury-sunder', name: 'Fury, keeps Sunder Armor up', talentString: '30305213002-25053005112010501-1', rotation: 'fury', stance: 'berserker', stats: FURY_STATS, bar: FURY_BAR, options: { sunderDuty: true } },
-  { id: 'arms-2h', name: 'Arms, two-hander', talentString: '20305213132515101-55050000001', rotation: 'arms', stance: 'battle', stats: ARMS_STATS, bar: ARMS_BAR },
-  { id: 'fury-2h', name: 'Two-hand Bloodthirst', talentString: '30304203032-55050020151010501', rotation: 'twoHandBloodthirst', stance: 'berserker', stats: ARMS_STATS, bar: FURY_BAR },
+  { id: 'arms-2h', name: 'Arms, two-hander', talentString: '20305213132515201-3505-2', rotation: 'arms', stance: 'battle', stats: ARMS_STATS, bar: ARMS_BAR },
+  { id: 'fury-2h', name: 'Two-hand Bloodthirst', talentString: '20305203032-45050020152010501', rotation: 'twoHandBloodthirst', stance: 'berserker', stats: ARMS_STATS, bar: FURY_BAR },
   { id: 'prot', name: 'Protection ("Fury Prot")', talentString: '35-0501-251333120230021351', rotation: 'protection', stance: 'defensive', stats: PROT_STATS, bar: PROT_BAR, tank: true },
   { id: 'prot-deep', name: 'Protection, deeper', talentString: '31-0501-255333120230021351', rotation: 'protection', stance: 'defensive', stats: PROT_STATS, bar: PROT_BAR, tank: true },
 ];

@@ -98,13 +98,14 @@ export function weaveCue(c: Combat): { text: string; tone: 'go' | 'hit' | 'back'
   return c.autoShotReset === 'classic' && toShot >= window ? go : null;
 }
 
-/** What to press in melee, in gs's weave order (Oct 21): Raptor Strike, Mongoose Bite, Strider Kick, Immolation Trap. */
+/** What to press in melee, in gs's weave order (since 27 Oct): Immolation Trap when its burn is down, Mongoose Bite, Strider Kick, Raptor Strike. */
 function meleeAttack(c: Combat): string | null {
-  if (raptorReadyIn(c) === 0 && raptorAffordable(c) && c.queuedSwing !== 'raptorStrike') return 'raptorStrike';
-  for (const id of ['mongooseBite', 'striderKick', 'immolationTrap']) {
+  for (const id of ['immolationTrap', 'mongooseBite', 'striderKick']) {
     const a = c.ability(id);
+    if (id === 'immolationTrap' && c.target && c.aura(c.target, 'immolationTrap')) continue;
     if (a && c.cooldownLeft(id).left === 0 && (a.usable?.(c) ?? true) && c.cost(a) <= c.player.resource) return id;
   }
+  if (raptorReadyIn(c) === 0 && raptorAffordable(c) && c.queuedSwing !== 'raptorStrike') return 'raptorStrike';
   return null;
 }
 

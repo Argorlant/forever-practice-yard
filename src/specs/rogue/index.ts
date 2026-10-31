@@ -82,9 +82,11 @@ function sealFate(c: Combat, t: Unit): void {
   }
 }
 
+/** Openers the spell rows mark No Active Defense: never dodged or parried (foreversim, Oct 22). */
+const NO_DEFENSE = new Set(['ambush', 'garrote']);
 /** A combo point builder that strikes with the main-hand weapon. */
 function builder(c: Combat, t: Unit, id: string, base: number, points = 1): Outcome {
-  const outcome = c.rollSpecial(t, id, { forceCrit: useColdBlood(c) });
+  const outcome = c.rollSpecial(t, id, { forceCrit: useColdBlood(c), noDodge: NO_DEFENSE.has(id) });
   if (!landed(outcome)) {
     c.refund(D.builderRefund);
     c.deal({ target: t, source: id, outcome, school: 'physical', amount: 0, white: false, hand: 'main' });
@@ -389,7 +391,7 @@ const abilities: Ability[] = [
     description: (c) => `Garrote the enemy: ${D.garrote.ticks} ticks of ${Math.round(D.garrote.tick + c.stats.attackPower * D.garrote.apPerTick)} every ${D.garrote.period} sec. Must be stealthed and behind the target. Can crit; ignores armor. Awards 1 combo point.`,
     use: (c, t) => {
       const u = t!;
-      const outcome = c.rollSpecial(u, 'garrote');
+      const outcome = c.rollSpecial(u, 'garrote', { noDodge: true });
       if (!landed(outcome)) {
         c.refund(D.builderRefund);
         c.deal({ target: u, source: 'garrote', outcome, school: 'physical', amount: 0, white: false });
@@ -695,43 +697,67 @@ function suggest(c: Combat): string | null {
   const eaLeft = ea ? ea.end - c.t : 0;
   const exposeArmor = !!c.options.exposeArmorDuty && ((cp === 5 && eaLeft < 15) || (cp === 4 && eaLeft < 2));
 
+  const energy = p.resource;
   if (rotation === 'hemorrhage') {
+    // gs's Subtlety list since 27 Oct: Garrote from stealth, Slice and Dice only once it falls off, Eviscerate and Hemorrhage at 60 energy.
     if (cp >= 1 && !snd) return 'sliceAndDice';
-    if (!c.stealthed() && p.inCombat && p.resource >= 60 && cp <= 1 && snd && ready('vanish')) return 'vanish';
+    if (!c.stealthed() && p.inCombat && energy >= 60 && cp <= 1 && snd && ready('vanish')) return 'vanish';
     if (c.stealthed()) {
       if (cp <= 2 && tl.premeditation && ready('premeditation')) return 'premeditation';
+      if (!c.aura(t, 'garrote')) return 'garrote';
       return canAmbush ? 'ambush' : 'cheapShot';
     }
-    if (cp >= 5 && sndLeft <= 2) return 'sliceAndDice';
     if (tea) return 'thistleTea';
     if (exposeArmor) return 'exposeArmor';
-    if (tl.preparation && ready('preparation') && c.cooldownLeft('vanish').left > 30) return 'preparation';
     const rupture = c.aura(t, 'rupture');
     if (!c.aura(t, 'hemorrhage') && cp >= 2 && !rupture) return 'hemorrhage';
     if (cp >= 3 && !rupture) return 'rupture';
-    if (cp >= 5) return 'eviscerate';
+    if (cp >= 5 && energy >= 60) return 'eviscerate';
     if (cp <= 3 && tl.ghostlyStrike && ready('ghostlyStrike')) return 'ghostlyStrike';
-    return 'hemorrhage';
+    if (energy >= 60) return 'hemorrhage';
+    if (tl.preparation && ready('preparation') && c.cooldownLeft('vanish').left > 30) return 'preparation';
+    return null;
   }
-
-  if (c.stealthed()) return canAmbush ? 'ambush' : 'cheapShot';
-  if (cp >= 1 && !snd) return 'sliceAndDice';
-  if (cp === 5 && sndLeft < 3) return 'sliceAndDice';
-  if (p.inCombat && tea) return 'thistleTea';
-  if (exposeArmor) return 'exposeArmor';
 
   if (rotation === 'mutilate') {
+    // gs's Mutilate list since 27 Oct: a Garrote opener, Eviscerate at 3 points with 50 energy, Mutilate under 3 points at 70.
+    if (c.stealthed()) return 'garrote';
+    if (cp >= 1 && !snd) return 'sliceAndDice';
+    if (p.inCombat && tea) return 'thistleTea';
+    if (exposeArmor) return 'exposeArmor';
     if (cp >= 4 && snd && tl.coldBlood && ready('coldBlood') && !c.aura(p, 'coldBlood')) return 'coldBlood';
-    if (cp >= 3) return 'eviscerate';
-    return 'mutilate';
+    if (cp >= 3 && energy >= 50) return 'eviscerate';
+    if (cp < 3 && energy >= 70) return 'mutilate';
+    return null;
   }
 
-  // Combat (Sinister Strike or Backstab).
-  if (tl.adrenalineRush && p.inCombat && p.resource < 59 && ready('adrenalineRush')) return 'adrenalineRush';
-  if (tl.bladeFlurry && snd && ready('bladeFlurry') && p.resource >= D.bladeFlurry.cost) return 'bladeFlurry';
-  if (cp === 5 && snd && tl.coldBlood && ready('coldBlood') && !c.aura(p, 'coldBlood')) return 'coldBlood';
-  if (cp === 5 && (snd || p.resource >= 79)) return 'eviscerate';
-  return rotation === 'backstab' ? 'backstab' : 'sinisterStrike';
+  if (rotation === 'backstab') {
+    if (c.stealthed()) return canAmbush ? 'ambush' : 'cheapShot';
+    if (cp >= 1 && !snd) return 'sliceAndDice';
+    if (cp === 5 && sndLeft < 3) return 'sliceAndDice';
+    if (p.inCombat && tea) return 'thistleTea';
+    if (exposeArmor) return 'exposeArmor';
+    if (tl.adrenalineRush && p.inCombat && energy < 59 && ready('adrenalineRush')) return 'adrenalineRush';
+    if (tl.bladeFlurry && snd && ready('bladeFlurry') && energy >= D.bladeFlurry.cost) return 'bladeFlurry';
+    if (cp === 5 && snd && tl.coldBlood && ready('coldBlood') && !c.aura(p, 'coldBlood')) return 'coldBlood';
+    if (cp === 5 && (snd || energy >= 79)) return 'eviscerate';
+    return 'backstab';
+  }
+
+  // Combat Swords, gs's list since 27 Oct: a Vanish and Garrote loop, Slice and Dice once it falls off, 5-point
+  // finishers, and Sinister Strike right after a main-hand swing (or at 90 energy).
+  if (c.stealthed()) return 'garrote';
+  if (p.inCombat && energy >= 50 && cp <= 3 && ready('vanish')) return 'vanish';
+  if (p.inCombat && tea) return 'thistleTea';
+  if (cp >= 1 && !snd) return 'sliceAndDice';
+  if (exposeArmor) return 'exposeArmor';
+  if (tl.adrenalineRush && p.inCombat && energy <= 30 && ready('adrenalineRush')) return 'adrenalineRush';
+  if (tl.bladeFlurry && snd && ready('bladeFlurry') && energy >= D.bladeFlurry.cost) return 'bladeFlurry';
+  if (cp >= 5 && tl.coldBlood && ready('coldBlood') && !c.aura(p, 'coldBlood')) return 'coldBlood';
+  if (cp >= 5) return 'eviscerate';
+  const swing = c.swingLeft('main');
+  if (swing.left > swing.total - 0.15 || energy >= 90) return 'sinisterStrike';
+  return null;
 }
 
 // ------------------------------------------------------- practice helpers

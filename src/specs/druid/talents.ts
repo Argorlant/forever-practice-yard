@@ -67,7 +67,7 @@ export const BUILDS: Build[] = [
   { id: 'cat', spec: 'cat', name: 'Feral Cat', talentString: '05002-55000032021032212051-055', stats: CAT_STATS, bar: CAT_BAR },
   { id: 'cat-feral', spec: 'cat', name: 'Feral, deeper (Natural Shapeshifter)', talentString: '-55210032021132212051-05503', stats: CAT_STATS, bar: CAT_BAR },
   { id: 'bear', spec: 'bear', name: 'Bear tank', talentString: '01-50022332120132012551-055', stats: BEAR_STATS, bar: BEAR_BAR, tank: true },
-  { id: 'moonkin', spec: 'balance', name: 'Moonkin', talentString: '5232220115501351--505003', stats: BALANCE_STATS, bar: BALANCE_BAR },
+  { id: 'moonkin', spec: 'balance', name: 'Moonkin', talentString: '533222011550135--505003', stats: BALANCE_STATS, bar: BALANCE_BAR },
   { id: 'balance', spec: 'balance', name: 'Balance', talentString: '5532220115001351--505302', stats: BALANCE_STATS, bar: BALANCE_BAR },
 ];
 

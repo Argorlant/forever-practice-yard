@@ -8,7 +8,7 @@ import type { Combat } from '../../engine/combat';
 import type { MinionLook, Spec } from '../../engine/types';
 import { BOSS_RULES, CONTROLS } from '../common';
 import { PET_HELP, PET_MODE } from '../pet';
-import { ABILITIES, D, SOURCES, T, baneOn, build, chances, demons, execute, left, lifeTapAmount, prepare, regen } from './core';
+import { ABILITIES, D, SOURCES, T, baneOn, build, chances, demons, left, lifeTapAmount, prepare, regen } from './core';
 import { AFFLICTION_STATS, DESTRUCTION_STATS, PACT_STATS } from './data';
 import { buildLabel, buildsFor, summary, talentsFor, type WarlockSpec } from './talents';
 
@@ -26,8 +26,11 @@ function ctx(c: Combat) {
   return { p, t, ready, afford, due };
 }
 
-/** gs's opening of every list: Life Tap when low (health allowing), a potion, Curse of the Elements, one Bane (Doom on cooldown). */
-function common(c: Combat): string | null {
+/**
+ * gs's opening of every list: Life Tap when low (health allowing), a potion, Curse of the Elements, the DoTs a list puts
+ * first (`before`: Corruption, and Immolate for Destruction, since 27 Oct), one Bane (Doom on cooldown).
+ */
+function common(c: Combat, before: string[] = []): string | null {
   const { p, t, ready, afford, due } = ctx(c);
   if (!c.manaLocked) {
     const mana = p.resource / p.maxResource;
@@ -38,6 +41,7 @@ function common(c: Combat): string | null {
     if ((mana < 0.15 || !afford('shadowBolt')) && healthy && p.resource + tap <= p.maxResource + 100) return 'lifeTap';
   }
   if (!c.raid.has('curseOfElements') && !c.aura(t, 'curseOfElements') && afford('curseOfTheElements')) return 'curseOfTheElements';
+  for (const id of before) if (due(id)) return id;
   if (ready('baneOfDoom') && afford('baneOfDoom') && !c.aura(t, 'baneOfDoom')) return 'baneOfDoom';
   if (!baneOn(c, t) && due('baneOfAgony')) return 'baneOfAgony';
   return null;
@@ -47,28 +51,26 @@ function rotationSuggest(c: Combat): string | null {
   const t = c.target;
   if (!t || t.health <= 0) return null;
   const tl = T(c);
-  const { p, ready, afford, due } = ctx(c);
+  const { ready, afford, due } = ctx(c);
   if (c.channeling) return null;
-  const first = common(c);
+  // gs's lists since 27 Oct: Corruption ahead of the Banes, Destruction's Immolate too; Shadowburn before Conflagrate;
+  // the Demonic Pact list no longer casts Soul Fire on Decimation.
+  const rotation = build(c).rotation;
+  const first = common(c, rotation === 'fire' ? ['immolate', 'corruption'] : ['corruption']);
   if (first) return first;
-  switch (build(c).rotation) {
+  switch (rotation) {
     case 'affliction':
     case 'ruin':
-      if (due('corruption')) return 'corruption';
       if (tl.siphonLife && due('siphonLife')) return 'siphonLife';
       if (due('immolate')) return 'immolate';
       return 'shadowBolt';
     case 'fire':
-      if (due('immolate')) return 'immolate';
-      if (tl.conflagrate && ready('conflagrate') && afford('conflagrate') && c.aura(t, 'immolate')) return 'conflagrate';
-      if (due('corruption')) return 'corruption';
       if (tl.shadowburn && ready('shadowburn') && afford('shadowburn')) return 'shadowburn';
+      if (tl.conflagrate && ready('conflagrate') && afford('conflagrate') && c.aura(t, 'immolate')) return 'conflagrate';
       return tl.incinerate ? 'incinerate' : 'shadowBolt';
     case 'pact':
       if (tl.demonicBrand && c.pet.out && !c.aura(t, 'demonicBrand') && c.casting?.id !== 'searingPain' && afford('searingPain')) return 'searingPain';
-      if (due('corruption')) return 'corruption';
       if (due('immolate')) return 'immolate';
-      if (execute(c) && c.aura(p, 'decimation') && ready('soulFire') && afford('soulFire')) return 'soulFire';
       return 'shadowBolt';
   }
 }

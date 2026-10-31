@@ -27,7 +27,7 @@ const bar = (ids: (string | null)[]): Binding[] => KEYS.map((key, i) => ({ id: i
 const ARCANE_BAR = bar(['arcaneBlast', 'arcaneMissiles', 'arcaneWrath', 'fireBlast', 'arcanePower', 'presenceOfMind', 'evocation', 'manaRuby',
   'manaPotion', 'scorch', 'frostbolt']);
 const FIRE_BAR = bar(['scorch', 'fireball', 'fireBlast', 'pyroblast', 'combustion', 'frostfireBolt', 'evocation', 'manaRuby', 'manaPotion',
-  'presenceOfMind']);
+  'presenceOfMind', 'arcaneBlast', 'arcaneMissiles', 'iceLance']);
 const FROST_BAR = bar(['frostbolt', 'iceLance', 'arcaneMissiles', 'coneOfCold', 'fireBlast', 'presenceOfMind', 'evocation', 'manaRuby',
   'manaPotion', 'frostfireBolt', 'arcaneBlast', 'iceBarrier']);
 
@@ -40,15 +40,15 @@ const MS = 'MythicSim / Kami Labs';
  */
 const MS_REENCODED = `${MS}, re-encoded to the Oct 21 trees`;
 export const BUILDS: Build[] = [
-  { id: 'arcane', spec: 'arcane', name: 'Arcane', talentString: '0502205013100311531-03-05350002', source: GS, stats: ARCANE_STATS, bar: ARCANE_BAR },
+  { id: 'arcane', spec: 'arcane', name: 'Arcane', talentString: '0502205003100311531-03-05350003', source: GS, stats: ARCANE_STATS, bar: ARCANE_BAR },
   { id: 'arcane-fire', spec: 'arcane', name: 'Arcane/Fire', talentString: '0502015003100311531-2305003202003', source: GS, stats: ARCANE_STATS, bar: ARCANE_BAR },
   { id: 'arcane-ms', spec: 'arcane', name: 'Arcane', talentString: '0532205003100311531-230500001-023', source: MS_REENCODED, stats: ARCANE_STATS, bar: ARCANE_BAR },
   { id: 'arcane-fs', spec: 'arcane', name: 'Arcane/Frost', talentString: '0552205003100311531-03-0533', source: FS, stats: ARCANE_STATS, bar: ARCANE_BAR },
-  { id: 'fire', spec: 'fire', name: 'Fire', talentString: '05002152000003-23450000130135031-002', source: GS, stats: FIRE_STATS, bar: FIRE_BAR },
+  { id: 'fire', spec: 'fire', name: 'Fire', talentString: '03022050021003-23450000130135031-002', source: GS, stats: FIRE_STATS, bar: FIRE_BAR },
   { id: 'fire-fs', spec: 'fire', name: 'Fire', talentString: '05022050001001-23550000130135031-003', source: FS, stats: FIRE_STATS, bar: FIRE_BAR },
   { id: 'fire-ms', spec: 'fire', name: 'Fire', talentString: '0501205003-13550000130135031-013', source: MS_REENCODED, stats: FIRE_STATS, bar: FIRE_BAR },
   { id: 'fire-frost', spec: 'fire', name: 'Fire/Frost (Frostfire Bolt)', talentString: '-03552020130135131-05350003', source: GS, stats: FIRE_STATS, bar: FIRE_BAR, options: { fireFiller: 'frostfire' } },
-  { id: 'frostfire', spec: 'fire', name: 'Frostfire', talentString: '-1355000013013502-2035010311013002', source: GS, stats: FIRE_STATS, bar: FIRE_BAR, options: { fireFiller: 'frostfire' } },
+  { id: 'frostfire', spec: 'fire', name: 'Frostfire', talentString: '-0355100013013403-2035010311013002', source: GS, stats: FIRE_STATS, bar: FIRE_BAR, options: { fireFiller: 'frostfire' } },
   { id: 'frost', spec: 'frost', name: 'Frost', talentString: '0500205-03-253520330100301251', source: GS, stats: FROST_STATS, bar: FROST_BAR },
   { id: 'arcane-frost', spec: 'frost', name: 'Arcane-Frost', talentString: '050220500310030053--0535000301003002', source: GS, stats: FROST_STATS, bar: FROST_BAR },
   { id: 'frost-ms', spec: 'frost', name: 'Frost with Missile Barrage', talentString: '0501205003-03-053520030101301251', source: MS_REENCODED, stats: FROST_STATS, bar: FROST_BAR },

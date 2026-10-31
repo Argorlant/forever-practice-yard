@@ -70,7 +70,10 @@ function specFor(spec: MageSpec, base: Omit<Spec, 'className' | 'resource' | 'ab
 }
 
 // ------------------------------------------------------------------ Arcane
-/** gs's Arcane list after Oct 15: cooldowns, Missiles on Barrage, Arcane Blast to 4 stacks, Arcane Wrath, Missiles. */
+/**
+ * gs's Arcane list since 27 Oct: cooldowns, Arcane Wrath on Presence of Mind, Missiles on Barrage, Arcane Blast on
+ * Clearcasting, to 3 stacks above 40 % mana and 2 below, Arcane Wrath, Frostbolt as the filler; no Evocation.
+ */
 function arcaneSuggest(c: Combat): string | null {
   const t = c.target;
   if (!t || t.health <= 0) return null;
@@ -79,14 +82,16 @@ function arcaneSuggest(c: Combat): string | null {
   if (channelingNow(c)) return null;
   if (p.inCombat && tl.arcanePower && ready('arcanePower') && mana >= 0.6) return 'arcanePower';
   if (p.inCombat && tl.presenceOfMind && ready('presenceOfMind')) return 'presenceOfMind';
-  const tool = manaTool(c, 0.15);
+  const tool = manaTool(c, 0);
   if (tool) return tool;
+  const wrath = tl.arcaneWrath && ready('arcaneWrath') && c.casting?.id !== 'arcaneWrath';
+  if (wrath && c.aura(p, 'presenceOfMind')) return 'arcaneWrath';
   if (c.aura(p, 'missileBarrage')) return 'arcaneMissiles';
   // The Arcane Blast being cast counts: what glows in the spell queue window comes after it.
   const stacks = Math.min(4, abStacks(c) + (c.casting?.id === 'arcaneBlast' ? 1 : 0));
-  if (tl.arcaneBlast && stacks < 4 && mana > 0.2) return 'arcaneBlast';
-  if (tl.arcaneWrath && ready('arcaneWrath') && c.casting?.id !== 'arcaneWrath') return 'arcaneWrath';
-  return 'arcaneMissiles';
+  if (tl.arcaneBlast && (c.aura(p, 'clearcasting') || (stacks < 3 && mana > 0.4) || stacks < 2)) return 'arcaneBlast';
+  if (wrath) return 'arcaneWrath';
+  return 'frostbolt';
 }
 
 function arcaneReview(c: Combat): Row[] {
@@ -126,13 +131,41 @@ export const mageArcane: Spec = specFor('arcane', {
 });
 
 // -------------------------------------------------------------------- Fire
-/** gs's ranked Fire list: Combustion, Pyroblast at 3 Heating Up, Fire Blast, Scorch upkeep, then your filler. */
+/**
+ * Fire. gs's Fire (27 Oct): Combustion, Fire Blast up to 2 Heating Up, Pyroblast at 3, Fireball on Clearcasting, Arcane
+ * Blast with no stacks, Missiles on Barrage, Scorch. gs's Frostfire: Pyroblast at 3 Heating Up once its burn is nearly
+ * gone, Scorch for Fire Vulnerability, Fire Blast at 1 Heating Up without Fingers of Frost, Frostfire Bolt. Other
+ * builds: gs's earlier list with your filler.
+ */
 function fireSuggest(c: Combat): string | null {
   const t = c.target;
   if (!t || t.health <= 0) return null;
   const tl = T(c);
-  const { p, ready } = ctx(c);
+  const { p, ready, mana } = ctx(c);
   if (channelingNow(c)) return null;
+  const heat = stacksOf(c, p, 'heatingUp');
+  const fv = c.aura(t, 'fireVulnerability');
+  if (c.options.build === 'fire') {
+    const tool = manaTool(c, 0.05);
+    if (tool) return tool;
+    if (p.inCombat && tl.combustion && ready('combustion')) return 'combustion';
+    if (heat <= 2 && ready('fireBlast')) return 'fireBlast';
+    if (tl.pyroblast && heat >= 3) return 'pyroblast';
+    if (c.aura(p, 'clearcasting')) return 'fireball';
+    if (tl.arcaneBlast && abStacks(c) === 0 && c.casting?.id !== 'arcaneBlast' && mana >= 0.3) return 'arcaneBlast';
+    if (c.aura(p, 'missileBarrage')) return 'arcaneMissiles';
+    return 'scorch';
+  }
+  if (c.options.build === 'frostfire') {
+    const tool = manaTool(c, 0.35);
+    if (tool) return tool;
+    const burn = (c.aura(t, 'pyroblastDot')?.end ?? c.t) - c.t;
+    if (tl.pyroblast && heat >= 3 && burn <= 2.5) return 'pyroblast';
+    if (p.inCombat && tl.combustion && ready('combustion')) return 'combustion';
+    if (!fv || (fv.stacks ?? 0) < 5 || fv.end - c.t <= 6) return 'scorch';
+    if (!c.aura(p, 'fingersOfFrost') && heat === 1 && ready('fireBlast')) return 'fireBlast';
+    return 'frostfireBolt';
+  }
   const tool = manaTool(c, 0.2);
   if (tool) return tool;
   if (p.inCombat && tl.combustion && ready('combustion')) return 'combustion';
@@ -140,7 +173,6 @@ function fireSuggest(c: Combat): string | null {
   // A Fire/Frost build of your own with Ice Lance: Fingers of Frost charges go to Ice Lance, as for Frost.
   if (tl.iceLance && c.aura(p, 'fingersOfFrost') && !c.casting) return 'iceLance';
   if (ready('fireBlast')) return 'fireBlast';
-  const fv = c.aura(t, 'fireVulnerability');
   if (tl.improvedScorch && (!fv || (fv.stacks ?? 0) < 5 || fv.end - c.t <= 5)) return 'scorch';
   const filler = String(c.options.fireFiller ?? 'scorch');
   return filler === 'fireball' ? 'fireball' : filler === 'frostfire' ? 'frostfireBolt' : 'scorch';

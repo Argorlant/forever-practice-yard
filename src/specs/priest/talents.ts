@@ -65,7 +65,7 @@ const SMITE_BAR = bar(['smite', 'holyFire', 'mindBlast', 'penance', 'innerFocus'
 const GS = 'gunba/wow-forever-sim';
 const FS = 'foreversim';
 export const BUILDS: Build[] = [
-  { id: 'shadow', spec: 'shadow', name: 'Shadow', talentString: '30503300103--50452001201302251', source: GS, stats: SHADOW_STATS, bar: SHADOW_BAR },
+  { id: 'shadow', spec: 'shadow', name: 'Shadow', talentString: '50500500102--50542001201302251', source: GS, stats: SHADOW_STATS, bar: SHADOW_BAR },
   { id: 'shadow-community', spec: 'shadow', name: 'Shadow, community build', talentString: '02530003101--55052201201302251', source: 'all three sims', stats: SHADOW_STATS, bar: SHADOW_BAR },
   { id: 'shadow-fs', spec: 'shadow', name: 'Shadow', talentString: '00530320103--50052201251302051', source: FS, stats: SHADOW_STATS, bar: SHADOW_BAR },
   { id: 'smite', spec: 'smite', name: 'Smite', talentString: '515035031030001031-00505023002-003', source: GS, stats: SMITE_STATS, bar: SMITE_BAR },

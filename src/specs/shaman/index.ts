@@ -56,7 +56,11 @@ const onCooldown = (c: Combat, id: string, cd: number) => {
 };
 
 // --------------------------------------------------------------- Elemental
-/** gs's ranked Elemental list (Stormcaller: the same without Lava Burst): Searing, Elemental Mastery on cooldown, Flame Shock, Lava Burst on it, Chain Lightning on Clearcasting, Lightning Bolt. */
+/**
+ * gs's ranked Elemental list since 27 Oct: Searing, Elemental Mastery on cooldown, Flame Shock, Lava Burst, Lightning
+ * Bolt under Elemental Mastery, Earth Shock on Clearcasting, Lightning Bolt. Stormcaller puts the Clearcasting Earth
+ * Shock before Lava Burst.
+ */
 function elementalSuggest(c: Combat): string | null {
   const t = c.target;
   if (!t || t.health <= 0) return null;
@@ -72,8 +76,13 @@ function elementalSuggest(c: Combat): string | null {
   // On the move, only instants: Flame Shock when it is down, otherwise Earth Shock.
   if (p.moving) return !flame && can('flameShock') ? 'flameShock' : can('earthShock') ? 'earthShock' : null;
   if (!flame && can('flameShock')) return 'flameShock';
+  const flameLeft = (c.aura(t, 'flameShock')?.end ?? c.t) - c.t;
+  const ccShock = has('clearcasting') && flameLeft > 2 && can('earthShock');
+  const stormcaller = String(c.options.build ?? '').startsWith('stormcaller');
+  if (stormcaller && ccShock) return 'earthShock';
   if (tl.lavaBurst && flame && can('lavaBurst') && c.casting?.id !== 'lavaBurst') return 'lavaBurst';
-  if (has('clearcasting') && can('chainLightning')) return 'chainLightning';
+  if (has('elementalMastery')) return 'lightningBolt';
+  if (ccShock) return 'earthShock';
   return 'lightningBolt';
 }
 
@@ -92,32 +101,36 @@ function elementalReview(c: Combat): Row[] {
     const lvb = Math.min(1, (casts('lavaBurst') * D.lavaBurst.cooldown) / time);
     rows.push({ label: 'Lava Burst on cooldown', value: pctOf(lvb), good: lvb >= 0.8 });
   }
-  if (tl.elementalFocus) rows.push({ label: 'Clearcasting procs / spent on Chain Lightning', value: `${k.clearcasting ?? 0} / ${k['clearcasting:chainLightning'] ?? 0}` });
+  if (tl.elementalFocus) rows.push({ label: 'Clearcasting procs / spent on Earth Shock', value: `${k.clearcasting ?? 0} / ${k['clearcasting:earthShock'] ?? 0}` });
   if (tl.lightningOverload) rows.push({ label: 'Lightning Overloads', value: String(k.overloads ?? 0) });
   manaRows(c, rows, 'Time without mana for Lightning Bolt');
   return rows;
 }
 
 // ------------------------------------------------------------- Enhancement
-/** gs's ranked Enhancement list: totems, Rage of the Farseer, Fire Nova on Clearcasting, Stormstrike, a 5-stack Lightning Bolt, Flame Shock, Earth Shock, Fire Nova with mana. */
+/**
+ * gs's ranked Enhancement list since 27 Oct: Searing Totem (the raid brings Windfury), Rage of the
+ * Farseer, Flame Shock, Stormstrike, Earth Shock, Fire Nova on Clearcasting, a 5-stack Lightning Bolt, Fire Nova from 10 % mana.
+ */
 function enhancementSuggest(c: Combat): string | null {
   const t = c.target;
   if (!t || t.health <= 0) return null;
   const tl = T(c);
   const { p, can, has, mana } = ctx(c);
-  // Grace of Air stacks with a raid Windfury Totem since Oct 15.
-  const air = imbue(c) === 'windfury' || c.raid.has('windfury') ? 'graceOfAirTotem' : 'windfuryTotem';
-  const totem = totems(c, ['strengthOfEarthTotem', air, 'searingTotem', 'manaSpringTotem']);
+  // gs leaves Strength of Earth and Windfury to the raid's shamans; the yard's raid list has no Strength of Earth, so you drop yours.
+  // With Flametongue and no raid Windfury Totem, your own Windfury Totem.
+  const ownWindfury = imbue(c) !== 'windfury' && !c.raid.has('windfury');
+  const totem = totems(c, ['strengthOfEarthTotem', ...(ownWindfury ? ['windfuryTotem'] : []), 'searingTotem']);
   if (totem) return totem;
   const close = c.inRange(t);
   const nova = fireTotem(c) && nearFireTotem(c, t, D.fireNova.radius) && can('fireNova');
   if (tl.rageOfTheFarseer && p.inCombat && close && can('rageOfTheFarseer')) return 'rageOfTheFarseer';
-  if (nova && has('clearcasting')) return 'fireNova';
-  if (tl.stormstrike && close && can('stormstrike')) return 'stormstrike';
-  if (tl.maelstromWeapon && maelstromStacks(c) >= D.maelstromWeapon.max) return 'lightningBolt';
   if (!c.aura(t, 'flameShock') && can('flameShock')) return 'flameShock';
+  if (tl.stormstrike && close && can('stormstrike')) return 'stormstrike';
   if (can('earthShock')) return 'earthShock';
-  if (nova && mana >= 0.2) return 'fireNova';
+  if (nova && has('clearcasting')) return 'fireNova';
+  if (tl.maelstromWeapon && maelstromStacks(c) >= D.maelstromWeapon.max) return 'lightningBolt';
+  if (nova && mana >= 0.1) return 'fireNova';
   return potion(c);
 }
 
@@ -235,7 +248,7 @@ export const shamanEnhancement: Spec = specFor('enhancement', {
   }],
   sheet: { spellCrit: 'Spell crit (gear + Intellect)', spellPower: 'Spell damage', crit: 'Melee crit (gear + Agility; Thundering Strikes adds on top)', offHand: false },
   lowMana: (c) => c.cost(c.ability('earthShock')!),
-  welcome: 'Welcome to the Enhancement practice yard. One two-hander with Windfury Weapon: drop Strength of Earth, Grace of Air and Searing Totem, then Stormstrike on cooldown; its 20% goes to Earth Shock (which keeps the charge) and a 5-stack Lightning Bolt (instant and free), keep Flame Shock up and use Fire Nova around your Searing Totem, always on Clearcasting.',
+  welcome: 'Welcome to the Enhancement practice yard. One two-hander with Windfury Weapon: drop Strength of Earth and Searing Totem, keep Flame Shock up, then Stormstrike and Earth Shock on cooldown (Earth Shock takes the Stormstrike bonus, and keeps the charge for a 5-stack Lightning Bolt, instant and free), and Fire Nova around your Searing Totem on Clearcasting or with mana to spare.',
   help: `${CONTROLS}
     ${HELP_COMMON}
     Enhancement in WoW Forever: no dual wield. Windfury Weapon: 20% per landed main-hand hit (1.5 sec cooldown) for two extra attacks with +466 AP (Elemental Weapons 3/3); it turns a Windfury Totem off for you, so your Air totem is Grace of Air. Stormstrike (8 sec): a weapon hit, and your next Lightning Bolt or Chain Lightning within 12 sec deals 20% more; Earth Shock gets the 20% without spending the charge (since Oct 21). Maelstrom Weapon: melee hits stack it (10 per minute at any rank); at 5 stacks Lightning Bolt is instant and free. Never hardcast Lightning Bolt below 5 stacks: it restarts your swing. Fire Nova is much weaker since Oct 15 (232-258, 0.143); Stormstrike costs 8% of base mana, and a spell that misses keeps its charge. Rage of the Farseer gives +30% attack speed.

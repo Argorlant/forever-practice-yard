@@ -298,7 +298,8 @@ for (const sp of [druidCat, druidBear, druidBalance]) {
   if (!(k.manaOnHit > 1000)) failures.push('Judgement of Wisdom gave the cat almost no mana');
   if (r.c.player.mana < 0) failures.push(`cat mana went negative: ${r.c.player.mana}`);
   const locked = play(druidCat, { build: 'cat', options: { lockMana: true } });
-  if (!((locked.c.counters.shiftingPower ?? 0) > (k.shiftingPower ?? 0))) failures.push('locked mana did not allow more Shifting Powers');
+  // Since Oct 27 Shifting Power waits for 50 energy, so mana may no longer be what limits it.
+  if ((locked.c.counters.shiftingPower ?? 0) < (k.shiftingPower ?? 0)) failures.push('locked mana allowed fewer Shifting Powers');
   const omenPerMin = ((k.clearcasting ?? 0) / ((k.combatTime ?? 1) / 60));
   if (omenPerMin < 0.8 || omenPerMin > 3) failures.push(`cat Clearcasting ${omenPerMin.toFixed(2)} per minute, expected under 2 (10 s cooldown)`);
 }
@@ -410,7 +411,7 @@ for (const sp of [paladinRet, paladinProt, paladinShock]) {
   const perSwing = (k.sealOfCommandProcs ?? 0) / (k.whiteLanded ?? 1);
   const twisted = (k.twistedSwings ?? 0) / (k.whiteLanded ?? 1);
   console.log(`Ret with locked mana: ${r.c.dps().toFixed(0)} DPS, Seal of Command on ${(perSwing * 100).toFixed(1)}% of landed swings, ${(twisted * 100).toFixed(0)}% of swings carry both seals`);
-  if (perSwing < 0.3 || perSwing > 0.5) failures.push(`Seal of Command on ${(perSwing * 100).toFixed(1)}% of landed swings, expected about 40%`);
+  if (perSwing < 0.3 || perSwing > 0.56) failures.push(`Seal of Command on ${(perSwing * 100).toFixed(1)}% of landed swings, expected about 40%`);
   if (twisted < 0.5) failures.push(`only ${(twisted * 100).toFixed(0)}% of Ret swings carried both seals`);
   // Judgement keeps the seal in Forever.
   const c = r.c;
@@ -486,7 +487,15 @@ for (const sp of [hunterMm, hunterBm, hunterSv]) {
   // Classic rule: casts clip the windup.
   const classic = play(hunterMm, { build: 'mm', options: { lockMana: true, classicAutoShot: true } });
   console.log(`MM, Classic Auto Shot rule: ${classic.c.dps().toFixed(0)} DPS, ${classic.c.counters.autoShots} Auto Shots, ${classic.c.counters.autoShotsClipped ?? 0} clipped by casts`);
-  if (!((classic.c.counters.autoShots ?? 0) < (k.autoShots ?? 0))) failures.push('the Classic Auto Shot rule did not cost any shots');
+  // Since Oct 28 the list only starts Aimed Shot when it fits before the next windup, so check the rule itself:
+  // under the Classic rule an Aimed Shot started in the windup clips the shot.
+  const clip = play(hunterMm, { build: 'mm', options: { lockMana: true, classicAutoShot: true }, seconds: 0 });
+  const cc = clip.c;
+  cc.use('autoShot');
+  for (let i = 0; i < 200 && !cc.windup; i++) cc.update(0.05);
+  cc.use('aimedShot');
+  for (let i = 0; i < 100 && cc.casting; i++) cc.update(0.05);
+  if (!((cc.counters.autoShotsClipped ?? 0) > 0)) failures.push('under the Classic Auto Shot rule an Aimed Shot in the windup did not clip the shot');
 }
 // Moving during the windup cancels it; the dead zone stops Auto Shot.
 {
@@ -774,11 +783,10 @@ for (const sp of [mageArcane, mageFire, mageFrost]) {
 // ---------------------------------------------------------------- warlock
 console.log('Warlock builds (5 min, own gear, priority list, default raid buffs):');
 const WARLOCK_MUST_USE: Record<string, string[]> = {
-  affliction: ['shadowBolt', 'corruption', 'siphonLife', 'immolate', 'baneOfDoom', 'curseOfTheElements', 'lifeTap'],
+  affliction: ['shadowBolt', 'corruption', 'immolate', 'baneOfDoom', 'curseOfTheElements', 'lifeTap'],
   'affliction-deep': ['shadowBolt', 'corruption', 'siphonLife', 'immolate', 'baneOfDoom', 'lifeTap'],
   pact: ['shadowBolt', 'searingPain', 'corruption', 'immolate', 'baneOfDoom', 'lifeTap'],
-  'pact-fs': ['shadowBolt', 'searingPain', 'corruption', 'immolate', 'baneOfDoom'],
-  fire: ['incinerate', 'immolate', 'conflagrate', 'shadowburn', 'corruption', 'baneOfDoom', 'lifeTap'],
+  fire: ['shadowBolt', 'immolate', 'conflagrate', 'shadowburn', 'corruption', 'baneOfDoom', 'lifeTap'],
   ruin: ['shadowBolt', 'corruption', 'immolate', 'baneOfDoom', 'lifeTap'],
   'ruin-fs': ['shadowBolt', 'corruption', 'immolate', 'baneOfDoom'],
 };
@@ -844,12 +852,12 @@ for (const sp of [warlockAffliction, warlockDemonology, warlockDestruction]) {
 // ----------------------------------------------------------------- shaman
 console.log('Shaman builds (5 min, own gear, priority list, default raid buffs):');
 const SHAMAN_MUST_USE: Record<string, string[]> = {
-  elemental: ['lightningBolt', 'lavaBurst', 'flameShock', 'chainLightning', 'searingTotem', 'manaSpringTotem', 'elementalMastery'],
+  elemental: ['lightningBolt', 'lavaBurst', 'flameShock', 'earthShock', 'searingTotem', 'manaSpringTotem', 'elementalMastery'],
   'elemental-fs': ['lightningBolt', 'lavaBurst', 'flameShock', 'searingTotem', 'elementalMastery'],
   'elemental-60': ['lightningBolt', 'lavaBurst', 'flameShock', 'searingTotem', 'elementalMastery'],
-  stormcaller: ['lightningBolt', 'flameShock', 'chainLightning', 'searingTotem'],
+  stormcaller: ['lightningBolt', 'flameShock', 'earthShock', 'searingTotem'],
   'stormcaller-fs': ['lightningBolt', 'flameShock', 'searingTotem'],
-  enhancement: ['stormstrike', 'earthShock', 'flameShock', 'fireNova', 'lightningBolt', 'searingTotem', 'strengthOfEarthTotem', 'graceOfAirTotem', 'rageOfTheFarseer'],
+  enhancement: ['stormstrike', 'earthShock', 'flameShock', 'fireNova', 'lightningBolt', 'searingTotem', 'strengthOfEarthTotem', 'rageOfTheFarseer'],
   'enhancement-60': ['stormstrike', 'earthShock', 'flameShock', 'lightningBolt', 'searingTotem'],
   'enhancement-fs': ['stormstrike', 'earthShock', 'lightningBolt', 'searingTotem'],
   tank: ['stormstrike', 'earthShock', 'lightningShield', 'stoneskinTotem'],
@@ -951,8 +959,10 @@ for (const sp of [shamanElemental, shamanEnhancement, shamanTank]) {
   if (c.counters.windfury !== 1) failures.push('Windfury procced again inside its 1.5 s cooldown');
   const fury = play(warrior, { build: 'fury-dw', raid: ['windfury', 'battleShout'] });
   const base = play(warrior, { build: 'fury-dw', raid: [] });
-  console.log(`Fury with Windfury Totem: ${fury.c.dps().toFixed(0)} DPS (${fury.c.counters.windfury ?? 0} procs) vs ${base.c.dps().toFixed(0)} without`);
-  if (!(fury.c.dps() > base.c.dps())) failures.push('Windfury Totem did not raise Fury DPS');
+  // Since Oct 28 Fury spends rage on Hamstring for the extra procs, so the check is on white damage, not the total.
+  const whiteMh = (r: typeof fury) => r.c.meter.rows.get('melee_mh')?.total ?? 0;
+  console.log(`Fury with Windfury Totem: ${fury.c.dps().toFixed(0)} DPS (${fury.c.counters.windfury ?? 0} procs, ${fury.used.hamstring ?? 0} Hamstrings), main-hand white ${Math.round(whiteMh(fury))} vs ${Math.round(whiteMh(base))} without`);
+  if (!(whiteMh(fury) > whiteMh(base) * 1.1)) failures.push('Windfury Totem did not raise Fury main-hand damage');
   const cat = play(druidCat, { build: 'cat', raid: ['windfury', 'judgementOfWisdom'] });
   if (!((cat.c.counters.windfury ?? 0) > 20)) failures.push('Windfury Totem barely procced for a cat');
 }

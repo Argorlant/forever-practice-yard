@@ -53,17 +53,19 @@ export const DATA = {
   aimedShot: { mana: 310, cast: 2, cooldown: 6, bonus: 166 },
   multiShot: { mana: Math.round(BASE_MANA * 0.139), cast: 0, cooldown: 6, targets: 3 },   // instant since client 70425 (gs; testers fire it on the move)
   arcaneShot: { mana: 190, cooldown: 6, damage: 217, rap: 0.11 },          // RAP share: fs from beta logs (gs none)
-  // Rank 8 (gs Oct 21): rank 9 is an Ahn'Qiraj book, and raids open on 9 December. RAP: the Forever notes' 10 % over the sting (fs; gs 3 % a tick).
-  serpentSting: { mana: 230, ticks: 5, period: 3, tick: 83, rap: 0.02 },
+  // Rank 8 (gs Oct 21): rank 9 is an Ahn'Qiraj book, and raids open on 9 December. RAP: 3 % a tick (both sims since Oct 28).
+  serpentSting: { mana: 230, ticks: 5, period: 3, tick: 83, rap: 0.03 },
   sniperShot: { mana: 365, cast: 4, cooldown: 15, bonus: 295, range: 45 },
   huntersMark: { mana: 60, duration: 120, rap: 143 },   // rank 4: 143 since a server hotfix (was 71, below rank 3's 98)
   rapidFire: { mana: 100, cooldown: 300, duration: 15, haste: 0.4 },
-  aspectOfTheHawk: { mana: 120, rap: 55 },   // rank 6 (gs Oct 21): 55 in the client, rank 5 is 90; rank 7's 120 is an Ahn'Qiraj book
+  aspectOfTheHawk: { mana: 120, rap: 55 },   // rank 6 (gs Oct 21): 55 in the client (ranks 1-5 cut to 15-47 on Oct 28); rank 7's 120 is an Ahn'Qiraj book
   aspectOfTheBeast: { mana: 110, ap: 110 },
-  trueshotAura: { mana: 425, rap: 75 },
+  trueshotAura: { mana: 425, rap: 50 },   // rank 5 (ranks 1-4 cut to 15/22/30/40 on Oct 28; foreversim)
   bestialWrath: { mana: Math.round(BASE_MANA * 0.12), cooldown: 120, duration: 18, damage: 1.5 },
   intimidation: { mana: Math.round(BASE_MANA * 0.08), cooldown: 60, window: 15 },
-  summonHawk: { mana: 190, cooldown: 6, dive: 108, diveRap: 0.05, duration: 18, max: 2, swing: 2.5, swingDamage: 0.35 * 108, crit: 1.5 },
+  // Hawks from combat logs (gs Oct 27): 80 % of your RAP as attack power (128.8 per DPS), a swing of 7.1-14.3 before Unleashed
+  // Fury, half your crit plus Ferocity's, your hit, on the white melee table.
+  summonHawk: { mana: 190, cooldown: 6, dive: 108, diveRap: 0.05, duration: 18, max: 2, swing: 2.5, swingMin: 7.14, swingMax: 14.28, apShare: 0.8, apPerDps: 128.8, critShare: 0.5 },
   raptorStrike: { mana: 100, cooldown: 6, bonus: 70 },
   mongooseBite: { mana: 65, cooldown: 5, bonus: 57, window: 10, dodgeWindow: 5 },
   striderKick: { mana: Math.round(BASE_MANA * 0.0581), cooldown: 8 },

@@ -55,7 +55,11 @@ function specFor(spec: PriestSpec, base: Omit<Spec, 'className' | 'resource' | '
 }
 
 // ------------------------------------------------------------------ Shadow
-/** gs's ranked Shadow list after Oct 15 (death first); Mind Flay is channelled in full (Improved Mind Flay makes the last tick strongest). */
+/**
+ * gs's ranked Shadow list since 27 Oct: Shadow Word: Death, Inner Focus with Mind Blast, Mind Blast, Shadow Word: Pain
+ * refreshed in its last 3 s, Devouring Plague in its last 5 s, Mind Flay channelled in full (Improved Mind Flay makes
+ * the last tick strongest).
+ */
 function shadowSuggest(c: Combat): string | null {
   const t = c.target;
   if (!t || t.health <= 0) return null;
@@ -64,16 +68,17 @@ function shadowSuggest(c: Combat): string | null {
   if (tl.shadowform && !shadowform(c)) return 'shadowform';
   const healthy = c.playerHealthLocked || p.health / p.maxHealth > 0.3;
   const deathReady = ready('shadowWordDeath') && afford('shadowWordDeath') && healthy;
-  const plagueDue = !c.aura(t, 'devouringPlague') && ready('devouringPlague') && afford('devouringPlague');
-  const painDue = !c.aura(t, 'shadowWordPain') && afford('shadowWordPain');
+  const left = (id: string) => (c.aura(t, id)?.end ?? c.t) - c.t;
+  const plagueDue = left('devouringPlague') <= 5 && ready('devouringPlague') && afford('devouringPlague');
+  const painDue = left('shadowWordPain') <= 3 && c.casting?.id !== 'shadowWordPain' && afford('shadowWordPain');
   const blastReady = ready('mindBlast') && afford('mindBlast');
   // Let Mind Flay finish: its last tick is the strongest.
   if (c.channeling?.id === 'mindFlay') return null;
   if (deathReady) return 'shadowWordDeath';
-  if (plagueDue) return 'devouringPlague';
-  if (painDue) return 'shadowWordPain';
   if (tl.innerFocus && ready('innerFocus') && blastReady && p.inCombat) return 'innerFocus';
   if (blastReady) return 'mindBlast';
+  if (painDue) return 'shadowWordPain';
+  if (plagueDue) return 'devouringPlague';
   if (potion) return 'manaPotion';
   if (tl.mindFlay && afford('mindFlay')) return 'mindFlay';
   return null;

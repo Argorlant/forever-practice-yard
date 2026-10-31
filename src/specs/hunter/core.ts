@@ -195,12 +195,27 @@ export const oldestHawkLeft = (c: Combat) => {
   const left = ['hawkA', 'hawkB'].map((id) => c.aura(c.player, id)).filter(Boolean).map((a) => a!.end - c.t);
   return left.length ? Math.min(...left) : 0;
 };
+const hawkCrit = (c: Combat) => D.summonHawk.critShare * c.critChance('petAttack') + 2 * T(c).ferocity;
+const hawkMult = (c: Combat) => (1 + 0.03 * T(c).unleashedFury) * (1 + 0.01 * T(c).focusedFire) * state(c).allDamage;
+/** The dive: it always lands. */
 function hawkHit(c: Combat, u: Unit, base: number, source: string): void {
-  const t = T(c);
-  const crit = roll(c, D.summonHawk.crit + 2 * t.ferocity);
-  const amount = Math.max(1, Math.round(base * (1 + 0.03 * t.unleashedFury) * (1 + 0.01 * t.focusedFire) * state(c).allDamage
-    * (crit ? c.rules.critMultiplier : 1) * (1 - c.armorReduction(u))));
+  const crit = roll(c, hawkCrit(c));
+  const amount = Math.max(1, Math.round(base * hawkMult(c) * (crit ? c.rules.critMultiplier : 1) * (1 - c.armorReduction(u))));
   c.deal({ target: u, source, outcome: crit ? 'crit' : 'hit', school: 'physical', amount, white: false });
+}
+/** A hawk's swing: its own damage plus 80 % of your RAP, on the white melee table with your hit. */
+function hawkSwing(c: Combat, u: Unit): void {
+  const h = D.summonHawk;
+  const base = between(c, h.swingMin, h.swingMax) + ((h.apShare * c.rangedAttackPower(u)) / h.apPerDps) * h.swing;
+  let x = c.random() * 100;
+  let outcome: Outcome = 'hit';
+  if ((x -= Math.max(0, c.rules.specialMiss - c.totalHit())) < 0) outcome = 'miss';
+  else if ((x -= c.rules.dodge) < 0) outcome = 'dodge';
+  else if ((x -= c.rules.glanceChance) < 0) outcome = 'glance';
+  else if (roll(c, hawkCrit(c))) outcome = 'crit';
+  const m = outcome === 'crit' ? c.rules.critMultiplier : outcome === 'glance' ? 0.65 : 1;
+  const amount = landed(outcome) ? Math.max(1, Math.round(base * hawkMult(c) * m * (1 - c.armorReduction(u)))) : 0;
+  c.deal({ target: u, source: 'hawk', outcome, school: 'physical', amount, white: false });
 }
 
 // --------------------------------------------------------------- abilities
@@ -355,7 +370,7 @@ export const ABILITIES: Ability[] = [
       c.applyAura(c.player, {
         id: slot, name: 'Hawk', icon: 'summonHawk', duration: h.duration, period: h.swing / c.rangedHaste(),
         // Oct 15: the hawk sticks to the target you summoned it on.
-        onTick: (cc) => { if (u.health > 0) hawkHit(cc, u, h.swingDamage, 'hawk'); },
+        onTick: (cc) => { if (u.health > 0) hawkSwing(cc, u); },
       });
       c.count('hawks');
     },

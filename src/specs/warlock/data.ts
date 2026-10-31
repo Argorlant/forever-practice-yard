@@ -9,24 +9,24 @@ const SAGEBLADE = { name: 'Sageblade', type: 'sword' as const, min: 58, max: 109
 
 /**
  * gs's UI default gear (real Forever items), Orc, unbuffed, with the
- * Spellstone (+21 Shadow and Fire). Hit is gear only (Suppression adds 1 %
+ * Spellstone (+21 Shadow: Shadow only since the Oct 21 database, both sims). Hit is gear only (Suppression adds 1 %
  * per point); spell crit is gear and Intellect (Malevolence adds Shadow crit).
  */
 export const AFFLICTION_STATS: Stats = {
-  attackPower: 100, crit: 6, hit: 7.9, spellCrit: 11.9,      // Oct 15: Orc Savage +1% crit, spells too
-  spellPower: 210, spellPowerBySchool: { shadow: 15 },
+  attackPower: 100, crit: 5, hit: 7.9, spellCrit: 10.9,      // launch racials (Oct 26): no Orc Savage; Command +5 % demon damage
+  spellPower: 189, spellPowerBySchool: { shadow: 36 },
   mainHand: SAGEBLADE, offHand: null, health: 2484,
 };
 /** Shadow and Flame: the Fire pieces and the Firestone (+21 Fire, +2 % crit). */
 export const DESTRUCTION_STATS: Stats = {
-  attackPower: 100, crit: 6, hit: 6.9, spellCrit: 13.1,      // Oct 15: Orc Savage +1% crit, spells too
+  attackPower: 100, crit: 5, hit: 6.9, spellCrit: 12.1,      // launch racials (Oct 26): no Orc Savage; Command +5 % demon damage
   spellPower: 192, spellPowerBySchool: { fire: 73 },
   mainHand: { name: 'Searing Golden Blade', type: 'dagger', min: 58, max: 109, speed: 1.8 }, offHand: null, health: 2334,
 };
 /** DS/Ruin: the Affliction gear with Fel Vitality's extra mana and Demonic Embrace's health. */
 export const RUIN_STATS: Stats = { ...AFFLICTION_STATS, health: 2559 };
 /** Demonic Pact: the Affliction gear; spell power includes Demonic Knowledge's +60. */
-export const PACT_STATS: Stats = { ...AFFLICTION_STATS, spellPower: 270, spellPowerBySchool: { shadow: 15 } };
+export const PACT_STATS: Stats = { ...AFFLICTION_STATS, spellPower: 249, spellPowerBySchool: { shadow: 36 } };
 
 const BASE_MANA = 1373;
 
@@ -61,7 +61,7 @@ export const DATA = {
   manaPotion: { min: 1350, max: 2250, cooldown: 120 },
   // Demons (gs model): melee demons Str 129 / Agi 85, AP 2 x Str - 20 + 10 % of your spell power
   pet: {
-    apBase: 238, apShare: 0.1, spShare: 0.1, swing: 2, base: 113, crit: 3.27 + 85 / 20,
+    apBase: 238, apShare: 0.1, spShare: 0.1, swing: 2, base: 113, crit: 3.27 + 85 / 20, command: 1.05,
     lashOfPain: { cooldown: 12, damage: 50, coeff: 0.429 },
     firebolt: { cast: 2, gap: 0.2, min: 41.5, max: 46.5, coeff: 0.571 },
     brand: { min: 65, max: 68, coeff: 0.078 },

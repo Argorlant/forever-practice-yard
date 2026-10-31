@@ -703,50 +703,82 @@ function suggest(c: Combat): string | null {
     return null;
   }
 
+  const can = (id: string) => ready(id) && rage >= cost(id);
+  const rend = c.aura(t, 'rend');
+  const rendLeft = rend ? rend.end - c.t : 0;
+  const opWindow = !!c.aura(p, 'overpowerReady');
+  const opIn = (s: number) => c.cooldownLeft('overpower').left <= s;
+  /** The cooldowns the sims leave to Autocast: Death Wish, Bloodrage, Berserker Rage. */
+  const cooldowns = (): string | null => {
+    if (!p.inCombat) return null;
+    if (tl.deathWish && can('deathWish')) return 'deathWish';
+    if (ready('bloodrage')) return 'bloodrage';
+    if (stance === 'berserker' && ready('berserkerRage')) return 'berserkerRage';
+    return null;
+  };
+  const bs = c.aura(p, 'battleShout');
+  if (!bs && rage >= 10) return 'battleShout';
+
   if (b.rotation === 'arms') {
-    if (stance !== 'battle') return 'battleStance';
-    const bs = c.aura(p, 'battleShout');
-    if (!bs && rage >= 10) return 'battleShout';
+    // gs's Arms list since 27 Oct: Battle Stance for Rend and Overpower, Berserker Stance (Recklessness, Whirlwind) in between.
     if (c.options.sunderDuty && (!sunder || (sunder.stacks ?? 0) < 5 || sunder.end - c.t < 8) && rage >= cost('sunderArmor')) return 'sunderArmor';
-    if (ready('bloodrage') && rage < 50) return 'bloodrage';
-    if (c.targets.length > 1 && tl.sweepingStrikes && ready('sweepingStrikes') && rage >= cost('sweepingStrikes')) return 'sweepingStrikes';
-    if (ready('overpower')) return 'overpower';
-    if (!c.aura(t, 'rend') && rage >= cost('rend')) return 'rend';
-    if (exec && ready('execute')) return 'execute';
-    if (ready('mortalStrike')) return rage >= cost('mortalStrike') ? 'mortalStrike' : null;
-    if (ready('slam') && rage >= 15) return 'slam';
-    if (!hsQueued && !exec && rage >= 70) return 'heroicStrike';
-    if (tl.spearingStrike && ready('spearingStrike') && rage >= 15) return 'spearingStrike';
+    const cd = cooldowns();
+    if (cd) return cd;
+    if (c.targets.length > 1 && tl.sweepingStrikes && can('sweepingStrikes')) return 'sweepingStrikes';
+    if (stance !== 'battle' && (rendLeft <= 1.5 || (opWindow && opIn(1.5) && rage <= 45)) && ready('battleStance')) return 'battleStance';
+    if (stance !== 'berserker' && rendLeft > 6 && !opWindow && rage <= 26 && ready('berserkerStance')) return 'berserkerStance';
+    if (p.inCombat && stance === 'berserker' && ready('recklessness')) return 'recklessness';
+    if (!hsQueued && !exec && rage >= 85) return 'heroicStrike';
+    if (can('overpower')) return 'overpower';
+    if (can('mortalStrike')) return 'mortalStrike';
+    if (tl.spearingStrike && can('spearingStrike')) return 'spearingStrike';
+    if (can('slam')) return 'slam';
+    if (rendLeft <= 3 && can('rend')) return 'rend';
+    if (can('whirlwind')) return 'whirlwind';
+    if (exec && can('execute')) return 'execute';
+    // Hamstring with rage to spare; not when Mortal Strike is about to come up (our sheets have less rage than the sims').
+    if (rage >= 20 && c.cooldownLeft('mortalStrike').left >= 1.5 && can('hamstring')) return 'hamstring';
     return null;
   }
 
-  // Fury and two-hand Bloodthirst: gs's priority lists since 21 Oct.
-  const twoHand = b.rotation === 'twoHandBloodthirst';
-  const hsAt = twoHand ? 80 : 40;
-  const bs = c.aura(p, 'battleShout');
-  if (!bs && rage >= 10) return 'battleShout';
+  // Fury and two-hand Bloodthirst: gs's priority lists since 28 Oct.
   if (c.options.sunderDuty && (!sunder || (sunder.stacks ?? 0) < 5 || sunder.end - c.t < 8)) {
     return rage >= cost('sunderArmor') ? 'sunderArmor' : null;
   }
   if (p.inCombat && stance === 'berserker' && ready('recklessness')) return 'recklessness';
-  if (p.inCombat && tl.deathWish && ready('deathWish') && rage >= 10) return 'deathWish';
-  if (ready('bloodrage')) return 'bloodrage';
-  if (p.inCombat && stance === 'berserker' && ready('berserkerRage')) return 'berserkerRage';
-  // Dance for an Overpower window up to 35 rage (60 with a two-hander), in the execute phase and during Recklessness too.
-  const opWindow = !!c.aura(p, 'overpowerReady');
-  if (stance === 'berserker' && opWindow && rage <= (twoHand ? 60 : 35) && c.cooldownLeft('overpower').left === 0) return 'battleStance';
-  // In Battle Stance, Rend goes back up outside the execute phase (not with Sunder duty: those globals go to Sunder).
-  if (stance === 'battle' && !exec && !c.options.sunderDuty && !c.aura(t, 'rend') && rage >= cost('rend')) return 'rend';
-  if (stance === 'battle' && opWindow && ready('overpower')) return 'overpower';
-  if (stance !== 'berserker') return 'berserkerStance';
-  if (exec && ready('execute')) return 'execute';
-  if (ready('bloodthirst')) return rage >= cost('bloodthirst') ? 'bloodthirst' : null;
-  if (ready('whirlwind')) return rage >= cost('whirlwind') ? 'whirlwind' : null;
-  if (twoHand && ready('slam') && rage >= 50) return 'slam';
+  if (b.rotation === 'twoHandBloodthirst') {
+    const cd = cooldowns();
+    if (cd) return cd;
+    if (can('bloodthirst')) return 'bloodthirst';
+    if (stance === 'battle' && !rend && !exec && can('rend')) return 'rend';
+    if (can('overpower')) return 'overpower';
+    if (stance !== 'berserker' && !opWindow && ready('berserkerStance')) return 'berserkerStance';
+    if (can('whirlwind')) return 'whirlwind';
+    if (!rend && can('rend')) return 'rend';
+    if (exec && can('execute')) return 'execute';
+    if (stance !== 'battle' && opWindow && rage <= 80 && ready('battleStance')) return 'battleStance';
+    if (rage >= 50 && c.swingLeft('main').left >= 2.25 && can('slam')) return 'slam';
+    if (c.raid.has('windfury') && !exec && c.swingLeft('main').left >= 1 && can('hamstring')) return 'hamstring';
+    if (!hsQueued && !exec && rage >= 95) return 'heroicStrike';
+    return null;
+  }
+  if (!hsQueued && !exec && rage >= 42) return 'heroicStrike';
+  if (can('bloodthirst')) return 'bloodthirst';
+  if (can('overpower')) return 'overpower';
+  // Back to Berserker Stance unless an Overpower window is open or Rend is down (up to 75 rage) outside the execute phase.
+  if (stance !== 'berserker' && !(opWindow || (!rend && !exec && rage <= 75)) && ready('berserkerStance')) return 'berserkerStance';
+  if (exec && can('execute')) return 'execute';
+  if (can('whirlwind')) return 'whirlwind';
+  // Dance to Battle Stance for Rend (up to 30 rage) and for an Overpower window (up to 35 rage, Overpower ready within 1 s).
+  if (stance !== 'battle' && !rend && !exec && rage <= 30 && ready('battleStance')) return 'battleStance';
+  if (stance !== 'battle' && opWindow && rage <= 35 && opIn(1) && ready('battleStance')) return 'battleStance';
+  if (stance === 'battle' && !rend && !exec && can('rend')) return 'rend';
+  const cd = cooldowns();
+  if (cd) return cd;
+  if (!rend && can('rend')) return 'rend';
   // With a Windfury Totem every landed special rolls Windfury: Hamstring fills the gaps between Bloodthirst and Whirlwind.
-  if (c.raid.has('windfury') && !exec && c.cooldownLeft('bloodthirst').left >= 1.5 && c.cooldownLeft('whirlwind').left >= 1.5
-    && c.swingLeft('main').left >= 1 && rage >= cost('hamstring')) return 'hamstring';
-  if (!hsQueued && !exec && rage >= hsAt) return 'heroicStrike';
+  if (c.raid.has('windfury') && !exec && c.cooldownLeft('bloodthirst').left >= 1 && c.cooldownLeft('whirlwind').left >= 1
+    && c.swingLeft('main').left >= 0.7 && can('hamstring')) return 'hamstring';
   return null;
 }
 

@@ -90,22 +90,27 @@ function mmSuggest(c: Combat): string | null {
   const t = c.target;
   if (!t || t.health <= 0) return null;
   const tl = T(c);
-  const { p, ready, afford, mana, potion } = ctx(c);
+  const { p, ready, afford, potion } = ctx(c);
   if (!c.aura(p, 'aspectOfTheHawk')) return 'aspectOfTheHawk';
   if (tl.trueshotAura && !c.aura(p, 'trueshotAura')) return 'trueshotAura';
   if (!c.aura(t, 'huntersMark')) return 'huntersMark';
   if (!c.autoShooting && c.inRangedRange(t)) return 'autoShot';
   if (p.inCombat && ready('rapidFire')) return 'rapidFire';
-  if (!c.aura(t, 'serpentSting') && afford('serpentSting')) return 'serpentSting';
-  // Weaving (gs Oct 21): no casts at range, they would keep you out of melee; Arcane Shot and Multi-Shot fill instead.
+  const sting = (c.aura(t, 'serpentSting')?.end ?? c.t) - c.t;
+  // Weaving (gs since 27 Oct): no casts at range, they would keep you out of melee: Multi-Shot, Serpent Sting in its last 3 s, Arcane Shot.
   if (c.weaving) {
-    if (ready('arcaneShot') && afford('arcaneShot')) return 'arcaneShot';
     if (ready('multiShot') && afford('multiShot')) return 'multiShot';
+    if (sting <= 3 && afford('serpentSting')) return 'serpentSting';
+    if (ready('arcaneShot') && afford('arcaneShot')) return 'arcaneShot';
     return potion ? 'manaPotion' : null;
   }
+  // gs's ranged Marksmanship (28 Oct): Aimed Shot, Multi-Shot when Aimed Shot cannot, Serpent Sting in its last 0.5 s,
+  // Arcane Shot, Sniper Shot, with no mana gates.
   if (ready('aimedShot') && afford('aimedShot') && castFits(c, 'aimedShot')) return 'aimedShot';
-  if (tl.sniperShot && ready('sniperShot') && c.cooldownLeft('aimedShot').left >= 3.5 && mana >= 0.3 && castFits(c, 'sniperShot')) return 'sniperShot';
-  if (ready('arcaneShot') && mana >= 0.15) return 'arcaneShot';
+  if (ready('multiShot') && afford('multiShot') && !castFits(c, 'aimedShot')) return 'multiShot';
+  if (sting <= 0.5 && afford('serpentSting')) return 'serpentSting';
+  if (ready('arcaneShot') && afford('arcaneShot')) return 'arcaneShot';
+  if (tl.sniperShot && ready('sniperShot') && afford('sniperShot') && castFits(c, 'sniperShot')) return 'sniperShot';
   if (potion) return 'manaPotion';
   return null;
 }
@@ -218,19 +223,20 @@ function svSuggest(c: Combat): string | null {
   const t = c.target;
   if (!t || t.health <= 0) return null;
   const tl = T(c);
-  const { p, ready, afford, mana, potion } = ctx(c);
+  const { p, ready, afford, potion } = ctx(c);
   if (!c.aura(p, 'aspectOfTheBeast')) return 'aspectOfTheBeast';
   const mark = c.aura(t, 'huntersMark');
   if (!mark || mark.end - c.t <= 5) return 'huntersMark';
   if (!p.autoAttacking && c.inRange(t)) return 'attack';
-  if (ready('raptorStrike') && c.queuedSwing !== 'raptorStrike' && afford('raptorStrike')) return 'raptorStrike';
+  // gs's Survival list since 27 Oct (its Auto Shots between melee are left out here): Mongoose Bite, Immolation Trap
+  // when its burn is down, Strider Kick, Raptor Strike; no Wing Clip.
   if (p.inCombat && ready('rapidFire')) return 'rapidFire';
-  if (tl.striderKick && ready('striderKick') && afford('striderKick')) return 'striderKick';
   if (ready('mongooseBite') && afford('mongooseBite')) return 'mongooseBite';
+  if (!c.aura(t, 'immolationTrap') && ready('immolationTrap') && afford('immolationTrap')) return 'immolationTrap';
+  if (tl.striderKick && ready('striderKick') && afford('striderKick')) return 'striderKick';
+  if (ready('raptorStrike') && c.queuedSwing !== 'raptorStrike' && afford('raptorStrike')) return 'raptorStrike';
   if (tl.summonHawk && ready('summonHawk') && afford('summonHawk') && (hawkCount(c) < 2 || oldestHawkLeft(c) < 1)) return 'summonHawk';
-  if (ready('immolationTrap') && afford('immolationTrap')) return 'immolationTrap';
   if (potion) return 'manaPotion';
-  if (mana >= (c.raid.has('judgementOfWisdom') ? 0.4 : 0.6) && afford('wingClip')) return 'wingClip';
   return null;
 }
 

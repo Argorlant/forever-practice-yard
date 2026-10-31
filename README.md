@@ -8,9 +8,11 @@ played Forever at level 60, a DPS number would only mislead. It works with keybo
 
 **Play it online:** https://argorlant.github.io/forever-practice-yard/
 
-Up to date with the October 21 server hotfixes (client 1.60.1.70450): talent trees, builds and numbers follow the two
-sims' updates for them. Spells are at the last trainer rank (the Ahn'Qiraj books need raids, which open on 9 December),
-raid buffs too; a boss without resistances resists no spell partly; the Mage's Frost tree lost Piercing Ice.
+Up to date with the two sims' October 27-28 updates (launch racials, re-searched builds and priority lists, live
+hotfixes through client 1.60.1.70658): spells at the last trainer rank (the Ahn'Qiraj books need raids, which open on
+9 December), raid buffs too; a boss without resistances resists no spell partly; the Mage's Frost tree without Piercing
+Ice; Human Ruthless at 1 % and no Orc Savage in the race sheets. The October 30 talent tree changes (Druid, Mage,
+Paladin) are not in the sims yet, so not here either.
 > **Speculative, built on the sims.** WoW Forever's beta has closed and the game launches on 4 November 2026. The talents,
 > builds, rotations and numbers here follow the community sims ([wow-forever-sim](https://github.com/gunba/wow-forever-sim) and
 > [foreversim](https://github.com/laurencestokes/foreversim)) and our own reading of the beta, which stopped at level 30, so they
