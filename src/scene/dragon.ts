@@ -348,7 +348,14 @@ const WHELP_POSES: Record<DragonPose, string[]> = {
   asleep: ['stand'], ground: ['stand'], hover: ['stand'], fly: ['run', 'walk'], dead: ['death'],
 };
 
-/** A model of the player's own as a dragon (Onyxia's dragononyxia.m2, a dragonwhelp.m2). */
+interface WingBone { bone: THREE.Object3D; rest: THREE.Quaternion; axis: THREE.Vector3; side: 1 | -1; outer: boolean }
+const turn = new THREE.Quaternion();
+
+/**
+ * A dragon model: the yard's own (Cethiel's Dragon 3D) or one of the player's (Onyxia's dragononyxia.m2, a
+ * dragonwhelp.m2). A model with no flight loops of its own (the yard's dragon has Stand, Walk, AttackUnarmed and
+ * Death) beats its wings and bobs in code while she hovers or flies.
+ */
 export class ModelDragon implements DragonFigure {
   readonly root = new THREE.Group();
   readonly pickables: THREE.Object3D[] = [];
@@ -356,6 +363,11 @@ export class ModelDragon implements DragonFigure {
   private pose: DragonPose | null = null;
   private mouthBone: THREE.Object3D | null = null;
   private poses: Record<DragonPose, string[]>;
+  /** Wing bones beaten in code (empty: the model flies with its own loops, or is a whelp). */
+  private wings: WingBone[] = [];
+  /** 0 on the ground, 1 in the air, eased. */
+  private air = 0;
+  private time = Math.random() * 10;
 
   constructor(private model: CustomModel, ringRadius: number, whelp = false) {
     this.poses = whelp ? WHELP_POSES : MODEL_POSES;
@@ -367,6 +379,27 @@ export class ModelDragon implements DragonFigure {
     });
     this.ring = selectionRing(ringRadius);
     this.root.add(this.ring);
+    if (!whelp && !model.hasClip(['hover', 'flystand', 'fly'])) this.findWings();
+  }
+
+  /**
+   * The wing bones (wing_upper.L, wing_lower.R…; the loader drops the dot) and the axis each beats around: the
+   * body's length (+Z, the way it faces), in the bone's parent space, so a beat lifts the wing whatever its bone axes.
+   */
+  private findWings(): void {
+    const root = this.model.root;
+    root.updateMatrixWorld(true);
+    const rootInv = root.getWorldQuaternion(new THREE.Quaternion()).invert();
+    root.traverse((o) => {
+      const m = /^wing_?(upper|lower)\.?([LR])$/i.exec(o.name);
+      if (!m || !o.parent) return;
+      const parent = rootInv.clone().multiply(o.parent.getWorldQuaternion(new THREE.Quaternion()));
+      const axis = new THREE.Vector3(0, 0, 1).applyQuaternion(parent.invert()).normalize();
+      // Facing +Z, its left wing is on +X: a positive turn about +Z lifts it, a negative one lifts the right.
+      this.wings.push({ bone: o, rest: o.quaternion.clone(), axis, side: m[2].toUpperCase() === 'L' ? 1 : -1, outer: false });
+    });
+    // The outer joint hangs from another wing bone (in the yard's dragon wing_upper hangs from wing_lower).
+    for (const w of this.wings) w.outer = this.wings.some((x) => x.bone === w.bone.parent);
   }
 
   setPose(p: DragonPose): void {
@@ -397,7 +430,33 @@ export class ModelDragon implements DragonFigure {
     return this.root.localToWorld(out.set(0, this.model.height * 0.6, this.model.height * 0.5));
   }
 
-  update(dt: number): void { this.model.update(dt); }
+  update(dt: number): void {
+    // Back to rest first: the animation overwrites only the bones it keys, and a beat must not add up frame after frame.
+    for (const w of this.wings) w.bone.quaternion.copy(w.rest);
+    this.model.update(dt);
+    if (!this.wings.length) return;
+    this.time += dt;
+    const target = this.pose === 'hover' || this.pose === 'fly' ? 1 : 0;
+    this.air += (target - this.air) * Math.min(1, dt * 1.5);
+    const body = this.model.root;
+    if (this.air < 0.005) {
+      body.position.y = 0;
+      body.rotation.set(0, 0, 0);
+      return;
+    }
+    // Slower, deeper beats when she flies from spot to spot than when she hovers.
+    const phase = this.time * (this.pose === 'fly' ? 1.1 : 1.5) * Math.PI * 2;
+    const depth = this.pose === 'fly' ? 1.25 : 1;
+    for (const w of this.wings) {
+      // The outer joint follows the inner one a little late, so the wing bends through the stroke.
+      const angle = Math.sin(phase - (w.outer ? 0.8 : 0)) * (w.outer ? 0.4 : 0.6) * depth * this.air * w.side;
+      w.bone.quaternion.premultiply(turn.setFromAxisAngle(w.axis, angle));
+    }
+    // She rises on the downstroke and sways gently.
+    body.position.y = Math.sin(phase - 1.3) * this.model.height * 0.035 * this.air;
+    body.rotation.x = -Math.cos(phase - 1.3) * 0.035 * this.air;
+    body.rotation.z = Math.sin(this.time * 0.6) * 0.05 * this.air;
+  }
 
   dispose(): void {
     this.root.removeFromParent();

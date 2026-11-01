@@ -243,6 +243,9 @@ export class CustomModel {
   }
 
   /** The first animation found, by exact name, else by a name that ends with it ("HumanMale_Stand"). */
+  /** Whether it has one of these animations (exact or as a name ending). */
+  hasClip(names: string[]): boolean { return !!this.pick(names); }
+
   private pick(names: string[]): THREE.AnimationClip | null {
     for (const n of names) {
       const clip = this.clips.get(n);
