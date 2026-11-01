@@ -184,6 +184,21 @@ for (const b of warrior.builds ?? []) {
   if (missing.length) failures.push(`${b.label} never used ${missing.join(', ')}`);
   if (!(c.dps() > 100)) failures.push(`${b.label}: ${c.dps().toFixed(0)} DPS`);
 }
+// Bloodrage before the pull puts you in combat, so its 20 rage does not decay (reported: it stopped at 9 out of combat).
+{
+  const c = new Combat(warrior, { ...(warrior.defaultOptions ?? {}) });
+  const dummy: Unit = { id: 0, name: 'Dummy', level: 63, health: 1e9, maxHealth: 1e9, armor: 3731, auras: new Map(), x: 0, z: 0, facing: 0, radius: 0.5 };
+  c.targets = [dummy];
+  c.target = dummy;
+  c.player.z = -20;
+  c.reset();
+  c.use('bloodrage');
+  for (let t = 0; t < 10.5; t += 0.05) c.update(0.05);
+  const rage = c.player.resource;
+  console.log(`Bloodrage before the pull: ${rage.toFixed(1)} rage after 10 s, in combat: ${c.player.inCombat}`);
+  if (rage < 19) failures.push(`Bloodrage before the pull left ${rage.toFixed(1)} rage, expected 20`);
+  if (c.ability('charge')?.usable?.(c)) failures.push('Charge was usable during Bloodrage');
+}
 // Execute phase: a Fury warrior at 15 % health executes.
 {
   const c = new Combat(warrior, { ...(warrior.defaultOptions ?? {}) });
