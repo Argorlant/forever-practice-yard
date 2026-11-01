@@ -7,14 +7,7 @@ import { DISCLAIMER_HTML, INSPIRATION_HTML, SUPPORT_HTML } from './disclaimer';
 import { iconHtml } from './icon';
 import { load } from './storage';
 import { talentTreesHtml } from './talent-tree';
-import { classKey, mainTree } from './talents-data';
-
-/** WoW's class order and colours. */
-export const CLASSES: { name: string; color: string }[] = [
-  { name: 'Warrior', color: '#c79c6e' }, { name: 'Paladin', color: '#f58cba' }, { name: 'Hunter', color: '#abd473' },
-  { name: 'Rogue', color: '#fff569' }, { name: 'Priest', color: '#ffffff' }, { name: 'Shaman', color: '#2a8cff' },
-  { name: 'Mage', color: '#69ccf0' }, { name: 'Warlock', color: '#9482c9' }, { name: 'Druid', color: '#ff7d0a' },
-];
+import { CLASSES, classKey, mainTree, specTitle } from './talents-data';
 
 const h = (tag: string, cls = '', html = '') => {
   const el = document.createElement(tag);
@@ -76,6 +69,19 @@ export function showPicker(app: HTMLElement): void {
     planner.href = `?planner=${load<string>('fpy.planner') ?? classKey(lastSpec?.className ?? 'warrior')}`;
     planner.title = "Any class's talent trees, with the level each point comes at and what WoW Forever changed";
     root.append(planner);
+    // Each spec's page (built by tools/seo_pages.ts): what its rotation is about, its builds, and a way in for search engines.
+    const guides = h('nav', 'picker-guides', '<h2>Rotation guides</h2>');
+    const list = h('div', 'picker-guide-list');
+    for (const c of CLASSES) {
+      for (const s of SPECS.filter((x) => x.className === c.name)) {
+        const a = h('a', '', specTitle(s)) as HTMLAnchorElement;
+        a.href = `${s.id}/`;
+        a.style.color = c.color;
+        list.append(a);
+      }
+    }
+    guides.append(list);
+    root.append(guides);
     root.append(h('p', 'picker-note', INSPIRATION_HTML));
     root.append(h('p', 'picker-note', `${SUPPORT_HTML}<br>Not affiliated with or endorsed by Blizzard Entertainment.`));
   };

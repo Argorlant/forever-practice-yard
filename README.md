@@ -283,7 +283,8 @@ npm run dev
 
 Then open http://127.0.0.1:5180.
 
-- `npm run build`: type-checks and builds the static site into `dist/`.
+- `npm run build`: type-checks and builds the static site into `dist/`, then `npm run seo` (`tools/seo_pages.ts`) writes
+  one page per spec (`dist/<spec>/`: its rotation, builds and a link into the yard) and `dist/sitemap.xml` for search engines.
 - `npm test`: plays the suggested rotation headless for 5 minutes and prints DPS and a breakdown.
 - `npm run model -- <folder>`: rebuilds `public/models/human.glb` from the Quaternius downloads (or set `QUATERNIUS_DIR`; default `./downloads`).
 - `npm run icons`: downloads the ability icons into `public/icons` (names in `src/ui/wow-icons.json`,

@@ -5,7 +5,7 @@
 // link that plays the build in the practice yard.
 import type { Spec, SpecBuild } from '../engine/types';
 import { SPECS } from '../specs';
-import { CLASSES } from './picker';
+import { CLASSES } from './talents-data';
 import { iconHtml } from './icon';
 import { load, save } from './storage';
 import NOTES from './talent-notes.json';
