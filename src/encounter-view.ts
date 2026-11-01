@@ -3,12 +3,13 @@
 // lair, the simulated tank and healer, Flame Breath, the fireballs, the Deep
 // Breath's fire with its warning on the floor, the lava, her yells and emotes.
 import * as THREE from 'three';
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import type { Combat } from './engine/combat';
 import type { CharacterLook, Unit } from './engine/types';
 import { CRACKS, FIRE_LINGERS, ROOM, type OnyxiaFight, type Point, type Review, type Whelp } from './encounters/onyxia';
 import { Character } from './scene/character';
 import type { Controls } from './scene/controls';
-import type { ModelSource } from './scene/custom-model';
+import { ModelSource } from './scene/custom-model';
 import { ModelDragon, ONYXIA_LOOK, ProceduralDragon, WHELP_LOOK, type DragonFigure, type DragonPose } from './scene/dragon';
 import type { EnemyView } from './scene/enemy';
 import { Lair } from './scene/lair';
@@ -65,10 +66,27 @@ export class OnyxiaView {
   private tankSwing = 0;
   private healerCast = 0;
   private sources: { onyxia: ModelSource | null; whelp: ModelSource | null } = { onyxia: null, whelp: null };
+  /**
+   * The yard's own dragon for her and the whelps: Cethiel's Dragon 3D by Cethiel and Drummyfish (CC0,
+   * opengameart.org), black, in public/models/onyxia.glb. Until it loads (or if it fails), the dragons built in code.
+   */
+  private dragon: { source: ModelSource; length: number; height: number } | null = null;
 
   constructor(private fight: OnyxiaFight, private d: ViewDeps) {
     d.scene.add(this.lair.root);
     this.boss = this.newBoss();
+    new GLTFLoader().loadAsync(d.modelUrl.replace(/[^/]*$/, 'onyxia.glb')).then((gltf) => {
+      gltf.scene.traverse((o) => {
+        const m = o as THREE.Mesh;
+        if (!m.isMesh) return;
+        const std = m.material as THREE.MeshStandardMaterial;
+        std.roughness = 0.85;
+        std.metalness = 0;
+      });
+      const size = new THREE.Box3().setFromObject(gltf.scene).getSize(new THREE.Vector3());
+      this.dragon = { source: new ModelSource(gltf.scene, gltf.animations, false, []), length: size.z, height: size.y };
+      this.rebuild(!this.sources.onyxia, !this.sources.whelp);
+    }).catch(() => { /* the dragons built in code stay */ });
     this.healer.load(d.modelUrl, d.healerLook).then(() => {
       this.healer.setWeapons('mace', null);
       d.scene.add(this.healer.root);
@@ -93,29 +111,47 @@ export class OnyxiaView {
     this.syncEnemies();
   }
 
-  /** Models of the player's own for her and the whelps (null: the dragons built in code). */
+  /** Models of the player's own for her and the whelps (null: the yard's dragon). */
   setSources(onyxia: ModelSource | null, whelp: ModelSource | null): void {
     this.sources = { onyxia, whelp };
-    this.boss.dispose();
-    this.boss = this.newBoss();
-    this.lastPose = '';
-    for (const [w, fig] of this.whelps) {
-      fig.dispose();
-      this.whelps.set(w, this.newWhelp());
+    this.rebuild(true, true);
+  }
+
+  private rebuild(boss: boolean, whelps: boolean): void {
+    if (boss) {
+      this.boss.dispose();
+      this.boss = this.newBoss();
+      this.lastPose = '';
+    }
+    if (whelps) {
+      for (const [w, fig] of this.whelps) {
+        fig.dispose();
+        this.whelps.set(w, this.newWhelp());
+      }
     }
     this.syncEnemies();
   }
 
+  /** The yard's dragon at a length in meters (CustomModel sizes a model under 4.5 units tall as yards). */
+  private ownDragon(length: number, ring: number, whelp: boolean): DragonFigure | null {
+    const dr = this.dragon;
+    if (!dr) return null;
+    const units = dr.height > 0.4 && dr.height < 4.5 ? 0.9144 : 1.85 / dr.height;
+    return new ModelDragon(dr.source.figure(0, length / (dr.length * units)), ring, whelp);
+  }
+
   private newBoss(): DragonFigure {
     const src = this.sources.onyxia;
-    const fig = src ? new ModelDragon(src.figure(src.defaultTurns, ONYXIA_SCALE), 5) : new ProceduralDragon(ONYXIA_LENGTH, ONYXIA_LOOK);
+    const fig = src ? new ModelDragon(src.figure(src.defaultTurns, ONYXIA_SCALE), 5)
+      : this.ownDragon(ONYXIA_LENGTH, 5, false) ?? new ProceduralDragon(ONYXIA_LENGTH, ONYXIA_LOOK);
     this.d.scene.add(fig.root);
     return fig;
   }
 
   private newWhelp(): DragonFigure {
     const src = this.sources.whelp;
-    const fig = src ? new ModelDragon(src.figure(src.defaultTurns), 0.9, true) : new ProceduralDragon(WHELP_LENGTH, WHELP_LOOK);
+    const fig = src ? new ModelDragon(src.figure(src.defaultTurns), 0.9, true)
+      : this.ownDragon(WHELP_LENGTH, 0.9, true) ?? new ProceduralDragon(WHELP_LENGTH, WHELP_LOOK);
     this.d.scene.add(fig.root);
     return fig;
   }

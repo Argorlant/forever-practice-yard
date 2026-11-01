@@ -1,8 +1,10 @@
-// Dragons built in code for the Onyxia encounter (no third-party models), in
-// the yard's low-poly style: Onyxia and her whelps share the build at two
-// sizes. Poses (asleep in her bed, on the ground, hovering, flying, dead) blend
-// into each other; acts (Flame Breath, Tail Sweep, Bellowing Roar, a bite) play
-// over them. A model of the player's own can stand in (ModelDragon, below).
+// Dragons for the Onyxia encounter. The yard draws Onyxia and her whelps with
+// Cethiel's Dragon 3D (CC0, public/models/onyxia.glb) through ModelDragon,
+// below, which also takes a model of the player's own. The dragon built in
+// code (ProceduralDragon) stands in while that loads or if it fails: Onyxia and
+// her whelps share the build at two sizes. Poses (asleep in her bed, on the
+// ground, hovering, flying, dead) blend into each other; acts (Flame Breath,
+// Tail Sweep, Bellowing Roar, a bite) play over them.
 import * as THREE from 'three';
 import type { CustomModel } from './custom-model';
 import type { EnemyView } from './enemy';
@@ -361,7 +363,7 @@ export class ModelDragon implements DragonFigure {
     model.root.visible = true;
     model.root.traverse((o) => {
       if ((o as THREE.Mesh).isMesh) this.pickables.push(o);
-      if (!this.mouthBone && /_?breath$|jaw$/i.test(o.name)) this.mouthBone = o;
+      if (!this.mouthBone && /_?breath$|jaw$|^jaw_lower$/i.test(o.name)) this.mouthBone = o;
     });
     this.ring = selectionRing(ringRadius);
     this.root.add(this.ring);

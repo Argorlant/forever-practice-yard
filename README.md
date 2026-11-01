@@ -314,6 +314,12 @@ Then open http://127.0.0.1:5180.
   (elspethbado), where the idea for this yard came from, and the hunter practice by Neteyes.
 - Character model and animations: [Quaternius](https://quaternius.com), Universal Animation
   Library 1 and 2 (CC0).
+- Onyxia and her whelps (`public/models/onyxia.glb`, the black texture) and the swords and shields
+  (`public/models/weapons.glb`): [Cethiel's Dragon 3D](https://opengameart.org/content/cethiels-dragon-3d) and
+  [Cethiel's Weapons 3D](https://opengameart.org/content/cethiels-weapons-3d) by Cethiel and Drummyfish (CC0),
+  exported from their .blend files to glTF (the dragon's actions renamed Stand, Walk, AttackUnarmed and Death;
+  the weapons normalized: swords grip at the origin and blade along +Y, shields face along +Z, one unit long)
+  with `tools/blender_dragon.py` and `tools/blender_weapons.py`.
 - Ability icons © Blizzard Entertainment, used so the buttons look as they do in the game.
 - Dummy portrait: [game-icons.net](https://game-icons.net) by Lorc (CC BY 3.0).
 - Floors of your own places: [three-mesh-bvh](https://github.com/gkjohnson/three-mesh-bvh) (MIT).

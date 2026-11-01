@@ -318,6 +318,8 @@ export class SettingsDialog {
     cr.append(h('p', 'note', INSPIRATION_HTML));
     cr.append(h('p', 'note', `
       Character model and animations: <a href="https://quaternius.com" target="_blank" rel="noopener">Quaternius</a>, Universal Animation Library 1 and 2 (CC0).
+      Onyxia and her whelps, swords and shields: <a href="https://opengameart.org/content/cethiels-dragon-3d" target="_blank" rel="noopener">Cethiel's Dragon 3D</a> and
+      <a href="https://opengameart.org/content/cethiels-weapons-3d" target="_blank" rel="noopener">Cethiel's Weapons 3D</a> by Cethiel and Drummyfish (CC0).
       Ability icons © Blizzard Entertainment, used in this fan tool so the buttons look as they do in the game.
       Dummy portrait: <a href="https://game-icons.net" target="_blank" rel="noopener">game-icons.net</a> by ${ICON_AUTHORS.join(', ')} (CC BY 3.0).
       Combat formulas follow <a href="https://github.com/wowsims/classic" target="_blank" rel="noopener">WoWSims</a> (MIT) and its WoW Forever forks:

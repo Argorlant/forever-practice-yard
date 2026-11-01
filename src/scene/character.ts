@@ -5,6 +5,41 @@ import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import type { CharacterLook, WeaponType } from '../engine/types';
 
+/**
+ * Hand-painted swords and shields: Cethiel's Weapons 3D by Cethiel and Drummyfish (CC0, opengameart.org), normalized
+ * into public/models/weapons.glb (swords: grip at the origin, blade along +Y, one unit long; shields: face toward +Z,
+ * one unit tall). Maces, axes, staves and fist weapons stay built in code.
+ */
+let weaponModels: Promise<Map<string, THREE.Object3D> | null> | null = null;
+function loadWeaponModels(url: string): Promise<Map<string, THREE.Object3D> | null> {
+  weaponModels ??= new GLTFLoader().loadAsync(url).then((gltf) => {
+    const byName = new Map<string, THREE.Object3D>();
+    for (const o of gltf.scene.children) {
+      o.traverse((m) => {
+        const mesh = m as THREE.Mesh;
+        if (!mesh.isMesh) return;
+        mesh.castShadow = true;
+        // Painted, not shiny.
+        for (const mat of Array.isArray(mesh.material) ? mesh.material : [mesh.material]) {
+          const std = mat as THREE.MeshStandardMaterial;
+          std.roughness = 0.8;
+          std.metalness = 0;
+        }
+      });
+      byName.set(o.name, o);
+    }
+    return byName;
+  }).catch(() => null);
+  return weaponModels;
+}
+const SWORD_LENGTH = 0.9;
+const DAGGER_LENGTH = 0.45;
+const SHIELD_MODEL = 'shield_b';
+const SHIELD_HEIGHT = 0.55;
+/** A blue and gold broadsword in the main hand, a green blade in the off hand, the flaming greatsword for two-handers, a thin blue dagger. */
+const swordModel = (kind: WeaponType, side: 'l' | 'r', twoHand: boolean) =>
+  (kind === 'dagger' ? 'sword_i' : twoHand ? 'sword_j' : side === 'l' ? 'sword_c' : 'sword_b');
+
 /** Bones that belong to the upper-body layer. */
 const UPPER = /^(spine_0[1-3]|neck_01|Head|clavicle_|upperarm_|lowerarm_|hand_|index_|middle_|pinky_|ring_|thumb_)/;
 
@@ -79,9 +114,12 @@ export class Character {
   private rangedMode = false;
   private cloth: THREE.Material | null = null;
   private attachToBone: ((b: THREE.Object3D, build: (g: THREE.Group) => void) => THREE.Group) | null = null;
+  /** The hand-painted swords and shields, by name (null: the ones built in code). */
+  private weaponModels: Map<string, THREE.Object3D> | null = null;
 
   async load(url: string, look: CharacterLook): Promise<void> {
-    const gltf = await new GLTFLoader().loadAsync(url);
+    const [gltf, weapons] = await Promise.all([new GLTFLoader().loadAsync(url), loadWeaponModels(url.replace(/[^/]*$/, 'weapons.glb'))]);
+    this.weaponModels = weapons;
     const model = gltf.scene;
     model.traverse((o) => {
       const m = o as THREE.SkinnedMesh;
@@ -446,8 +484,20 @@ export class Character {
     for (const w of this.weapons) w.visible = !this.rangedMode;
   }
 
-  /** A kite shield strapped to the left forearm, its face out of the back of the arm. */
+  /** A shield strapped to the left forearm, its face out of the back of the arm. */
   private buildShield(g: THREE.Group): void {
+    const model = this.weaponModels?.get(SHIELD_MODEL);
+    if (model) {
+      // Normalized like the kite shield below: face toward +Z, top toward +Y, one unit tall.
+      const s = model.clone();
+      s.scale.setScalar(SHIELD_HEIGHT);
+      const holder = new THREE.Group();
+      holder.add(s);
+      holder.rotation.set(-Math.PI / 2, 0, -Math.PI / 2);
+      holder.position.set(0.15, 0.07, 0);
+      g.add(holder);
+      return;
+    }
     const { metal } = this.mats;
     const shape = new THREE.Shape();
     shape.moveTo(0, 0.26);
@@ -482,8 +532,28 @@ export class Character {
     const side3 = new THREE.Vector3().crossVectors(blade, palm).normalize();
     const basis = new THREE.Matrix4().makeBasis(side3, blade, new THREE.Vector3().crossVectors(side3, blade));
 
-    const { metal, grip, gold } = this.mats;
     const w = new THREE.Group();
+    const model = kind === 'sword' || kind === 'dagger' ? this.weaponModels?.get(swordModel(kind, side, scale > 1)) : null;
+    if (model) {
+      // Normalized: the grip at the origin, the blade along +Y, one unit long.
+      const piece = model.clone();
+      piece.scale.setScalar(kind === 'dagger' ? DAGGER_LENGTH : SWORD_LENGTH);
+      w.add(piece);
+    } else {
+      this.buildCodeWeapon(w, kind);
+    }
+
+    w.scale.setScalar(scale);
+    w.quaternion.setFromRotationMatrix(basis);
+    // Grip center: between index and pinky knuckles, pushed into the palm.
+    w.position.copy(index.clone().add(pinky).multiplyScalar(0.46).add(palm.clone().multiplyScalar(0.03)));
+    hand.add(w);
+    return w;
+  }
+
+  /** A weapon built in code (maces, axes, staves, fist weapons; swords and daggers when the models are missing). */
+  private buildCodeWeapon(w: THREE.Group, kind: WeaponType): void {
+    const { metal, grip, gold } = this.mats;
     const add = (m: THREE.Mesh, y: number) => { m.position.y = y; m.castShadow = true; w.add(m); return m; };
     // The handle sits in the fist; +Y points out of the thumb side.
     add(new THREE.Mesh(new THREE.CylinderGeometry(0.014, 0.016, kind === 'mace' || kind === 'axe' ? 0.34 : 0.12, 8), grip),
@@ -542,13 +612,6 @@ export class Character {
       }
       add(new THREE.Mesh(new THREE.BoxGeometry(0.09, 0.05, 0.02), gold), 0.05);
     }
-
-    w.scale.setScalar(scale);
-    w.quaternion.setFromRotationMatrix(basis);
-    // Grip center: between index and pinky knuckles, pushed into the palm.
-    w.position.copy(index.clone().add(pinky).multiplyScalar(0.46).add(palm.clone().multiplyScalar(0.03)));
-    hand.add(w);
-    return w;
   }
 
   // ------------------------------------------------------------- animation
