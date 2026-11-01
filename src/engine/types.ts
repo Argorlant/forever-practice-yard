@@ -89,6 +89,8 @@ export interface Aura {
   haste?: number;
   /** Resource regeneration multiplier (e.g. Adrenaline Rush doubles energy). */
   regen?: number;
+  /** On the player: no out-of-combat resource decay while active (Bloodrage before a pull). */
+  pauseDecay?: boolean;
   /** Movement speed multiplier (Sprint, Stealth). */
   speed?: number;
   /** On the player: extra attack power (Battle Shout). */

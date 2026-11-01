@@ -324,17 +324,17 @@ const abilities: Ability[] = [
   {
     id: 'bloodrage', name: 'Bloodrage', icon: 'bloodrage', gcd: 0, target: 'self',
     cooldown: D.bloodrage.cooldown,
-    description: (c) => `Gain ${Math.round(D.bloodrage.now * (1 + 0.25 * T(c).improvedBloodrage))} rage now and ${Math.round(D.bloodrage.overTime * (1 + 0.25 * T(c).improvedBloodrage))} over ${D.bloodrage.duration} sec, at the cost of some health. It puts you in combat while it lasts, as in Classic: the rage does not decay, and you cannot Charge.`,
+    description: (c) => `Gain ${Math.round(D.bloodrage.now * (1 + 0.25 * T(c).improvedBloodrage))} rage now and ${Math.round(D.bloodrage.overTime * (1 + 0.25 * T(c).improvedBloodrage))} over ${D.bloodrage.duration} sec, at the cost of some health. Before a pull its rage does not decay while it lasts, and you can still Charge.`,
     use: (c) => {
       const mult = 1 + 0.25 * T(c).improvedBloodrage;
-      // Classic: Bloodrage puts you in combat for its duration, so out-of-combat rage decay does not eat it before a pull.
-      c.enterCombat();
       gainRage(c, D.bloodrage.now * mult);
       c.count('bloodrageRage', D.bloodrage.now * mult);
       if (!c.playerHealthLocked) c.player.health = Math.max(1, c.player.health - 338);
       c.applyAura(c.player, {
-        id: 'bloodrage', name: 'Bloodrage', icon: 'bloodrage', duration: D.bloodrage.duration, period: 1,
-        onTick: (cc) => { cc.enterCombat(); gainRage(cc, (D.bloodrage.overTime / D.bloodrage.duration) * mult); },
+        // Forever (players' report): Bloodrage before a pull does not put you in combat, so Bloodrage -> Battle Shout ->
+        // Charge works, and its rage is not lost to out-of-combat decay while it ticks.
+        id: 'bloodrage', name: 'Bloodrage', icon: 'bloodrage', duration: D.bloodrage.duration, period: 1, pauseDecay: true,
+        onTick: (cc) => { gainRage(cc, (D.bloodrage.overTime / D.bloodrage.duration) * mult); },
       });
     },
   },

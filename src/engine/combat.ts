@@ -432,7 +432,7 @@ export class Combat {
       for (const id of this.trackedTargetAuras) if (this.target?.auras.has(id)) this.count(`uptime:target:${id}`, dt);
     }
     this.addResource(gain);
-    if (!p.inCombat && p.decayPerSecond) this.addResource(-p.decayPerSecond * dt);
+    if (!p.inCombat && p.decayPerSecond && ![...p.auras.values()].some((a) => a.pauseDecay)) this.addResource(-p.decayPerSecond * dt);
     let buffMana = 0;
     for (const a of p.auras.values()) if (a.manaPerSecond) buffMana += a.manaPerSecond;
     if (p.maxMana) p.mana = Math.min(p.maxMana, p.mana + (p.manaPerSecond + buffMana) * dt);

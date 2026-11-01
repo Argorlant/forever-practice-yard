@@ -184,7 +184,8 @@ for (const b of warrior.builds ?? []) {
   if (missing.length) failures.push(`${b.label} never used ${missing.join(', ')}`);
   if (!(c.dps() > 100)) failures.push(`${b.label}: ${c.dps().toFixed(0)} DPS`);
 }
-// Bloodrage before the pull puts you in combat, so its 20 rage does not decay (reported: it stopped at 9 out of combat).
+// Bloodrage before the pull: its rage does not decay while it ticks (reported: it stopped at 9 out of combat), and in
+// Forever it does not put you in combat, so Charge still works (Bloodrage -> Battle Shout -> Charge).
 {
   const c = new Combat(warrior, { ...(warrior.defaultOptions ?? {}) });
   const dummy: Unit = { id: 0, name: 'Dummy', level: 63, health: 1e9, maxHealth: 1e9, armor: 3731, auras: new Map(), x: 0, z: 0, facing: 0, radius: 0.5 };
@@ -197,7 +198,7 @@ for (const b of warrior.builds ?? []) {
   const rage = c.player.resource;
   console.log(`Bloodrage before the pull: ${rage.toFixed(1)} rage after 10 s, in combat: ${c.player.inCombat}`);
   if (rage < 19) failures.push(`Bloodrage before the pull left ${rage.toFixed(1)} rage, expected 20`);
-  if (c.ability('charge')?.usable?.(c)) failures.push('Charge was usable during Bloodrage');
+  if (c.player.inCombat || !c.ability('charge')?.usable?.(c)) failures.push('Bloodrage before the pull blocked Charge');
 }
 // Execute phase: a Fury warrior at 15 % health executes.
 {
