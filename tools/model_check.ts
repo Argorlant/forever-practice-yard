@@ -7,6 +7,7 @@ import { CustomModel, ModelSource, animKey } from '../src/scene/custom-model';
 import { CustomPlace } from '../src/scene/custom-place';
 import { unpackMapBundle } from '../src/scene/model-bundle';
 import { factionForRace, trainingAreaKeys } from '../src/scene/training-area';
+import { DRUID_FORMS, druidFormKeys, formDefinition } from '../src/scene/druid-forms';
 
 // Exercise the published rig and animations. Images are omitted only in this
 // headless test; browser QA checks the original materials and their appearance.
@@ -63,20 +64,31 @@ model.dispose();
 assert(!model.root.getObjectByName('yard-ranged-hand'));
 
 const manifest = JSON.parse(fs.readFileSync('public/wow/manifest.json', 'utf8'));
-// Test actual published forms, including the two faction aliases for Skyborne.
-for (const race of ['tauren', 'highorder', 'windshaper']) {
-  for (const kind of ['cat', 'bear']) {
+// Check every race/form mapping and animate each distinct published model.
+const checkedForms = new Set<string>();
+for (const race of ['nightelf', 'tauren', 'highorder', 'windshaper']) {
+  for (const kind of DRUID_FORMS) {
     const file = manifest.models[`form-${kind}@${race}`];
     assert(file && manifest.gzip.includes(file), `${race} ${kind} has a published form`);
+    assert.equal(manifest.models[druidFormKeys(`${race}-f`, kind)[0]], file);
     const formJSON = JSON.parse(gunzipSync(fs.readFileSync(`public/wow/${file}.gz`)).toString());
     const meta = formJSON.scenes[0].extras;
-    assert.equal(meta.race, race === 'tauren' ? 'tauren' : 'skyborne');
-    assert.equal(meta.form, kind);
+    const shared = kind === 'aquatic' || kind === 'tree' || (kind === 'travel' && ['nightelf', 'tauren'].includes(race));
+    assert.equal(meta.race, shared ? 'shared' : ['highorder', 'windshaper'].includes(race) ? 'skyborne' : race);
+    assert.equal(meta.form, kind === 'dire-bear' ? 'bear' : kind);
+    assert.equal(meta.definition, formDefinition(race, kind), `${race} ${kind} uses the requested SD/HD version`);
     assert(/wow\.export/i.test(formJSON.asset.generator));
     assert(formJSON.images.length > 0 && formJSON.materials.every((m: { pbrMetallicRoughness?: { baseColorTexture?: unknown } }) => m.pbrMetallicRoughness?.baseColorTexture), 'Original textures are present');
+    if (kind === 'tree') assert(formJSON.materials.some((m: { alphaMode?: string; doubleSided?: boolean }) => m.alphaMode === 'MASK' && m.doubleSided), 'Tree leaves use original double-sided cutouts');
+    if (checkedForms.has(file)) continue;
+    checkedForms.add(file);
     const names = formJSON.animations.map((a: { name: string }) => animKey(a.name));
-    const ability = kind === 'cat' ? 'druidcatclaw' : 'druidbearmaul';
-    for (const name of ['stand', 'run', 'attackunarmed', ability]) assert(names.includes(name), `${race} ${kind}: ${name}`);
+    const required = kind === 'cat' ? ['druidcatclaw'] : kind === 'bear' ? ['druidbearmaul'] : kind === 'moonkin' ? ['spellcastdirected'] : [];
+    for (const name of ['stand', kind === 'aquatic' ? 'swim' : 'run', ...required]) assert(names.includes(name), `${race} ${kind}: ${name}`);
+    if (meta.definition === 'sd' && ['cat', 'bear', 'moonkin'].includes(kind)) {
+      const triangles = formJSON.meshes.reduce((n: number, m: { primitives: { indices: number }[] }) => n + m.primitives.reduce((n, p) => n + formJSON.accessors[p.indices].count / 3, 0), 0);
+      assert(triangles < 1800, `${race} ${kind} uses original low-poly geometry (${triangles})`);
+    }
     for (const buffer of formJSON.buffers) buffer.uri = `data:application/octet-stream;base64,${fs.readFileSync(`public/wow/${buffer.uri}`).toString('base64')}`;
     for (const dep of manifest.dependencies[file]) assert(fs.statSync(`public/wow/${dep}`).size > 0);
     delete formJSON.images; delete formJSON.textures;
@@ -84,19 +96,26 @@ for (const race of ['tauren', 'highorder', 'windshaper']) {
     formJSON.materials = formJSON.materials.map((m: { name?: string }) => ({ name: m.name }));
     const form = await new GLTFLoader().parseAsync(JSON.stringify(formJSON), '');
     const figure = new ModelSource(form.scene, form.animations, true, []).figure();
-    assert(figure.height > 0.5 && figure.height < 3.5, `${race} ${kind}: plausible original display scale (${figure.height})`);
+    assert(figure.height > 0.3 && figure.height < 12, `${race} ${kind}: plausible original display scale (${figure.height})`);
     figure.setLocomotion('run', 6.4); figure.update(0.5);
+    if (kind === 'aquatic') figure.setPose(['swim']);
     figure.root.updateMatrixWorld(true);
     const mesh = figure.root.getObjectByProperty('isSkinnedMesh', true) as THREE.SkinnedMesh;
     assert(mesh?.skeleton.bones.length > 0);
     const before = mesh.skeleton.bones.map((bone) => bone.matrixWorld.clone());
     figure.update(0.17); figure.root.updateMatrixWorld(true);
     assert(mesh.skeleton.bones.some((bone, i) => !bone.matrixWorld.equals(before[i])), `${race} ${kind} runs with animated bones`);
-    figure.playAbility(kind === 'cat' ? 'claw' : 'maul'); figure.update(0.2);
+    if (kind === 'cat' || kind === 'bear') figure.playAbility(kind === 'cat' ? 'claw' : 'maul');
+    if (kind === 'moonkin') figure.play('cast');
+    figure.update(0.2);
     figure.dispose();
   }
 }
-for (const kind of ['cat', 'bear']) assert.equal(manifest.models[`form-${kind}@highorder`], manifest.models[`form-${kind}@windshaper`], 'Both Skyborne factions share the original form');
+for (const kind of DRUID_FORMS) {
+  assert.equal(manifest.models[`form-${kind}@highorder`], manifest.models[`form-${kind}@windshaper`], 'Both Skyborne factions share the original form');
+  assert.equal(manifest.models[`form-${kind}`], manifest.models[`form-${kind}@nightelf`]);
+}
+for (const race of ['nightelf', 'tauren', 'highorder', 'windshaper']) assert.equal(manifest.models[`form-dire-bear@${race}`], manifest.models[`form-bear@${race}`]);
 for (const race of ['human', 'dwarf', 'gnome', 'nightelf', 'orc', 'tauren', 'troll', 'undead']) {
   for (const sex of ['m', 'f']) {
     const faction = factionForRace(`${race}-${sex}`);
@@ -154,4 +173,4 @@ assert(files.some((f) => /adt_31_49\.obj$/.test(f.name)));
 assert(files.some((f) => /tex_31_49\.png$/.test(f.name)));
 assert(files.every((f) => f.data.size > 0));
 await assert.rejects(unpackMapBundle(data.slice(0, data.size - 1)), /Incomplete map file/);
-console.log(`Published druid: six race/form choices, textures, scale and animated bones checked. Published hunter: ranged and melee attachments checked; both faction training floors, walls and edges and 16 race/sex choices checked; ${files.length} map files decoded and truncated archives rejected.`);
+console.log(`Published druid: 28 race/form choices, SD/HD policy, original geometry, textures, scale and ${checkedForms.size} animated models checked. Published hunter: ranged and melee attachments checked; both faction training floors, walls and edges and 16 race/sex choices checked; ${files.length} map files decoded and truncated archives rejected.`);

@@ -113,6 +113,16 @@ export async function loadModelSource(files: ModelFile[]): Promise<ModelSource> 
   manager.onError = (url) => { lost.push(fileName(url)); };
   try {
     const gltf = await new GLTFLoader(manager).loadAsync(urls.get(main.name.toLowerCase())!);
+    gltf.scene.traverse((object) => {
+      const mesh = object as THREE.Mesh;
+      if (!mesh.isMesh) return;
+      for (const material of Array.isArray(mesh.material) ? mesh.material : [mesh.material]) {
+        if (![3, 4].includes(material.userData.wowBlendMode)) continue;
+        material.transparent = true;
+        material.blending = THREE.AdditiveBlending;
+        material.depthWrite = false;
+      }
+    });
     return new ModelSource(gltf.scene, gltf.animations, /wow\.export/i.test(String(gltf.asset?.generator ?? '')), [...new Set(lost)]);
   } finally {
     for (const u of urls.values()) URL.revokeObjectURL(u);

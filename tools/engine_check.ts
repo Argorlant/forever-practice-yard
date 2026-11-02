@@ -370,6 +370,13 @@ for (const sp of [druidCat, druidBear, druidBalance]) {
 }
 // Balance: Wrath 1.5 s, Starfire 3.0 s and 2.5 s with an Eclipse charge; most Starfires use one.
 {
+  const form = new Combat(druidBalance, { ...druidBalance.defaultOptions, build: 'balance' });
+  if (druidBalance.form?.(form) !== 'moonkin') failures.push('The Moonkin talent starts in its visible form');
+  form.use('moonkinForm');
+  if (druidBalance.form?.(form) !== null) failures.push('Leaving Moonkin returns to the humanoid');
+  form.update(2);
+  form.use('moonkinForm');
+  if (druidBalance.form?.(form) !== 'moonkin') failures.push('Entering Moonkin restores its visible form');
   const r = play(druidBalance, { build: 'moonkin', seconds: 120 });
   const c = r.c;
   c.removeAura(c.player, 'naturesGrace');

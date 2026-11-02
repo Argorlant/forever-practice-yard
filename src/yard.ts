@@ -4,6 +4,7 @@ import * as THREE from 'three';
 import { Combat } from './engine/combat';
 import type { Unit, Weapon } from './engine/types';
 import { Beast, RACE_FORMS } from './scene/beast';
+import { DRUID_FORMS, FORM_NAMES, druidFormKeys, type DruidForm } from './scene/druid-forms';
 import { Character, type Locomotion } from './scene/character';
 import { CustomModel } from './scene/custom-model';
 import { CustomPlace } from './scene/custom-place';
@@ -134,6 +135,10 @@ const START_Z = controls.z;
 const FENCE = controls.arenaRadius;
 const character = new Character();
 world.scene.add(character.root);
+let previewForm: DruidForm | null = null;
+let formSelect: HTMLSelectElement | null = null;
+let formStatus: HTMLElement | null = null;
+const initialDruidForm = spec.id === 'druid-cat' ? 'cat' : spec.id === 'druid-bear' ? 'bear' : 'moonkin';
 // Druid forms: animal models shown instead of the humanoid.
 const beasts: { cat?: Beast; bear?: Beast } = {};
 for (const kind of ['cat', 'bear'] as const) {
@@ -230,18 +235,15 @@ function localPlayerKeys(race: string | null): string[] {
   const who = race ? `@${race}` : '';
   return [`${spec.id}:${tree}${who}`, `${spec.id}${who}`];
 }
-const ownForms: { cat?: OwnModel; bear?: OwnModel } = {};
-for (const kind of ['cat', 'bear'] as const) {
-  if (!spec.forms?.[kind]) continue;
+const ownForms: Partial<Record<DruidForm, OwnModel>> = {};
+for (const kind of DRUID_FORMS) {
+  if (spec.className !== 'Druid') continue;
   ownForms[kind] = new OwnModel({
-    key: `form-${kind}`, title: kind === 'cat' ? 'Cat Form' : 'Bear Form', kind: 'figure', moments: ['stand', 'run', 'attack', 'jump'],
-    hint: `Models tab: ${CODE(`creature/druid${kind}/druid${kind}.m2`)} (Tauren: ${CODE(`druid${kind}tauren.m2`)}), then Export GLB.`,
+    key: `form-${kind}`, title: FORM_NAMES[kind], kind: 'figure', moments: ['stand', 'run', 'attack', 'jump'],
+    hint: 'The published form follows your race: SD for Night Elf and Tauren; Skyborne keeps HD where SD is unavailable. You can import a replacement GLB with animations.',
+    later: kind !== initialDruidForm,
     raceOnly: true,
-    // The published form is the Night Elf's; another race has its own, or the one drawn in code.
-    localKeys: async () => {
-      const race = (await currentRace())?.split('-')[0];
-      return !race || race === 'nightelf' ? [`form-${kind}@nightelf`, `form-${kind}`] : [`form-${kind}@${race}`];
-    },
+    localKeys: async () => druidFormKeys(await currentRace(), kind),
   });
 }
 void paintBeasts();
@@ -271,7 +273,7 @@ const fightSlots = [ownLair, ownOnyxia, ownWhelp];
 const ownSlots = [ownPlayer, ...Object.values(ownForms), ownDummy, ownYard, ...fightSlots];
 /** The copies drawn now: yours, else null for the yard's own. */
 let ownCharacter: CustomModel | null = null;
-const ownForm: { cat?: CustomModel | null; bear?: CustomModel | null } = {};
+const ownForm: Partial<Record<DruidForm, CustomModel | null>> = {};
 let place: CustomPlace | null = null;
 
 /** A fresh copy of a slot's model, hidden until it is the one in use; the old copy goes. */
@@ -288,8 +290,8 @@ ownPlayer.onChange = () => {
   dressOwn();
   if (!ownCharacter) void prepareFallback().catch((err) => console.error(err));
 };
-for (const [kind, slot] of Object.entries(ownForms) as ['cat' | 'bear', OwnModel][]) {
-  slot.onChange = () => { ownForm[kind] = figureOf(slot, ownForm[kind]); };
+for (const [kind, slot] of Object.entries(ownForms) as [DruidForm, OwnModel][]) {
+  slot.onChange = () => { ownForm[kind] = figureOf(slot, ownForm[kind]); updateFormStatus(); };
 }
 
 /** The floor under (x, z): flat in the yard, the place's own floors in yours. */
@@ -314,10 +316,20 @@ totems.ground = floorNear;
 
 /** The model that stands for the player right now. */
 const avatar = () => {
-  const form = spec.form?.(combat) ?? null;
-  if (form) return ownForm[form] || beasts[form] || character;
+  const form = previewForm ?? spec.form?.(combat) ?? null;
+  if (form) return ownForm[form] || (form === 'cat' || form === 'bear' ? beasts[form] : null) || ownCharacter || character;
   return ownCharacter || character;
 };
+
+function updateFormStatus(): void {
+  if (!formStatus) return;
+  const form = previewForm ?? spec.form?.(combat) ?? null;
+  const definition = form && ownForms[form]?.source?.scene.userData.definition;
+  const detail = form ? `${FORM_NAMES[form]} · ${definition === 'hd' ? 'HD (Skyborne SD unavailable)' : definition === 'sd' ? 'SD' : 'model unavailable'}`
+    : spec.id === 'druid-balance' && !combat.ability('moonkinForm')?.usable?.(combat) ? 'Humanoid · Moonkin requires its talent; preview is available' : 'Humanoid';
+  const text = previewForm ? `Preview · practice paused. ${detail}.${previewForm === 'tree' ? ' Client model only; no healing simulation.' : previewForm === 'aquatic' ? ' Model preview on land; no swimming simulation.' : ''}` : `Practice · ${detail}`;
+  if (formStatus.textContent !== text) formStatus.textContent = text;
+}
 
 // What you fight: the practice dummies, or an encounter's boss and adds (src/encounter-view.ts fills it then).
 const dummies: { dummy: EnemyView; unit: Unit }[] = [];
@@ -531,6 +543,7 @@ function placeAtStart(): void {
 
 /** The pull: she wakes; with you as the tank she swings at you. */
 function startFight(): void {
+  if (previewForm) return;
   if (!fight || fight.phase) return;
   fight.start();
   if (!fight.tankBot) {
@@ -613,11 +626,43 @@ const hud = new Hud(app, combat, prefs.bar, {
       save(LOCAL_RACE, sel.value);
       sel.blur();
       sel.disabled = true;
-      await whileLoading('Loading your character and training area…', Promise.all([ownPlayer.refreshLocal(), ownYard.refreshLocal(), ...Object.values(ownForms).map((slot) => slot.refreshLocal()), paintBeasts()]));
+      if (formSelect) formSelect.disabled = true;
+      await whileLoading('Loading your character and training area…', Promise.all([ownPlayer.refreshLocal(), ownYard.refreshLocal(), ...Object.values(ownForms).filter((slot) => !slot.loading).map((slot) => slot.refreshLocal()), paintBeasts()]));
       sel.disabled = false;
+      if (formSelect) formSelect.disabled = false;
+      updateFormStatus();
     });
     hud.root.querySelector('.hud-right')?.prepend(sel);
   });
+}
+if (spec.className === 'Druid') {
+  const panel = document.createElement('div');
+  panel.className = 'druid-form-picker';
+  const label = document.createElement('label');
+  label.textContent = 'Druid forms';
+  formSelect = document.createElement('select');
+  formSelect.title = 'Druid form preview';
+  formSelect.append(new Option('Practice form (automatic)', ''));
+  for (const kind of DRUID_FORMS) formSelect.append(new Option(FORM_NAMES[kind], kind));
+  formStatus = document.createElement('p');
+  formStatus.setAttribute('role', 'status');
+  label.append(formSelect);
+  panel.append(label, formStatus);
+  hud.root.append(panel);
+  formSelect.addEventListener('change', async () => {
+    previewForm = formSelect!.value as DruidForm || null;
+    pullTimers.forEach(clearTimeout); pullTimers = [];
+    hud.showCountdown('');
+    formSelect!.blur();
+    formSelect!.disabled = true;
+    if (previewForm) {
+      const slot = ownForms[previewForm]!;
+      await whileLoading(`Loading ${FORM_NAMES[previewForm]}…`, slot.start().then(() => slot.refreshLocal()));
+    }
+    formSelect!.disabled = false;
+    updateFormStatus();
+  });
+  updateFormStatus();
 }
 /** The bar changed on the screen (drag, spellbook, Keys): save it and keep Settings in step. */
 function barChanged(): void {
@@ -691,6 +736,7 @@ function rebuildHudBindings(): void {
 }
 
 function startPull(): void {
+  if (previewForm) { hud.showError('Return to Practice form to resume combat.'); return; }
   pullTimers.forEach(clearTimeout);
   pullTimers = [];
   for (let i = 10; i >= 1; i--) {
@@ -705,6 +751,7 @@ function startPull(): void {
 
 // --------------------------------------------------------------- input
 function pressSlot(slot: number): void {
+  if (previewForm) { hud.showError('Return to Practice form to resume combat.'); return; }
   const id = prefs.bar[slot]?.id;
   if (!id || !slotShown(slot, prefs.barRows)) return;
   hud.flash(slot);
@@ -772,7 +819,7 @@ controls.onClick = (x, y, button) => {
   for (const d of dummies) {
     if (raycaster.intersectObjects(d.dummy.pickables, false).length) {
       select(d.unit);
-      if (button === 2) combat.startAutoAttack();
+      if (button === 2 && !previewForm) combat.startAutoAttack();
       return;
     }
   }
@@ -987,9 +1034,9 @@ function locomotion(moving: boolean, backwards: boolean, airborne: boolean, aimi
 function frame(): void {
   const dt = Math.min(0.1, clock.getDelta());
   if (switchingModels) { requestAnimationFrame(frame); return; }
-  elapsed += dt;
+  if (!previewForm) elapsed += dt;
   const move = controls.update(dt);
-  if (dash) {
+  if (dash && !previewForm) {
     dash.t = Math.min(1, dash.t + dt / 0.25);
     controls.x = dash.fromX + (dash.toX - dash.fromX) * dash.t;
     controls.z = dash.fromZ + (dash.toZ - dash.fromZ) * dash.t;
@@ -1005,8 +1052,8 @@ function frame(): void {
       dummy.root.rotation.y = facing;
     }
   }
-  combat.update(dt);
-  if (fight) {
+  if (!previewForm) combat.update(dt);
+  if (fight && !previewForm) {
     fight.update(dt);
     // Her body is in the way on the ground; in the air you walk under her.
     const b = fight.boss;
@@ -1014,14 +1061,15 @@ function frame(): void {
   }
 
   const active = avatar();
-  for (const a of [character, ownCharacter, ownForm.cat, ownForm.bear, beasts.cat, beasts.bear]) if (a) a.root.visible = a === active;
+  for (const a of [character, ownCharacter, ...Object.values(ownForm), beasts.cat, beasts.bear]) if (a) a.root.visible = a === active;
   active.root.position.set(controls.x, controls.y, controls.z);
   active.root.rotation.y = controls.facing;
   active.setBodyYaw(move.moving ? move.bodyYaw : 0);
   const aiming = shooting();
   character.setRangedMode(aiming);
   ownCharacter?.setRangedMode(aiming);
-  active.setLocomotion(locomotion(move.moving, move.backwards, move.airborne, aiming), move.backwards ? -move.speed : move.speed);
+  active.setLocomotion(previewForm ? move.moving ? 'run' : 'idle' : locomotion(move.moving, move.backwards, move.airborne, aiming), move.backwards ? -move.speed : move.speed);
+  if (active instanceof CustomModel) active.setPose(previewForm === 'aquatic' ? [move.moving ? 'swim' : 'swimidle'] : null);
   active.update(dt);
   if (fightView) fightView.update(dt, elapsed);
   else for (const d of dummies) d.dummy.update(dt, elapsed);
@@ -1032,6 +1080,7 @@ function frame(): void {
   if (companion) updatePet(dt);
   world.update(dt, elapsed);
   hud.update();
+  updateFormStatus();
   floaters.update();
   world.renderer.render(world.scene, world.camera);
   requestAnimationFrame(frame);
@@ -1062,7 +1111,7 @@ function prepareFallback(): Promise<void> {
 }
 
 showLoading('Loading your character and training area…');
-Promise.all([...ownSlots.filter((slot) => fight || !fightSlots.includes(slot)).map((slot) => slot.ready), companionReady, totemsReady]).then(async () => {
+Promise.all([...ownSlots.filter((slot) => !slot.slot.later || (fight && fightSlots.includes(slot))).map((slot) => slot.ready), companionReady, totemsReady]).then(async () => {
   // The very first rendered frame already has the WoW character, dummy, map
   // and companion. Load the mannequin only when a custom character is absent
   // or the player explicitly switches it off.

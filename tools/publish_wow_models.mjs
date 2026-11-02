@@ -17,8 +17,12 @@ const source = path.resolve(process.argv.slice(2).find((arg) => !arg.startsWith(
 const output = path.resolve('public/wow');
 const io = new NodeIO().registerExtensions(ALL_EXTENSIONS);
 const allModels = JSON.parse(await fs.readFile(path.join(source, 'yard-models.json'), 'utf8'));
-const selection = formsOnly ? Object.fromEntries(Object.entries(allModels).filter(([key]) => /^form-(cat|bear)@(tauren|highorder|windshaper)$/.test(key))) : allModels;
-if (formsOnly && Object.keys(selection).length !== 6) throw new Error('Expected Cat and Bear exports for Tauren, High Order and Windshaper.');
+const selection = formsOnly ? Object.fromEntries(Object.entries(allModels).filter(([key]) => /^form-(cat|bear|dire-bear|moonkin|travel|aquatic|tree)(@(nightelf|tauren|highorder|windshaper))?$/.test(key))) : allModels;
+if (formsOnly) for (const form of ['cat', 'bear', 'dire-bear', 'moonkin', 'travel', 'aquatic', 'tree']) {
+  for (const race of ['nightelf', 'tauren', 'highorder', 'windshaper']) {
+    if (!selection[`form-${form}@${race}`]) throw new Error(`Missing ${race} ${form} export.`);
+  }
+}
 const manifest = mapsOnly || formsOnly ? JSON.parse(await fs.readFile(path.join(output, 'manifest.json'), 'utf8'))
   : { models: { ...selection }, dependencies: {}, maps: {}, archives: {}, gzip: [], revision: '' };
 if (formsOnly) Object.assign(manifest.models, selection);
@@ -123,6 +127,13 @@ for (const map of [...new Set(Object.values(selection).filter((v) => v.startsWit
     originalBytes += bytes.length;
     await write(name, bytes);
   }
+}
+if (formsOnly) {
+  const active = new Set(Object.values(manifest.models));
+  for (const name of Object.keys(manifest.dependencies)) {
+    if (name.startsWith('druid-forms/') && !active.has(name)) delete manifest.dependencies[name];
+  }
+  manifest.gzip = manifest.gzip.filter((name) => !name.startsWith('druid-forms/') || active.has(name));
 }
 manifest.revision = '';
 manifest.revision = createHash('sha256').update(JSON.stringify(manifest)).digest('hex').slice(0, 16);

@@ -273,7 +273,7 @@ export interface Spec {
   /** Draw the combo point pips (rogues). */
   comboPoints?: boolean;
   /** Druid forms: which animal model to show right now (null: the humanoid). */
-  form?: (c: Combat) => 'cat' | 'bear' | null;
+  form?: (c: Combat) => 'cat' | 'bear' | 'moonkin' | null;
   forms?: { cat?: BeastLookSpec; bear?: BeastLookSpec };
   /** Turn on the attacking dummy by default (tank builds). */
   tank?: boolean;

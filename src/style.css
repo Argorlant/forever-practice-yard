@@ -497,3 +497,8 @@ img.wow-icon { width: 100%; height: 100%; display: block; object-fit: cover; tra
 .disclaimer-box { max-width: 760px; margin: 0 auto 24px; padding: 12px 16px; border: 1px solid var(--gold-dim); border-radius: 8px;
   background: rgba(40, 30, 12, .55); color: var(--muted); font-size: 13px; line-height: 1.5; }
 .disclaimer-box b, .disclaimer b { color: var(--ink); }
+.druid-form-picker { position: absolute; left: 14px; top: 286px; width: 186px; padding: 9px; border: 1px solid #8a7347; border-radius: 5px; background: #17150fdf; color: #e8dcc3; pointer-events: auto; font-size: 12px; }
+.druid-form-picker label { display: grid; gap: 6px; }
+.druid-form-picker select { width: 100%; min-height: 32px; color: #f1e4c9; background: #292318; border: 1px solid #786442; border-radius: 3px; }
+.druid-form-picker p { margin: 7px 0 0; line-height: 1.4; }
+@media (max-width: 700px) { .druid-form-picker { left: 8px; top: 250px; width: 150px; font-size: 11px; padding: 6px; } }

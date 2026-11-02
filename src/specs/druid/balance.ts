@@ -311,6 +311,7 @@ export const druidBalance: Spec = {
   className: 'Druid',
   specName: 'Balance',
   resource: 'mana',
+  form: (c) => c.aura(c.player, 'moonkinForm') ? 'moonkin' : null,
   abilities,
   stats: BALANCE_STATS,
   rules: BOSS_RULES,
