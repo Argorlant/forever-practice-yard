@@ -11,12 +11,17 @@ import { dedup } from '@gltf-transform/functions';
 import { prepareMapBundle } from './map_bundle.mjs';
 
 const mapsOnly = process.argv.includes('--maps-only');
-const source = path.resolve(process.argv.slice(2).find((arg) => arg !== '--maps-only') ?? path.join(os.homedir(), 'wow.export'));
+const formsOnly = process.argv.includes('--forms-only');
+if (mapsOnly && formsOnly) throw new Error('Choose --maps-only or --forms-only.');
+const source = path.resolve(process.argv.slice(2).find((arg) => !arg.startsWith('--')) ?? path.join(os.homedir(), 'wow.export'));
 const output = path.resolve('public/wow');
 const io = new NodeIO().registerExtensions(ALL_EXTENSIONS);
-const selection = JSON.parse(await fs.readFile(path.join(source, 'yard-models.json'), 'utf8'));
-const manifest = mapsOnly ? JSON.parse(await fs.readFile(path.join(output, 'manifest.json'), 'utf8'))
+const allModels = JSON.parse(await fs.readFile(path.join(source, 'yard-models.json'), 'utf8'));
+const selection = formsOnly ? Object.fromEntries(Object.entries(allModels).filter(([key]) => /^form-(cat|bear)@(tauren|highorder|windshaper)$/.test(key))) : allModels;
+if (formsOnly && Object.keys(selection).length !== 6) throw new Error('Expected Cat and Bear exports for Tauren, High Order and Windshaper.');
+const manifest = mapsOnly || formsOnly ? JSON.parse(await fs.readFile(path.join(output, 'manifest.json'), 'utf8'))
   : { models: { ...selection }, dependencies: {}, maps: {}, archives: {}, gzip: [], revision: '' };
+if (formsOnly) Object.assign(manifest.models, selection);
 manifest.archives ??= {};
 const written = new Set();
 let originalBytes = 0;
@@ -89,7 +94,7 @@ for (const file of mapsOnly ? [] : [...new Set(Object.values(selection).filter((
   const name = file.replace(/\.glb$/i, '.gltf');
   const compact = Buffer.from(JSON.stringify(json));
   await write(`${name}.gz`, gzipSync(compact));
-  manifest.gzip.push(name);
+  if (!manifest.gzip.includes(name)) manifest.gzip.push(name);
   manifest.dependencies[name] = [...new Set(deps)];
   for (const key of Object.keys(manifest.models)) {
     if (manifest.models[key] === file) manifest.models[key] = name;

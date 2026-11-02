@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { gunzipSync } from 'node:zlib';
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
-import { CustomModel, ModelSource } from '../src/scene/custom-model';
+import { CustomModel, ModelSource, animKey } from '../src/scene/custom-model';
 import { CustomPlace } from '../src/scene/custom-place';
 import { unpackMapBundle } from '../src/scene/model-bundle';
 import { factionForRace, trainingAreaKeys } from '../src/scene/training-area';
@@ -63,6 +63,40 @@ model.dispose();
 assert(!model.root.getObjectByName('yard-ranged-hand'));
 
 const manifest = JSON.parse(fs.readFileSync('public/wow/manifest.json', 'utf8'));
+// Test actual published forms, including the two faction aliases for Skyborne.
+for (const race of ['tauren', 'highorder', 'windshaper']) {
+  for (const kind of ['cat', 'bear']) {
+    const file = manifest.models[`form-${kind}@${race}`];
+    assert(file && manifest.gzip.includes(file), `${race} ${kind} has a published form`);
+    const formJSON = JSON.parse(gunzipSync(fs.readFileSync(`public/wow/${file}.gz`)).toString());
+    const meta = formJSON.scenes[0].extras;
+    assert.equal(meta.race, race === 'tauren' ? 'tauren' : 'skyborne');
+    assert.equal(meta.form, kind);
+    assert(/wow\.export/i.test(formJSON.asset.generator));
+    assert(formJSON.images.length > 0 && formJSON.materials.every((m: { pbrMetallicRoughness?: { baseColorTexture?: unknown } }) => m.pbrMetallicRoughness?.baseColorTexture), 'Original textures are present');
+    const names = formJSON.animations.map((a: { name: string }) => animKey(a.name));
+    const ability = kind === 'cat' ? 'druidcatclaw' : 'druidbearmaul';
+    for (const name of ['stand', 'run', 'attackunarmed', ability]) assert(names.includes(name), `${race} ${kind}: ${name}`);
+    for (const buffer of formJSON.buffers) buffer.uri = `data:application/octet-stream;base64,${fs.readFileSync(`public/wow/${buffer.uri}`).toString('base64')}`;
+    for (const dep of manifest.dependencies[file]) assert(fs.statSync(`public/wow/${dep}`).size > 0);
+    delete formJSON.images; delete formJSON.textures;
+    delete formJSON.extensionsUsed; delete formJSON.extensionsRequired;
+    formJSON.materials = formJSON.materials.map((m: { name?: string }) => ({ name: m.name }));
+    const form = await new GLTFLoader().parseAsync(JSON.stringify(formJSON), '');
+    const figure = new ModelSource(form.scene, form.animations, true, []).figure();
+    assert(figure.height > 0.5 && figure.height < 3.5, `${race} ${kind}: plausible original display scale (${figure.height})`);
+    figure.setLocomotion('run', 6.4); figure.update(0.5);
+    figure.root.updateMatrixWorld(true);
+    const mesh = figure.root.getObjectByProperty('isSkinnedMesh', true) as THREE.SkinnedMesh;
+    assert(mesh?.skeleton.bones.length > 0);
+    const before = mesh.skeleton.bones.map((bone) => bone.matrixWorld.clone());
+    figure.update(0.17); figure.root.updateMatrixWorld(true);
+    assert(mesh.skeleton.bones.some((bone, i) => !bone.matrixWorld.equals(before[i])), `${race} ${kind} runs with animated bones`);
+    figure.playAbility(kind === 'cat' ? 'claw' : 'maul'); figure.update(0.2);
+    figure.dispose();
+  }
+}
+for (const kind of ['cat', 'bear']) assert.equal(manifest.models[`form-${kind}@highorder`], manifest.models[`form-${kind}@windshaper`], 'Both Skyborne factions share the original form');
 for (const race of ['human', 'dwarf', 'gnome', 'nightelf', 'orc', 'tauren', 'troll', 'undead']) {
   for (const sex of ['m', 'f']) {
     const faction = factionForRace(`${race}-${sex}`);
@@ -120,4 +154,4 @@ assert(files.some((f) => /adt_31_49\.obj$/.test(f.name)));
 assert(files.some((f) => /tex_31_49\.png$/.test(f.name)));
 assert(files.every((f) => f.data.size > 0));
 await assert.rejects(unpackMapBundle(data.slice(0, data.size - 1)), /Incomplete map file/);
-console.log(`Published hunter: ranged and melee attachments checked; both faction training floors, walls and edges and 16 race/sex choices checked; ${files.length} map files decoded and truncated archives rejected.`);
+console.log(`Published druid: six race/form choices, textures, scale and animated bones checked. Published hunter: ranged and melee attachments checked; both faction training floors, walls and edges and 16 race/sex choices checked; ${files.length} map files decoded and truncated archives rejected.`);

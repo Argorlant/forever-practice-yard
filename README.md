@@ -271,13 +271,16 @@ browser (IndexedDB): imports by visitors are never uploaded or shared. The owner
 warlock's demon (`minion:imp`), a totem (`totem:searingTotem`) and the raid at Onyxia (`raid:tank`, `raid:healer`,
 `raid:whelpTank`). Your character goes per spec, talent tree and race (`hunter-bm@nightelf-f`, `warrior:Fury@human-m`), and
 `@races:hunter` with `@default:hunter` fill a menu of races at the top right. A druid's forms go per race (`form-cat@tauren`, `form-bear@highorder`, plain `form-cat` for the
-Night Elf); a race with none gets forms drawn in code. A zone is `map:` and the folders holding
+Night Elf). Cat and Bear are published for Night Elf, Tauren and both Skyborne factions; the latter share the
+original Blue appearances from the installed Forever client. A race with none gets forms drawn in code. See
+`research/druid_forms.md` for exact source IDs and preparation. A zone is `map:` and the folders holding
 its files (`map:maps,world,tileset`). To update the online selection, run `npm run export:wow` (optionally followed by
 `-- <export-folder>`), then build and deploy. This prepares `public/wow/manifest.json`, compressed model descriptions,
 shared binary resources and map files. Ordinary builds use these prepared assets and do not read the machine's export folder.
 The published map uses one compressed archive containing only its referenced models and textures; terrain textures are
 prepared at the same 2048px size already used by the renderer. `npm run export:wow -- --maps-only` refreshes that archive
-without reprocessing the character exports. Personal map anchors and rotation are kept when the hosted assets update.
+without reprocessing the character exports. `npm run export:wow -- --forms-only` publishes only the six Tauren/Skyborne
+Cat/Bear keys from the local selection. Personal map anchors and rotation are kept when the hosted assets update.
 The default faction areas are smaller selected WMO exports, prepared with
 `node tools/prepare_training_area.mjs <export.glb> alliance` (or `horde`). See `research/training_areas.md` for source groups.
 
