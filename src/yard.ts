@@ -247,6 +247,8 @@ for (const [kind, slot] of Object.entries(ownForms) as ['cat' | 'bear', OwnModel
 /** The floor under (x, z): flat in the yard, the place's own floors in yours. */
 const groundY = (x: number, z: number, y = 0) => place?.groundAt(x, z, y) ?? 0;
 controls.ground = groundY;
+controls.canStep = (x, z, y, toX, toZ) => place?.canStep(x, z, y, toX, toZ) ?? true;
+controls.clearance = (from, dir, far) => place?.clearance(from, dir, far) ?? far;
 
 /** The model that stands for the player right now. */
 const avatar = () => {

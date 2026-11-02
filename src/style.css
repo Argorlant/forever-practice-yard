@@ -311,6 +311,11 @@ img.wow-icon { width: 100%; height: 100%; display: block; object-fit: cover; tra
 .joystick .knob { position: absolute; left: 50%; top: 50%; width: 48px; height: 48px; margin: -24px; border-radius: 50%; background: rgba(216,178,90,.5); border: 1px solid var(--gold); }
 @media (pointer: coarse) { .joystick { display: block; } }
 
+/* No room beside the target frame: what you fight stacks on the right, above the rotation panel. */
+@media (max-width: 1180px) {
+  .hud-right { flex-wrap: wrap; justify-content: flex-end; width: 150px; }
+  .meter { top: 116px; }
+}
 @media (max-width: 720px) {
   :root { --slot: 42px; }
   .meter { top: auto; bottom: 230px; right: 8px; width: 170px; font-size: 11px; }
@@ -318,19 +323,22 @@ img.wow-icon { width: 100%; height: 100%; display: block; object-fit: cover; tra
   .target-frame { grid-template-columns: 40px 170px; top: 56px; }
   .target-portrait { width: 40px; height: 40px; }
   /* The buttons wrap before the target count on the right. */
-  .hud-left { flex-direction: row; flex-wrap: wrap; left: 8px; right: 112px; top: 8px; gap: 6px; }
+  .hud-left { flex-direction: row; flex-wrap: wrap; left: 8px; right: 118px; top: 8px; gap: 6px; }
   .hud-btn { min-width: 0; padding: 6px 10px; font-size: 13px; }
-  .hud-right { right: 8px; top: 8px; }
+  .hud-right { right: 8px; top: 8px; width: 102px; }
   .hud-right span { display: none; }
+  .fight-select { width: 100%; }
   .keys-grid { grid-template-columns: 1fr; }
   .joystick { bottom: 210px; }
+}
+/* A narrow screen: the target frame goes below the buttons and what you fight. */
+@media (max-width: 460px) {
+  .target-frame { top: 108px; }
 }
 @media (max-width: 420px) {
   :root { --slot: 38px; }
   .bottom { bottom: 8px; }
-  /* Two rows of buttons on a phone: the target frame goes below them. */
   .hud-btn { padding: 5px 8px; font-size: 12px; }
-  .target-frame { top: 78px; }
 }
 
 /* ------------------------------------------------------------ first screen */

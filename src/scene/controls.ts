@@ -23,6 +23,9 @@ const JUMP_SPEED = 7.28;
 const GRAVITY = 17.6;
 const ARENA_RADIUS = 14.2;
 const PLAYER_RADIUS = 0.35;
+/** How far the camera keeps from a wall behind you, and the closest it comes to your head. */
+const CAMERA_MARGIN = 0.25;
+const CAMERA_CLOSEST = 0.5;
 
 export interface MoveState {
   moving: boolean;
@@ -38,6 +41,8 @@ export class Controls {
   camYaw = 0;           // camera offset from the facing
   camPitch = 0.32;
   camDist = 6.5;
+  /** How far back the camera stands now: camDist, or less with a wall behind you. */
+  private camRoom = 6.5;
   private keys = new Set<string>();
   private lmb = false;
   private rmb = false;
@@ -54,6 +59,10 @@ export class Controls {
   arenaRadius = ARENA_RADIUS;
   /** The floor under (x, z) for someone at height y: flat at 0 in the yard; a place of your own has its own floors. */
   ground: (x: number, z: number, y: number) => number = () => 0;
+  /** Whether a step is free: a place of your own has walls, and edges where its floors end. */
+  canStep: (x: number, z: number, y: number, toX: number, toZ: number) => boolean = () => true;
+  /** How far a line from your head runs before it meets something, up to `far`. */
+  clearance: (from: THREE.Vector3, dir: THREE.Vector3, far: number) => number = (_from, _dir, far) => far;
   /** The floor under you, updated every frame. */
   private floor = 0;
   /** Thrown by a blow (Tail Sweep): a velocity that dies down. */
@@ -187,6 +196,7 @@ export class Controls {
     }
 
     this.facing += turn * TURN * dt;
+    const fromX = this.x, fromZ = this.z;
     const moving = Math.hypot(fwd, strafe) > 0.05;
     // While moving, the camera swings back behind the character.
     if (moving && !this.lmb) this.camYaw *= Math.max(0, 1 - dt * 2.5);
@@ -226,6 +236,7 @@ export class Controls {
       const d = Math.hypot(dx, dz), min = o.r + PLAYER_RADIUS;
       if (d < min && d > 1e-4) { this.x = o.x + (dx / d) * min; this.z = o.z + (dz / d) * min; }
     }
+    this.stopAtWalls(fromX, fromZ);
     // Jump and fall; on the ground, follow it up steps and down slopes (a drop of more than a step is a fall).
     this.floor = this.ground(this.x, this.z, this.y);
     const grounded = this.vy <= 0 && this.y - this.floor < 0.35;
@@ -242,15 +253,31 @@ export class Controls {
     return { moving, backwards: fwd < -0.05, speed, airborne: this.y > this.floor + 0.02, bodyYaw };
   }
 
-  private placeCamera(_dt: number): void {
+  /** A wall or an edge stops the step; along a wall it slides. */
+  private stopAtWalls(fromX: number, fromZ: number): void {
+    const { x, y, z } = this;
+    if (this.canStep(fromX, fromZ, y, x, z)) return;
+    if (this.canStep(fromX, fromZ, y, x, fromZ)) this.z = fromZ;
+    else if (this.canStep(fromX, fromZ, y, fromX, z)) this.x = fromX;
+    else { this.x = fromX; this.z = fromZ; }
+  }
+
+  private placeCamera(dt: number): void {
     const yaw = this.facing + this.camYaw;
     const target = new THREE.Vector3(this.x, this.y + 1.55, this.z);
     const horiz = Math.cos(this.camPitch) * this.camDist;
-    this.camera.position.set(
+    const back = new THREE.Vector3(
       target.x - Math.sin(yaw) * horiz,
       Math.max(this.floor + 0.3, target.y + Math.sin(this.camPitch) * this.camDist),
       target.z - Math.cos(yaw) * horiz,
-    );
+    ).sub(target);
+    const far = back.length();
+    back.normalize();
+    const free = this.clearance(target, back, far);
+    const room = free < far ? free - CAMERA_MARGIN : far;
+    // In front of a wall at once, and easing back out so a passing pillar does not make it jump.
+    this.camRoom = room < this.camRoom ? room : Math.min(room, this.camRoom + dt * 12);
+    this.camera.position.copy(target).addScaledVector(back, Math.max(CAMERA_CLOSEST, this.camRoom));
     this.camera.lookAt(target);
   }
 }

@@ -7,6 +7,17 @@ import type { ModelSource } from './custom-model';
 
 /** How high a floor can be above your feet and still be stepped onto (stairs, ramps). */
 const STEP = 1.2;
+/** How far you keep from a wall or an edge. */
+const BODY = 0.35;
+/** How upright a surface's normal must be to stand on it (about 50 degrees of slope), and below which it is a wall. */
+const WALKABLE = 0.64;
+const WALL = 0.7;
+const DOWN = new THREE.Vector3(0, -1, 0);
+
+/** How upright the surface a line hit is: 1 for a floor or a ceiling, 0 for a wall. */
+function upright(hit: THREE.Intersection): number {
+  return Math.abs(hit.face!.normal.clone().transformDirection(hit.object.matrixWorld).y);
+}
 
 export class CustomPlace {
   readonly root = new THREE.Group();
@@ -95,16 +106,49 @@ export class CustomPlace {
     this.root.updateMatrixWorld(true);
   }
 
-  private hit(origin: THREE.Vector3, far: number): THREE.Vector3 | null {
-    this.ray.set(origin, new THREE.Vector3(0, -1, 0));
+  /** The nearest thing along a line through the place. */
+  private cast(origin: THREE.Vector3, dir: THREE.Vector3, far: number): THREE.Intersection | null {
+    this.ray.set(origin, dir);
     this.ray.far = far;
-    const hits = this.ray.intersectObjects(this.floors, false);
-    return hits.length ? hits[0].point : null;
+    return this.ray.intersectObjects(this.floors, false)[0] ?? null;
+  }
+
+  private hit(origin: THREE.Vector3, far: number): THREE.Vector3 | null {
+    return this.cast(origin, DOWN, far)?.point ?? null;
+  }
+
+  private under(x: number, z: number, y: number): THREE.Intersection | null {
+    return this.cast(new THREE.Vector3(x, y + STEP, z), DOWN, STEP + 40);
   }
 
   /** The floor under (x, z) that someone standing at height y can reach, or null over the void. */
   groundAt(x: number, z: number, y: number): number | null {
-    return this.hit(new THREE.Vector3(x, y + STEP, z), STEP + 40)?.y ?? null;
+    return this.under(x, z, y)?.point.y ?? null;
+  }
+
+  /**
+   * Whether someone at height y can walk from (x, z) to (toX, toZ): no wall in the way, and a floor to land on
+   * that is not too steep and no further down than they can step back up. A building on the yard's grass stays
+   * open as before, and someone off the floors or on a cliff can always walk away.
+   */
+  canStep(x: number, z: number, y: number, toX: number, toZ: number): boolean {
+    if (!this.hasGround) return true;
+    const len = Math.hypot(toX - x, toZ - z);
+    if (len < 1e-6) return true;
+    const dir = new THREE.Vector3((toX - x) / len, 0, (toZ - z) / len);
+    // Just above what can be stepped onto, so stairs and ramps are not walls.
+    const wall = this.cast(new THREE.Vector3(x, y + STEP + 0.05, z), dir, len + BODY);
+    if (wall && upright(wall) < WALL) return false;
+    const here = this.under(x, z, y);
+    if (!here || upright(here) < WALKABLE) return true;
+    // A crack between two floors is no edge: nothing just ahead, and nothing beyond it.
+    const next = this.under(toX + dir.x * BODY, toZ + dir.z * BODY, y) ?? this.under(toX + dir.x * BODY * 2, toZ + dir.z * BODY * 2, y);
+    return !!next && upright(next) >= WALKABLE && here.point.y - next.point.y <= STEP;
+  }
+
+  /** How far a line from `from` runs before it meets something, up to `far`. */
+  clearance(from: THREE.Vector3, dir: THREE.Vector3, far: number): number {
+    return this.cast(from, dir, far)?.distance ?? far;
   }
 
   /** Makes the floor under (x, z) the yard's center, where the dummies stand. Returns the new anchor. */

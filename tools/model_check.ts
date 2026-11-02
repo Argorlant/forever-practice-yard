@@ -85,6 +85,20 @@ for (const [x, z] of [[0, 0], [-2.8, 0], [2.8, 0], [0, -12 * 0.9144]]) {
   assert.notEqual(height, null, `Training floor exists at ${x}, ${z}`);
   assert(Math.abs(height!) < 1.2, `Training floor stays level at ${x}, ${z}`);
 }
+// Run straight out from the dummies, a player's step at a time: always on a floor, and never further down than a step.
+for (let turn = 0; turn < 8; turn++) {
+  const dx = Math.sin(turn * Math.PI / 4) * 0.2, dz = Math.cos(turn * Math.PI / 4) * 0.2;
+  let x = 0, z = -3.2, y = place.groundAt(x, z, 0)!;
+  for (let i = 0; i < 1500 && place.canStep(x, z, y, x + dx, z + dz); i++) {
+    x += dx; z += dz;
+    const floor = place.groundAt(x, z, y);
+    assert.notEqual(floor, null, `A ${faction} run stays on a floor at ${x}, ${z}`);
+    assert(y - floor! <= 1.2, `A ${faction} run does not fall at ${x}, ${z}`);
+    y = floor!;
+  }
+  // Stormwind's courtyard has walls all around.
+  if (faction === 'alliance') assert(Math.hypot(x, z) < 45, `Walls stop an Alliance run at ${x}, ${z}`);
+}
 place.dispose();
 }
 const archive = Object.values(manifest.archives)[0];
@@ -94,4 +108,4 @@ assert(files.some((f) => /adt_31_49\.obj$/.test(f.name)));
 assert(files.some((f) => /tex_31_49\.png$/.test(f.name)));
 assert(files.every((f) => f.data.size > 0));
 await assert.rejects(unpackMapBundle(data.slice(0, data.size - 1)), /Incomplete map file/);
-console.log(`Published hunter: ranged and melee attachments checked; both faction training floors and 16 race/sex choices checked; ${files.length} map files decoded and truncated archives rejected.`);
+console.log(`Published hunter: ranged and melee attachments checked; both faction training floors, walls and edges and 16 race/sex choices checked; ${files.length} map files decoded and truncated archives rejected.`);

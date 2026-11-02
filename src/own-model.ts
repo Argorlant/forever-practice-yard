@@ -158,6 +158,9 @@ export function localSource(key: string): Promise<ModelSource | null> {
 /** A button the yard adds to a slot while its model is on ("Put the dummy here"). */
 export interface SlotAction { label: string; title: string; run(): void }
 
+/** What a visitor imported, as opposed to the published selection (with `npm run dev`, yard-models.json comes first). */
+const isPersonal = (m: StoredModel | null): boolean => !!m && !m.label.startsWith('hosted:') && !import.meta.env.DEV;
+
 export class OwnModel {
   /** Settles after the saved/hosted model is built and its onChange has run. */
   readonly ready: Promise<void>;
@@ -187,8 +190,7 @@ export class OwnModel {
     const file = await localFile(keys);
     const name = file ? await modelLabel(file) : null;
     // Already kept in this browser (with its anchor): a zone's files are not fetched again.
-    const personal = kept && !kept.label.startsWith('hosted:') && !import.meta.env.DEV;
-    const local = name && kept?.label !== name && !personal ? await localModel(keys).catch((err) => {
+    const local = name && kept?.label !== name && !isPersonal(kept) ? await localModel(keys).catch((err) => {
       console.error(err);
       return null;
     }) : null;
@@ -217,8 +219,8 @@ export class OwnModel {
     if (!this.slot.localKeys) return;
     const file = await localFile(await this.slot.localKeys());
     if (!file || await modelLabel(file) === this.localFile) return;
-    // A deliberate race/build change replaces the currently selected figure.
-    if (!import.meta.env.DEV && this.slot.kind === 'figure') await deleteModel(this.storageKey);
+    // A character the visitor imported stays; only the published one follows the race and the build.
+    if (this.slot.kind === 'figure' && isPersonal(this.stored)) return;
     this.busy = true;
     this.draw();
     await this.restore();
@@ -322,6 +324,8 @@ export class OwnModel {
 
   private async remove(): Promise<void> {
     await deleteModel(this.storageKey);
+    // A place imported before each faction had its own is kept under the slot's key too, and would come back.
+    if (this.storageKey !== this.slot.key && (await getModel(this.slot.key))?.label === this.stored?.label) await deleteModel(this.slot.key);
     this.source?.dispose();
     this.source = null;
     this.stored = null;

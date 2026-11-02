@@ -250,7 +250,9 @@ GLB from the arrow next to its Export button:
   Stormwind is left out (too big for a browser), and only the files the zone uses are kept. For a building, an arena or
   a raid room, export a WMO from the Models tab as GLB, such as `stranglegladiatorarena.wmo` (the Gurubashi Arena).
   You walk on the ground and the floors (stairs and ramps too); where a building has none, such as an arena pit that is
-  the map's ground, the grass stands in. Walk to a spot and press Put the dummy here to set the dummies there.
+  the map's ground, the grass stands in. In a place with its own ground, walls, cliffs, big drops and the end of its
+  floors stop you, and the camera stays on your side of a wall. Walk to a spot and press Put the dummy here to set the
+  dummies there.
 - **Onyxia's lair:** `world/wmo/dungeon/kl_onyxiaslair/kl_onyxiaslair.wmo`, drawn for the Onyxia fight only: the yard
   stays around the dummies. Without it, the fight happens in your yard.
 
