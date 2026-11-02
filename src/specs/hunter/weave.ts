@@ -1,7 +1,7 @@
-// Melee weaving for ranged hunters (an optional advanced mode), really ranged
-// weaving: use the ranged cooldowns at range, step through the dead zone into
-// melee, press what you can (Raptor Strike, Immolation Trap, Mongoose Bite,
-// Strider Kick), and step back out before the next windup. The engine runs both
+// Melee weaving, really ranged weaving: use the ranged cooldowns at range, step
+// through the dead zone into melee, press what you can (Raptor Strike, Immolation
+// Trap, Mongoose Bite, Strider Kick), and step back out before the next windup.
+// Any hunter build can do it; the optional helper plans the trips. The engine runs both
 // autos (Combat.weaving) and applies the chosen Auto Shot reset rule; this
 // file gives the cues, the glow in melee, the range rings and the review.
 // Timing and value: research/hunter_forever.md → Melee weaving.
@@ -12,16 +12,19 @@ import type { Hit, SettingField } from '../../engine/types';
 /** Running speed, 7 yards per second. */
 const RUN = 7 * YARD;
 
-interface WeaveState { lastShot: number; lastMelee: number; leaving: boolean }
+interface WeaveState { lastShot: number; lastMelee: number; leaving: boolean; advised: boolean }
 const states = new WeakMap<Combat, WeaveState>();
 const state = (c: Combat): WeaveState => {
   let s = states.get(c);
-  if (!s) states.set(c, (s = { lastShot: -Infinity, lastMelee: -Infinity, leaving: false }));
+  if (!s) states.set(c, (s = { lastShot: -Infinity, lastMelee: -Infinity, leaving: false, advised: false }));
   return s;
 };
 
+/** The weaving helper is on: the rotation and the cues plan trips into melee. */
+export const weaveAdvised = (c: Combat): boolean => state(c).advised;
+
 export const WEAVE_OPTIONS: SettingField[] = [
-  { key: 'meleeWeaving', name: 'Melee weaving (advanced): Auto Shot and your melee swing run together; step in between shots for a swing or Raptor Strike', kind: 'toggle' },
+  { key: 'meleeWeaving', name: 'Weaving helper (advanced): the rotation and the cues plan your trips into melee. You can step in on any build without it', kind: 'toggle' },
   {
     key: 'autoShotReset', name: 'Melee weaving: what a melee swing does to Auto Shot', kind: 'choice',
     choices: [
@@ -32,13 +35,12 @@ export const WEAVE_OPTIONS: SettingField[] = [
   },
 ];
 
-/** Turns the mode on for ranged builds and keeps track of shots and swings. */
+/** Lets any hunter step in and out (both autos run and the distance picks which one fires), and keeps track of shots and swings. */
 export function setupWeaving(c: Combat, melee: boolean): void {
-  states.set(c, { lastShot: -Infinity, lastMelee: -Infinity, leaving: false });
-  c.weaving = !melee && !!c.options.meleeWeaving;
+  states.set(c, { lastShot: -Infinity, lastMelee: -Infinity, leaving: false, advised: !melee && !!c.options.meleeWeaving });
+  c.weaving = true;
   const rule = String(c.options.autoShotReset ?? 'classic');
   c.autoShotReset = rule === 'beta' || rule === 'wrath' ? rule : 'classic';
-  if (!c.weaving) return;
   c.afterDamage.push((h: Hit) => {
     const s = state(c);
     if (h.source === 'autoShot') s.lastShot = c.t;
@@ -66,8 +68,9 @@ const raptorReady = (c: Combat, within = 0) => c.cooldownLeft('raptorStrike').le
 function gcdAttack(c: Combat, within = 0): string | null {
   for (const id of ['immolationTrap', 'mongooseBite', 'striderKick']) {
     const a = c.ability(id);
+    if (!a || a.requirements?.(c, c.target)) continue;
     if (id === 'immolationTrap' && c.target && c.aura(c.target, 'immolationTrap')) continue;
-    if (a && c.cooldownLeft(id).left <= within && (a.usable?.(c) ?? true) && c.cost(a) <= c.player.resource) return id;
+    if (c.cooldownLeft(id).left <= within && (a.usable?.(c) ?? true) && c.cost(a) <= c.player.resource) return id;
   }
   return null;
 }
@@ -100,10 +103,13 @@ export function weaveCue(c: Combat, atRange: (c: Combat) => string | null): { te
   }
   // Through the dead zone without turning back halfway.
   if (!c.inRangedRange(u)) {
+    // Without the helper the trip in is your own idea: only the way back out gets a cue.
+    if (!s.advised) return s.leaving ? stepOut : null;
     if (late || (!raptorReady(c, travelIn) && !gcdAttack(c, travelIn))) s.leaving = true;
     return s.leaving ? stepOut : stepIn;
   }
   s.leaving = false;
+  if (!s.advised) return null;
 
   // At range: the ranged cooldowns first, then a trip if there is something to press and it fits before the next windup.
   if (c.windup || c.casting || c.channeling || atRange(c)) return null;
@@ -133,8 +139,8 @@ export function weaveRings(c: Combat): { radius: number; color: number }[] {
 }
 
 export function weaveRows(c: Combat, rows: { label: string; value: string; good?: boolean }[]): void {
-  if (!c.weaving) return;
   const k = c.counters;
+  if (!state(c).advised && !k.weaveRaptor && !k.weaveWhite) return;
   const time = Math.max(1, k.combatTime ?? 0);
   const w = c.stats.ranged;
   const avgShot = (c.meter.rows.get('autoShot')?.total ?? 0) / Math.max(1, k.autoShots ?? 0);

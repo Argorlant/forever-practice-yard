@@ -229,7 +229,7 @@ export const ABILITIES: Ability[] = [
   {
     id: 'attack', name: 'Attack', icon: 'melee', gcd: 0, target: 'enemy', range: 'melee',
     highlight: (c) => c.player.autoAttacking,
-    description: () => 'Starts your melee auto attack (it turns Auto Shot off).',
+    description: () => 'Starts your melee auto attack. Auto Shot stays on, with its own timer: the distance decides which one fires.',
     use: () => {},
   },
   {
@@ -476,7 +476,7 @@ export function prepare(c: Combat): void {
   p.maxResource = Math.max(1, Number(c.options.mana ?? 4000));
   p.regenPerSecond = 0;
   c.manaLocked = !!c.options.lockMana;
-  // Melee weaving (optional, ranged builds): both autos on, the Auto Shot reset rule from Settings.
+  // Both autos on for every build, the weaving helper if chosen, the Auto Shot reset rule from Settings.
   setupWeaving(c, !!b.melee);
   c.classicAutoShot = !!c.options.classicAutoShot;
 

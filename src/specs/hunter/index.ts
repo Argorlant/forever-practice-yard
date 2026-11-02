@@ -9,7 +9,7 @@ import { PET_HELP, PET_MODE } from '../pet';
 import { ABILITIES, D, SOURCES, T, chances, hawkCount, oldestHawkLeft, onCooldown, prepare, regen } from './core';
 import { MELEE_STATS, RANGED_STATS } from './data';
 import { buildLabel, buildsFor, summary, talentsFor, type HunterSpec } from './talents';
-import { WEAVE_OPTIONS, weaveCue, weaveRings, weaveRows, weaveSuggest } from './weave';
+import { WEAVE_OPTIONS, weaveAdvised, weaveCue, weaveRings, weaveRows, weaveSuggest } from './weave';
 
 type Row = { label: string; value: string; good?: boolean };
 const pctOf = (n: number) => `${Math.round(n * 100)}%`;
@@ -55,7 +55,7 @@ const HELP_COMMON = `Auto Shot fires on its own every weapon swing (faster with 
     WoW Forever: Aimed Shot is baseline (2 sec cast, 6 sec cooldown shared with Multi-Shot, which is instant since the Oct 15 client), Arcane Shot and Serpent Sting scale with ranged attack power, and Auto Shot keeps firing while you cast (Settings has the Classic rule as an option). You cannot cast while moving; Arcane Shot and Serpent Sting are instant.
     Mana is your resource: shots drain it fast. Judgement of Wisdom, Blessing of Wisdom and Mana Spring Totem are on by default under Raid buffs and debuffs, and Major Mana Potions are on your bar; you can lock your mana in Settings.`;
 
-const WEAVE_HELP = `Melee weaving (an advanced option in Settings), really ranged weaving: Auto Shot and your melee swing (the two-handed glaive) run on separate timers, and the distance decides which one fires. Use your ranged cooldowns at range, step through the dead zone (the rings on the ground: inside the red one you hit in melee, outside the green one you shoot), press what you can (Raptor Strike first, it goes on your next swing and off the global cooldown, then Immolation Trap, Mongoose Bite and Strider Kick), and step back out before the next windup. The cue above your bar says when: Step in, what to press, Step out. We assume separate timers, as in Classic, until this can be checked in the live game; on the beta a melee swing restarted the Auto Shot timer (reported as bug #14), and you can pick that rule in Settings to practice it. gunba's SV Weave and MM Weave builds play this way from 12 yards (pick them in Settings).`;
+const WEAVE_HELP = `Melee weaving, really ranged weaving: on any build you can step in and out, because Auto Shot and your melee swing (the two-handed glaive) run on separate timers and the distance decides which one fires. The rings on the ground show it: inside the red one you hit in melee, outside the green one you shoot, and between them nothing fires. The weaving helper in Settings (on in gunba's SV Weave and MM Weave, which play this way from 12 yards) plans the trips: use your ranged cooldowns at range, step in, press what you can (Raptor Strike first, it goes on your next swing and off the global cooldown, then Immolation Trap, Mongoose Bite and Strider Kick), and step back out before the next windup; the cue above your bar says when. Without the helper nothing asks you to step in, but in melee it still shows what to press and when to step out. We assume separate timers, as in Classic, until this can be checked in the live game; on the beta a melee swing restarted the Auto Shot timer (reported as bug #14), and you can pick that rule in Settings to practice it.`;
 
 const OPTIONS = [
   { key: 'classicAutoShot', name: 'Classic Auto Shot rule: a cast started in the windup clips the shot', kind: 'toggle' as const },
@@ -98,7 +98,7 @@ function mmSuggest(c: Combat): string | null {
   if (p.inCombat && ready('rapidFire')) return 'rapidFire';
   const sting = (c.aura(t, 'serpentSting')?.end ?? c.t) - c.t;
   // Weaving (gs since 27 Oct): no casts at range, they would keep you out of melee: Multi-Shot, Serpent Sting in its last 3 s, Arcane Shot.
-  if (c.weaving) {
+  if (weaveAdvised(c)) {
     if (ready('multiShot') && afford('multiShot')) return 'multiShot';
     if (sting <= 3 && afford('serpentSting')) return 'serpentSting';
     if (ready('arcaneShot') && afford('arcaneShot')) return 'arcaneShot';
@@ -122,7 +122,7 @@ function rangedReview(c: Combat): Row[] {
   const rows: Row[] = [];
   autoShotRows(c, rows);
   weaveRows(c, rows);
-  if (!c.weaving) rows.push({ label: 'Aimed Shot on cooldown', value: pctOf(onCooldown(c, 'aimedShot', D.aimedShot.cooldown)), good: onCooldown(c, 'aimedShot', D.aimedShot.cooldown) >= 0.7 });
+  if (!weaveAdvised(c)) rows.push({ label: 'Aimed Shot on cooldown', value: pctOf(onCooldown(c, 'aimedShot', D.aimedShot.cooldown)), good: onCooldown(c, 'aimedShot', D.aimedShot.cooldown) >= 0.7 });
   rows.push(
     { label: 'Serpent Sting uptime', value: pctOf((k['uptime:target:serpentSting'] ?? 0) / time), good: (k['uptime:target:serpentSting'] ?? 0) / time >= 0.85 },
   );
@@ -272,9 +272,11 @@ export const hunterSv: Spec = specFor('sv', {
   help: `${CONTROLS}
     ${PET_HELP}
     Survival fights in melee: two one-handers (Predator's Edge makes the off hand hit harder), Aspect of the Beast for melee attack power. Raptor Strike replaces your next swing (off the global cooldown); Strider Kick is a weapon kick on an 8 sec cooldown; Mongoose Bite lights up after a dodge or, with Expose Prey, after landed hits on the target you marked yourself; Lacerating Strikes makes it bleed.
+    The rings on the ground mark melee range and Auto Shot's minimum range: step out past the green one and Auto Shot fires between your swings.
     Immolation Trap is placed at your feet and usable in combat in WoW Forever. Wing Clip is the filler when you have mana to spare. Mana is your resource: Judgement of Wisdom gives a lot back to a melee hunter.
     This is a practice tool: hit, crit and proc chances follow WoW Forever; damage numbers are an approximation.`,
   look: { clothColor: 0x4a5a3a, leatherColor: 0x3a3022, hood: true },
   suggest: svSuggest,
+  rings: weaveRings,
   review: svReview,
 });

@@ -573,6 +573,33 @@ for (const sp of [hunterMm, hunterBm, hunterSv]) {
   if ((svCycle.counters.autoShotHeld ?? 0) > 3) failures.push(`SV Weave held Auto Shot ${(svCycle.counters.autoShotHeld ?? 0).toFixed(1)} s`);
 }
 
+// Any hunter can step in and out, whatever the build: both autos stay on, the distance picks which one fires, and the rings show it.
+{
+  const stand = (c: Combat, seconds: number, yards: number) => { c.player.z = -yards * 0.9144; for (let t = 0; t < seconds; t += 0.05) c.update(0.05); };
+  const hits = (c: Combat, source: string) => c.meter.rows.get(source)?.hits ?? 0;
+  const ranged = play(hunterMm, { build: 'mm', seconds: 0, options: { lockMana: true } }).c;
+  ranged.use('autoShot');
+  stand(ranged, 6, 12);
+  const firstShots = hits(ranged, 'autoShot');
+  if (hunterMm.cue?.(ranged)) failures.push('A build without the weaving helper was asked to step in');
+  stand(ranged, 0.1, 6);
+  if (hunterMm.cue?.(ranged)) failures.push('A build without the weaving helper got a cue on the way in');
+  stand(ranged, 6, 3);
+  if (hits(ranged, 'melee_mh') === 0) failures.push('A ranged build could not swing after stepping in');
+  stand(ranged, 6, 12);
+  if (firstShots === 0 || hits(ranged, 'autoShot') <= firstShots) failures.push('Auto Shot did not carry on after stepping back out');
+  const melee = play(hunterSv, { build: 'sv', seconds: 0, options: { lockMana: true } }).c;
+  melee.use('attack');
+  stand(melee, 6, 2);
+  if (hits(melee, 'melee_mh') === 0) failures.push('Melee Survival did not swing');
+  stand(melee, 6, 12);
+  if (hits(melee, 'autoShot') === 0) failures.push('Melee Survival did not shoot after stepping out');
+  for (const [name, sp, c] of [['ranged', hunterMm, ranged], ['melee', hunterSv, melee]] as const) {
+    if (sp.rings?.(c).length !== 2) failures.push(`The ${name} build has no range rings`);
+  }
+  console.log(`  Stepping in and out without the helper: Marksmanship ${hits(ranged, 'melee_mh')} swings and ${hits(ranged, 'autoShot')} shots, melee Survival ${hits(melee, 'melee_mh')} swings and ${hits(melee, 'autoShot')} shots`);
+}
+
 // Pets as in WoW: they run to the target and hit only there; orders and modes decide when they go.
 {
   const PET_SOURCES = ['petMelee', 'petClaw', 'petBite', 'lashOfPain', 'firebolt'];

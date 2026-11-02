@@ -100,10 +100,10 @@ fire while Auto Shot is on or a shot is cast, and the melee weapon is put away.
 - **Survival** (`?class=hunter-sv`): a melee spec in Forever. Dual wield, Aspect of the Beast, Raptor Strike, Strider
   Kick, Mongoose Bite opened by Expose Prey on your own Hunter's Mark, Lacerating Strikes and Immolation Trap.
 
-**Melee weaving** is an advanced option for Marksmanship and Beast Mastery (Settings, off by default): Auto Shot and the
+**Melee weaving** works on every hunter build: Auto Shot and the
 melee swing of your two-handed glaive run on separate timers, and the distance decides which one fires. It is really
 ranged weaving: use your ranged cooldowns at range, step in, press what you can, step back out. Rings on the ground mark
-melee range and Auto Shot's minimum range, and a cue above the bar says when to step in, which melee attack to press
+melee range and Auto Shot's minimum range on all of them. The weaving helper in Settings (off by default, on in the weave builds) adds a cue above the bar that says when to step in, which melee attack to press
 (Raptor Strike first, off the global cooldown, then Immolation Trap, Mongoose Bite and Strider Kick) and when to step out; weaving drops Aimed Shot for Arcane
 Shot and Multi-Shot at range. A
 third setting picks what a melee swing does to Auto Shot: Classic keeps the two timers separate (the default, assumed until it can be checked in the live game), the Forever
