@@ -142,7 +142,7 @@ export const hunterMm: Spec = specFor('mm', {
   options: [...OPTIONS, PET_OPTION, PET_MODE, ...WEAVE_OPTIONS],
   sheet: { attackPower: 'Melee attack power', spellCrit: false, offHand: false },
   lowMana: (c) => c.cost(c.ability('aimedShot')!),
-  welcome: 'Welcome to the Marksmanship practice yard. You start 12 yards from the dummy: keep Auto Shot firing (stand still during its windup), Serpent Sting up, Aimed Shot on cooldown, Sniper Shot when Aimed is far, Arcane Shot with spare mana. The gunba build is Lone Wolf: no pet, +20% damage.',
+  welcome: 'Welcome to Marksmanship practice. You start 12 yards from the dummy: keep Auto Shot firing (stand still during its windup), Serpent Sting up, Aimed Shot on cooldown, Sniper Shot when Aimed is far, Arcane Shot with spare mana. The gunba build is Lone Wolf: no pet, +20% damage.',
   help: `${CONTROLS}
     ${PET_HELP}
     ${HELP_COMMON}
@@ -203,7 +203,7 @@ export const hunterBm: Spec = specFor('bm', {
   options: [...OPTIONS, PET_OPTION, PET_MODE, ...WEAVE_OPTIONS],
   sheet: { attackPower: 'Melee attack power', spellCrit: false, offHand: false },
   lowMana: (c) => c.cost(c.ability('aimedShot')!),
-  welcome: 'Welcome to the Beast Mastery practice yard. Your cat fights at the dummy while you shoot from 12 yards: keep two hawks out, Bestial Wrath and Rapid Fire together, Serpent Sting up and Aimed Shot on cooldown.',
+  welcome: 'Welcome to Beast Mastery practice. Your cat fights at the dummy while you shoot from 12 yards: keep two hawks out, Bestial Wrath and Rapid Fire together, Serpent Sting up and Aimed Shot on cooldown.',
   help: `${CONTROLS}
     ${PET_HELP}
     ${HELP_COMMON}
@@ -268,7 +268,7 @@ export const hunterSv: Spec = specFor('sv', {
   options: [...OPTIONS.filter((o) => o.key !== 'classicAutoShot'), PET_OPTION, PET_MODE],
   sheet: { attackPower: 'Melee attack power', spellCrit: false },
   lowMana: (c) => c.cost(c.ability('raptorStrike')!),
-  welcome: 'Welcome to the Survival practice yard. In WoW Forever Survival is a melee spec: dual wield, Aspect of the Beast, Raptor Strike on cooldown, Strider Kick, Mongoose Bite when Expose Prey lights it on your marked target, and Immolation Trap at your feet.',
+  welcome: 'Welcome to Survival practice. In WoW Forever Survival is a melee spec: dual wield, Aspect of the Beast, Raptor Strike on cooldown, Strider Kick, Mongoose Bite when Expose Prey lights it on your marked target, and Immolation Trap at your feet.',
   help: `${CONTROLS}
     ${PET_HELP}
     Survival fights in melee: two one-handers (Predator's Edge makes the off hand hit harder), Aspect of the Beast for melee attack power. Raptor Strike replaces your next swing (off the global cooldown); Strider Kick is a weapon kick on an 8 sec cooldown; Mongoose Bite lights up after a dodge or, with Expose Prey, after landed hits on the target you marked yourself; Lacerating Strikes makes it bleed.

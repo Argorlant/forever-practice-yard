@@ -39,7 +39,7 @@ function groupsOf(className: string): Group[] {
 
 export function showPicker(app: HTMLElement): void {
   app.querySelector('.loading')?.remove();
-  document.title = 'Forever Practice Yard · WoW Forever';
+  document.title = 'Forever Rotations · WoW Forever';
   const root = h('div', 'picker');
   app.append(root);
   const last = load<string>('fpy.class');
@@ -47,7 +47,7 @@ export function showPicker(app: HTMLElement): void {
 
   const showClasses = () => {
     root.innerHTML = '';
-    root.append(h('h1', 'picker-title', 'Forever Practice Yard'),
+    root.append(h('h1', 'picker-title', 'Forever Rotations'),
       h('p', 'picker-sub', 'Practise your WoW Forever rotation against a training dummy. Choose your class.'),
       h('div', 'disclaimer-box', DISCLAIMER_HTML));
     const grid = h('div', 'class-grid');

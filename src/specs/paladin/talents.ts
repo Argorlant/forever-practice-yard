@@ -70,7 +70,7 @@ const GS = 'gunba/wow-forever-sim';
 // The Oct 30 trees rebuilt the paladin: Twist of Light, Instrument of Law, One-Handed Weapon Specialization,
 // Improved Seal of Fury and Voice of Truth are gone, Unsealed Wrath and Shieldsworn are the new 31-point talents,
 // and several talents moved trees or changed ranks. The yard re-spent gs's three lists on them.
-const RESPENT = `${GS}, re-spent by the yard for the Oct 30 trees`;
+const RESPENT = `${GS}, re-spent by us for the Oct 30 trees`;
 export const BUILDS: Build[] = [
   { id: 'ret', spec: 'ret', name: 'Retribution (Unsealed Wrath)', talentString: '050250002-501-05233301001301351', source: RESPENT, stats: RET_STATS, bar: RET_BAR },
   { id: 'prot', spec: 'prot', name: 'Protection (Shieldsworn)', talentString: '-55302102513501531-0522', source: RESPENT, stats: PROT_STATS, bar: PROT_BAR, tank: true },

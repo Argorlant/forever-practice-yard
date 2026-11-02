@@ -51,11 +51,11 @@ function page(spec: Spec): string {
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>${esc(title)} rotation practice · WoW Forever · Forever Practice Yard</title>
+  <title>${esc(title)} rotation practice · WoW Forever · Forever Rotations</title>
   <meta name="description" content="${esc(description)}">
   <link rel="canonical" href="${url}">
   <meta property="og:type" content="website">
-  <meta property="og:site_name" content="Forever Practice Yard">
+  <meta property="og:site_name" content="Forever Rotations">
   <meta property="og:title" content="${esc(title)} rotation practice · WoW Forever">
   <meta property="og:description" content="${esc(description)}">
   <meta property="og:url" content="${url}">
@@ -93,7 +93,7 @@ function page(spec: Spec): string {
 </head>
 <body>
   <main>
-    <div class="crumb"><a href="../">Forever Practice Yard</a> › ${esc(spec.className)}</div>
+    <div class="crumb"><a href="../">Forever Rotations</a> › ${esc(spec.className)}</div>
     <h1><span>${esc(title)}</span> rotation practice</h1>
     <p class="sub">WoW Forever, level 60, against a training dummy, in your browser or on a phone. Free.</p>
     <p>${esc(spec.welcome)}</p>
@@ -105,7 +105,7 @@ function page(spec: Spec): string {
         ${buildRows}
     </ul>
     <p class="note"><b>Speculative, built on the sims.</b> The talents, builds, rotations and numbers follow the community sims (gunba's
-      wow-forever-sim and foreversim) and a beta that stopped at level 30, so they may not match the live game. A practice tool for a
+      wow-forever-sim and foreversim) and our reading of the beta, made before WoW Forever's launch, so they may not match the live game. A practice tool for a
       rotation's rhythm: it shows no DPS. Spotted something wrong? <a href="${ISSUES}">Tell us on GitHub</a>.</p>
     <h2>Other classes</h2>
     <ul class="others">${others}</ul>

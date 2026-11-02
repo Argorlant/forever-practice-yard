@@ -393,7 +393,7 @@ export const druidCat: Spec = {
   ],
   sheet: { spellCrit: false, mainHand: 'Weapon (its DPS is your cat swing)' },
   bar: buildById('cat', 'cat').bar,
-  welcome: 'Welcome to the Feral Cat practice yard. Energy flows smoothly, Shifting Power is the Forever powershift (paid in mana) and Omen of Clarity is baseline. Open with Prowl and Ravage from behind, keep Rip up, bite at 5 points and Shred everything else.',
+  welcome: 'Welcome to Feral Cat practice. Energy flows smoothly, Shifting Power is the Forever powershift (paid in mana) and Omen of Clarity is baseline. Open with Prowl and Ravage from behind, keep Rip up, bite at 5 points and Shred everything else.',
   help: `${CONTROLS}
     Energy regenerates smoothly at 10 per second. The global cooldown is 1.0 sec for every cat attack. A cat swings every 1.0 sec for your weapon's DPS plus AP/14; Shred and Claw use the same weapon damage.
     Shifting Power gives 40 Energy (45 with Wolfshead Helm) for 684 mana, every 8 sec (Oct 30 hotfix; Improved Shifting Power is gone), and cannot be used at full Energy. Mana is the second bar: Judgement of Wisdom on the dummy gives mana back on your hits, Blessing of Wisdom and Mana Spring Totem add 8 and 5 per second (all three are on by default under Raid buffs and debuffs), Major Mana Potions do the rest; you can also lock it.

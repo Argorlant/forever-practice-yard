@@ -40,7 +40,7 @@ const distance = (a: Points, b: Points) => a.reduce((n, tree, i) => n + tree.red
 
 export function showPlanner(app: HTMLElement): void {
   app.querySelector('.loading')?.remove();
-  document.title = 'Talent planner · Forever Practice Yard';
+  document.title = 'Talent planner · Forever Rotations';
   const params = new URLSearchParams(location.search);
   const root = h('div', 'picker planner');
   const tip = h('div', 'tal-tip');
@@ -93,7 +93,7 @@ export function showPlanner(app: HTMLElement): void {
   const orderBox = h('section', 'planner-box');
   const foreverBox = h('section', 'planner-box');
   cols.append(orderBox, foreverBox);
-  const back = h('a', 'hud-btn picker-back', '‹ Practice yard') as HTMLAnchorElement;
+  const back = h('a', 'hud-btn picker-back', '‹ Practice') as HTMLAnchorElement;
   back.href = './';
   root.append(back, title,
     h('p', 'picker-sub', `WoW Forever's talent trees (client build ${TREE_VERSION}). Click a talent to spend a point, right-click to take one back. The planner keeps the order you spend them in: one point a level from level 10, 51 at level 60.`),
@@ -148,7 +148,7 @@ export function showPlanner(app: HTMLElement): void {
     play.hidden = !near || !total;
     if (near && total) {
       play.textContent = `Practise as ${near.build.name ?? near.build.label}`;
-      play.title = `Opens the practice yard with ${near.build.name ?? near.build.label}'s gear and action bar and these talents`;
+      play.title = `Opens practice with ${near.build.name ?? near.build.label}'s gear and action bar and these talents`;
       play.href = `?class=${near.spec.id}&build=${encodeURIComponent(near.build.id)}&talents=${s}`;
     }
 
@@ -187,7 +187,7 @@ export function showPlanner(app: HTMLElement): void {
       gone.append(h('ul', '', n.removed.map((r) => `<li>${esc(r)}</li>`).join('')));
       foreverBox.append(gone);
     }
-    foreverBox.append(h('p', 'planner-note small', 'From the yard\'s research sheets on the sims and Wowhead\'s Forever tooltips; hover a talent for what changed.'));
+    foreverBox.append(h('p', 'planner-note small', 'From our research sheets on the sims and Wowhead\'s Forever tooltips; hover a talent for what changed.'));
 
     keep();
   };

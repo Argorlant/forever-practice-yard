@@ -227,7 +227,7 @@ export const shamanElemental: Spec = specFor('elemental', {
   options: OPTIONS,
   sheet: { attackPower: false, crit: false, spellCrit: 'Spell crit (gear + Intellect; Thundering Strikes adds on top)', spellPower: 'Spell damage (every school)', hit: 'Hit (gear; Tidal Focus adds on top)', mainHand: false, offHand: false },
   lowMana: (c) => c.cost(c.ability('lightningBolt')!),
-  welcome: 'Welcome to the Elemental practice yard. Drop Searing Totem and Mana Spring Totem, keep Flame Shock burning, cast Lava Burst whenever it is ready on your Flame Shock, Elemental Mastery on cooldown, Chain Lightning on Clearcasting, and Lightning Bolt for everything else. Mana runs out; that is part of the spec in WoW Forever.',
+  welcome: 'Welcome to Elemental practice. Drop Searing Totem and Mana Spring Totem, keep Flame Shock burning, cast Lava Burst whenever it is ready on your Flame Shock, Elemental Mastery on cooldown, Chain Lightning on Clearcasting, and Lightning Bolt for everything else. Mana runs out; that is part of the spec in WoW Forever.',
   help: `${CONTROLS}
     ${HELP_COMMON}
     Elemental in WoW Forever: casts are faster and weaker (Lightning Bolt 2.0 sec with Elemental Alacrity). Lava Burst (21 points, no prerequisite) deals 20% more on your own Flame Shock; Call of Flame keeps Flame Shock up 3/6/9 sec longer. Elemental Fury makes your spells and Searing Totem crit for 2.0x; Lightning Overload has 10% for a free half-damage copy. Elemental Mastery (31 points, needs Lava Burst) is back since Oct 15: for 15 sec Lightning Bolt and Lava Burst cast 0.5 sec faster (1.5 sec with Alacrity) and Chain Lightning has no cooldown; 3 min cooldown. The Stormcaller builds trade Lava Burst for Intellect turned into spell damage.
@@ -248,7 +248,7 @@ export const shamanEnhancement: Spec = specFor('enhancement', {
   }],
   sheet: { spellCrit: 'Spell crit (gear + Intellect)', spellPower: 'Spell damage', crit: 'Melee crit (gear + Agility; Thundering Strikes adds on top)', offHand: false },
   lowMana: (c) => c.cost(c.ability('earthShock')!),
-  welcome: 'Welcome to the Enhancement practice yard. One two-hander with Windfury Weapon: drop Strength of Earth and Searing Totem, keep Flame Shock up, then Stormstrike and Earth Shock on cooldown (Earth Shock takes the Stormstrike bonus, and keeps the charge for a 5-stack Lightning Bolt, instant and free), and Fire Nova around your Searing Totem on Clearcasting or with mana to spare.',
+  welcome: 'Welcome to Enhancement practice. One two-hander with Windfury Weapon: drop Strength of Earth and Searing Totem, keep Flame Shock up, then Stormstrike and Earth Shock on cooldown (Earth Shock takes the Stormstrike bonus, and keeps the charge for a 5-stack Lightning Bolt, instant and free), and Fire Nova around your Searing Totem on Clearcasting or with mana to spare.',
   help: `${CONTROLS}
     ${HELP_COMMON}
     Enhancement in WoW Forever: no dual wield. Windfury Weapon: 20% per landed main-hand hit (1.5 sec cooldown) for two extra attacks with +466 AP (Elemental Weapons 3/3); it turns a Windfury Totem off for you, so your Air totem is Grace of Air. Stormstrike (8 sec): a weapon hit, and your next Lightning Bolt or Chain Lightning within 12 sec deals 20% more; Earth Shock gets the 20% without spending the charge (since Oct 21). Maelstrom Weapon: melee hits stack it (10 per minute at any rank); at 5 stacks Lightning Bolt is instant and free. Never hardcast Lightning Bolt below 5 stacks: it restarts your swing. Fire Nova is much weaker since Oct 15 (232-258, 0.143); Stormstrike costs 8% of base mana, and a spell that misses keeps its charge. Rage of the Farseer gives +30% attack speed.
@@ -267,7 +267,7 @@ export const shamanTank: Spec = specFor('tank', {
   options: MELEE_OPTIONS,
   sheet: { spellCrit: 'Spell crit (gear + Intellect)', spellPower: 'Spell damage', offHand: false },
   lowMana: (c) => c.cost(c.ability('earthShock')!),
-  welcome: 'Welcome to the off-tank practice yard, our experimental proposal: WoW Forever has no tank shaman. Rockbiter Weapon (+threat), Lightning Shield orbs when the dummy hits you, Stoneskin Totem, Stormstrike (your dodges and parries can reset it) and Earth Shock for double threat.',
+  welcome: 'Welcome to off-tank practice, our experimental proposal: WoW Forever has no tank shaman. Rockbiter Weapon (+threat), Lightning Shield orbs when the dummy hits you, Stoneskin Totem, Stormstrike (your dodges and parries can reset it) and Earth Shock for double threat.',
   help: `${CONTROLS}
     ${HELP_COMMON}
     Off-tank (our proposal, 17/34/0): Forever has no tank shaman, so this is an experiment. Rockbiter Weapon gives +784 AP and threat on each hit, Spirit Weapons lets you parry and adds 30% threat with Rockbiter, Anticipation and Toughness are in the tank sheet. Lightning Shield: 3 orbs, one per hit you take (3.5 sec apart). Improved Stormstrike resets Stormstrike when you dodge or parry. Nothing lowers crushing blows, so expect to take a lot of damage.

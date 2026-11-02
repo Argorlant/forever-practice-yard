@@ -113,7 +113,7 @@ export const priestShadow: Spec = specFor('shadow', {
   options: OPTIONS,
   sheet: { attackPower: false, crit: false, spellCrit: 'Spell crit (gear + Intellect)', spellPower: 'Spell power (every school)', mainHand: false, offHand: false },
   lowMana: (c) => c.cost(c.ability('mindBlast')!),
-  welcome: 'Welcome to the Shadow practice yard. In Shadowform, keep Shadow Word: Pain and Devouring Plague ticking, Shadow Word: Death and Mind Blast on cooldown, and fill with Mind Flay, channelled in full: Improved Mind Flay makes each tick stronger than the last. Devouring Plague comes back every 24 sec. Shadow Word: Death costs you health on a dummy.',
+  welcome: 'Welcome to Shadow practice. In Shadowform, keep Shadow Word: Pain and Devouring Plague ticking, Shadow Word: Death and Mind Blast on cooldown, and fill with Mind Flay, channelled in full: Improved Mind Flay makes each tick stronger than the last. Devouring Plague comes back every 24 sec. Shadow Word: Death costs you health on a dummy.',
   help: `${CONTROLS}
     ${HELP_COMMON}
     Shadow in WoW Forever: Shadowform gives +10% Shadow damage, half-price Shadow spells and 2.0x Shadow crits. Shadow Weaving is personal: each landed Shadow spell adds +2% to your Shadow damage, up to 5 stacks for 15 sec. Mind Flay is one hit roll for the whole channel; its ticks crit, and Improved Mind Flay makes each tick 10/20% stronger than the one before. Shadowform's 2.0x crit includes Shadow Word: Death (confirmed Oct 15). Shadow Word: Death (baseline) hurts you for 10% of your health whenever the target survives: the health bar shows it, and raid healers top you up.
@@ -171,7 +171,7 @@ export const priestSmite: Spec = specFor('smite', {
   options: OPTIONS,
   sheet: { attackPower: false, crit: false, spellCrit: 'Spell crit (gear + Intellect)', spellPower: 'Spell power (every school)', mainHand: false, offHand: false },
   lowMana: (c) => c.cost(c.ability('smite')!),
-  welcome: 'Welcome to the Smite practice yard, an experimental WoW Forever build: keep your Holy Fire and Shadow Word: Pain up for Power in Light, Smite as the filler, Mind Blast while you have mana, Power Infusion and Inner Focus together. Judgement of the Crusader from a raid paladin is on by default.',
+  welcome: 'Welcome to Smite practice, an experimental WoW Forever build: keep your Holy Fire and Shadow Word: Pain up for Power in Light, Smite as the filler, Mind Blast while you have mana, Power Infusion and Inner Focus together. Judgement of the Crusader from a raid paladin is on by default.',
   help: `${CONTROLS}
     ${HELP_COMMON}
     Smite in WoW Forever: Smite and Holy Fire were halved, then built back by Power in Light (+10% to Smite and Penance while your Holy Fire or Shadow Word: Pain is on the target), Searing Light (+5% Holy, and Holy Fire ticks can give a free Holy Nova), Holy Precision (+18% Holy hit) and Holy Specialization (+5% crit). Penance fires three bolts at 0, 1 and 2 sec; the sims only use it with mana to spare. Mind Blast does about 1.8x Smite's damage per second of casting.

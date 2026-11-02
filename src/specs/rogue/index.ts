@@ -872,7 +872,7 @@ export const rogue: Spec = {
     { key: 'poisonOH', name: 'Off-hand poison', kind: 'choice', choices: POISONS },
   ],
   bar: BUILDS[0].bar,
-  welcome: 'Welcome to the rogue practice yard. Pick a talent build from the WoW Forever sims in Settings and practice its rotation on a training dummy, in the browser or on a phone.',
+  welcome: 'Welcome to rogue practice. Pick a talent build from the WoW Forever sims in Settings and practice its rotation on a training dummy, in the browser or on a phone.',
   help: `You start behind the dummy. W and S move along your facing, A and D turn, Q and E strafe; all six can be rebound below. Space jumps.
     Hold the left mouse button to orbit the camera; hold the right button to steer; hold both to run forward. Scroll to zoom.
     Click a dummy to target it, right-click to target and start attacking, Tab cycles targets, Esc clears it.

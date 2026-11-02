@@ -177,7 +177,7 @@ export const warlockAffliction: Spec = specFor('affliction', {
   specName: 'Affliction',
   stats: AFFLICTION_STATS,
   defaultOptions: opts('affliction', 4033),
-  welcome: 'Welcome to the Affliction practice yard. Curse of the Elements, Bane of Doom on cooldown, then keep Corruption, Siphon Life and Immolate ticking and fill with Shadow Bolt. Shadow Trance (Nightfall) makes the next one instant. Life Tap turns health into mana; raid healing gives it back.',
+  welcome: 'Welcome to Affliction practice. Curse of the Elements, Bane of Doom on cooldown, then keep Corruption, Siphon Life and Immolate ticking and fill with Shadow Bolt. Shadow Trance (Nightfall) makes the next one instant. Life Tap turns health into mana; raid healing gives it back.',
   help: `${CONTROLS}
     ${PET_HELP}
     ${HELP_COMMON}
@@ -193,7 +193,7 @@ export const warlockDemonology: Spec = specFor('demonology', {
   specName: 'Demonology',
   stats: PACT_STATS,
   defaultOptions: opts('pact', 4638, 'voidwalker'),
-  welcome: 'Welcome to the Demonology practice yard (Demonic Pact). Your Succubus fights with you; Searing Pain brands the target so her next attacks add Shadow damage. Keep the Brand up, Bane of Doom on cooldown, Corruption and Immolate ticking, and fill with Shadow Bolt. Below 35% health, Decimation makes Soul Fire fast.',
+  welcome: 'Welcome to Demonology practice (Demonic Pact). Your Succubus fights with you; Searing Pain brands the target so her next attacks add Shadow damage. Keep the Brand up, Bane of Doom on cooldown, Corruption and Immolate ticking, and fill with Shadow Bolt. Below 35% health, Decimation makes Soul Fire fast.',
   help: `${CONTROLS}
     ${PET_HELP}
     ${HELP_COMMON}
@@ -209,7 +209,7 @@ export const warlockDestruction: Spec = specFor('destruction', {
   specName: 'Destruction',
   stats: DESTRUCTION_STATS,
   defaultOptions: opts('fire', 4153),
-  welcome: 'Welcome to the Destruction practice yard (Shadow and Flame). Immolate, then Conflagrate and Shadowburn on cooldown: each keeps a +10% buff up for the other school, and Shadow and Flame keeps your Immolate burning. Corruption and Bane of Doom tick on the side; Incinerate is the filler. The DS/Ruin build plays Shadow Bolts instead.',
+  welcome: 'Welcome to Destruction practice (Shadow and Flame). Immolate, then Conflagrate and Shadowburn on cooldown: each keeps a +10% buff up for the other school, and Shadow and Flame keeps your Immolate burning. Corruption and Bane of Doom tick on the side; Incinerate is the filler. The DS/Ruin build plays Shadow Bolts instead.',
   help: `${CONTROLS}
     ${PET_HELP}
     ${HELP_COMMON}

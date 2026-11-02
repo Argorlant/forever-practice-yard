@@ -1,6 +1,6 @@
-# Forever Practice Yard
+# Forever Rotations
 
-A browser practice yard for **World of Warcraft: Forever** rotations. You stand next to a
+Rotation practice in the browser for **World of Warcraft: Forever**. You stand next to a
 training dummy and play your class with real keybinds: energy, combo points, the global
 cooldown, positional requirements, procs and auras follow the game rules, and a rotation panel
 counts your hits and crits and reviews your habits. There is no DPS meter on purpose: until anyone has
@@ -12,15 +12,15 @@ Up to date with the two sims' October 27-28 updates (launch racials, re-searched
 hotfixes through client 1.60.1.70658): spells at the last trainer rank (the Ahn'Qiraj books need raids, which open on
 9 December), raid buffs too; a boss without resistances resists no spell partly; the Mage's Frost tree without Piercing
 Ice; Human Ruthless at 1 % and no Orc Savage in the race sheets. The live hotfix of October 30 rebuilt the Druid, Mage
-and Paladin trees (and moved or renamed a Hunter and a Priest talent); the sims have not published it yet, so the yard
+and Paladin trees (and moved or renamed a Hunter and a Priest talent); the sims have not published it yet, so the site
 reads those trees and their tooltips from Wowhead's WoW Forever calculator (`tools/wowhead_trees.mjs`, data in
-`research/wowhead/`) and re-spends the sims' builds on them. Those builds and the Ret and Shockadin loops are the yard's,
+`research/wowhead/`) and re-spends the sims' builds on them. Those builds and the Ret and Shockadin loops are ours,
 **provisional**, until the sims publish theirs.
-> **Speculative, built on the sims.** WoW Forever's beta has closed and the game launches on 4 November 2026. The talents,
+> **Speculative, built on the sims.** This site was made before WoW Forever's launch on 4 November 2026. The talents,
 > builds, rotations and numbers here follow the community sims ([wow-forever-sim](https://github.com/gunba/wow-forever-sim) and
-> [foreversim](https://github.com/laurencestokes/foreversim)) and our own reading of the beta, which stopped at level 30, so they
-> may not match the live game, and classes can still change at launch and once players reach level 60. Use it as a practice tool: learn a rotation's rhythm and get a feel for how a class might play at max
-> level. That's why the yard shows no DPS: the damage in the floating combat text is only a rough guide. Spotted something wrong? Feedback is very welcome in the
+> [foreversim](https://github.com/laurencestokes/foreversim)) and our own reading of the beta, so they
+> may not match the live game, and classes can still change as players reach level 60. Use it as a practice tool: learn a rotation's rhythm and get a feel for how a class might play at max
+> level. That's why it shows no DPS: the damage in the floating combat text is only a rough guide. Spotted something wrong? Feedback is very welcome in the
 > [issues](https://github.com/Argorlant/forever-practice-yard/issues).
 
 The first class is the **Combat Rogue**, with WoW Forever's numbers and rules: smooth energy
@@ -209,7 +209,7 @@ it until they fit again. The tooltips give each rank's text, what a talent needs
 (★ marks the talents new in Forever); a panel lists the new talents the build takes and the Classic talents the trees no
 longer have. Start from one of the sims' builds (its order is made up: main tree from the top, then the others) or compare
 with one (the other build's rank shows on every talent where they differ). The link (`?planner=<class>&o=…`) holds the
-order, one letter per point; *Practise as …* opens the yard with the nearest of the sims' builds (its gear and action bar)
+order, one letter per point; *Practise as …* opens practice with the nearest of the sims' builds (its gear and action bar)
 and your talents. The notes come from the research sheets: `node tools/talent_notes.mjs` rebuilds
 `src/ui/talent-notes.json`.
 
@@ -230,20 +230,20 @@ with trails and impacts that show the crit, Lightning Bolt as a real bolt, arrow
 hands while you cast, the Drain Life and Mind Flay streams, and the auras you wear (Lightning Shield's orbs, Holy
 Shield, Shadowform). It is all particles (`src/scene/vfx.ts`) driven by the engine's events (`src/combat-vfx.ts`).
 
-**Published models and your own models.** The online yard loads the owner's exported characters (with race and sex
+**Published models and your own models.** The online site loads the owner's exported characters (with race and sex
 selection), forms, companions, training dummy, training area and Onyxia's lair automatically. Alliance races practice
 in Stormwind's Command Center courtyard; Horde races practice in Orgrimmar's Valley of Honor. Changing race changes
-the area with it. Each faction keeps its own saved dummy position. Onyxia's lair and dragons arrive the first time you go to her or open Settings. The scene waits for the rest of its WoW models, showing how much has arrived and using the yard's own if nothing arrives for 20 seconds, before its first
+the area with it. Each faction keeps its own saved dummy position. Onyxia's lair and dragons arrive the first time you go to her or open Settings. The scene waits for the rest of its WoW models, showing how much has arrived and using the site's own if nothing arrives for 20 seconds, before its first
 frame, and the fallback mannequin is loaded only if the character model is unavailable or switched off. Shared animation buffers and textures
 avoid repeating the same data for every equipment set; the original exports are unchanged. Settings → "Your own models"
-can replace these with personal files: your character, the druid's Cat and Bear Forms, the training dummy, the yard itself and Onyxia's lair. Export them with
+can replace these with personal files: your character, the druid's Cat and Bear Forms, the training dummy, the training area itself and Onyxia's lair. Export them with
 [wow.export](https://github.com/Kruithne/wow.export), which reads your own game files (open your WoW folder in it), as
 GLB from the arrow next to its Export button:
 - **Your character:** the Characters tab (Item Sets equips a whole tier set), with Export animations ticked.
 - **Cat and Bear Form:** the Models tab, `creature/druidcat/druidcat.m2` and `creature/druidbear/druidbear.m2` (Tauren:
   `druidcattauren.m2`, `druidbeartauren.m2`).
 - **Training dummy:** `creature/object/woodendummy.m2`; it plays its own wounds when hit, a bigger one on a crit.
-- **The yard:** a zone or a building. For a zone, Shift+click map tiles in the Maps tab (Goldshire is Azeroth 31, 49)
+- **Training area:** a zone or a building. For a zone, Shift+click map tiles in the Maps tab (Goldshire is Azeroth 31, 49)
   and Export OBJ, then press Load a map folder… and pick wow.export's export folder (your browser may call it an
   upload; nothing leaves your computer). The terrain, its trees and props and its buildings with their furniture are
   placed as wow.export's Blender importer places them, trees and props drawn as instances; a whole city such as
@@ -253,8 +253,8 @@ GLB from the arrow next to its Export button:
   the map's ground, the grass stands in. In a place with its own ground, walls, cliffs, big drops and the end of its
   floors stop you, and the camera stays on your side of a wall. Walk to a spot and press Put the dummy here to set the
   dummies there.
-- **Onyxia's lair:** `world/wmo/dungeon/kl_onyxiaslair/kl_onyxiaslair.wmo`, drawn for the Onyxia fight only: the yard
-  stays around the dummies. Without it, the fight happens in your yard.
+- **Onyxia's lair:** `world/wmo/dungeon/kl_onyxiaslair/kl_onyxiaslair.wmo`, drawn for the Onyxia fight only: the training area
+  stays around the dummies. Without it, the fight happens in your training area.
 
 WoW's animation names (wow.export's "Run (ID 5 variation 0)", Attack1H, SpellCastDirected, AttackBow…, or their
 AnimationData numbers) are matched to what you do; abilities with an animation of their own use it (Claw, Rake, Rip,
@@ -308,7 +308,7 @@ npm run dev
 Then open http://127.0.0.1:5180.
 
 - `npm run build`: type-checks and builds the static site into `dist/`, then `npm run seo` (`tools/seo_pages.ts`) writes
-  one page per spec (`dist/<spec>/`: its rotation, builds and a link into the yard) and `dist/sitemap.xml` for search engines.
+  one page per spec (`dist/<spec>/`: its rotation, builds and a link into the practice) and `dist/sitemap.xml` for search engines.
 - `npm run export:wow`: prepares the owner's `~/wow.export/yard-models.json` selection in `public/wow/` for publication.
 - `npm test`: plays the suggested rotation headless for 5 minutes and prints DPS and a breakdown.
 - `npm run model -- <folder>`: rebuilds `public/models/human.glb` from the Quaternius downloads (or set `QUATERNIUS_DIR`; default `./downloads`).
@@ -321,7 +321,7 @@ Then open http://127.0.0.1:5180.
 | --- | --- |
 | `src/engine` | The combat engine, shared by every class: event clock, smooth regeneration, GCD and spell queue, casts, cooldowns, auras, dual-wield auto attacks, attack and spell tables, armor, the attacking dummy, raid buffs and debuffs (`raid.ts`). |
 | `src/specs/<class>` | One class (`rogue`, `warrior`, `druid`, `paladin`, `hunter`, `priest`, `mage`, `warlock`, `shaman`): `data.ts` holds every number with its source; `talents.ts` the sims' builds; the spec files define abilities, procs and the priority list. |
-| `src/scene` | The 3D yard (three.js): world, dummy, character, WoW-style controls and spell effects; `custom-model.ts`, `custom-place.ts` and `wow-map.ts` draw models, places and zones of your own (wired in `src/own-model.ts`). |
+| `src/scene` | The 3D scene (three.js): world, dummy, character, WoW-style controls and spell effects; `custom-model.ts`, `custom-place.ts` and `wow-map.ts` draw models, places and zones of your own (wired in `src/own-model.ts`). |
 | `src/encounters` | Boss encounters: their rules, without drawing (`onyxia.ts`); `src/encounter-view.ts` draws them (`scene/dragon.ts`, `scene/lair.ts`). |
 | `src/ui` | HUD, action bar, floating combat text, rotation panel and settings; the first screen (`picker.ts`) and the talent planner (`planner.ts`). |
 | `research` | Sourced notes on each spec's WoW Forever mechanics. |
@@ -336,7 +336,7 @@ Then open http://127.0.0.1:5180.
 ## Credits
 
 - Inspired by the practice tools at [miao.tips/practice](https://www.miao.tips/practice): the feral practice by Elspeth
-  (elspethbado), where the idea for this yard came from, and the hunter practice by Neteyes.
+  (elspethbado), where the idea for this site came from, and the hunter practice by Neteyes.
 - Character model and animations: [Quaternius](https://quaternius.com), Universal Animation
   Library 1 and 2 (CC0).
 - Onyxia and her whelps (`public/models/onyxia.glb`, the black texture) and the swords and shields
@@ -355,7 +355,7 @@ Then open http://127.0.0.1:5180.
 
 ## Support
 
-The practice yard is free and fan-made, and it stays complete for everyone. If it helped your rotation, you can buy me a
+It is free and fan-made, and it stays complete for everyone. If it helped your rotation, you can buy me a
 coffee on Ko-fi: [ko-fi.com/argorlant](https://ko-fi.com/argorlant) (or directly on PayPal:
 [paypal.me/argorlant](https://paypal.me/argorlant)).
 

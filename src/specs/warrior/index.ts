@@ -902,7 +902,7 @@ export const warrior: Spec = {
     { key: 'sunderDuty', name: 'You keep 5 Sunder Armors up', kind: 'toggle' },
   ],
   bar: BUILDS[0].bar,
-  welcome: 'Welcome to the warrior practice yard. Pick a Fury, Arms or Protection build from the WoW Forever sims in Settings. For Protection the dummy hits back, so blocks, Revenge and rage from damage taken work as in the game.',
+  welcome: 'Welcome to warrior practice. Pick a Fury, Arms or Protection build from the WoW Forever sims in Settings. For Protection the dummy hits back, so blocks, Revenge and rage from damage taken work as in the game.',
   help: `You start behind the dummy. W and S move along your facing, A and D turn, Q and E strafe; all six can be rebound below. Space jumps.
     Hold the left mouse button to orbit the camera; hold the right button to steer; hold both to run forward. Scroll to zoom.
     Rage in WoW Forever is normalized: each landed white swing gives a fixed amount from your weapon's speed (3.46 per second of speed with a one-hander, 4.5 with a two-hander, half for the off hand), doubled on a crit. Misses, dodges, parries and Heroic Strike swings give none. Abilities do not give rage.

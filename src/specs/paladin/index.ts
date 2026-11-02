@@ -122,10 +122,10 @@ export const paladinRet: Spec = specFor('ret', {
   options: MANA_OPTIONS,
   sheet: { spellCrit: 'Spell crit (gear + Intellect)', spellPower: 'Spell power (Holy)' },
   lowMana: (c) => c.cost(c.ability('sealOfRighteousness')!),
-  welcome: 'Welcome to the Retribution practice yard. Keep a seal up, Judgement and Holy Strike on cooldown, and with Unsealed Wrath (the Oct 30 trees) swing three times with Seal of Command, once with Seal of Righteousness to release the stored copies, then back. Mana runs out, as it does in Forever.',
+  welcome: 'Welcome to Retribution practice. Keep a seal up, Judgement and Holy Strike on cooldown, and with Unsealed Wrath (the Oct 30 trees) swing three times with Seal of Command, once with Seal of Righteousness to release the stored copies, then back. Mana runs out, as it does in Forever.',
   help: `${CONTROLS}
     ${HELP_COMMON}
-    Retribution swings a slow two-hander: Seal of Command procs 7 times per minute (about 44% per swing at 3.8 sec) and Seal of Righteousness adds Holy damage to every swing. Twist of Light is gone since the live hotfix of Oct 30; Unsealed Wrath (the new 31-point talent) makes each landed swing store a copy of your seal for 15 sec, up to 3, and the first swing with a different seal gives every stored copy its normal chance. The yellow glow follows the yard's provisional loop: Judgement, Holy Strike, Seal of Command for three swings, Seal of Righteousness for one, Consecration with spare mana.
+    Retribution swings a slow two-hander: Seal of Command procs 7 times per minute (about 44% per swing at 3.8 sec) and Seal of Righteousness adds Holy damage to every swing. Twist of Light is gone since the live hotfix of Oct 30; Unsealed Wrath (the new 31-point talent) makes each landed swing store a copy of your seal for 15 sec, up to 3, and the first swing with a different seal gives every stored copy its normal chance. The yellow glow follows our provisional loop: Judgement, Holy Strike, Seal of Command for three swings, Seal of Righteousness for one, Consecration with spare mana.
     Vengeance (after any crit) raises your damage; Vindication now only lowers the dummy's attack power. Conviction gives 2% crit per point to attacks and spells, and Champion of the Light 5/5 makes Hammer of Wrath instant. The review in the rotation panel counts the stored seals your swings released.
     This is a practice tool: hit, crit and proc chances follow WoW Forever; damage numbers are an approximation.`,
   look: { clothColor: 0xb8902e, leatherColor: 0x9aa0a8, hood: false, plate: true },
@@ -192,7 +192,7 @@ export const paladinProt: Spec = specFor('prot', {
   options: MANA_OPTIONS,
   sheet: { spellCrit: 'Spell crit (gear + Intellect)', spellPower: 'Spell power (Holy)' },
   lowMana: (c) => c.cost(c.ability('holyShield')!),
-  welcome: 'Welcome to the Protection practice yard. The dummy hits back: keep Righteous Fury, a seal and Holy Shield up, Judgement on cooldown, Consecration with spare mana and Holy Strike. Blocks give you Holy Shield damage, Reckoning charges and mana.',
+  welcome: 'Welcome to Protection practice. The dummy hits back: keep Righteous Fury, a seal and Holy Shield up, Judgement on cooldown, Consecration with spare mana and Holy Strike. Blocks give you Holy Shield damage, Reckoning charges and mana.',
   help: `${CONTROLS}
     ${HELP_COMMON}
     The dummy attacks you and rolls miss, dodge, parry, block, crit and crushing blows against your sheet. Holy Shield adds 30% block for 10 sec or 4 blocks and deals Holy damage on each block; Redoubt raises your block after hits taken; Shield Specialization gives back 4% of your mana on a block; Reckoning: a block (at most once per 1.5 sec) or a crit taken stores a charge, up to 4, and your next swing fires them all as extra attacks without resetting your swing timer.
@@ -252,11 +252,11 @@ export const paladinShock: Spec = specFor('shock', {
   options: MANA_OPTIONS,
   sheet: { spellCrit: 'Spell crit (gear + Intellect)', spellPower: 'Spell power (Holy)' },
   lowMana: (c) => c.cost(c.ability('holyShock')!),
-  welcome: 'Welcome to the Shockadin practice yard: a melee paladin with Holy Shock on a 10 sec cooldown. gunba\'s Shockadin (23/0/28, re-spent for the Oct 30 trees): keep Seal of Righteousness up, Judgement, Consecration with mana to spare, then Holy Strike and Holy Shock on cooldown.',
+  welcome: 'Welcome to Shockadin practice: a melee paladin with Holy Shock on a 10 sec cooldown. gunba\'s Shockadin (23/0/28, re-spent for the Oct 30 trees): keep Seal of Righteousness up, Judgement, Consecration with mana to spare, then Holy Strike and Holy Shock on cooldown.',
   help: `${CONTROLS}
     ${HELP_COMMON}
     Holy Shock is a 21-point Holy talent with a 10 sec cooldown in WoW Forever (30 in Classic). Divine Precision gives it 8% hit, and Divine Favor makes the next one crit. Since the live hotfix of Oct 30 Holy Power only raises healing crits and Light's Vigil only works on allies, so our Light's Vigil builds are gone. It costs a lot of mana: practice it as a burst on top of your melee.
-    gunba's Shockadin keeps Seal of Righteousness up, judges, lays Consecration with mana to spare (Consecrated Ground: your Holy spells +10% on its targets), then Holy Strike and Holy Shock. The yard re-spent it for the Oct 30 trees (Champion of the Light 3/5 is 36% of your Intellect) and spends Divine Favor on a Holy Shock.
+    gunba's Shockadin keeps Seal of Righteousness up, judges, lays Consecration with mana to spare (Consecrated Ground: your Holy spells +10% on its targets), then Holy Strike and Holy Shock. We re-spent it for the Oct 30 trees (Champion of the Light 3/5 is 36% of your Intellect) and spends Divine Favor on a Holy Shock.
     This is a practice tool: hit, crit and proc chances follow WoW Forever; damage numbers are an approximation.`,
   look: { clothColor: 0xe8e0c8, leatherColor: 0xb8902e, hood: false, plate: true },
   suggest: shockSuggest,

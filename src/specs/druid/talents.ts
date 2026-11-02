@@ -68,7 +68,7 @@ const GS = 'gunba/wow-forever-sim';
 // The Oct 30 trees moved Furor to Feral and Heart of the Wild to Restoration and dropped Berserk and Improved
 // Shifting Power; their points went to Feral Swiftness, Predatory Discipline and the row fillers. Balance builds
 // keep their talents (Reflection and Subtlety swapped places).
-const RESPENT = `${GS}, re-spent by the yard for the Oct 30 trees`;
+const RESPENT = `${GS}, re-spent by us for the Oct 30 trees`;
 const REENCODED = `${GS}, re-encoded to the Oct 30 trees`;
 export const BUILDS: Build[] = [
   { id: 'cat', spec: 'cat', name: 'Feral Cat', talentString: '05002-55200032023012125001-055', source: RESPENT, stats: CAT_STATS, bar: CAT_BAR },

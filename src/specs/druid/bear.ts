@@ -369,7 +369,7 @@ export const druidBear: Spec = {
   ],
   sheet: { spellCrit: false, mainHand: 'Weapon (its DPS x 2.5 is your bear swing)' },
   bar: buildById('bear', 'bear').bar,
-  welcome: 'Welcome to the Feral Bear practice yard. The dummy hits back, so rage from damage taken, dodges and Frenzied Regeneration work as in the game. Keep Lacerate at 5 stacks, Primal Bite on cooldown, Demoralizing Roar and Faerie Fire up, and Maul with spare rage.',
+  welcome: 'Welcome to Feral Bear practice. The dummy hits back, so rage from damage taken, dodges and Frenzied Regeneration work as in the game. Keep Lacerate at 5 stacks, Primal Bite on cooldown, Demoralizing Roar and Faerie Fire up, and Maul with spare rage.',
   help: `${CONTROLS}
     Bear rage in WoW Forever is normalized: each landed white swing gives 11.25 rage (22.5 on a crit), every 2.5 sec. Misses, dodges, parries and the swing a Maul replaces give none. Hits you take give rage from their damage before armor and Barkskin (Forever's measured rule): about 27 for a normal hit from the default dummy, 55 for a crit, 41 for a crushing blow; a dodge gives none, except Natural Reaction's 5.
     Maul replaces your next swing: press once to queue it; pressing again does not cancel it. Primal Bite has a 6 sec cooldown (Berserk is gone since the Oct 30 hotfix). Lacerate is a Feral talent since Oct 30; it stacks 5 times and its hit grows with the stacks.

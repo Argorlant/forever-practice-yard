@@ -329,7 +329,7 @@ export const druidBalance: Spec = {
   sheet: { attackPower: false, crit: false, spellCrit: 'Spell crit (gear + Intellect)', spellPower: 'Spell power', mainHand: false, offHand: false },
   regen,
   bar: buildById('moonkin', 'balance').bar,
-  welcome: 'Welcome to the Balance practice yard. Keep Insect Swarm and Moonfire up, then loop Wrath - Starfire - Starfire: each Wrath gives two Eclipse charges that make Starfire faster. Mana runs out, as it does in Forever: Judgement of Wisdom, Blessing of Wisdom and Mana Spring Totem are on, and Innervate and Major Mana Potions are on your bar.',
+  welcome: 'Welcome to Balance practice. Keep Insect Swarm and Moonfire up, then loop Wrath - Starfire - Starfire: each Wrath gives two Eclipse charges that make Starfire faster. Mana runs out, as it does in Forever: Judgement of Wisdom, Blessing of Wisdom and Mana Spring Totem are on, and Innervate and Major Mana Potions are on your bar.',
   help: `${CONTROLS}
     Spells have a cast bar; moving interrupts it. The global cooldown is 1.5 sec and shrinks with casting haste down to 1.0 sec.
     Wrath (1.5 sec with Improved Wrath) gives two Eclipse charges; each one takes 0.5 sec off a Starfire (3.0 -> 2.5 sec). A spell crit gives Nature's Grace: 10% faster casts and a 10% shorter GCD for 3 sec.

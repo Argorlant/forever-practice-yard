@@ -40,7 +40,7 @@ const MS = 'MythicSim / Kami Labs';
  */
 const MS_REENCODED = `${MS}, re-encoded to the Oct 30 trees`;
 /** The live hotfix of 30 October rebuilt the Arcane and Fire trees; the sims have no builds for them yet, so theirs are re-spent here. */
-const RESPENT = (sim: string) => `${sim}, re-spent by the yard for the Oct 30 trees`;
+const RESPENT = (sim: string) => `${sim}, re-spent by us for the Oct 30 trees`;
 export const BUILDS: Build[] = [
   { id: 'arcane', spec: 'arcane', name: 'Arcane', talentString: '023205203100311531-3-05350003', source: RESPENT(GS), stats: ARCANE_STATS, bar: ARCANE_BAR },
   { id: 'arcane-fire', spec: 'arcane', name: 'Arcane/Fire', talentString: '023015203100311531-5050032000203', source: RESPENT(GS), stats: ARCANE_STATS, bar: ARCANE_BAR },

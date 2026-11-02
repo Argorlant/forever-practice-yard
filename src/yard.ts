@@ -36,7 +36,7 @@ const CLASS_KEY = 'fpy.class';
 const params = new URLSearchParams(location.search);
 const spec = specById(params.get('class') ?? load<string>(CLASS_KEY));
 save(CLASS_KEY, spec.id);
-document.title = `${spec.className} Practice Yard · WoW Forever`;
+document.title = `${spec.className} Rotations · WoW Forever`;
 // v5: four action bar rows before the stance bar (v4: warriors got a stance bar; stats are gear only since v3).
 const PREFS_KEY = `fpy.${spec.id}.v5${spec.prefsRevision ? `.r${spec.prefsRevision}` : ''}`;
 const MODEL_URL = `${import.meta.env.BASE_URL}models/human.glb`;
@@ -229,14 +229,14 @@ const ownDummy = new OwnModel({
   hint: `Models tab: ${CODE('creature/object/woodendummy.m2')}, then Export GLB.`,
 });
 const ownYard = new OwnModel({
-  key: 'yard', title: 'The yard', kind: 'place',
+  key: 'yard', title: 'Training area', kind: 'place',
   localKeys: async () => trainingAreaKeys(load<string>(LOCAL_RACE) ?? (await localRaces(classKey(spec.className)))?.start),
   cacheKey: async () => `yard:${factionForRace(load<string>(LOCAL_RACE) ?? (await localRaces(classKey(spec.className)))?.start)}`,
   hint: `A zone: Maps tab, Shift+click a map tile (Goldshire is Azeroth 31, 49), Export OBJ, then Load a map folder… here and pick wow.export's export folder (its Settings → Export Directory). Your browser may call this an upload: nothing leaves your computer. Or a building, an arena or a raid room: Models tab, WMO filter, such as ${CODE('stranglegladiatorarena.wmo')} (the Gurubashi Arena), Export GLB. Then walk to where the dummy should stand and press Put the dummy here.`,
 });
 const ownLair = new OwnModel({
   key: 'onyxia-lair', title: "Onyxia's lair", kind: 'place', later: true,
-  hint: `For the Onyxia fight only; the yard above stays around the dummies. Models tab: ${CODE('world/wmo/dungeon/kl_onyxiaslair/kl_onyxiaslair.wmo')}, then Export GLB.`,
+  hint: `For the Onyxia fight only; the training area above stays around the dummies. Models tab: ${CODE('world/wmo/dungeon/kl_onyxiaslair/kl_onyxiaslair.wmo')}, then Export GLB.`,
 });
 const ownOnyxia = new OwnModel({
   key: 'onyxia', title: 'Onyxia', kind: 'figure', moments: ['stand', 'attack', 'wound'], later: true,
@@ -360,7 +360,7 @@ ownYard.onChange = applyPlace;
 ownLair.onChange = applyPlace;
 ownYard.actions = [{
   label: 'Put the dummy here',
-  title: "The floor where you stand becomes the yard's center, where the dummies stand",
+  title: "The floor where you stand becomes the center of the training area, where the dummies stand",
   run: () => {
     if (!place || fight) return;
     ownYard.setAnchor(place.centerOn(controls.x, controls.z, controls.y));

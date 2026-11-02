@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "license": "MIT",
-  "description": "Rotation practice yard for WoW Forever",
+  "description": "Rotation practice for WoW Forever",
   "type": "module",
   "scripts": {
     "dev": "vite --port 5180 --host 127.0.0.1",
