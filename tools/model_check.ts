@@ -70,6 +70,8 @@ for (const race of ['human', 'dwarf', 'gnome', 'nightelf', 'orc', 'tauren', 'tro
     assert(manifest.models[trainingAreaKeys(`${race}-${sex}`)[0]], `Training area exists for ${race}-${sex}`);
   }
 }
+assert.equal(factionForRace('windshaper'), 'horde');
+assert.equal(factionForRace('highorder'), 'alliance');
 for (const faction of ['alliance', 'horde']) {
 const trainingFile = manifest.models[`yard:${faction}`];
 const compressed = manifest.gzip.includes(trainingFile);

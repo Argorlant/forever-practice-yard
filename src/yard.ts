@@ -3,7 +3,7 @@
 import * as THREE from 'three';
 import { Combat } from './engine/combat';
 import type { Unit, Weapon } from './engine/types';
-import { Beast } from './scene/beast';
+import { Beast, RACE_FORMS } from './scene/beast';
 import { Character, type Locomotion } from './scene/character';
 import { CustomModel } from './scene/custom-model';
 import { CustomPlace } from './scene/custom-place';
@@ -202,11 +202,25 @@ const totemsReady = spec.className === 'Shaman'
 // this browser: the character (per class), the druid's forms, the dummy and the yard.
 const CODE = (s: string) => `<code>${s}</code>`;
 const LOCAL_RACE = `fpy.localRace.${classKey(spec.className)}`;
+/** The race saved for this class. A race with no character model ("highorder", no sex) counts only for the specs that stay in form. */
+const savedRace = (): string | null => {
+  const race = load<string>(LOCAL_RACE);
+  return race && !race.includes('-') && !spec.form ? null : race;
+};
+const currentRace = async () => savedRace() ?? (await localRaces(classKey(spec.className)))?.start;
+/** The forms drawn in code take the race's colors. */
+async function paintBeasts(): Promise<void> {
+  const race = (await currentRace())?.split('-')[0];
+  for (const kind of ['cat', 'bear'] as const) {
+    const look = (race && RACE_FORMS[race]?.[kind]) || spec.forms?.[kind];
+    if (look) beasts[kind]?.setLook(look);
+  }
+}
 const ownPlayer = new OwnModel({
   key: classKey(spec.className), title: 'Your character', kind: 'figure',
   moments: ['stand', 'run', 'run backwards', 'attack', 'cast', 'shoot', 'jump'],
   hint: 'Characters tab: dress your character (Item Sets puts on a whole tier set), tick Export animations, then Export GLB. Helmets and shoulder pads go back on their attachment points.',
-  localKeys: () => localPlayerKeys(load<string>(LOCAL_RACE)),
+  localKeys: () => localPlayerKeys(savedRace()),
 });
 /** `npm run dev`: a model per spec, per talent tree for a class with one spec ("warrior:Fury"), and per race ("@human-m"). */
 function localPlayerKeys(race: string | null): string[] {
@@ -222,16 +236,23 @@ for (const kind of ['cat', 'bear'] as const) {
   ownForms[kind] = new OwnModel({
     key: `form-${kind}`, title: kind === 'cat' ? 'Cat Form' : 'Bear Form', kind: 'figure', moments: ['stand', 'run', 'attack', 'jump'],
     hint: `Models tab: ${CODE(`creature/druid${kind}/druid${kind}.m2`)} (Tauren: ${CODE(`druid${kind}tauren.m2`)}), then Export GLB.`,
+    raceOnly: true,
+    // The published form is the Night Elf's; another race has its own, or the one drawn in code.
+    localKeys: async () => {
+      const race = (await currentRace())?.split('-')[0];
+      return !race || race === 'nightelf' ? [`form-${kind}@nightelf`, `form-${kind}`] : [`form-${kind}@${race}`];
+    },
   });
 }
+void paintBeasts();
 const ownDummy = new OwnModel({
   key: 'dummy', title: 'Training dummy', kind: 'figure', moments: ['stand', 'wound'],
   hint: `Models tab: ${CODE('creature/object/woodendummy.m2')}, then Export GLB.`,
 });
 const ownYard = new OwnModel({
   key: 'yard', title: 'Training area', kind: 'place',
-  localKeys: async () => trainingAreaKeys(load<string>(LOCAL_RACE) ?? (await localRaces(classKey(spec.className)))?.start),
-  cacheKey: async () => `yard:${factionForRace(load<string>(LOCAL_RACE) ?? (await localRaces(classKey(spec.className)))?.start)}`,
+  localKeys: async () => trainingAreaKeys(await currentRace()),
+  cacheKey: async () => `yard:${factionForRace(await currentRace())}`,
   hint: `A zone: Maps tab, Shift+click a map tile (Goldshire is Azeroth 31, 49), Export OBJ, then Load a map folder… here and pick wow.export's export folder (its Settings → Export Directory). Your browser may call this an upload: nothing leaves your computer. Or a building, an arena or a raid room: Models tab, WMO filter, such as ${CODE('stranglegladiatorarena.wmo')} (the Gurubashi Arena), Export GLB. Then walk to where the dummy should stand and press Put the dummy here.`,
 });
 const ownLair = new OwnModel({
@@ -576,20 +597,23 @@ const hud = new Hud(app, combat, prefs.bar, {
     sel.title = "Your character's race and sex";
     const label = (who: string) => {
       const [race, sex] = who.split('-');
-      return `${race === 'nightelf' ? 'Night Elf' : race[0].toUpperCase() + race.slice(1)} ${sex === 'm' ? 'male' : 'female'}`;
+      const name = { nightelf: 'Night Elf', highorder: 'Skyborne (High Order)', windshaper: 'Skyborne (Windshaper)' }[race] ?? race[0].toUpperCase() + race.slice(1);
+      return sex ? `${name} ${sex === 'm' ? 'male' : 'female'}` : name;
     };
-    const current = load<string>(LOCAL_RACE) ?? races.start;
-    for (const who of races.list) {
+    const current = savedRace() ?? races.start;
+    // The specs that stay in form need no character model: Skyborne druids are there even without one.
+    const formOnly = spec.form ? ['highorder', 'windshaper'].filter((race) => !races.list.some((who) => who.startsWith(race))) : [];
+    for (const who of [...races.list, ...formOnly]) {
       const option = new Option(label(who), who, false, who === current);
       // Not exported yet.
-      option.disabled = !(await localHas(localPlayerKeys(who)));
+      option.disabled = !spec.form && !(await localHas(localPlayerKeys(who)));
       sel.append(option);
     }
     sel.addEventListener('change', async () => {
       save(LOCAL_RACE, sel.value);
       sel.blur();
       sel.disabled = true;
-      await whileLoading('Loading your character and training area…', Promise.all([ownPlayer.refreshLocal(), ownYard.refreshLocal()]));
+      await whileLoading('Loading your character and training area…', Promise.all([ownPlayer.refreshLocal(), ownYard.refreshLocal(), ...Object.values(ownForms).map((slot) => slot.refreshLocal()), paintBeasts()]));
       sel.disabled = false;
     });
     hud.root.querySelector('.hud-right')?.prepend(sel);

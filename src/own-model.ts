@@ -28,6 +28,8 @@ export interface SlotSpec {
   cacheKey?: () => string | Promise<string>;
   /** Not needed for the first scene: it loads on start(), when its fight is chosen or Settings opens. */
   later?: boolean;
+  /** Drawn only for the race its names point to: with none for the race, a published model of another race is not kept. */
+  raceOnly?: boolean;
 }
 
 interface HostedModels {
@@ -242,7 +244,7 @@ export class OwnModel {
       console.error(err);
       return null;
     }) : null;
-    const s = local ?? kept;
+    const s = local ?? (this.slot.raceOnly && !name && !isPersonal(kept) ? null : kept);
     if (!s) return;
     // Switched off stays off, whichever model the race and the build call for.
     if (local && kept) local.enabled = kept.enabled;
@@ -267,6 +269,16 @@ export class OwnModel {
   async refreshLocal(): Promise<void> {
     if (!this.slot.localKeys) return;
     const file = await localFile(await this.slot.localKeys());
+    if (!file && this.slot.raceOnly && this.stored && !isPersonal(this.stored)) {
+      this.source?.dispose();
+      this.source = null;
+      this.stored = null;
+      this.localFile = null;
+      this.status = '';
+      this.draw();
+      this.onChange();
+      return;
+    }
     if (!file || await modelLabel(file) === this.localFile) return;
     // A character the visitor imported stays; only the published one follows the race and the build.
     if (this.slot.kind === 'figure' && isPersonal(this.stored)) return;

@@ -270,7 +270,8 @@ browser (IndexedDB): imports by visitors are never uploaded or shared. The owner
 `onyxia`, `onyxian-whelp`), and a few names cover what has no slot in Settings: a hunter's pet (`pet:hunter-bm`), a
 warlock's demon (`minion:imp`), a totem (`totem:searingTotem`) and the raid at Onyxia (`raid:tank`, `raid:healer`,
 `raid:whelpTank`). Your character goes per spec, talent tree and race (`hunter-bm@nightelf-f`, `warrior:Fury@human-m`), and
-`@races:hunter` with `@default:hunter` fill a menu of races at the top right. A zone is `map:` and the folders holding
+`@races:hunter` with `@default:hunter` fill a menu of races at the top right. A druid's forms go per race (`form-cat@tauren`, `form-bear@highorder`, plain `form-cat` for the
+Night Elf); a race with none gets forms drawn in code. A zone is `map:` and the folders holding
 its files (`map:maps,world,tileset`). To update the online selection, run `npm run export:wow` (optionally followed by
 `-- <export-folder>`), then build and deploy. This prepares `public/wow/manifest.json`, compressed model descriptions,
 shared binary resources and map files. Ordinary builds use these prepared assets and do not read the machine's export folder.

@@ -3,6 +3,7 @@
 // prowl, paw swipes and bites, a jump pose, breathing and a swaying tail.
 // Same interface as the humanoid Character, so the scene can swap them.
 import * as THREE from 'three';
+import type { BeastLookSpec } from '../engine/types';
 import type { Locomotion } from './character';
 
 export interface BeastLook {
@@ -10,7 +11,24 @@ export interface BeastLook {
   fur: number;
   belly: number;
   eyes: number;
+  /** A crest and shoulder tufts, for the Skyborne's bird-like forms. */
+  feathers?: boolean;
 }
+
+type RaceForm = BeastLookSpec & { feathers?: boolean };
+const SKYBORNE: { cat: RaceForm; bear: RaceForm } = {
+  cat: { fur: 0x3f6fb5, belly: 0xe8eef5, eyes: 0xbfe6ff, feathers: true },
+  bear: { fur: 0x34609f, belly: 0xe8eef5, eyes: 0xbfe6ff, feathers: true },
+};
+/** A druid's forms drawn in code, for a race with no model of its own (Night Elf keeps the spec's colors). */
+export const RACE_FORMS: Record<string, { cat: RaceForm; bear: RaceForm }> = {
+  tauren: {
+    cat: { fur: 0x8c6b3f, belly: 0xcdb387, eyes: 0xffd27a },
+    bear: { fur: 0x43311f, belly: 0x7a6248, eyes: 0xffc860 },
+  },
+  highorder: SKYBORNE,
+  windshaper: SKYBORNE,
+};
 
 interface Leg { hip: THREE.Group; knee: THREE.Group; front: boolean; side: 1 | -1; phase: number }
 interface Shot { name: string; t: number; length: number }
@@ -39,11 +57,21 @@ export class Beast {
   private bodyYaw = 0;
   private bodyYawTarget = 0;
   private time = 0;
+  private paint!: { fur: THREE.MeshStandardMaterial; belly: THREE.MeshStandardMaterial; glow: THREE.MeshBasicMaterial };
+  private feathers: THREE.Group[] = [];
 
   constructor(private look: BeastLook) {
     this.shape = SHAPES[look.kind];
     this.build();
     this.root.add(this.body);
+  }
+
+  /** Another race's colors for the same animal. */
+  setLook(look: RaceForm): void {
+    this.paint.fur.color.setHex(look.fur);
+    this.paint.belly.color.setHex(look.belly);
+    this.paint.glow.color.setHex(look.eyes);
+    for (const group of this.feathers) group.visible = !!look.feathers;
   }
 
   private build(): void {
@@ -52,6 +80,7 @@ export class Beast {
     const belly = new THREE.MeshStandardMaterial({ color: this.look.belly, roughness: 0.9, flatShading: true });
     const dark = new THREE.MeshStandardMaterial({ color: 0x111111, roughness: 0.6 });
     const glow = new THREE.MeshBasicMaterial({ color: this.look.eyes });
+    this.paint = { fur, belly, glow };
     const cast = <T extends THREE.Object3D>(o: T) => { o.traverse((m) => { if ((m as THREE.Mesh).isMesh) m.castShadow = true; }); return o; };
     const bear = this.look.kind === 'bear';
 
@@ -106,6 +135,28 @@ export class Beast {
       eye.position.set(side * s.head * 0.42, s.head * 0.18, s.head * 0.82);
       this.head.add(eye);
     }
+
+    // Feathers: shown only on the Skyborne's forms.
+    const crest = new THREE.Group();
+    for (let i = 0; i < 3; i++) {
+      const plume = new THREE.Mesh(new THREE.ConeGeometry(s.head * 0.16, s.head * (1.05 - i * 0.2), 4), belly);
+      plume.position.set(0, s.head * (0.95 - i * 0.12), -s.head * (0.15 + i * 0.32));
+      plume.rotation.x = -0.75 - i * 0.2;
+      crest.add(cast(plume));
+    }
+    this.head.add(crest);
+    const tufts = new THREE.Group();
+    for (const side of [-1, 1]) {
+      for (let i = 0; i < 3; i++) {
+        const plume = new THREE.Mesh(new THREE.ConeGeometry(s.radius * 0.2, s.radius * 0.95, 4), belly);
+        plume.position.set(side * s.radius * 0.88, s.radius * (0.42 - i * 0.28), s.length * 0.28 - i * s.radius * 0.28);
+        plume.rotation.set(-1.15, 0, side * -0.65);
+        tufts.add(cast(plume));
+      }
+    }
+    this.torso.add(tufts);
+    this.feathers = [crest, tufts];
+    for (const group of this.feathers) group.visible = !!this.look.feathers;
 
     // Legs: hip (pivot) -> upper -> knee (pivot) -> lower -> paw.
     const phases = { fl: 0, hr: 0, fr: 0.5, hl: 0.5 };
