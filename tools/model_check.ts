@@ -49,6 +49,16 @@ for (const kind of ['bow', 'gun', 'crossbow'] as const) {
   assert(model.root.getObjectByName('yard-ranged-back')!.visible);
   assert(melee.every((item) => item.visible));
 }
+// A build or a choice in Settings that differs from the export: the yard's own weapon, and nothing where none is held.
+model.setRanged(null);
+const inRight = right.children.length, inLeft = left.children.length;
+model.setMelee('polearm', null, true);
+assert(melee.every((item) => !item.visible), 'A two-hander hides both exported weapons');
+assert.equal(right.children.length, inRight + 1, 'The two-hander is drawn in the right hand');
+assert.equal(left.children.length, inLeft, 'And nothing in the left');
+model.setMelee('own', 'own');
+assert(melee.every((item) => item.visible), 'The exported weapons come back');
+assert.equal(right.children.length, inRight);
 model.dispose();
 assert(!model.root.getObjectByName('yard-ranged-hand'));
 

@@ -19,6 +19,9 @@ const STYLES: Record<string, Style> = {
 };
 
 /** Where each slot stands around your feet: [sideways, forward] in metres, turned with your facing at the drop. */
+/** How high a totem's head is above its floor, where its attacks and novas start. */
+export const TOTEM_HEAD = 0.95;
+
 const SPOTS: Record<string, [number, number]> = { fire: [1.05, 0.6], earth: [-1.05, 0.6], air: [1.5, -0.2], water: [-1.5, -0.2] };
 
 interface Live { group: THREE.Group; animated: THREE.Object3D[]; top: Top; age: number; dying: number; phase: number; figure?: CustomModel }
@@ -32,6 +35,8 @@ export class Totems {
   private leaving: Live[] = [];
   /** Models of your own for a totem (`npm run dev`); the others are carved in code. */
   private models = new Map<string, ModelSource>();
+  /** The floor under a spot: flat in the yard, the place's own floors in yours. */
+  ground: (x: number, z: number) => number = () => 0;
 
   constructor(private scene: THREE.Scene) {}
 
@@ -61,7 +66,8 @@ export class Totems {
     const model = this.models.get(id!);
     const t = model ? this.buildModel(model, style) : this.build(style);
     // Forward is (sin f, cos f); sideways is (cos f, -sin f).
-    t.group.position.set(x + fwd * sin + side * cos, 0, z + fwd * cos - side * sin);
+    const spotX = x + fwd * sin + side * cos, spotZ = z + fwd * cos - side * sin;
+    t.group.position.set(spotX, this.ground(spotX, spotZ), spotZ);
     t.group.rotation.y = facing;
     t.group.scale.setScalar(0.001);
     this.scene.add(t.group);
@@ -71,7 +77,12 @@ export class Totems {
   /** The head of your totem in a slot, where its attacks and novas start; the drop point if the slot is empty. */
   head(slot: string, x: number, z: number): THREE.Vector3 {
     const t = this.live.get(slot);
-    return t ? t.group.position.clone().setY(0.95) : new THREE.Vector3(x, 0.95, z);
+    return t ? t.group.position.clone().setY(t.group.position.y + TOTEM_HEAD) : new THREE.Vector3(x, this.ground(x, z) + TOTEM_HEAD, z);
+  }
+
+  /** The floors changed (another place): every totem back on the floor under it. */
+  settle(): void {
+    for (const { group: { position: p } } of this.live.values()) p.y = this.ground(p.x, p.z);
   }
 
   /** Removes every totem at once (a reset). */
@@ -94,7 +105,7 @@ export class Totems {
       const t = this.leaving[i];
       t.dying += dt;
       const k = Math.min(1, t.dying / 0.3);
-      t.group.position.y = -0.9 * k;
+      t.group.position.y -= 3 * dt;
       t.group.scale.setScalar(1 - 0.5 * k);
       if (k >= 1) {
         this.dispose(t);

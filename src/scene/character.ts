@@ -541,7 +541,7 @@ export class Character {
       piece.scale.setScalar(kind === 'dagger' ? DAGGER_LENGTH : SWORD_LENGTH);
       w.add(piece);
     } else {
-      this.buildCodeWeapon(w, kind);
+      Character.buildCodeWeapon(w, kind, this.mats);
     }
 
     w.scale.setScalar(scale);
@@ -552,9 +552,19 @@ export class Character {
     return w;
   }
 
-  /** A weapon built in code (maces, axes, staves, fist weapons; swords and daggers when the models are missing). */
-  private buildCodeWeapon(w: THREE.Group, kind: WeaponType): void {
-    const { metal, grip, gold } = this.mats;
+  /** A melee weapon built in code for any rig's hand: the grip at the origin, the blade along +Y. */
+  static buildMelee(kind: WeaponType): THREE.Group {
+    const w = new THREE.Group();
+    Character.buildCodeWeapon(w, kind, {
+      metal: new THREE.MeshStandardMaterial({ color: 0x9aa3ad, metalness: 0.85, roughness: 0.3 }),
+      grip: new THREE.MeshStandardMaterial({ color: 0x1d1612, roughness: 0.6 }),
+      gold: new THREE.MeshStandardMaterial({ color: 0xc9a050, metalness: 0.8, roughness: 0.35 }),
+    });
+    return w;
+  }
+
+  /** A weapon built in code (maces, axes, polearms, staves, fist weapons; swords and daggers when the models are missing). */
+  private static buildCodeWeapon(w: THREE.Group, kind: WeaponType, { metal, grip, gold }: { metal: THREE.Material; grip: THREE.Material; gold: THREE.Material }): void {
     const add = (m: THREE.Mesh, y: number) => { m.position.y = y; m.castShadow = true; w.add(m); return m; };
     // The handle sits in the fist; +Y points out of the thumb side.
     add(new THREE.Mesh(new THREE.CylinderGeometry(0.014, 0.016, kind === 'mace' || kind === 'axe' ? 0.34 : 0.12, 8), grip),
@@ -596,6 +606,19 @@ export class Character {
         prong.rotation.set(Math.sin(a) * 0.3, 0, -Math.cos(a) * 0.3);
         w.add(prong);
       }
+    } else if (kind === 'polearm') {
+      // A long shaft with a blade at its top.
+      add(new THREE.Mesh(new THREE.CylinderGeometry(0.014, 0.016, 0.78, 8), grip), 0.2);
+      const shape = new THREE.Shape();
+      shape.moveTo(-0.035, 0);
+      shape.lineTo(0.035, 0);
+      shape.lineTo(0.02, 0.2);
+      shape.lineTo(0, 0.28);
+      shape.lineTo(-0.02, 0.2);
+      shape.closePath();
+      const blade = add(new THREE.Mesh(new THREE.ExtrudeGeometry(shape, { depth: 0.008, bevelEnabled: false }), metal), 0.59);
+      blade.position.z = -0.004;
+      add(new THREE.Mesh(new THREE.BoxGeometry(0.12, 0.02, 0.03), gold), 0.59);
     } else if (kind === 'axe') {
       const shape = new THREE.Shape();
       shape.moveTo(0, -0.06);

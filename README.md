@@ -233,7 +233,7 @@ Shield, Shadowform). It is all particles (`src/scene/vfx.ts`) driven by the engi
 **Published models and your own models.** The online yard loads the owner's exported characters (with race and sex
 selection), forms, companions, training dummy, training area and Onyxia's lair automatically. Alliance races practice
 in Stormwind's Command Center courtyard; Horde races practice in Orgrimmar's Valley of Honor. Changing race changes
-the area with it. Each faction keeps its own saved dummy position. The scene waits for its WoW models before its first
+the area with it. Each faction keeps its own saved dummy position. Onyxia's lair and dragons arrive the first time you go to her or open Settings. The scene waits for the rest of its WoW models, showing how much has arrived and using the yard's own if nothing arrives for 20 seconds, before its first
 frame, and the fallback mannequin is loaded only if the character model is unavailable or switched off. Shared animation buffers and textures
 avoid repeating the same data for every equipment set; the original exports are unchanged. Settings → "Your own models"
 can replace these with personal files: your character, the druid's Cat and Bear Forms, the training dummy, the yard itself and Onyxia's lair. Export them with

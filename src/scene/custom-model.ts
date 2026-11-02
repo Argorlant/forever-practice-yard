@@ -11,6 +11,18 @@ import type { WeaponType } from '../engine/types';
 
 export interface ModelFile { name: string; type?: string; data: Blob }
 
+/** What a hand holds: 'own' is what the export holds, a weapon type draws the yard's own instead, null is nothing. */
+export type Held = WeaponType | 'own' | null;
+
+function freeMeshes(group: THREE.Object3D): void {
+  group.traverse((o) => {
+    if (!(o as THREE.Mesh).isMesh) return;
+    const mesh = o as THREE.Mesh;
+    mesh.geometry.dispose();
+    for (const mat of Array.isArray(mesh.material) ? mesh.material : [mesh.material]) mat.dispose();
+  });
+}
+
 /** Each locomotion state's animations, best first. */
 const LOCO: Record<Locomotion, string[]> = {
   idle: ['stand', 'idleloop', 'idle'],
@@ -174,6 +186,9 @@ export class CustomModel {
   private rangedKind: WeaponType | null = null;
   private ranged: { hand: THREE.Group; back: THREE.Group } | null = null;
   private meleeItems: THREE.Object3D[] = [];
+  private holding: { main: Held; off: Held } = { main: 'own', off: 'own' };
+  private heldKey = 'own|own|false';
+  private drawnWeapons: THREE.Group[] = [];
   private aimForward = new THREE.Vector3();
   private aimRight = new THREE.Vector3();
   private aimUp = new THREE.Vector3();
@@ -250,29 +265,8 @@ export class CustomModel {
     scene.traverse((o) => { if (/^(Main.hand|Off.hand)_Item/i.test(o.name)) this.meleeItems.push(o); });
   }
 
-  /** The exported outfit has melee items but may omit the ranged slot. Reuse
-   * the yard's ranged models and bind them to this rig's actual hand bones. */
-  setRanged(kind: WeaponType | null): void {
-    if (kind === this.rangedKind) return;
-    this.rangedKind = kind;
-    if (this.ranged) {
-      for (const group of [this.ranged.hand, this.ranged.back]) {
-        group.removeFromParent();
-        group.traverse((o) => {
-          if (!(o as THREE.Mesh).isMesh) return;
-          const mesh = o as THREE.Mesh;
-          mesh.geometry.dispose();
-          for (const mat of Array.isArray(mesh.material) ? mesh.material : [mesh.material]) mat.dispose();
-        });
-      }
-      this.ranged = null;
-    }
-    if (!kind) {
-      for (const item of this.meleeItems) item.visible = true;
-      return;
-    }
-    const hand = kind === 'bow' ? this.hands.l : this.hands.r;
-    if (!hand) return;
+  /** Binds a weapon to this rig's hand bone: the grip in the fist, up across the knuckles, forward along the fingers. */
+  private inHand(hand: THREE.Object3D, weapon: THREE.Object3D, scale = 1): THREE.Group {
     hand.updateWorldMatrix(true, true);
     const finger = (name: string) => {
       let found: THREE.Object3D | null = null;
@@ -281,8 +275,7 @@ export class CustomModel {
     };
     const index = finger('IndexFinger'), pinky = finger('PinkyFinger'), middle = finger('MiddleFinger');
     const holder = new THREE.Group();
-    holder.name = 'yard-ranged-hand';
-    holder.add(Character.buildRanged(kind));
+    holder.add(weapon);
     if (index && pinky && middle) {
       const forward = middle.clone().normalize();
       const up = index.clone().sub(pinky);
@@ -292,8 +285,49 @@ export class CustomModel {
       holder.position.copy(index.clone().add(pinky).multiplyScalar(0.5));
     }
     // Mesh dimensions are meters; wow.export bones are in yards.
-    holder.scale.setScalar(1 / 0.9144);
+    holder.scale.setScalar(scale / 0.9144);
     hand.add(holder);
+    return holder;
+  }
+
+  /** What each hand holds, for a build or a choice in Settings that differs from the export; `twoHand` draws the main hand's bigger. */
+  setMelee(main: Held, off: Held, twoHand = false): void {
+    const key = `${main}|${off}|${twoHand}`;
+    if (key === this.heldKey) return;
+    this.heldKey = key;
+    this.holding = { main, off };
+    for (const group of this.drawnWeapons) { group.removeFromParent(); freeMeshes(group); }
+    this.drawnWeapons = [];
+    if (main && main !== 'own' && this.hands.r) this.drawnWeapons.push(this.inHand(this.hands.r, Character.buildMelee(main), twoHand ? 1.6 : 1));
+    if (off && off !== 'own' && this.hands.l) this.drawnWeapons.push(this.inHand(this.hands.l, Character.buildMelee(off)));
+    this.showMelee(!this.ranged?.hand.visible);
+  }
+
+  private showMelee(on: boolean): void {
+    for (const item of this.meleeItems) item.visible = on && (/^Main/i.test(item.name) ? this.holding.main : this.holding.off) === 'own';
+    for (const group of this.drawnWeapons) group.visible = on;
+  }
+
+  /** The exported outfit has melee items but may omit the ranged slot. Reuse
+   * the yard's ranged models and bind them to this rig's actual hand bones. */
+  setRanged(kind: WeaponType | null): void {
+    if (kind === this.rangedKind) return;
+    this.rangedKind = kind;
+    if (this.ranged) {
+      for (const group of [this.ranged.hand, this.ranged.back]) {
+        group.removeFromParent();
+        freeMeshes(group);
+      }
+      this.ranged = null;
+    }
+    if (!kind) {
+      this.showMelee(true);
+      return;
+    }
+    const hand = kind === 'bow' ? this.hands.l : this.hands.r;
+    if (!hand) return;
+    const holder = this.inHand(hand, Character.buildRanged(kind));
+    holder.name = 'yard-ranged-hand';
     const back = new THREE.Group();
     back.name = 'yard-ranged-back';
     back.add(Character.buildRanged(kind));
@@ -318,7 +352,7 @@ export class CustomModel {
     if (!this.ranged) return;
     this.ranged.hand.visible = on;
     this.ranged.back.visible = !on;
-    for (const item of this.meleeItems) item.visible = !on;
+    this.showMelee(!on);
   }
 
   private rangedNames(ready: boolean): string[] {
@@ -529,6 +563,7 @@ export class CustomModel {
   /** Takes the copy out of the scene; its geometry and textures belong to the ModelSource. */
   dispose(): void {
     this.setRanged(null);
+    this.setMelee('own', 'own');
     this.root.removeFromParent();
     this.mixer.stopAllAction();
   }

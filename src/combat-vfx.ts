@@ -5,6 +5,7 @@
 import * as THREE from 'three';
 import type { Combat } from './engine/combat';
 import type { Hit, School, Unit, VfxStyle } from './engine/types';
+import { TOTEM_HEAD } from './scene/totems';
 import { STYLES, styleOfColor, type Missile, type StrikeKind, type Vfx } from './scene/vfx';
 
 const YD = 0.9144;
@@ -225,7 +226,7 @@ export function wireVfx(combat: Combat, vfx: Vfx, at: FxAnchors): { update(dt: n
     const pet = at.pet();
     const t = combat.target;
     if (!pet || !t) return;
-    if (kind === 'firebolt') launch('fire', t, spellHit, { from: pet.clone().setY(0.7), speed: 20, size: 0.08 });
+    if (kind === 'firebolt') launch('fire', t, spellHit, { from: pet.clone().setY(pet.y + 0.7), speed: 20, size: 0.08 });
     else if (kind === 'lash') {
       const p = chestPoint(t);
       if (p) vfx.strike(p, pet, 0xff60c0, 'arc');
@@ -233,8 +234,8 @@ export function wireVfx(combat: Combat, vfx: Vfx, at: FxAnchors): { update(dt: n
   });
 
   combat.on('nova', ({ x, z, radius, totem }) => {
-    const p = totem ? at.totemHead(totem, x, z) : new THREE.Vector3(x, 0, z);
-    vfx.nova(new THREE.Vector3(p.x, 0, p.z), radius * YD, 'fire');
+    const head = totem ? at.totemHead(totem, x, z) : null;
+    vfx.nova(head ? head.setY(head.y - TOTEM_HEAD) : new THREE.Vector3(x, at.feet().y, z), radius * YD, 'fire');
   });
 
   combat.on('incoming', (i) => {

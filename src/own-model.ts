@@ -26,6 +26,8 @@ export interface SlotSpec {
   localKeys?: () => string[] | Promise<string[]>;
   /** Separate saved places (and anchors) for each faction. */
   cacheKey?: () => string | Promise<string>;
+  /** Not needed for the first scene: it loads on start(), when its fight is chosen or Settings opens. */
+  later?: boolean;
 }
 
 interface HostedModels {
@@ -37,9 +39,45 @@ interface HostedModels {
   revision: string;
 }
 
+/** How the published models are coming along: bytes so far, and a call as more arrive. */
+export const downloads = { received: 0, onProgress: () => {} };
+/** With nothing arriving at all for this long, downloads are given up on and the yard's own models stand in. */
+const STALLED_MS = 20000;
+const running = new Set<AbortController>();
+let lastByte = 0;
+let watchdog: ReturnType<typeof setInterval> | null = null;
+
+async function download(url: string): Promise<Blob> {
+  const abort = new AbortController();
+  running.add(abort);
+  lastByte = performance.now();
+  watchdog ??= setInterval(() => {
+    if (performance.now() - lastByte > STALLED_MS) for (const a of running) a.abort();
+  }, 1000);
+  try {
+    const response = await fetch(url, { signal: abort.signal });
+    if (!response.ok) throw new Error(`Could not load ${url} (${response.status}).`);
+    if (response.headers.get('content-type')?.includes('text/html')) throw new Error(`Missing file: ${url}.`);
+    if (!response.body) return await response.blob();
+    const parts: BlobPart[] = [];
+    const reader = response.body.getReader();
+    for (;;) {
+      const { done, value } = await reader.read();
+      if (done) return new Blob(parts);
+      parts.push(value);
+      lastByte = performance.now();
+      downloads.received += value.length;
+      downloads.onProgress();
+    }
+  } finally {
+    running.delete(abort);
+    if (!running.size && watchdog) { clearInterval(watchdog); watchdog = null; }
+  }
+}
+
 const HOSTED_ROOT = `${import.meta.env.BASE_URL}wow/`;
 const hosted: Promise<HostedModels | null> = import.meta.env.DEV ? Promise.resolve(null)
-  : fetch(`${HOSTED_ROOT}manifest.json`).then((r) => r.ok ? r.json() : null).catch(() => null);
+  : download(`${HOSTED_ROOT}manifest.json`).then((b) => b.text()).then((text) => JSON.parse(text)).catch(() => null);
 /** Local development reads wow.export directly; production reads its prepared static selection. */
 const localMap: Promise<Record<string, string>> = import.meta.env.DEV
   ? fetch('/@local-wow/yard-models.json').then((r) => (r.ok ? r.json() : {})).catch(() => ({}))
@@ -75,12 +113,9 @@ async function hostedFile(name: string, h: HostedModels): Promise<ModelFile> {
   // literally (wow.export uses folders such as food&utensils).
   const path = name.split('/').map((part) => encodeURIComponent(part).replace(/%26/gi, '&')).join('/');
   const url = `${HOSTED_ROOT}${path}${h.gzip.includes(name) ? '.gz' : ''}`;
-  const response = await fetch(url);
-  if (!response.ok) throw new Error(`Could not load ${name} (${response.status}).`);
-  if (response.headers.get('content-type')?.includes('text/html')) throw new Error(`Missing model file: ${name}.`);
   // Some static servers set Content-Encoding for .gz and the browser already
   // decompresses it; others serve the gzip file as an ordinary binary asset.
-  const payload = await response.blob();
+  const payload = await download(url);
   const magic = new Uint8Array(await payload.slice(0, 2).arrayBuffer());
   const data = compressed && magic[0] === 0x1f && magic[1] === 0x8b
     ? await new Response(payload.stream().pipeThrough(new DecompressionStream('gzip'))).blob()
@@ -175,11 +210,24 @@ export class OwnModel {
   actions: SlotAction[] = [];
   private localFile: string | null = null;
   private storageKey: string;
+  private go!: () => void;
 
   constructor(readonly slot: SlotSpec) {
     this.storageKey = slot.key;
-    this.ready = this.restore().finally(() => { this.busy = false; this.draw(); this.onChange(); });
+    this.ready = new Promise<void>((go) => { this.go = go; if (!slot.later) go(); })
+      .then(() => this.restore())
+      .finally(() => { this.busy = false; this.draw(); this.onChange(); });
   }
+
+  /** Loads a slot marked `later`; settles with `ready`. */
+  start(): Promise<void> {
+    this.go();
+    return this.ready;
+  }
+
+  get loading(): boolean { return this.busy; }
+  /** A model the visitor imported, not the published one. */
+  get personal(): boolean { return isPersonal(this.stored); }
 
   /** Imported models stay personal; the hosted selection supplies defaults for empty slots. */
   private async restore(): Promise<void> {
@@ -196,12 +244,13 @@ export class OwnModel {
     }) : null;
     const s = local ?? kept;
     if (!s) return;
+    // Switched off stays off, whichever model the race and the build call for.
+    if (local && kept) local.enabled = kept.enabled;
     const samePlace = !!(local && kept?.label.startsWith('hosted:') && this.slot.kind === 'place'
       && kept.label.split(':').slice(2).join(':') === file);
     if (samePlace && kept) {
       local.anchor = kept.anchor;
       local.rotation = kept.rotation;
-      local.enabled = kept.enabled;
     }
     this.localFile = local?.label ?? (name === kept?.label ? name : null);
     this.stored = s;
@@ -337,6 +386,7 @@ export class OwnModel {
 
   /** Fills this slot's part of the Settings section; it redraws itself as the model loads. */
   panel(parent: HTMLElement): void {
+    void this.start();
     this.box = el('div', 'own-model');
     parent.append(this.box);
     this.draw();

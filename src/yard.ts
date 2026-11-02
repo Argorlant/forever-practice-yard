@@ -2,7 +2,7 @@
 // class in ?class= (the first screen, ./ui/picker.ts, links here).
 import * as THREE from 'three';
 import { Combat } from './engine/combat';
-import type { Unit } from './engine/types';
+import type { Unit, Weapon } from './engine/types';
 import { Beast } from './scene/beast';
 import { Character, type Locomotion } from './scene/character';
 import { CustomModel } from './scene/custom-model';
@@ -13,7 +13,7 @@ import { Dummy } from './scene/dummy';
 import { Totems } from './scene/totems';
 import { Vfx } from './scene/vfx';
 import { wireVfx } from './combat-vfx';
-import { OwnModel, localHas, localRaces, localSource, ownModelsSection } from './own-model';
+import { OwnModel, downloads, localHas, localRaces, localSource, ownModelsSection } from './own-model';
 import { OnyxiaFight, ROOM } from './encounters/onyxia';
 import { OnyxiaView } from './encounter-view';
 import type { EnemyView } from './scene/enemy';
@@ -43,6 +43,32 @@ const MODEL_URL = `${import.meta.env.BASE_URL}models/human.glb`;
 
 const app = document.getElementById('app')!;
 const loading = app.querySelector('.loading');
+let loadingText = '', loadingFrom = 0, loadingMB = 0;
+function showLoading(text: string): void {
+  loadingText = text;
+  loadingFrom = downloads.received;
+  loadingMB = 0;
+  if (loading) loading.textContent = text;
+}
+// How much has arrived, so a slow connection shows it is moving.
+downloads.onProgress = () => {
+  const mb = Math.floor((downloads.received - loadingFrom) / 1048576);
+  if (mb > loadingMB && loading?.isConnected) { loadingMB = mb; loading.textContent = `${loadingText} ${mb} MB`; }
+};
+/** Covers the scene, with time stopped, while models it needs arrive. */
+async function whileLoading(text: string, work: Promise<unknown>): Promise<void> {
+  switchingModels = true;
+  showLoading(text);
+  if (loading) app.append(loading);
+  try {
+    await work;
+  } catch (err) {
+    console.error(err);
+  } finally {
+    loading?.remove();
+    switchingModels = false;
+  }
+}
 
 // --------------------------------------------------------------- prefs
 function loadPrefs(): Prefs {
@@ -209,18 +235,19 @@ const ownYard = new OwnModel({
   hint: `A zone: Maps tab, Shift+click a map tile (Goldshire is Azeroth 31, 49), Export OBJ, then Load a map folder… here and pick wow.export's export folder (its Settings → Export Directory). Your browser may call this an upload: nothing leaves your computer. Or a building, an arena or a raid room: Models tab, WMO filter, such as ${CODE('stranglegladiatorarena.wmo')} (the Gurubashi Arena), Export GLB. Then walk to where the dummy should stand and press Put the dummy here.`,
 });
 const ownLair = new OwnModel({
-  key: 'onyxia-lair', title: "Onyxia's lair", kind: 'place',
+  key: 'onyxia-lair', title: "Onyxia's lair", kind: 'place', later: true,
   hint: `For the Onyxia fight only; the yard above stays around the dummies. Models tab: ${CODE('world/wmo/dungeon/kl_onyxiaslair/kl_onyxiaslair.wmo')}, then Export GLB.`,
 });
 const ownOnyxia = new OwnModel({
-  key: 'onyxia', title: 'Onyxia', kind: 'figure', moments: ['stand', 'attack', 'wound'],
+  key: 'onyxia', title: 'Onyxia', kind: 'figure', moments: ['stand', 'attack', 'wound'], later: true,
   hint: `For the Onyxia fight. Models tab: ${CODE('creature/dragon/dragononyxia.m2')}, then Export GLB.`,
 });
 const ownWhelp = new OwnModel({
-  key: 'onyxian-whelp', title: 'Onyxian Whelp', kind: 'figure', moments: ['stand', 'attack', 'wound'],
+  key: 'onyxian-whelp', title: 'Onyxian Whelp', kind: 'figure', moments: ['stand', 'attack', 'wound'], later: true,
   hint: `For the Onyxia fight. Models tab: ${CODE('creature/dragonwhelp/dragonwhelp.m2')} with its black skin, then Export GLB.`,
 });
-const ownSlots = [ownPlayer, ...Object.values(ownForms), ownDummy, ownYard, ownLair, ownOnyxia, ownWhelp];
+const fightSlots = [ownLair, ownOnyxia, ownWhelp];
+const ownSlots = [ownPlayer, ...Object.values(ownForms), ownDummy, ownYard, ...fightSlots];
 /** The copies drawn now: yours, else null for the yard's own. */
 let ownCharacter: CustomModel | null = null;
 const ownForm: { cat?: CustomModel | null; bear?: CustomModel | null } = {};
@@ -237,7 +264,7 @@ function figureOf(slot: OwnModel, old: CustomModel | null | undefined): CustomMo
 }
 ownPlayer.onChange = () => {
   ownCharacter = figureOf(ownPlayer, ownCharacter);
-  ownCharacter?.setRanged(prefs.stats.ranged?.type ?? null);
+  dressOwn();
   if (!ownCharacter) void prepareFallback().catch((err) => console.error(err));
 };
 for (const [kind, slot] of Object.entries(ownForms) as ['cat' | 'bear', OwnModel][]) {
@@ -249,6 +276,20 @@ const groundY = (x: number, z: number, y = 0) => place?.groundAt(x, z, y) ?? 0;
 controls.ground = groundY;
 controls.canStep = (x, z, y, toX, toZ) => place?.canStep(x, z, y, toX, toZ) ?? true;
 controls.clearance = (from, dir, far) => place?.clearance(from, dir, far) ?? far;
+/**
+ * The floor under what stands apart from you (a pet, a totem, a range ring). Near you it is the floor closest to your feet,
+ * or level with you at a cliff's edge; further away, the floor seen from your height or the dummies', whichever is higher.
+ */
+const floorNear = (x: number, z: number): number => {
+  if (!place) return 0;
+  const y = controls.y;
+  if (Math.hypot(x - controls.x, z - controls.z) >= 10) return place.groundAt(x, z, Math.max(0, y)) ?? Math.max(0, y);
+  // From above your head too: on a slope the floor beside you can be higher than a step.
+  const low = place.groundAt(x, z, y), high = place.groundAt(x, z, y + 2);
+  const floor = low === null || (high !== null && Math.abs(high - y) < Math.abs(low - y)) ? high : low;
+  return floor !== null && Math.abs(floor - y) < 3 ? floor : y;
+};
+totems.ground = floorNear;
 
 /** The model that stands for the player right now. */
 const avatar = () => {
@@ -306,13 +347,14 @@ function applyScenery(): void {
   fightView?.lair.setFloor(place ? (x, z) => groundY(x, z, 3) : null);
   world.setAmbience(lair && !place ? 'cave' : 'dusk');
   // In a place of your own you can walk off to find a spot for the dummy; Onyxia's room has its walls.
-  controls.arenaRadius = place ? 400 : lair ? ROOM.radius - 1 : FENCE;
+  controls.arenaRadius = lair ? ROOM.radius - 1 : place ? 400 : FENCE;
   standOnFloors();
 }
 /** Dummies and you on the floor where you are. */
 function standOnFloors(): void {
   if (!fight) for (const d of dummies) d.dummy.root.position.y = groundY(d.unit.x, d.unit.z);
   controls.y = groundY(controls.x, controls.z, controls.y);
+  totems.settle();
 }
 ownYard.onChange = applyPlace;
 ownLair.onChange = applyPlace;
@@ -369,7 +411,24 @@ function equip(): void {
   const st = prefs.stats;
   character.setWeapons(st.mainHand.type, st.offHand?.type ?? null, { twoHand: st.mainHand.twoHand, shield: st.shield });
   character.setRanged(st.ranged?.type ?? null);
-  ownCharacter?.setRanged(st.ranged?.type ?? null);
+  dressOwn();
+}
+
+/** A published character holds what its talent tree's first build holds: a build or a choice in Settings that differs gets the yard's own weapon in that hand. A model you imported keeps its own. */
+function dressOwn(): void {
+  if (!ownCharacter) return;
+  const st = prefs.stats;
+  ownCharacter.setRanged(st.ranged?.type ?? null);
+  const cls = classKey(spec.className);
+  const tree = (talents?: string) => (talents ? mainTree(cls, talents)?.name : null);
+  const current = spec.builds?.find((b) => b.id === prefs.options.build);
+  const exported = ownPlayer.personal ? st : spec.builds?.find((b) => tree(b.talentString) === tree(current?.talentString))?.stats ?? spec.stats;
+  const same = (a?: Weapon | null, b?: Weapon | null) => a?.type === b?.type && !!a?.twoHand === !!b?.twoHand;
+  ownCharacter.setMelee(
+    same(st.mainHand, exported.mainHand) ? 'own' : st.mainHand.type,
+    same(st.offHand, exported.offHand) ? 'own' : st.offHand?.type ?? null,
+    !!st.mainHand.twoHand,
+  );
 }
 
 function fullReset(): void {
@@ -405,6 +464,9 @@ function setFight(id: string): void {
     combat.enemyAttacker = null;
   }
   if (id === 'onyxia') {
+    // Her lair and the dragons arrive the first time you go to her.
+    const arriving = Promise.all(fightSlots.map((slot) => slot.start()));
+    if (sceneUp && fightSlots.some((slot) => slot.loading)) void whileLoading("Loading Onyxia's lair…", arriving);
     for (const d of dummies) d.dummy.root.removeFromParent();
     dummies.length = 0;
     fight = new OnyxiaFight(combat, !tanking());
@@ -525,17 +587,8 @@ const hud = new Hud(app, combat, prefs.bar, {
       save(LOCAL_RACE, sel.value);
       sel.blur();
       sel.disabled = true;
-      switchingModels = true;
-      if (loading) { loading.textContent = 'Loading your character and training area…'; app.append(loading); }
-      try {
-        await Promise.all([ownPlayer.refreshLocal(), ownYard.refreshLocal()]);
-      } catch (err) {
-        console.error(err);
-      } finally {
-        loading?.remove();
-        switchingModels = false;
-        sel.disabled = false;
-      }
+      await whileLoading('Loading your character and training area…', Promise.all([ownPlayer.refreshLocal(), ownYard.refreshLocal()]));
+      sel.disabled = false;
     });
     hud.root.querySelector('.hud-right')?.prepend(sel);
   });
@@ -807,7 +860,7 @@ function updateRings(): void {
       rings.add(m);
     }
   }
-  rings.position.set(t.x, 0, t.z);
+  rings.position.set(t.x, floorNear(t.x, t.z), t.z);
 }
 
 combat.on('note', ({ text, kind }) => {
@@ -884,6 +937,8 @@ function showWelcome(): void {
 const clock = new THREE.Clock();
 let elapsed = 0;
 let switchingModels = false;
+/** The first frame has been drawn. */
+let sceneUp = false;
 
 /** Shooting (hunters): Auto Shot on and not swinging in melee (weaving), or casting a shot. The bow, gun or crossbow comes out. */
 function shooting(): boolean {
@@ -963,7 +1018,7 @@ function updatePet(dt: number): void {
   const st = combat.pet;
   pet.root.visible = st.out && Number.isFinite(st.x);
   if (!pet.root.visible) return;
-  pet.root.position.set(st.x, groundY(st.x, st.z), st.z);
+  pet.root.position.set(st.x, floorNear(st.x, st.z), st.z);
   pet.root.rotation.y = st.facing;
   // 6.4 m/s is the run (7 yards per second); following a sprinting owner it runs faster.
   pet.setLocomotion(st.moving ? 'run' : st.attacking ? 'ready' : 'idle', st.moving ? 6.4 * Math.max(1, combat.moveSpeed()) : 0);
@@ -980,13 +1035,14 @@ function prepareFallback(): Promise<void> {
   return fallbackLoad ??= character.load(MODEL_URL, spec.look).then(equip);
 }
 
-if (loading) loading.textContent = 'Loading your character and training area…';
-Promise.all([...ownSlots.map((slot) => slot.ready), companionReady, totemsReady]).then(async () => {
+showLoading('Loading your character and training area…');
+Promise.all([...ownSlots.filter((slot) => fight || !fightSlots.includes(slot)).map((slot) => slot.ready), companionReady, totemsReady]).then(async () => {
   // The very first rendered frame already has the WoW character, dummy, map
   // and companion. Load the mannequin only when a custom character is absent
   // or the player explicitly switches it off.
   if (!ownPlayer.on) await prepareFallback();
   loading?.remove();
+  sceneUp = true;
   equip();
   clock.start();
   requestAnimationFrame(frame);

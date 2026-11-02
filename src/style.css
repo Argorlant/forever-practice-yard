@@ -48,7 +48,7 @@ a { color: var(--gold); }
 
 .hud-right { position: absolute; right: 14px; top: 14px; display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--muted); }
 .fight-select { background: #1c1712; color: var(--ink); border: 1px solid #5a4630; border-radius: 4px; padding: 4px 6px; font: inherit; font-size: 12px; pointer-events: auto; }
-.boss-text { position: absolute; top: 15%; left: 50%; transform: translateX(-50%); width: min(90vw, 760px); text-align: center; pointer-events: none; display: flex; flex-direction: column; gap: 6px; }
+.boss-text { position: absolute; top: max(15%, 104px); left: 50%; transform: translateX(-50%); width: min(90vw, 760px); text-align: center; pointer-events: none; display: flex; flex-direction: column; gap: 6px; }
 .boss-line { font-weight: 700; text-shadow: 0 1px 2px #000, 0 0 4px #000; transition: opacity 1s; }
 .boss-line.yell { color: #ff3b2a; font-size: 16px; }
 .boss-line.emote { color: #ffa640; font-size: 22px; }
@@ -311,6 +311,10 @@ img.wow-icon { width: 100%; height: 100%; display: block; object-fit: cover; tra
 .joystick .knob { position: absolute; left: 50%; top: 50%; width: 48px; height: 48px; margin: -24px; border-radius: 50%; background: rgba(216,178,90,.5); border: 1px solid var(--gold); }
 @media (pointer: coarse) { .joystick { display: block; } }
 
+/* Her yells between the buttons on the left and the rotation panel on the right. */
+@media (min-width: 721px) and (max-width: 1290px) {
+  .boss-text { left: 110px; right: 270px; width: auto; transform: none; }
+}
 /* No room beside the target frame: what you fight stacks on the right, above the rotation panel. */
 @media (max-width: 1180px) {
   .hud-right { flex-wrap: wrap; justify-content: flex-end; width: 150px; }
@@ -321,6 +325,7 @@ img.wow-icon { width: 100%; height: 100%; display: block; object-fit: cover; tra
   .meter { top: auto; bottom: 230px; right: 8px; width: 170px; font-size: 11px; }
   .meter-rows { max-height: 22vh; }
   .target-frame { grid-template-columns: 40px 170px; top: 56px; }
+  .boss-text { top: 136px; }
   .target-portrait { width: 40px; height: 40px; }
   /* The buttons wrap before the target count on the right. */
   .hud-left { flex-direction: row; flex-wrap: wrap; left: 8px; right: 118px; top: 8px; gap: 6px; }
@@ -334,6 +339,7 @@ img.wow-icon { width: 100%; height: 100%; display: block; object-fit: cover; tra
 /* A narrow screen: the target frame goes below the buttons and what you fight. */
 @media (max-width: 460px) {
   .target-frame { top: 108px; }
+  .boss-text { top: 188px; }
 }
 @media (max-width: 420px) {
   :root { --slot: 38px; }

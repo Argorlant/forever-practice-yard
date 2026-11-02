@@ -552,8 +552,8 @@ export class Vfx {
   /** Fire Nova, Magma Totem, Holy Nova: a wave with its element along the rim. */
   nova(at: THREE.Vector3, radius: number, style: VfxStyle): void {
     const s = STYLES[style];
-    this.wave(tmp2.copy(at).setY(0.15), radius, s.colors[0], { duration: 0.5 });
-    const ground = new THREE.Vector3(at.x, 0.2, at.z);
+    this.wave(tmp2.copy(at).setY(at.y + 0.15), radius, s.colors[0], { duration: 0.5 });
+    const ground = new THREE.Vector3(at.x, at.y + 0.2, at.z);
     for (const r of [0.35, 0.6, 0.85]) {
       this.emit({ at: ground, count: Math.round(10 + radius * 3 * r), colors: s.colors, ring: radius * r, speed: [0.5, 1.5], dir: new THREE.Vector3(0, 1, 0), spread: 0.4, life: [0.35, 0.7], size: [0.35, 0.05], gravity: style === 'fire' ? -2 : 0 });
     }
