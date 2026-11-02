@@ -23,7 +23,9 @@ export interface SlotSpec {
   /** For a figure: the moments Settings reports as found or missing. */
   moments?: string[];
   /** Names in the published selection or local yard-models.json, best first. */
-  localKeys?: () => string[];
+  localKeys?: () => string[] | Promise<string[]>;
+  /** Separate saved places (and anchors) for each faction. */
+  cacheKey?: () => string | Promise<string>;
 }
 
 interface HostedModels {
@@ -157,6 +159,8 @@ export function localSource(key: string): Promise<ModelSource | null> {
 export interface SlotAction { label: string; title: string; run(): void }
 
 export class OwnModel {
+  /** Settles after the saved/hosted model is built and its onChange has run. */
+  readonly ready: Promise<void>;
   source: ModelSource | null = null;
   private stored: StoredModel | null = null;
   private status = '';
@@ -167,15 +171,19 @@ export class OwnModel {
   onChange: () => void = () => {};
   actions: SlotAction[] = [];
   private localFile: string | null = null;
+  private storageKey: string;
 
   constructor(readonly slot: SlotSpec) {
-    this.restore().finally(() => { this.busy = false; this.draw(); this.onChange(); });
+    this.storageKey = slot.key;
+    this.ready = this.restore().finally(() => { this.busy = false; this.draw(); this.onChange(); });
   }
 
   /** Imported models stay personal; the hosted selection supplies defaults for empty slots. */
   private async restore(): Promise<void> {
-    const kept = await getModel(this.slot.key);
-    const keys = this.slot.localKeys?.() ?? [this.slot.key];
+    this.storageKey = await (this.slot.cacheKey?.() ?? this.slot.key);
+    const kept = await getModel(this.storageKey)
+      ?? (this.storageKey !== this.slot.key ? await getModel(this.slot.key) : null);
+    const keys = await (this.slot.localKeys?.() ?? [this.slot.key]);
     const file = await localFile(keys);
     const name = file ? await modelLabel(file) : null;
     // Already kept in this browser (with its anchor): a zone's files are not fetched again.
@@ -186,7 +194,9 @@ export class OwnModel {
     }) : null;
     const s = local ?? kept;
     if (!s) return;
-    if (local && kept?.label.startsWith('hosted:') && this.slot.kind === 'place') {
+    const samePlace = !!(local && kept?.label.startsWith('hosted:') && this.slot.kind === 'place'
+      && kept.label.split(':').slice(2).join(':') === file);
+    if (samePlace && kept) {
       local.anchor = kept.anchor;
       local.rotation = kept.rotation;
       local.enabled = kept.enabled;
@@ -196,18 +206,19 @@ export class OwnModel {
     const built = await this.build(s.files, !local);
     if (local && this.slot.kind === 'figure' && this.source) local.rotation = this.source.defaultTurns;
     if (local && this.slot.kind === 'place' && built) {
+      if (!samePlace) local.rotation = Number(this.source?.scene.userData.defaultRotation ?? 0);
       local.files = built.keep;
-      void putModel(this.slot.key, local);
+      void putModel(this.storageKey, local);
     }
   }
 
   /** Refresh the character after a race or talent build change. */
   async refreshLocal(): Promise<void> {
     if (!this.slot.localKeys) return;
-    const file = await localFile(this.slot.localKeys());
+    const file = await localFile(await this.slot.localKeys());
     if (!file || await modelLabel(file) === this.localFile) return;
     // A deliberate race/build change replaces the currently selected figure.
-    if (!import.meta.env.DEV) await deleteModel(this.slot.key);
+    if (!import.meta.env.DEV && this.slot.kind === 'figure') await deleteModel(this.storageKey);
     this.busy = true;
     this.draw();
     await this.restore();
@@ -224,7 +235,7 @@ export class OwnModel {
   setAnchor(a: number[]): void {
     if (!this.stored) return;
     this.stored.anchor = a;
-    void putModel(this.slot.key, this.stored);
+    void putModel(this.storageKey, this.stored);
   }
 
   /** Reads the files; returns the ones to keep (a map export keeps only what the zone uses) and a label, or null. */
@@ -294,7 +305,7 @@ export class OwnModel {
       const main = files.find((f) => /\.gl(b|tf)$/i.test(f.name));
       const turns = this.slot.kind === 'figure' ? this.source!.defaultTurns : 0;
       this.stored = { files: built.keep, label: built.label ?? main?.name ?? 'model', rotation: turns, enabled: true };
-      if (!(await putModel(this.slot.key, this.stored))) {
+      if (!(await putModel(this.storageKey, this.stored))) {
         this.status += ' This browser would not keep it (a private window, or no room), so it lasts until you reload.';
       }
     }
@@ -304,13 +315,13 @@ export class OwnModel {
   }
 
   private save(): void {
-    if (this.stored) void putModel(this.slot.key, this.stored);
+    if (this.stored) void putModel(this.storageKey, this.stored);
     this.draw();
     this.onChange();
   }
 
   private async remove(): Promise<void> {
-    await deleteModel(this.slot.key);
+    await deleteModel(this.storageKey);
     this.source?.dispose();
     this.source = null;
     this.stored = null;

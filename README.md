@@ -231,7 +231,10 @@ hands while you cast, the Drain Life and Mind Flay streams, and the auras you we
 Shield, Shadowform). It is all particles (`src/scene/vfx.ts`) driven by the engine's events (`src/combat-vfx.ts`).
 
 **Published models and your own models.** The online yard loads the owner's exported characters (with race and sex
-selection), forms, companions, training dummy, map and Onyxia's lair automatically. Shared animation buffers and textures
+selection), forms, companions, training dummy, training area and Onyxia's lair automatically. Alliance races practice
+in Stormwind's Command Center courtyard; Horde races practice in Orgrimmar's Valley of Honor. Changing race changes
+the area with it. Each faction keeps its own saved dummy position. The scene waits for its WoW models before its first
+frame, and the fallback mannequin is loaded only if the character model is unavailable or switched off. Shared animation buffers and textures
 avoid repeating the same data for every equipment set; the original exports are unchanged. Settings → "Your own models"
 can replace these with personal files: your character, the druid's Cat and Bear Forms, the training dummy, the yard itself and Onyxia's lair. Export them with
 [wow.export](https://github.com/Kruithne/wow.export), which reads your own game files (open your WoW folder in it), as
@@ -270,6 +273,8 @@ shared binary resources and map files. Ordinary builds use these prepared assets
 The published map uses one compressed archive containing only its referenced models and textures; terrain textures are
 prepared at the same 2048px size already used by the renderer. `npm run export:wow -- --maps-only` refreshes that archive
 without reprocessing the character exports. Personal map anchors and rotation are kept when the hosted assets update.
+The default faction areas are smaller selected WMO exports, prepared with
+`node tools/prepare_training_area.mjs <export.glb> alliance` (or `horde`). See `research/training_areas.md` for source groups.
 
 **Encounters: Onyxia.** The menu at the top right switches from the training dummies to Onyxia, Classic's three-phase
 fight practiced alone (`src/encounters/onyxia.ts`): a simulated tank holds her (you hold her yourself as a tank spec or

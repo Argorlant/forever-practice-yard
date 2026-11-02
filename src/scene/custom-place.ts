@@ -45,7 +45,7 @@ export class CustomPlace {
     });
     this.triangles = Math.round(triangles);
     // Onyxia's Lair has its own floors: no grass of the yard's through them.
-    this.hasGround = hasGround || !!lairBox(scene);
+    this.hasGround = hasGround || !!lairBox(scene) || source.scene.userData.trainingArea === true;
     // WoW units are yards.
     this.scale = source.fromWowExport ? 0.9144 : 1;
     this.inner.scale.setScalar(this.scale);
@@ -53,7 +53,9 @@ export class CustomPlace {
     this.root.add(this.inner);
     this.root.rotation.y = quarterTurns * (Math.PI / 2);
     this.ray.firstHitOnly = true;
-    this.anchor = anchor ? new THREE.Vector3().fromArray(anchor) : this.middle(scene);
+    const initial = anchor ?? source.scene.userData.defaultAnchor;
+    this.anchor = Array.isArray(initial) && initial.length === 3
+      ? new THREE.Vector3().fromArray(initial) : this.middle(scene);
     this.placeAnchor();
   }
 
@@ -64,7 +66,8 @@ export class CustomPlace {
    */
   private middle(scene: THREE.Object3D): THREE.Vector3 {
     this.placeAnchor(new THREE.Vector3());
-    const box = lairBox(scene) ?? new THREE.Box3().setFromObject(scene);
+    const box = (typeof scene.userData.focusMesh === 'string' ? lairBox(scene, scene.userData.focusMesh) : null)
+      ?? lairBox(scene) ?? new THREE.Box3().setFromObject(scene);
     const c = box.getCenter(new THREE.Vector3());
     const size = box.getSize(new THREE.Vector3());
     const down = (x: number, z: number) => this.hit(new THREE.Vector3(x, box.max.y + 1, z), size.y + 2);
@@ -122,13 +125,13 @@ export class CustomPlace {
  * its "Lair" groups are the room the fight is in, so the first guess for the anchor is their middle.
  * Its groups share one vertex buffer, so the room's bounds come from the vertices its triangles use.
  */
-function lairBox(scene: THREE.Object3D): THREE.Box3 | null {
+function lairBox(scene: THREE.Object3D, focus?: string): THREE.Box3 | null {
   const box = new THREE.Box3();
   const v = new THREE.Vector3();
   scene.updateMatrixWorld(true);
   scene.traverse((o) => {
     const m = o as THREE.Mesh;
-    if (!m.isMesh || !/_lair\d*$/i.test(m.name)) return;
+    if (!m.isMesh || (focus ? !m.name.startsWith(focus) : !/_lair\d*$/i.test(m.name))) return;
     const pos = m.geometry.attributes.position;
     const index = m.geometry.index;
     const n = index ? index.count : pos.count;

@@ -6,13 +6,14 @@ import os from 'node:os';
 import { createHash } from 'node:crypto';
 import { gzipSync } from 'node:zlib';
 import { NodeIO } from '@gltf-transform/core';
+import { ALL_EXTENSIONS } from '@gltf-transform/extensions';
 import { dedup } from '@gltf-transform/functions';
 import { prepareMapBundle } from './map_bundle.mjs';
 
 const mapsOnly = process.argv.includes('--maps-only');
 const source = path.resolve(process.argv.slice(2).find((arg) => arg !== '--maps-only') ?? path.join(os.homedir(), 'wow.export'));
 const output = path.resolve('public/wow');
-const io = new NodeIO();
+const io = new NodeIO().registerExtensions(ALL_EXTENSIONS);
 const selection = JSON.parse(await fs.readFile(path.join(source, 'yard-models.json'), 'utf8'));
 const manifest = mapsOnly ? JSON.parse(await fs.readFile(path.join(output, 'manifest.json'), 'utf8'))
   : { models: { ...selection }, dependencies: {}, maps: {}, archives: {}, gzip: [], revision: '' };

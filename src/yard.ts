@@ -7,6 +7,7 @@ import { Beast } from './scene/beast';
 import { Character, type Locomotion } from './scene/character';
 import { CustomModel } from './scene/custom-model';
 import { CustomPlace } from './scene/custom-place';
+import { factionForRace, trainingAreaKeys } from './scene/training-area';
 import { Controls, DEFAULT_MOVE } from './scene/controls';
 import { Dummy } from './scene/dummy';
 import { Totems } from './scene/totems';
@@ -133,13 +134,12 @@ async function localFigure(key: string, scale = 1): Promise<CustomModel | null> 
 interface Companion { root: THREE.Object3D; setLocomotion(state: Locomotion, speed?: number): void; update(dt: number): void; swing(): void; play?(name: string): void }
 let companion: Companion | null = pet;
 let minionId: string | null = null;
-if (pet) {
-  void localFigure(`pet:${spec.id}`).then((figure) => {
+const companionReady = pet
+  ? localFigure(`pet:${spec.id}`).then((figure) => {
     if (!figure) return;
     pet.root.removeFromParent();
     companion = figure;
-  });
-}
+  }) : Promise.resolve();
 /** Loads the demon the build calls for (once per look); it shows while the pet is out. */
 function syncMinion(): void {
   const want = spec.minion?.(combat) ?? null;
@@ -166,11 +166,10 @@ function drawMinion(want: NonNullable<ReturnType<NonNullable<typeof spec.minion>
 }
 // Shaman totems, drawn where they were dropped.
 const totems = new Totems(world.scene);
-if (spec.className === 'Shaman') {
-  for (const id of ['searingTotem', 'magmaTotem', 'strengthOfEarthTotem', 'stoneskinTotem', 'graceOfAirTotem', 'windfuryTotem', 'manaSpringTotem']) {
-    void localSource(`totem:${id}`).then((source) => { if (source) totems.useModel(id, source); });
-  }
-}
+const totemsReady = spec.className === 'Shaman'
+  ? Promise.all(['searingTotem', 'magmaTotem', 'strengthOfEarthTotem', 'stoneskinTotem', 'graceOfAirTotem', 'windfuryTotem', 'manaSpringTotem']
+    .map((id) => localSource(`totem:${id}`).then((source) => { if (source) totems.useModel(id, source); })))
+  : Promise.resolve();
 
 // ------------------------------------------------------ your own models
 // Models from the player's own game files (Settings → Your own models), kept in
@@ -205,6 +204,8 @@ const ownDummy = new OwnModel({
 });
 const ownYard = new OwnModel({
   key: 'yard', title: 'The yard', kind: 'place',
+  localKeys: async () => trainingAreaKeys(load<string>(LOCAL_RACE) ?? (await localRaces(classKey(spec.className)))?.start),
+  cacheKey: async () => `yard:${factionForRace(load<string>(LOCAL_RACE) ?? (await localRaces(classKey(spec.className)))?.start)}`,
   hint: `A zone: Maps tab, Shift+click a map tile (Goldshire is Azeroth 31, 49), Export OBJ, then Load a map folder… here and pick wow.export's export folder (its Settings → Export Directory). Your browser may call this an upload: nothing leaves your computer. Or a building, an arena or a raid room: Models tab, WMO filter, such as ${CODE('stranglegladiatorarena.wmo')} (the Gurubashi Arena), Export GLB. Then walk to where the dummy should stand and press Put the dummy here.`,
 });
 const ownLair = new OwnModel({
@@ -237,6 +238,7 @@ function figureOf(slot: OwnModel, old: CustomModel | null | undefined): CustomMo
 ownPlayer.onChange = () => {
   ownCharacter = figureOf(ownPlayer, ownCharacter);
   ownCharacter?.setRanged(prefs.stats.ranged?.type ?? null);
+  if (!ownCharacter) void prepareFallback().catch((err) => console.error(err));
 };
 for (const [kind, slot] of Object.entries(ownForms) as ['cat' | 'bear', OwnModel][]) {
   slot.onChange = () => { ownForm[kind] = figureOf(slot, ownForm[kind]); };
@@ -517,10 +519,21 @@ const hud = new Hud(app, combat, prefs.bar, {
       option.disabled = !(await localHas(localPlayerKeys(who)));
       sel.append(option);
     }
-    sel.addEventListener('change', () => {
+    sel.addEventListener('change', async () => {
       save(LOCAL_RACE, sel.value);
-      void ownPlayer.refreshLocal();
       sel.blur();
+      sel.disabled = true;
+      switchingModels = true;
+      if (loading) { loading.textContent = 'Loading your character and training area…'; app.append(loading); }
+      try {
+        await Promise.all([ownPlayer.refreshLocal(), ownYard.refreshLocal()]);
+      } catch (err) {
+        console.error(err);
+      } finally {
+        loading?.remove();
+        switchingModels = false;
+        sel.disabled = false;
+      }
     });
     hud.root.querySelector('.hud-right')?.prepend(sel);
   });
@@ -868,6 +881,7 @@ function showWelcome(): void {
 // ------------------------------------------------------------------- loop
 const clock = new THREE.Clock();
 let elapsed = 0;
+let switchingModels = false;
 
 /** Shooting (hunters): Auto Shot on and not swinging in melee (weaving), or casting a shot. The bow, gun or crossbow comes out. */
 function shooting(): boolean {
@@ -889,6 +903,7 @@ function locomotion(moving: boolean, backwards: boolean, airborne: boolean, aimi
 
 function frame(): void {
   const dt = Math.min(0.1, clock.getDelta());
+  if (switchingModels) { requestAnimationFrame(frame); return; }
   elapsed += dt;
   const move = controls.update(dt);
   if (dash) {
@@ -958,14 +973,25 @@ window.addEventListener('resize', () => world.resize());
 if (prefs.encounter && prefs.encounter !== 'dummies') setFight(prefs.encounter);
 else hud.setFight('dummies');
 
-character.load(MODEL_URL, spec.look).then(() => {
+let fallbackLoad: Promise<void> | null = null;
+function prepareFallback(): Promise<void> {
+  return fallbackLoad ??= character.load(MODEL_URL, spec.look).then(equip);
+}
+
+if (loading) loading.textContent = 'Loading your character and training area…';
+Promise.all([...ownSlots.map((slot) => slot.ready), companionReady, totemsReady]).then(async () => {
+  // The very first rendered frame already has the WoW character, dummy, map
+  // and companion. Load the mannequin only when a custom character is absent
+  // or the player explicitly switches it off.
+  if (!ownPlayer.on) await prepareFallback();
   loading?.remove();
   equip();
+  clock.start();
   requestAnimationFrame(frame);
   if (!prefs.seenWelcome) showWelcome();
 }).catch((err) => {
   console.error(err);
-  if (loading) loading.textContent = 'Could not load the character model.';
+  if (loading) loading.textContent = 'Could not load the training area. Reload to try again.';
 });
 
 // Debug handle for automated checks.

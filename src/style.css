@@ -19,7 +19,7 @@ body { font: 14px/1.4 system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; 
 button, select, input { font: inherit; color: inherit; }
 a { color: var(--gold); }
 
-.loading { position: fixed; inset: 0; display: grid; place-items: center; font-family: Georgia, 'Palatino Linotype', serif; color: var(--muted); letter-spacing: .08em; }
+.loading { position: fixed; inset: 0; z-index: 100; display: grid; place-items: center; padding: 24px; background: #0b0908; text-align: center; font-family: Georgia, 'Palatino Linotype', serif; color: var(--muted); letter-spacing: .08em; }
 
 .hud { position: absolute; inset: 0; pointer-events: none; user-select: none; -webkit-user-select: none; }
 .hud > * { pointer-events: auto; }
