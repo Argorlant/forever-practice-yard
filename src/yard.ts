@@ -234,7 +234,10 @@ function figureOf(slot: OwnModel, old: CustomModel | null | undefined): CustomMo
   world.scene.add(m.root);
   return m;
 }
-ownPlayer.onChange = () => { ownCharacter = figureOf(ownPlayer, ownCharacter); };
+ownPlayer.onChange = () => {
+  ownCharacter = figureOf(ownPlayer, ownCharacter);
+  ownCharacter?.setRanged(prefs.stats.ranged?.type ?? null);
+};
 for (const [kind, slot] of Object.entries(ownForms) as ['cat' | 'bear', OwnModel][]) {
   slot.onChange = () => { ownForm[kind] = figureOf(slot, ownForm[kind]); };
 }
@@ -362,6 +365,7 @@ function equip(): void {
   const st = prefs.stats;
   character.setWeapons(st.mainHand.type, st.offHand?.type ?? null, { twoHand: st.mainHand.twoHand, shield: st.shield });
   character.setRanged(st.ranged?.type ?? null);
+  ownCharacter?.setRanged(st.ranged?.type ?? null);
 }
 
 function fullReset(): void {
@@ -918,6 +922,7 @@ function frame(): void {
   active.setBodyYaw(move.moving ? move.bodyYaw : 0);
   const aiming = shooting();
   character.setRangedMode(aiming);
+  ownCharacter?.setRangedMode(aiming);
   active.setLocomotion(locomotion(move.moving, move.backwards, move.airborne, aiming), move.backwards ? -move.speed : move.speed);
   active.update(dt);
   if (fightView) fightView.update(dt, elapsed);

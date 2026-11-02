@@ -389,12 +389,12 @@ export class Character {
       const tilt = new THREE.Group();
       tilt.rotation.z = kind === 'bow' ? -0.6 : 0.7;
       tilt.position.set(0, -0.02, -0.17);
-      const model = this.buildRanged(kind);
+      const model = Character.buildRanged(kind);
       if (kind !== 'bow') model.rotation.x = -Math.PI / 2;
       tilt.add(model);
       g.add(tilt);
     });
-    const hand = this.holdRanged(this.handR, 'r', this.buildRanged(kind));
+    const hand = this.holdRanged(this.handR, 'r', Character.buildRanged(kind));
     this.ranged = { back, hand };
     this.setRangedMode(this.rangedMode);
   }
@@ -425,8 +425,9 @@ export class Character {
   }
 
   /** A bow, gun or crossbow, built with the grip at the origin, shooting along +Z, up along +Y. */
-  private buildRanged(kind: WeaponType): THREE.Group {
-    const { metal, grip } = this.mats;
+  static buildRanged(kind: WeaponType): THREE.Group {
+    const metal = new THREE.MeshStandardMaterial({ color: 0x9aa3ad, metalness: 0.85, roughness: 0.3 });
+    const grip = new THREE.MeshStandardMaterial({ color: 0x1d1612, roughness: 0.6 });
     const wood = new THREE.MeshStandardMaterial({ color: 0x6a4423, roughness: 0.8 });
     const string = new THREE.MeshBasicMaterial({ color: 0xe8e0c8 });
     const w = new THREE.Group();

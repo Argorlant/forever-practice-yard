@@ -6,7 +6,8 @@
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { clone as cloneSkinned } from 'three/examples/jsm/utils/SkeletonUtils.js';
-import type { Locomotion } from './character';
+import { Character, type Locomotion } from './character';
+import type { WeaponType } from '../engine/types';
 
 export interface ModelFile { name: string; type?: string; data: Blob }
 
@@ -170,6 +171,14 @@ export class CustomModel {
   private swingToggle = false;
   private moving = false;
   private hands: { l: THREE.Object3D | null; r: THREE.Object3D | null };
+  private rangedKind: WeaponType | null = null;
+  private ranged: { hand: THREE.Group; back: THREE.Group } | null = null;
+  private meleeItems: THREE.Object3D[] = [];
+  private aimForward = new THREE.Vector3();
+  private aimRight = new THREE.Vector3();
+  private aimUp = new THREE.Vector3();
+  private aimMatrix = new THREE.Matrix4();
+  private aimRotation = new THREE.Quaternion();
   /** Bones above the waist: one-shots play on them only, so the legs keep running. */
   private upperBones: Set<string> | null;
   /** Standing height in meters. */
@@ -235,9 +244,86 @@ export class CustomModel {
       return hit;
     };
     this.hands = {
-      r: bone(/hand[\s_.-]*r(ight)?\b|r(ight)?[\s_.-]*hand|handr/i),
-      l: bone(/hand[\s_.-]*l(eft)?\b|l(eft)?[\s_.-]*hand|handl/i),
+      r: bone(/(?:^|_)HandR$/i) ?? bone(/hand[\s_.-]*r(ight)?\b|r(ight)?[\s_.-]*hand|handr/i),
+      l: bone(/(?:^|_)HandL$/i) ?? bone(/hand[\s_.-]*l(eft)?\b|l(eft)?[\s_.-]*hand|handl/i),
     };
+    scene.traverse((o) => { if (/^(Main.hand|Off.hand)_Item/i.test(o.name)) this.meleeItems.push(o); });
+  }
+
+  /** The exported outfit has melee items but may omit the ranged slot. Reuse
+   * the yard's ranged models and bind them to this rig's actual hand bones. */
+  setRanged(kind: WeaponType | null): void {
+    if (kind === this.rangedKind) return;
+    this.rangedKind = kind;
+    if (this.ranged) {
+      for (const group of [this.ranged.hand, this.ranged.back]) {
+        group.removeFromParent();
+        group.traverse((o) => {
+          if (!(o as THREE.Mesh).isMesh) return;
+          const mesh = o as THREE.Mesh;
+          mesh.geometry.dispose();
+          for (const mat of Array.isArray(mesh.material) ? mesh.material : [mesh.material]) mat.dispose();
+        });
+      }
+      this.ranged = null;
+    }
+    if (!kind) {
+      for (const item of this.meleeItems) item.visible = true;
+      return;
+    }
+    const hand = kind === 'bow' ? this.hands.l : this.hands.r;
+    if (!hand) return;
+    hand.updateWorldMatrix(true, true);
+    const finger = (name: string) => {
+      let found: THREE.Object3D | null = null;
+      hand.traverse((o) => { if (!found && new RegExp(`${name}.*(?:L|R)$`, 'i').test(o.name)) found = o; });
+      return found ? hand.worldToLocal((found as THREE.Object3D).getWorldPosition(new THREE.Vector3())) : null;
+    };
+    const index = finger('IndexFinger'), pinky = finger('PinkyFinger'), middle = finger('MiddleFinger');
+    const holder = new THREE.Group();
+    holder.name = 'yard-ranged-hand';
+    holder.add(Character.buildRanged(kind));
+    if (index && pinky && middle) {
+      const forward = middle.clone().normalize();
+      const up = index.clone().sub(pinky);
+      up.addScaledVector(forward, -up.dot(forward)).normalize();
+      const right = new THREE.Vector3().crossVectors(up, forward).normalize();
+      holder.quaternion.setFromRotationMatrix(new THREE.Matrix4().makeBasis(right, up, forward));
+      holder.position.copy(index.clone().add(pinky).multiplyScalar(0.5));
+    }
+    // Mesh dimensions are meters; wow.export bones are in yards.
+    holder.scale.setScalar(1 / 0.9144);
+    hand.add(holder);
+    const back = new THREE.Group();
+    back.name = 'yard-ranged-back';
+    back.add(Character.buildRanged(kind));
+    back.rotation.set(kind === 'bow' ? 0 : -Math.PI / 2, 0, -0.6);
+    back.position.set(-0.18, this.height * 0.72, -0.15);
+    this.body.add(back);
+    this.ranged = { hand: holder, back };
+    this.setRangedMode(false);
+    const clip = this.pick(this.rangedNames(true));
+    if (clip) {
+      const previous = this.loco.get('aim');
+      previous?.lower.stop(); previous?.upper?.stop();
+      const parts = this.split(clip);
+      const lower = this.mixer.clipAction(parts.lower ?? clip);
+      const upper = parts.upper ? this.mixer.clipAction(parts.upper) : null;
+      for (const action of [lower, upper]) { action?.play(); action?.setEffectiveWeight(0); }
+      this.loco.set('aim', { lower, upper, weight: 0, target: this.current === 'aim' ? 1 : 0 });
+    }
+  }
+
+  setRangedMode(on: boolean): void {
+    if (!this.ranged) return;
+    this.ranged.hand.visible = on;
+    this.ranged.back.visible = !on;
+    for (const item of this.meleeItems) item.visible = !on;
+  }
+
+  private rangedNames(ready: boolean): string[] {
+    return this.rangedKind === 'bow' ? (ready ? ['holdbow', 'readybow'] : ['attackbow', 'firebow'])
+      : ready ? ['holdrifle', 'readyrifle', 'readycrossbow', 'readybow'] : ['attackrifle', 'firecrossbow', 'attackbow'];
   }
 
   /** For Settings: whether one of the yard's moments ('stand', 'run', 'attack', 'wound'…) has an animation. */
@@ -346,13 +432,13 @@ export class CustomModel {
   playAbility(id: string, animation?: string): void {
     const own = ABILITY_ANIMS[id] && this.pick(ABILITY_ANIMS[id]);
     const def = animation ? ACTIONS[animation] : undefined;
-    const clip = own || (def && this.pick(def.names));
+    const clip = own || (def && this.pick(animation === 'shoot' && this.rangedKind ? this.rangedNames(false) : def.names));
     if (clip) this.playClip(clip, own ? 1.2 : def!.rate, true);
   }
 
   play(name: string): void {
     const def = ACTIONS[name];
-    const clip = def && this.pick(def.names);
+    const clip = def && this.pick(name === 'shoot' && this.rangedKind ? this.rangedNames(false) : def.names);
     if (clip) this.playClip(clip, def.rate);
   }
 
@@ -420,10 +506,29 @@ export class CustomModel {
     this.bodyYaw += (this.bodyYawTarget - this.bodyYaw) * Math.min(1, dt * 10);
     this.body.rotation.y = this.bodyYaw;
     this.mixer.update(dt);
+    if (this.ranged?.hand.visible && this.hands.l && this.hands.r) {
+      // WoW rigs have different hand axes from the mannequin. The supporting
+      // left hand gives the shot direction for both the bow and the rifle;
+      // keep the grip on its bone, then align the barrel/bow after animation.
+      this.root.updateMatrixWorld(true);
+      this.hands.l.getWorldPosition(this.aimForward);
+      this.hands.r.getWorldPosition(this.aimRight);
+      this.aimForward.sub(this.aimRight).normalize();
+      this.aimUp.set(0, 1, 0);
+      this.aimRight.crossVectors(this.aimUp, this.aimForward).normalize();
+      if (this.aimRight.lengthSq() > 0.5) {
+        this.aimUp.crossVectors(this.aimForward, this.aimRight).normalize();
+        this.aimMatrix.makeBasis(this.aimRight, this.aimUp, this.aimForward);
+        const weapon = this.ranged.hand;
+        weapon.parent!.getWorldQuaternion(this.aimRotation).invert();
+        weapon.quaternion.setFromRotationMatrix(this.aimMatrix).premultiply(this.aimRotation);
+      }
+    }
   }
 
   /** Takes the copy out of the scene; its geometry and textures belong to the ModelSource. */
   dispose(): void {
+    this.setRanged(null);
     this.root.removeFromParent();
     this.mixer.stopAllAction();
   }
@@ -434,6 +539,8 @@ const ITEM_SLOTS: [RegExp, RegExp][] = [
   [/^Head_Item/i, /^bone_Head$/i],
   [/^Shoulder[\s_]*\(?L\)?_Item/i, /^bone_ArmL$/i],
   [/^Shoulder[\s_]*\(?R\)?_Item/i, /^bone_ArmR$/i],
+  [/^Main.hand_Item/i, /^bone_HandR$/i],
+  [/^Off.hand_Item/i, /^bone_HandL$/i],
 ];
 
 /**

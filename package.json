@@ -10,6 +10,7 @@
     "build": "tsc --noEmit && vite build && npm run seo",
     "preview": "vite preview --port 5181",
     "export:wow": "node tools/publish_wow_models.mjs",
+    "test:models": "esbuild tools/model_check.ts --bundle --platform=node --format=esm --log-level=warning --outfile=node_modules/.cache/model_check.mjs && node node_modules/.cache/model_check.mjs",
     "model": "node tools/build_model.mjs",
     "icons": "node tools/icons.mjs && node tools/wow_icons.mjs",
     "talents": "node tools/talent_layout.mjs",

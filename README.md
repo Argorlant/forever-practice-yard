@@ -267,6 +267,9 @@ warlock's demon (`minion:imp`), a totem (`totem:searingTotem`) and the raid at O
 its files (`map:maps,world,tileset`). To update the online selection, run `npm run export:wow` (optionally followed by
 `-- <export-folder>`), then build and deploy. This prepares `public/wow/manifest.json`, compressed model descriptions,
 shared binary resources and map files. Ordinary builds use these prepared assets and do not read the machine's export folder.
+The published map uses one compressed archive containing only its referenced models and textures; terrain textures are
+prepared at the same 2048px size already used by the renderer. `npm run export:wow -- --maps-only` refreshes that archive
+without reprocessing the character exports. Personal map anchors and rotation are kept when the hosted assets update.
 
 **Encounters: Onyxia.** The menu at the top right switches from the training dummies to Onyxia, Classic's three-phase
 fight practiced alone (`src/encounters/onyxia.ts`): a simulated tank holds her (you hold her yourself as a tank spec or

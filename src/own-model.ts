@@ -7,6 +7,7 @@
 import { AdditiveBlending, type Mesh } from 'three';
 import { loadModelSource, type ModelFile, type ModelSource } from './scene/custom-model';
 import { isMapExport, loadMapSource } from './scene/wow-map';
+import { unpackMapBundle } from './scene/model-bundle';
 import { deleteModel, getModel, putModel, type StoredModel } from './ui/model-store';
 
 const EXPORT_LINK = '<a href="https://github.com/Kruithne/wow.export" target="_blank" rel="noopener">wow.export</a>';
@@ -29,6 +30,7 @@ interface HostedModels {
   models: Record<string, string>;
   dependencies: Record<string, string[]>;
   maps: Record<string, string[]>;
+  archives?: Record<string, string>;
   gzip: string[];
   revision: string;
 }
@@ -66,11 +68,11 @@ export async function localHas(keys: string[]): Promise<boolean> {
 }
 
 async function hostedFile(name: string, h: HostedModels): Promise<ModelFile> {
-  const compressed = h.gzip.includes(name);
+  const compressed = h.gzip.includes(name) || name.endsWith('.gz');
   // Ampersands are valid in path segments. Vite's static preview expects them
   // literally (wow.export uses folders such as food&utensils).
   const path = name.split('/').map((part) => encodeURIComponent(part).replace(/%26/gi, '&')).join('/');
-  const url = `${HOSTED_ROOT}${path}${compressed ? '.gz' : ''}`;
+  const url = `${HOSTED_ROOT}${path}${h.gzip.includes(name) ? '.gz' : ''}`;
   const response = await fetch(url);
   if (!response.ok) throw new Error(`Could not load ${name} (${response.status}).`);
   if (response.headers.get('content-type')?.includes('text/html')) throw new Error(`Missing model file: ${name}.`);
@@ -94,6 +96,11 @@ async function localModel(keys: string[]): Promise<StoredModel | null> {
   if (!file) return null;
   const h = await hosted;
   if (h) {
+    const archive = h.archives?.[file];
+    if (archive) {
+      const bundle = await hostedFile(archive, h);
+      return { files: await unpackMapBundle(bundle.data), label: await modelLabel(file), rotation: 0, enabled: true };
+    }
     const names = file.startsWith('map:') ? h.maps[file] : [file, ...(h.dependencies[file] ?? [])];
     if (!names?.length) return null;
     const files: ModelFile[] = new Array(names.length);
@@ -179,6 +186,11 @@ export class OwnModel {
     }) : null;
     const s = local ?? kept;
     if (!s) return;
+    if (local && kept?.label.startsWith('hosted:') && this.slot.kind === 'place') {
+      local.anchor = kept.anchor;
+      local.rotation = kept.rotation;
+      local.enabled = kept.enabled;
+    }
     this.localFile = local?.label ?? (name === kept?.label ? name : null);
     this.stored = s;
     const built = await this.build(s.files, !local);

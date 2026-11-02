@@ -7,12 +7,16 @@ import { createHash } from 'node:crypto';
 import { gzipSync } from 'node:zlib';
 import { NodeIO } from '@gltf-transform/core';
 import { dedup } from '@gltf-transform/functions';
+import { prepareMapBundle } from './map_bundle.mjs';
 
-const source = path.resolve(process.argv[2] ?? path.join(os.homedir(), 'wow.export'));
+const mapsOnly = process.argv.includes('--maps-only');
+const source = path.resolve(process.argv.slice(2).find((arg) => arg !== '--maps-only') ?? path.join(os.homedir(), 'wow.export'));
 const output = path.resolve('public/wow');
 const io = new NodeIO();
 const selection = JSON.parse(await fs.readFile(path.join(source, 'yard-models.json'), 'utf8'));
-const manifest = { models: { ...selection }, dependencies: {}, maps: {}, gzip: [], revision: '' };
+const manifest = mapsOnly ? JSON.parse(await fs.readFile(path.join(output, 'manifest.json'), 'utf8'))
+  : { models: { ...selection }, dependencies: {}, maps: {}, archives: {}, gzip: [], revision: '' };
+manifest.archives ??= {};
 const written = new Set();
 let originalBytes = 0;
 let publishedBytes = 0;
@@ -34,7 +38,7 @@ async function resource(bytes, extension) {
   return name;
 }
 
-for (const file of [...new Set(Object.values(selection).filter((v) => v.endsWith('.glb')))]) {
+for (const file of mapsOnly ? [] : [...new Set(Object.values(selection).filter((v) => v.endsWith('.glb')))]) {
   const bytes = await fs.readFile(path.join(source, file));
   originalBytes += bytes.length;
   const original = JSON.parse(bytes.subarray(20, 20 + bytes.readUInt32LE(12)).toString());
@@ -105,12 +109,16 @@ async function walk(dir) {
 for (const map of [...new Set(Object.values(selection).filter((v) => v.startsWith('map:')))]) {
   const files = [...new Set((await Promise.all(map.slice(4).split(',').map(walk))).flat())];
   manifest.maps[map] = files;
-  for (const name of files) {
+  const bundle = await prepareMapBundle(source, output, files);
+  manifest.archives[map] = bundle.name;
+  publishedBytes += bundle.bytes;
+  for (const name of mapsOnly ? [] : files) {
     const bytes = await fs.readFile(path.join(source, name));
     originalBytes += bytes.length;
     await write(name, bytes);
   }
 }
+manifest.revision = '';
 manifest.revision = createHash('sha256').update(JSON.stringify(manifest)).digest('hex').slice(0, 16);
 await write('manifest.json', Buffer.from(JSON.stringify(manifest)));
 console.log(JSON.stringify({ models: manifest.gzip.length, files: written.size,
