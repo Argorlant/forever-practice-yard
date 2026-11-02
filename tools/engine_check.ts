@@ -543,7 +543,7 @@ for (const sp of [hunterMm, hunterBm, hunterSv]) {
       const cue = hunterMm.cue?.(c)?.text;
       const dir = cue === 'Step in' ? 1 : cue === 'Step out' ? -1 : 0;
       c.player.moving = dir !== 0;
-      c.player.z += dir * 7 * 0.9144 * 0.05;
+      c.player.z += dir * 7 * 0.9144 * c.moveSpeed() * 0.05;
       const id = hunterMm.suggest?.(c);
       if (id) c.use(id);
       c.update(0.05);
@@ -566,6 +566,11 @@ for (const sp of [hunterMm, hunterBm, hunterSv]) {
   const svStill = weaveRun(false, 'classic', 'sv-ranged');
   const svWeave = weaveRun(true, 'classic', 'sv-ranged');
   console.log(`  Survival talents, ranged rotation (foreversim): no weaving ${svStill.dps().toFixed(0)} DPS | ${line('Classic rule', svWeave)}`);
+  // gunba's SV Weave: the cycle presses Raptor Strike, not just white swings, and is back in time for every shot.
+  const svCycle = weaveRun(true, 'classic', 'sv-weave');
+  console.log(`  SV Weave: ${line('Classic rule', svCycle)}`);
+  if ((svCycle.counters.weaveRaptor ?? 0) < 9) failures.push(`SV Weave pressed Raptor Strike only ${svCycle.counters.weaveRaptor ?? 0} times in 3 minutes`);
+  if ((svCycle.counters.autoShotHeld ?? 0) > 3) failures.push(`SV Weave held Auto Shot ${(svCycle.counters.autoShotHeld ?? 0).toFixed(1)} s`);
 }
 
 // Pets as in WoW: they run to the target and hit only there; orders and modes decide when they go.

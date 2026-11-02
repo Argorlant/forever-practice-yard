@@ -55,7 +55,7 @@ const HELP_COMMON = `Auto Shot fires on its own every weapon swing (faster with 
     WoW Forever: Aimed Shot is baseline (2 sec cast, 6 sec cooldown shared with Multi-Shot, which is instant since the Oct 15 client), Arcane Shot and Serpent Sting scale with ranged attack power, and Auto Shot keeps firing while you cast (Settings has the Classic rule as an option). You cannot cast while moving; Arcane Shot and Serpent Sting are instant.
     Mana is your resource: shots drain it fast. Judgement of Wisdom, Blessing of Wisdom and Mana Spring Totem are on by default under Raid buffs and debuffs, and Major Mana Potions are on your bar; you can lock your mana in Settings.`;
 
-const WEAVE_HELP = `Melee weaving (an advanced option in Settings): Auto Shot and your melee swing (the two-handed glaive) run together, and the distance decides which one fires. Right after a shot leaves, step forward through the dead zone (the rings on the ground: inside the red one you hit in melee, outside the green one you shoot), take a swing or Raptor Strike, and step back out before the next windup. The cue above your bar says when: Step in, Raptor Strike, Step out. The default is the Classic rule: the two timers are independent. On the Forever beta a melee swing restarts the Auto Shot timer, which is reported as a bug (#14) and makes a weave gain little; pick that rule in Settings to practice what the beta does today. Since Oct 21 gunba's sim weaves: its SV Weave and MM Weave builds shoot from 12 yards and step to 5 for Raptor Strike, Mongoose Bite, Strider Kick and Immolation Trap while the next Auto Shot is more than 1.5 sec away (pick them in Settings).`;
+const WEAVE_HELP = `Melee weaving (an advanced option in Settings), really ranged weaving: Auto Shot and your melee swing (the two-handed glaive) run on separate timers, and the distance decides which one fires. Use your ranged cooldowns at range, step through the dead zone (the rings on the ground: inside the red one you hit in melee, outside the green one you shoot), press what you can (Raptor Strike first, it goes on your next swing and off the global cooldown, then Immolation Trap, Mongoose Bite and Strider Kick), and step back out before the next windup. The cue above your bar says when: Step in, what to press, Step out. We assume separate timers, as in Classic, until this can be checked in the live game; on the beta a melee swing restarted the Auto Shot timer (reported as bug #14), and you can pick that rule in Settings to practice it. gunba's SV Weave and MM Weave builds play this way from 12 yards (pick them in Settings).`;
 
 const OPTIONS = [
   { key: 'classicAutoShot', name: 'Classic Auto Shot rule: a cast started in the windup clips the shot', kind: 'toggle' as const },
@@ -152,7 +152,7 @@ export const hunterMm: Spec = specFor('mm', {
     This is a practice tool: hit, crit and proc chances follow WoW Forever; damage numbers are an approximation.`,
   look: { clothColor: 0x3d5a2a, leatherColor: 0x5a4630, hood: true },
   suggest: (c) => weaveSuggest(c, mmSuggest),
-  cue: weaveCue,
+  cue: (c) => weaveCue(c, mmSuggest),
   rings: weaveRings,
   review: rangedReview,
 });
@@ -212,7 +212,7 @@ export const hunterBm: Spec = specFor('bm', {
     This is a practice tool: hit, crit and proc chances follow WoW Forever; damage numbers are an approximation.`,
   look: { clothColor: 0x5a3a20, leatherColor: 0x4a3a28, hood: true },
   suggest: (c) => weaveSuggest(c, bmSuggest),
-  cue: weaveCue,
+  cue: (c) => weaveCue(c, bmSuggest),
   rings: weaveRings,
   review: bmReview,
 });

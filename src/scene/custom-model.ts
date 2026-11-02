@@ -303,6 +303,9 @@ export class CustomModel {
     this.showMelee(!this.ranged?.hand.visible);
   }
 
+  /** The export holds a weapon in each hand. */
+  get holdsPair(): boolean { return this.meleeItems.some((item) => /^Off/i.test(item.name)); }
+
   private showMelee(on: boolean): void {
     for (const item of this.meleeItems) item.visible = on && (/^Main/i.test(item.name) ? this.holding.main : this.holding.off) === 'own';
     for (const group of this.drawnWeapons) group.visible = on;

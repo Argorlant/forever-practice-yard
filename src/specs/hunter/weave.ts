@@ -1,6 +1,7 @@
-// Melee weaving for ranged hunters (an optional advanced mode): after an Auto
-// Shot leaves, step through the dead zone into melee, take a swing or Raptor
-// Strike, and step back out before the next windup. The engine runs both
+// Melee weaving for ranged hunters (an optional advanced mode), really ranged
+// weaving: use the ranged cooldowns at range, step through the dead zone into
+// melee, press what you can (Raptor Strike, Immolation Trap, Mongoose Bite,
+// Strider Kick), and step back out before the next windup. The engine runs both
 // autos (Combat.weaving) and applies the chosen Auto Shot reset rule; this
 // file gives the cues, the glow in melee, the range rings and the review.
 // Timing and value: research/hunter_forever.md → Melee weaving.
@@ -11,11 +12,11 @@ import type { Hit, SettingField } from '../../engine/types';
 /** Running speed, 7 yards per second. */
 const RUN = 7 * YARD;
 
-interface WeaveState { lastShot: number; lastMelee: number }
+interface WeaveState { lastShot: number; lastMelee: number; leaving: boolean }
 const states = new WeakMap<Combat, WeaveState>();
 const state = (c: Combat): WeaveState => {
   let s = states.get(c);
-  if (!s) states.set(c, (s = { lastShot: -Infinity, lastMelee: -Infinity }));
+  if (!s) states.set(c, (s = { lastShot: -Infinity, lastMelee: -Infinity, leaving: false }));
   return s;
 };
 
@@ -24,8 +25,8 @@ export const WEAVE_OPTIONS: SettingField[] = [
   {
     key: 'autoShotReset', name: 'Melee weaving: what a melee swing does to Auto Shot', kind: 'choice',
     choices: [
-      { value: 'classic', label: 'Classic: the two timers are independent (default)' },
-      { value: 'beta', label: 'Forever beta today: it restarts the Auto Shot timer (reported as bug #14)' },
+      { value: 'classic', label: 'Classic: separate melee and ranged timers (default, until checked in the live game)' },
+      { value: 'beta', label: 'Forever beta: it restarts the Auto Shot timer (reported as bug #14)' },
       { value: 'wrath', label: 'Wrath: each one restarts the other' },
     ],
   },
@@ -33,7 +34,7 @@ export const WEAVE_OPTIONS: SettingField[] = [
 
 /** Turns the mode on for ranged builds and keeps track of shots and swings. */
 export function setupWeaving(c: Combat, melee: boolean): void {
-  states.set(c, { lastShot: -Infinity, lastMelee: -Infinity });
+  states.set(c, { lastShot: -Infinity, lastMelee: -Infinity, leaving: false });
   c.weaving = !melee && !!c.options.meleeWeaving;
   const rule = String(c.options.autoShotReset ?? 'classic');
   c.autoShotReset = rule === 'beta' || rule === 'wrath' ? rule : 'classic';
@@ -57,11 +58,22 @@ export function setupWeaving(c: Combat, melee: boolean): void {
   });
 }
 
-const raptorReadyIn = (c: Combat) => c.cooldownLeft('raptorStrike').left;
-const raptorAffordable = (c: Combat) => c.cost(c.ability('raptorStrike')!) <= c.player.resource;
+/** Raptor Strike is ready within this many seconds, and not already waiting for the swing. */
+const raptorReady = (c: Combat, within = 0) => c.cooldownLeft('raptorStrike').left <= within
+  && c.cost(c.ability('raptorStrike')!) <= c.player.resource && c.queuedSwing !== 'raptorStrike';
 
-/** The cue above the action bar: when to step in, swing, and step out. */
-export function weaveCue(c: Combat): { text: string; tone: 'go' | 'hit' | 'back' } | null {
+/** The melee attack on the global cooldown ready within this many seconds, in gs's weave order (since 27 Oct). */
+function gcdAttack(c: Combat, within = 0): string | null {
+  for (const id of ['immolationTrap', 'mongooseBite', 'striderKick']) {
+    const a = c.ability(id);
+    if (id === 'immolationTrap' && c.target && c.aura(c.target, 'immolationTrap')) continue;
+    if (a && c.cooldownLeft(id).left <= within && (a.usable?.(c) ?? true) && c.cost(a) <= c.player.resource) return id;
+  }
+  return null;
+}
+
+/** The cue above the action bar: ranged cooldowns first, then step in, press what you can, and step out in time for the shot. */
+export function weaveCue(c: Combat, atRange: (c: Combat) => string | null): { text: string; tone: 'go' | 'hit' | 'back' } | null {
   const u = c.target;
   if (!c.weaving || !c.autoShooting || !u || u.health <= 0) return null;
   const s = state(c);
@@ -69,44 +81,39 @@ export function weaveCue(c: Combat): { text: string; tone: 'go' | 'hit' | 'back'
   const d = c.distance(u);
   const meleeEdge = MELEE_RANGE + u.radius * 0.5;
   const rangedEdge = RANGED_MIN + u.radius;
+  const travelIn = Math.max(0, d - meleeEdge + 0.1) / run;
   const travelOut = Math.max(0, rangedEdge + 0.1 - Math.min(d, meleeEdge)) / run;
   const toShot = c.windup ? 0 : c.timeToWindup();
-  const swung = s.lastMelee > s.lastShot;
   const late = toShot <= travelOut + 0.15;
+  const stepOut = { text: 'Step out', tone: 'back' as const };
+  const stepIn = { text: 'Step in', tone: 'go' as const };
 
   if (c.inRange(u)) {
-    if (!swung && !late) {
+    if (!late) {
       const id = meleeAttack(c);
       if (id) return { text: c.ability(id)!.name, tone: 'hit' };
-      return { text: 'Swing…', tone: 'hit' };
+      // Raptor Strike waits for the swing; a swing about to land is worth waiting for too.
+      if (c.queuedSwing === 'raptorStrike' || (s.lastMelee <= s.lastShot && c.swingLeft('main').left <= 0.3)) return { text: 'Swing…', tone: 'hit' };
     }
-    return { text: 'Step out', tone: 'back' };
+    s.leaving = true;
+    return stepOut;
   }
-  if (!c.inRangedRange(u)) return swung || late ? { text: 'Step out', tone: 'back' } : { text: 'Step in', tone: 'go' };
+  // Through the dead zone without turning back halfway.
+  if (!c.inRangedRange(u)) {
+    if (late || (!raptorReady(c, travelIn) && !gcdAttack(c, travelIn))) s.leaving = true;
+    return s.leaving ? stepOut : stepIn;
+  }
+  s.leaving = false;
 
-  // At range: is there room for a weave before the next windup?
-  if (c.windup || c.casting || c.channeling) return null;
-  if (c.aura(c.player, 'rapidFire') || c.aura(c.player, 'quickShots')) return null;
-  const travelIn = Math.max(0, d - meleeEdge + 0.1) / run;
-  // The melee swing must be ready when you arrive (a 3.2 sec glaive swings rarely).
-  if (c.swingLeft('main').left > travelIn + 0.3) return null;
-  const window = travelIn + 0.15 + travelOut + 0.25;
-  const go = { text: 'Step in', tone: 'go' as const };
-  // Raptor Strike (~300 damage) is worth a late shot: go right after a shot leaves, under every rule.
-  if (raptorReadyIn(c) <= travelIn && raptorAffordable(c)) return c.t - s.lastShot <= 0.6 ? go : null;
-  // A white swing alone only under the Classic rule, and only when the whole trip fits before the next windup.
-  return c.autoShotReset === 'classic' && toShot >= window ? go : null;
+  // At range: the ranged cooldowns first, then a trip if there is something to press and it fits before the next windup.
+  if (c.windup || c.casting || c.channeling || atRange(c)) return null;
+  if (!raptorReady(c, travelIn) && !gcdAttack(c, travelIn)) return null;
+  return toShot >= travelIn + travelOut + 0.15 ? stepIn : null;
 }
 
-/** What to press in melee, in gs's weave order (since 27 Oct): Immolation Trap when its burn is down, Mongoose Bite, Strider Kick, Raptor Strike. */
+/** What to press in melee: Raptor Strike first (off the global cooldown, or the swing goes out white), then the attacks on the global cooldown. */
 function meleeAttack(c: Combat): string | null {
-  for (const id of ['immolationTrap', 'mongooseBite', 'striderKick']) {
-    const a = c.ability(id);
-    if (id === 'immolationTrap' && c.target && c.aura(c.target, 'immolationTrap')) continue;
-    if (a && c.cooldownLeft(id).left === 0 && (a.usable?.(c) ?? true) && c.cost(a) <= c.player.resource) return id;
-  }
-  if (raptorReadyIn(c) === 0 && raptorAffordable(c) && c.queuedSwing !== 'raptorStrike') return 'raptorStrike';
-  return null;
+  return raptorReady(c) ? 'raptorStrike' : gcdAttack(c);
 }
 
 /** In melee the glow shows the melee attack to press; in the dead zone nothing; at range the usual list. */

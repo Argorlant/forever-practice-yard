@@ -423,7 +423,9 @@ function dressOwn(): void {
   const tree = (talents?: string) => (talents ? mainTree(cls, talents)?.name : null);
   const current = spec.builds?.find((b) => b.id === prefs.options.build);
   const exported = ownPlayer.personal ? st : spec.builds?.find((b) => tree(b.talentString) === tree(current?.talentString))?.stats ?? spec.stats;
-  const same = (a?: Weapon | null, b?: Weapon | null) => a?.type === b?.type && !!a?.twoHand === !!b?.twoHand;
+  // A weaving hunter swings its two-hander in plain sight, and a pair of weapons cannot stand for that.
+  const asExported = ownPlayer.personal || !(prefs.options.meleeWeaving && st.mainHand.twoHand && ownCharacter.holdsPair);
+  const same = (a?: Weapon | null, b?: Weapon | null) => asExported && a?.type === b?.type && !!a?.twoHand === !!b?.twoHand;
   ownCharacter.setMelee(
     same(st.mainHand, exported.mainHand) ? 'own' : st.mainHand.type,
     same(st.offHand, exported.offHand) ? 'own' : st.offHand?.type ?? null,

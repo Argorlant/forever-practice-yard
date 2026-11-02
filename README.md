@@ -101,14 +101,16 @@ fire while Auto Shot is on or a shot is cast, and the melee weapon is put away.
   Kick, Mongoose Bite opened by Expose Prey on your own Hunter's Mark, Lacerating Strikes and Immolation Trap.
 
 **Melee weaving** is an advanced option for Marksmanship and Beast Mastery (Settings, off by default): Auto Shot and the
-melee swing of your two-handed glaive run together, and the distance decides which one fires. Rings on the ground mark
+melee swing of your two-handed glaive run on separate timers, and the distance decides which one fires. It is really
+ranged weaving: use your ranged cooldowns at range, step in, press what you can, step back out. Rings on the ground mark
 melee range and Auto Shot's minimum range, and a cue above the bar says when to step in, which melee attack to press
-(Raptor Strike, Mongoose Bite, Strider Kick, Immolation Trap) and when to step out; weaving drops Aimed Shot for Arcane
+(Raptor Strike first, off the global cooldown, then Immolation Trap, Mongoose Bite and Strider Kick) and when to step out; weaving drops Aimed Shot for Arcane
 Shot and Multi-Shot at range. A
-third setting picks what a melee swing does to Auto Shot: Classic keeps the two timers independent (the default), the Forever
-beta restarts Auto Shot (what it does today, reported as a bug), Wrath links them both ways. The review counts weaves, the Auto Shot time they cost and
+third setting picks what a melee swing does to Auto Shot: Classic keeps the two timers separate (the default, assumed until it can be checked in the live game), the Forever
+beta restarted Auto Shot (reported as a bug), Wrath links them both ways. The review counts weaves, the Auto Shot time they cost and
 the net damage. Since Oct 21 gunba's sim weaves: its SV Weave (its top build) and MM Weave builds, in Settings, shoot from
-12 yards and step to 5 while the next Auto Shot is more than 1.5 s away, with no pet.
+12 yards and step to 5 while the next Auto Shot is more than 1.5 s away, with no pet. SV Weave carries a two-hander for this;
+melee Survival prefers two weapons for its white swings.
 
 The **Priest** comes as two damage specs (sources in [`research/priest_forever.md`](research/priest_forever.md)); pure healers are out of scope:
 
