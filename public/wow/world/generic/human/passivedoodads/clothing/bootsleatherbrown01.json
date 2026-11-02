@@ -1,0 +1,126 @@
+{
+	"fileType": "m2",
+	"fileDataID": 198140,
+	"fileName": "world/generic/human/passive doodads/clothing/bootsleatherbrown01.m2",
+	"internalName": "BootsLeatherBrown01",
+	"textures": [
+		{
+			"fileNameInternal": "world/generic/human/passive doodads/armor/leatherandbootshuman.blp",
+			"fileNameExternal": "..\\armor\\leatherandbootshuman.png",
+			"mtlName": "mat_leatherandbootshuman",
+			"flags": 0,
+			"fileDataID": 197913
+		}
+	],
+	"textureTypes": [
+		0
+	],
+	"materials": [
+		{
+			"flags": 0,
+			"blendingMode": 0
+		}
+	],
+	"textureCombos": [
+		0
+	],
+	"colors": [],
+	"textureWeights": [
+		{
+			"globalSeq": 65535,
+			"interpolation": 0,
+			"timestamps": [
+				[
+					0
+				]
+			],
+			"values": [
+				[
+					32767
+				]
+			],
+			"timestampOffsets": null,
+			"valueOffsets": null
+		}
+	],
+	"transparencyLookup": [
+		0
+	],
+	"textureTransforms": [],
+	"textureTransformsLookup": [
+		65535
+	],
+	"boundingBox": {
+		"min": [
+			-0.23228700459003448,
+			-0.32249391078948975,
+			-0.0007463140645995736
+		],
+		"max": [
+			0.21943356096744537,
+			0.32308363914489746,
+			0.653652012348175
+		]
+	},
+	"boundingSphereRadius": 0.44426190853118896,
+	"collisionBox": {
+		"min": [
+			10000000,
+			10000000,
+			10000000
+		],
+		"max": [
+			-10000000,
+			-10000000,
+			-10000000
+		]
+	},
+	"collisionSphereRadius": 0,
+	"skin": {
+		"subMeshes": [
+			{
+				"enabled": true,
+				"submeshID": 501,
+				"level": 0,
+				"vertexStart": 0,
+				"vertexCount": 122,
+				"triangleStart": 0,
+				"triangleCount": 390,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					-0.03234316036105156,
+					0.00029488358995877206,
+					0.2702018916606903
+				],
+				"sortCenterPosition": [
+					-0.03234316036105156,
+					0.00029488358995877206,
+					0.2702018916606903
+				],
+				"sortRadius": 0.42359092831611633
+			}
+		],
+		"textureUnits": [
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 0,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 0,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 0,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			}
+		],
+		"fileName": "world/generic/human/passive doodads/clothing/bootsleatherbrown0100.skin",
+		"fileDataID": 504331
+	}
+}

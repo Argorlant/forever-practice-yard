@@ -1,0 +1,126 @@
+{
+	"fileType": "m2",
+	"fileDataID": 198133,
+	"fileName": "world/generic/human/passive doodads/cloth/clothyarnblue.m2",
+	"internalName": "ClothYarnBlue",
+	"textures": [
+		{
+			"fileNameInternal": "world/generic/human/passive doodads/cloth/clothstuff.blp",
+			"fileNameExternal": "clothstuff.png",
+			"mtlName": "mat_clothstuff",
+			"flags": 3,
+			"fileDataID": 198132
+		}
+	],
+	"textureTypes": [
+		0
+	],
+	"materials": [
+		{
+			"flags": 4,
+			"blendingMode": 1
+		}
+	],
+	"textureCombos": [
+		0
+	],
+	"colors": [],
+	"textureWeights": [
+		{
+			"globalSeq": 65535,
+			"interpolation": 0,
+			"timestamps": [
+				[
+					0
+				]
+			],
+			"values": [
+				[
+					32767
+				]
+			],
+			"timestampOffsets": null,
+			"valueOffsets": null
+		}
+	],
+	"transparencyLookup": [
+		0
+	],
+	"textureTransforms": [],
+	"textureTransformsLookup": [
+		65535
+	],
+	"boundingBox": {
+		"min": [
+			-0.002766669960692525,
+			-0.20824700593948364,
+			-0.24016499519348145
+		],
+		"max": [
+			0.08846750110387802,
+			0.20824700593948364,
+			0.24016499519348145
+		]
+	},
+	"boundingSphereRadius": 0.29305899143218994,
+	"collisionBox": {
+		"min": [
+			10000000,
+			10000000,
+			10000000
+		],
+		"max": [
+			-10000000,
+			-10000000,
+			-10000000
+		]
+	},
+	"collisionSphereRadius": 0,
+	"skin": {
+		"subMeshes": [
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 0,
+				"vertexCount": 48,
+				"triangleStart": 0,
+				"triangleCount": 156,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					0.04375031217932701,
+					-0.008677023462951183,
+					-2.2972624691419696e-8
+				],
+				"sortCenterPosition": [
+					0.04285041615366936,
+					0,
+					0
+				],
+				"sortRadius": 0.29305872321128845
+			}
+		],
+		"textureUnits": [
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 16,
+				"skinSectionIndex": 0,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 0,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 0,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			}
+		],
+		"fileName": "world/generic/human/passive doodads/cloth/clothyarnblue00.skin",
+		"fileDataID": 504323
+	}
+}

@@ -1,0 +1,126 @@
+{
+	"fileType": "m2",
+	"fileDataID": 189410,
+	"fileName": "world/azeroth/duskwood/passivedoodads/bush/pumpkinpatch01.m2",
+	"internalName": "PumpkinPatch01",
+	"textures": [
+		{
+			"fileNameInternal": "interface/glues/models/ui_scourge/cemetery01.blp",
+			"fileNameExternal": "..\\..\\..\\..\\..\\interface\\glues\\models\\ui_scourge\\cemetery01.png",
+			"mtlName": "mat_cemetery01",
+			"flags": 0,
+			"fileDataID": 132027
+		}
+	],
+	"textureTypes": [
+		0
+	],
+	"materials": [
+		{
+			"flags": 4,
+			"blendingMode": 1
+		}
+	],
+	"textureCombos": [
+		0
+	],
+	"colors": [],
+	"textureWeights": [
+		{
+			"globalSeq": 65535,
+			"interpolation": 0,
+			"timestamps": [
+				[
+					0
+				]
+			],
+			"values": [
+				[
+					32767
+				]
+			],
+			"timestampOffsets": null,
+			"valueOffsets": null
+		}
+	],
+	"transparencyLookup": [
+		0
+	],
+	"textureTransforms": [],
+	"textureTransformsLookup": [
+		65535
+	],
+	"boundingBox": {
+		"min": [
+			-2.328575372695923,
+			-1.851149082183838,
+			-0.4239250719547272
+		],
+		"max": [
+			0.8594232201576233,
+			2.5554451942443848,
+			1.52910578250885
+		]
+	},
+	"boundingSphereRadius": 2.4661970138549805,
+	"collisionBox": {
+		"min": [
+			10000000,
+			10000000,
+			10000000
+		],
+		"max": [
+			-10000000,
+			-10000000,
+			-10000000
+		]
+	},
+	"collisionSphereRadius": 0,
+	"skin": {
+		"subMeshes": [
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 0,
+				"vertexCount": 294,
+				"triangleStart": 0,
+				"triangleCount": 882,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					-0.912222683429718,
+					-0.15578503906726837,
+					0.7066922187805176
+				],
+				"sortCenterPosition": [
+					-0.7345761060714722,
+					0.35214805603027344,
+					0.5525903701782227
+				],
+				"sortRadius": 2.4661972522735596
+			}
+		],
+		"textureUnits": [
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 16,
+				"skinSectionIndex": 0,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 0,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 0,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			}
+		],
+		"fileName": "world/azeroth/duskwood/passivedoodads/bush/pumpkinpatch0100.skin",
+		"fileDataID": 494338
+	}
+}

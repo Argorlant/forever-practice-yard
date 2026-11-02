@@ -1,0 +1,126 @@
+{
+	"fileType": "m2",
+	"fileDataID": 198057,
+	"fileName": "world/generic/human/passive doodads/bottles/bottle01.m2",
+	"internalName": "Bottle01",
+	"textures": [
+		{
+			"fileNameInternal": "world/generic/human/passive doodads/bottles/glass2bottle02.blp",
+			"fileNameExternal": "glass2bottle02.png",
+			"mtlName": "mat_glass2bottle02",
+			"flags": 3,
+			"fileDataID": 198059
+		}
+	],
+	"textureTypes": [
+		0
+	],
+	"materials": [
+		{
+			"flags": 4,
+			"blendingMode": 0
+		}
+	],
+	"textureCombos": [
+		0
+	],
+	"colors": [],
+	"textureWeights": [
+		{
+			"globalSeq": 65535,
+			"interpolation": 0,
+			"timestamps": [
+				[
+					0
+				]
+			],
+			"values": [
+				[
+					32767
+				]
+			],
+			"timestampOffsets": null,
+			"valueOffsets": null
+		}
+	],
+	"transparencyLookup": [
+		0
+	],
+	"textureTransforms": [],
+	"textureTransformsLookup": [
+		65535
+	],
+	"boundingBox": {
+		"min": [
+			-0.1588049978017807,
+			-0.15621399879455566,
+			0.010793600231409073
+		],
+		"max": [
+			0.1527930051088333,
+			0.1599459946155548,
+			0.7237359881401062
+		]
+	},
+	"boundingSphereRadius": 0.3826349973678589,
+	"collisionBox": {
+		"min": [
+			-0.1603509932756424,
+			-0.15745499730110168,
+			0
+		],
+		"max": [
+			0.16482800245285034,
+			0.15756100416183472,
+			0.7214890122413635
+		]
+	},
+	"collisionSphereRadius": 0.4258881211280823,
+	"skin": {
+		"subMeshes": [
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 0,
+				"vertexCount": 56,
+				"triangleStart": 0,
+				"triangleCount": 150,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					-0.0002574919490143657,
+					0.003252862486988306,
+					0.32640939950942993
+				],
+				"sortCenterPosition": [
+					-0.003005996346473694,
+					0.0018659979104995728,
+					0.3672648072242737
+				],
+				"sortRadius": 0.3826344311237335
+			}
+		],
+		"textureUnits": [
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 0,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 0,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 0,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			}
+		],
+		"fileName": "world/generic/human/passive doodads/bottles/bottle0100.skin",
+		"fileDataID": 504273
+	}
+}

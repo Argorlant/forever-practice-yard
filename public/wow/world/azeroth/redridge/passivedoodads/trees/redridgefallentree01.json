@@ -1,0 +1,178 @@
+{
+	"fileType": "m2",
+	"fileDataID": 190114,
+	"fileName": "world/azeroth/redridge/passivedoodads/trees/redridgefallentree01.m2",
+	"internalName": "RedRidgeFallenTree01",
+	"textures": [
+		{
+			"fileNameInternal": "world/azeroth/redridge/passivedoodads/trees/trunk01.blp",
+			"fileNameExternal": "trunk01.png",
+			"mtlName": "mat_trunk01",
+			"flags": 3,
+			"fileDataID": 190137
+		},
+		{
+			"fileNameInternal": "world/azeroth/redridge/passivedoodads/trees/trunkend02.blp",
+			"fileNameExternal": "trunkend02.png",
+			"mtlName": "mat_trunkend02",
+			"flags": 0,
+			"fileDataID": 190140
+		}
+	],
+	"textureTypes": [
+		0,
+		0
+	],
+	"materials": [
+		{
+			"flags": 0,
+			"blendingMode": 0
+		},
+		{
+			"flags": 0,
+			"blendingMode": 0
+		}
+	],
+	"textureCombos": [
+		0,
+		1
+	],
+	"colors": [],
+	"textureWeights": [
+		{
+			"globalSeq": 65535,
+			"interpolation": 0,
+			"timestamps": [
+				[
+					0
+				]
+			],
+			"values": [
+				[
+					32767
+				]
+			],
+			"timestampOffsets": null,
+			"valueOffsets": null
+		}
+	],
+	"transparencyLookup": [
+		0
+	],
+	"textureTransforms": [],
+	"textureTransformsLookup": [
+		65535
+	],
+	"boundingBox": {
+		"min": [
+			-0.3878154158592224,
+			-6.312012672424316,
+			-0.20415163040161133
+		],
+		"max": [
+			1.1076518297195435,
+			5.928800582885742,
+			1.4122358560562134
+		]
+	},
+	"boundingSphereRadius": 6.144401550292969,
+	"collisionBox": {
+		"min": [
+			-0.3878154158592224,
+			-6.312012672424316,
+			-0.20415152609348297
+		],
+		"max": [
+			1.1076518297195435,
+			5.928800582885742,
+			1.4122358560562134
+		]
+	},
+	"collisionSphereRadius": 6.144401550292969,
+	"skin": {
+		"subMeshes": [
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 0,
+				"vertexCount": 35,
+				"triangleStart": 0,
+				"triangleCount": 150,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					0.3423788249492645,
+					-0.0029118419624865055,
+					0.5081900954246521
+				],
+				"sortCenterPosition": [
+					0.3599182069301605,
+					-0.20605897903442383,
+					0.604042112827301
+				],
+				"sortRadius": 6.107002258300781
+			},
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 35,
+				"vertexCount": 50,
+				"triangleStart": 150,
+				"triangleCount": 240,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					0.25519922375679016,
+					-0.16414859890937805,
+					0.5420606136322021
+				],
+				"sortCenterPosition": [
+					0.3599182069301605,
+					-0.1916060447692871,
+					0.6645020842552185
+				],
+				"sortRadius": 6.148160934448242
+			}
+		],
+		"textureUnits": [
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 0,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 0,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 0,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			},
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 1,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 1,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 1,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			}
+		],
+		"fileName": "world/azeroth/redridge/passivedoodads/trees/redridgefallentree0100.skin",
+		"fileDataID": 494707
+	}
+}

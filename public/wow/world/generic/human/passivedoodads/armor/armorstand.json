@@ -1,0 +1,126 @@
+{
+	"fileType": "m2",
+	"fileDataID": 197910,
+	"fileName": "world/generic/human/passive doodads/armor/armorstand.m2",
+	"internalName": "ArmorStand",
+	"textures": [
+		{
+			"fileNameInternal": "world/generic/human/passive doodads/armor/armorermisc.blp",
+			"fileNameExternal": "armorermisc.png",
+			"mtlName": "mat_armorermisc",
+			"flags": 0,
+			"fileDataID": 197868
+		}
+	],
+	"textureTypes": [
+		0
+	],
+	"materials": [
+		{
+			"flags": 4,
+			"blendingMode": 1
+		}
+	],
+	"textureCombos": [
+		0
+	],
+	"colors": [],
+	"textureWeights": [
+		{
+			"globalSeq": 65535,
+			"interpolation": 0,
+			"timestamps": [
+				[
+					0
+				]
+			],
+			"values": [
+				[
+					32767
+				]
+			],
+			"timestampOffsets": null,
+			"valueOffsets": null
+		}
+	],
+	"transparencyLookup": [
+		0
+	],
+	"textureTransforms": [],
+	"textureTransformsLookup": [
+		65535
+	],
+	"boundingBox": {
+		"min": [
+			-0.4470329284667969,
+			-0.4348057806491852,
+			0.00019511250138748437
+		],
+		"max": [
+			0.4488004744052887,
+			0.4338361620903015,
+			1.7853105068206787
+		]
+	},
+	"boundingSphereRadius": 0.9996580481529236,
+	"collisionBox": {
+		"min": [
+			-0.4470329284667969,
+			-0.4348057806491852,
+			0
+		],
+		"max": [
+			0.4488004744052887,
+			0.4338361620903015,
+			1.7853105068206787
+		]
+	},
+	"collisionSphereRadius": 0.9997450709342957,
+	"skin": {
+		"subMeshes": [
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 0,
+				"vertexCount": 172,
+				"triangleStart": 0,
+				"triangleCount": 240,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					0.0004694502567872405,
+					0.005666947457939386,
+					0.5075002312660217
+				],
+				"sortCenterPosition": [
+					0.0008837729692459106,
+					-0.0004848092794418335,
+					0.8927528262138367
+				],
+				"sortRadius": 0.9996580481529236
+			}
+		],
+		"textureUnits": [
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 16,
+				"skinSectionIndex": 0,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 0,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 0,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			}
+		],
+		"fileName": "world/generic/human/passive doodads/armor/armorstand00.skin",
+		"fileDataID": 504125
+	}
+}

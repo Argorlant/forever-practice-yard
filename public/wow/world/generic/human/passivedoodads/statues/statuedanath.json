@@ -1,0 +1,360 @@
+{
+	"fileType": "m2",
+	"fileDataID": 198560,
+	"fileName": "world/generic/human/passive doodads/statues/statuedanath.m2",
+	"internalName": "StatueDanath",
+	"textures": [
+		{
+			"fileNameInternal": "world/generic/human/passive doodads/statues/danathsword.blp",
+			"fileNameExternal": "danathsword.png",
+			"mtlName": "mat_danathsword",
+			"flags": 0,
+			"fileDataID": 198548
+		},
+		{
+			"fileNameInternal": "world/generic/human/passive doodads/statues/danathshoulder.blp",
+			"fileNameExternal": "danathshoulder.png",
+			"mtlName": "mat_danathshoulder",
+			"flags": 0,
+			"fileDataID": 198547
+		},
+		{
+			"fileNameInternal": "world/generic/human/passive doodads/statues/danathhelmet.blp",
+			"fileNameExternal": "danathhelmet.png",
+			"mtlName": "mat_danathhelmet",
+			"flags": 0,
+			"fileDataID": 198546
+		},
+		{
+			"fileNameInternal": "world/generic/human/passive doodads/statues/danath02.blp",
+			"fileNameExternal": "danath02.png",
+			"mtlName": "mat_danath02",
+			"flags": 0,
+			"fileDataID": 198545
+		}
+	],
+	"textureTypes": [
+		0,
+		0,
+		0,
+		0
+	],
+	"materials": [
+		{
+			"flags": 0,
+			"blendingMode": 0
+		},
+		{
+			"flags": 0,
+			"blendingMode": 0
+		},
+		{
+			"flags": 0,
+			"blendingMode": 0
+		},
+		{
+			"flags": 0,
+			"blendingMode": 0
+		}
+	],
+	"textureCombos": [
+		3,
+		0,
+		1,
+		2
+	],
+	"colors": [],
+	"textureWeights": [
+		{
+			"globalSeq": 65535,
+			"interpolation": 0,
+			"timestamps": [
+				[
+					0
+				]
+			],
+			"values": [
+				[
+					32767
+				]
+			],
+			"timestampOffsets": null,
+			"valueOffsets": null
+		}
+	],
+	"transparencyLookup": [
+		0
+	],
+	"textureTransforms": [],
+	"textureTransformsLookup": [
+		65535
+	],
+	"boundingBox": {
+		"min": [
+			-4.823522090911865,
+			-5.805281162261963,
+			0.0015789867611601949
+		],
+		"max": [
+			6.457647800445557,
+			4.736246109008789,
+			20.48313331604004
+		]
+	},
+	"boundingSphereRadius": 11.6935396194458,
+	"collisionBox": {
+		"min": [
+			-4.823522090911865,
+			-5.683123588562012,
+			0.0015789867611601949
+		],
+		"max": [
+			3.2329704761505127,
+			3.170488119125366,
+			13.82407283782959
+		]
+	},
+	"collisionSphereRadius": 8.755379676818848,
+	"skin": {
+		"subMeshes": [
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 0,
+				"vertexCount": 292,
+				"triangleStart": 0,
+				"triangleCount": 1056,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					1.3666207790374756,
+					-0.7940529584884644,
+					13.55708122253418
+				],
+				"sortCenterPosition": [
+					1.6131489276885986,
+					-1.069156289100647,
+					12.492011070251465
+				],
+				"sortRadius": 8.270587921142578
+			},
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 292,
+				"vertexCount": 58,
+				"triangleStart": 1056,
+				"triangleCount": 168,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					-1.0008909702301025,
+					-2.183291435241699,
+					15.867862701416016
+				],
+				"sortCenterPosition": [
+					-1.9449059963226318,
+					-0.023624897003173828,
+					11.624832153320312
+				],
+				"sortRadius": 10.336301803588867
+			},
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 350,
+				"vertexCount": 56,
+				"triangleStart": 1224,
+				"triangleCount": 138,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					-1.3426607847213745,
+					1.8512965440750122,
+					14.968120574951172
+				],
+				"sortCenterPosition": [
+					-1.3426607847213745,
+					1.8512965440750122,
+					14.968120574951172
+				],
+				"sortRadius": 3.357285737991333
+			},
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 406,
+				"vertexCount": 94,
+				"triangleStart": 1362,
+				"triangleCount": 432,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					3.373253583908081,
+					-2.0641026496887207,
+					12.750020027160645
+				],
+				"sortCenterPosition": [
+					3.489962100982666,
+					-2.08638072013855,
+					12.58399772644043
+				],
+				"sortRadius": 2.7368855476379395
+			},
+			{
+				"enabled": true,
+				"submeshID": 404,
+				"level": 0,
+				"vertexStart": 500,
+				"vertexCount": 104,
+				"triangleStart": 1794,
+				"triangleCount": 318,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					-1.1711429357528687,
+					1.7572736740112305,
+					9.341578483581543
+				],
+				"sortCenterPosition": [
+					0.5650898218154907,
+					-0.6342411041259766,
+					10.263309478759766
+				],
+				"sortRadius": 6.643492698669434
+			},
+			{
+				"enabled": true,
+				"submeshID": 504,
+				"level": 0,
+				"vertexStart": 604,
+				"vertexCount": 84,
+				"triangleStart": 2112,
+				"triangleCount": 348,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					-0.9607300758361816,
+					-1.3766894340515137,
+					2.744173288345337
+				],
+				"sortCenterPosition": [
+					-0.9607300758361816,
+					-1.3766894340515137,
+					2.744173288345337
+				],
+				"sortRadius": 6.044520854949951
+			}
+		],
+		"textureUnits": [
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 1,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 0,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 1,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			},
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 2,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 1,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 2,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			},
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 3,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 2,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 3,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			},
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 0,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 3,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 0,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			},
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 4,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 3,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 0,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			},
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 5,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 3,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 0,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			}
+		],
+		"fileName": "world/generic/human/passive doodads/statues/statuedanath00.skin",
+		"fileDataID": 504630
+	}
+}

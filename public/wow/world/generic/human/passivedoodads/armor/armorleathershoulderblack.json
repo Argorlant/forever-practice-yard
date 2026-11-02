@@ -1,0 +1,126 @@
+{
+	"fileType": "m2",
+	"fileDataID": 197893,
+	"fileName": "world/generic/human/passive doodads/armor/armorleathershoulderblack.m2",
+	"internalName": "ArmorLeatherShoulderBlack",
+	"textures": [
+		{
+			"fileNameInternal": "world/generic/human/passive doodads/armor/leatherandbootshuman.blp",
+			"fileNameExternal": "leatherandbootshuman.png",
+			"mtlName": "mat_leatherandbootshuman",
+			"flags": 0,
+			"fileDataID": 197913
+		}
+	],
+	"textureTypes": [
+		0
+	],
+	"materials": [
+		{
+			"flags": 4,
+			"blendingMode": 1
+		}
+	],
+	"textureCombos": [
+		0
+	],
+	"colors": [],
+	"textureWeights": [
+		{
+			"globalSeq": 65535,
+			"interpolation": 0,
+			"timestamps": [
+				[
+					0
+				]
+			],
+			"values": [
+				[
+					32767
+				]
+			],
+			"timestampOffsets": null,
+			"valueOffsets": null
+		}
+	],
+	"transparencyLookup": [
+		0
+	],
+	"textureTransforms": [],
+	"textureTransformsLookup": [
+		65535
+	],
+	"boundingBox": {
+		"min": [
+			-0.28707200288772583,
+			-0.27461498975753784,
+			0.014744400046765804
+		],
+		"max": [
+			0.24047300219535828,
+			0.20225399732589722,
+			0.3039639890193939
+		]
+	},
+	"boundingSphereRadius": 0.3416909873485565,
+	"collisionBox": {
+		"min": [
+			10000000,
+			10000000,
+			10000000
+		],
+		"max": [
+			-10000000,
+			-10000000,
+			-10000000
+		]
+	},
+	"collisionSphereRadius": 0,
+	"skin": {
+		"subMeshes": [
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 0,
+				"vertexCount": 19,
+				"triangleStart": 0,
+				"triangleCount": 54,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					-0.013586069457232952,
+					-0.04097611829638481,
+					0.16018487513065338
+				],
+				"sortCenterPosition": [
+					-0.013586069457232952,
+					-0.04097611829638481,
+					0.16018487513065338
+				],
+				"sortRadius": 0.3350706994533539
+			}
+		],
+		"textureUnits": [
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 16,
+				"skinSectionIndex": 0,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 0,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 0,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			}
+		],
+		"fileName": "world/generic/human/passive doodads/armor/armorleathershoulderblack00.skin",
+		"fileDataID": 504137
+	}
+}

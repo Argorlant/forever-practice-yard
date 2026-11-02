@@ -1,0 +1,490 @@
+{
+	"fileType": "m2",
+	"fileDataID": 197366,
+	"fileName": "world/generic/dwarf/passive doodads/excavationcrane/excavationcrane.m2",
+	"internalName": "ExcavationCrane",
+	"textures": [
+		{
+			"fileNameInternal": "world/generic/dwarf/passive doodads/excavationcrane/woodplain.blp",
+			"fileNameExternal": "woodplain.png",
+			"mtlName": "mat_woodplain",
+			"flags": 3,
+			"fileDataID": 197368
+		},
+		{
+			"fileNameInternal": "world/generic/dwarf/passive doodads/excavationbarriers/ironrim.blp",
+			"fileNameExternal": "..\\excavationbarriers\\ironrim.png",
+			"mtlName": "mat_ironrim",
+			"flags": 3,
+			"fileDataID": 197364
+		},
+		{
+			"fileNameInternal": "dungeons/textures/brian/excavation/finishedwood.blp",
+			"fileNameExternal": "..\\..\\..\\..\\..\\dungeons\\textures\\brian\\excavation\\finishedwood.png",
+			"mtlName": "mat_finishedwood",
+			"flags": 0,
+			"fileDataID": 127042
+		},
+		{
+			"fileNameInternal": "world/generic/dwarf/passive doodads/excavationcrane/woodplanks.blp",
+			"fileNameExternal": "woodplanks.png",
+			"mtlName": "mat_woodplanks",
+			"flags": 0,
+			"fileDataID": 197369
+		},
+		{
+			"fileNameInternal": "world/generic/dwarf/passive doodads/excavationrailingpost/woodrailing.blp",
+			"fileNameExternal": "..\\excavationrailingpost\\woodrailing.png",
+			"mtlName": "mat_woodrailing",
+			"flags": 0,
+			"fileDataID": 197376
+		},
+		{
+			"fileNameInternal": "world/generic/dwarf/passive doodads/excavationcrane/caverope01.blp",
+			"fileNameExternal": "caverope01.png",
+			"mtlName": "mat_caverope01",
+			"flags": 3,
+			"fileDataID": 197365
+		},
+		{
+			"fileNameInternal": "world/generic/dwarf/passive doodads/excavationcrane/minecavepulley01_64.blp",
+			"fileNameExternal": "minecavepulley01_64.png",
+			"mtlName": "mat_minecavepulley01_64",
+			"flags": 0,
+			"fileDataID": 197367
+		},
+		{
+			"fileNameInternal": "dungeons/textures/brian/excavation/woodbaseiron.blp",
+			"fileNameExternal": "..\\..\\..\\..\\..\\dungeons\\textures\\brian\\excavation\\woodbaseiron.png",
+			"mtlName": "mat_woodbaseiron",
+			"flags": 0,
+			"fileDataID": 127045
+		}
+	],
+	"textureTypes": [
+		0,
+		0,
+		0,
+		0,
+		0,
+		0,
+		0,
+		0
+	],
+	"materials": [
+		{
+			"flags": 0,
+			"blendingMode": 0
+		},
+		{
+			"flags": 0,
+			"blendingMode": 0
+		},
+		{
+			"flags": 0,
+			"blendingMode": 0
+		},
+		{
+			"flags": 0,
+			"blendingMode": 0
+		},
+		{
+			"flags": 0,
+			"blendingMode": 0
+		},
+		{
+			"flags": 0,
+			"blendingMode": 0
+		},
+		{
+			"flags": 4,
+			"blendingMode": 0
+		},
+		{
+			"flags": 0,
+			"blendingMode": 0
+		}
+	],
+	"textureCombos": [
+		0,
+		1,
+		2,
+		3,
+		4,
+		5,
+		6,
+		7
+	],
+	"colors": [],
+	"textureWeights": [
+		{
+			"globalSeq": 65535,
+			"interpolation": 0,
+			"timestamps": [
+				[
+					0
+				]
+			],
+			"values": [
+				[
+					32767
+				]
+			],
+			"timestampOffsets": null,
+			"valueOffsets": null
+		}
+	],
+	"transparencyLookup": [
+		0
+	],
+	"textureTransforms": [],
+	"textureTransformsLookup": [
+		65535
+	],
+	"boundingBox": {
+		"min": [
+			-1.7870570421218872,
+			-1.5121198892593384,
+			-0.2954523265361786
+		],
+		"max": [
+			6.606080532073975,
+			1.3741159439086914,
+			6.022644996643066
+		]
+	},
+	"boundingSphereRadius": 5.2177863121032715,
+	"collisionBox": {
+		"min": [
+			-1.8344084024429321,
+			-1.0954045057296753,
+			-0.2954523265361786
+		],
+		"max": [
+			6.629480361938477,
+			1.123417854309082,
+			5.911214828491211
+		]
+	},
+	"collisionSphereRadius": 5.265720844268799,
+	"skin": {
+		"subMeshes": [
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 0,
+				"vertexCount": 21,
+				"triangleStart": 0,
+				"triangleCount": 72,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					0.000007446323252224829,
+					0.052365195006132126,
+					3.7281720638275146
+				],
+				"sortCenterPosition": [
+					0.021073028445243835,
+					0.015878506004810333,
+					3.693182945251465
+				],
+				"sortRadius": 1.8075095415115356
+			},
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 21,
+				"vertexCount": 82,
+				"triangleStart": 72,
+				"triangleCount": 273,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					0.68154376745224,
+					0.3006919324398041,
+					2.2091097831726074
+				],
+				"sortCenterPosition": [
+					2.5659399032592773,
+					0.49309903383255005,
+					3.4275007247924805
+				],
+				"sortRadius": 3.972303628921509
+			},
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 103,
+				"vertexCount": 163,
+				"triangleStart": 345,
+				"triangleCount": 354,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					2.5825743675231934,
+					-0.06989724934101105,
+					2.667389154434204
+				],
+				"sortCenterPosition": [
+					2.4095118045806885,
+					-0.1959747076034546,
+					3.4613945484161377
+				],
+				"sortRadius": 4.900422096252441
+			},
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 266,
+				"vertexCount": 39,
+				"triangleStart": 699,
+				"triangleCount": 138,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					1.1455672979354858,
+					0.5357567667961121,
+					1.310403823852539
+				],
+				"sortCenterPosition": [
+					3.104849100112915,
+					-0.006106138229370117,
+					1.4873404502868652
+				],
+				"sortRadius": 3.505709171295166
+			},
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 305,
+				"vertexCount": 124,
+				"triangleStart": 837,
+				"triangleCount": 192,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					0.0026020798832178116,
+					0.2175133377313614,
+					4.317898750305176
+				],
+				"sortCenterPosition": [
+					0.021501600742340088,
+					0.2623731791973114,
+					3.4926042556762695
+				],
+				"sortRadius": 2.8248884677886963
+			},
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 429,
+				"vertexCount": 87,
+				"triangleStart": 1029,
+				"triangleCount": 240,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					3.258896827697754,
+					0.2532934248447418,
+					3.0373780727386475
+				],
+				"sortCenterPosition": [
+					3.05667781829834,
+					-0.0061061084270477295,
+					3.10652494430542
+				],
+				"sortRadius": 3.936863422393799
+			},
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 516,
+				"vertexCount": 112,
+				"triangleStart": 1269,
+				"triangleCount": 240,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					4.098865509033203,
+					0.11478357017040253,
+					5.080904006958008
+				],
+				"sortCenterPosition": [
+					4.087621212005615,
+					0.12153619527816772,
+					5.091533660888672
+				],
+				"sortRadius": 1.3867236375808716
+			},
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 628,
+				"vertexCount": 37,
+				"triangleStart": 1509,
+				"triangleCount": 126,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					-0.06250350922346115,
+					0.01616552472114563,
+					0.9319753050804138
+				],
+				"sortCenterPosition": [
+					0.021177679300308228,
+					0.015938997268676758,
+					0.8773876428604126
+				],
+				"sortRadius": 1.377328872680664
+			}
+		],
+		"textureUnits": [
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 0,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 0,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 0,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			},
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 1,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 1,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 1,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			},
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 2,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 2,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 2,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			},
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 3,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 3,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 3,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			},
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 4,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 4,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 4,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			},
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 5,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 5,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 5,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			},
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 6,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 6,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 6,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			},
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 7,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 7,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 7,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			}
+		],
+		"fileName": "world/generic/dwarf/passive doodads/excavationcrane/excavationcrane00.skin",
+		"fileDataID": 503373
+	}
+}

@@ -1,0 +1,126 @@
+{
+	"fileType": "m2",
+	"fileDataID": 199886,
+	"fileName": "world/generic/passivedoodads/misc/wheelbarrow/caveminewheelbarrow01.m2",
+	"internalName": "CaveMineWheelbarrow01",
+	"textures": [
+		{
+			"fileNameInternal": "world/generic/passivedoodads/misc/wheelbarrow/wheelbarrow_cave01_128.blp",
+			"fileNameExternal": "wheelbarrow_cave01_128.png",
+			"mtlName": "mat_wheelbarrow_cave01_128",
+			"flags": 3,
+			"fileDataID": 199887
+		}
+	],
+	"textureTypes": [
+		0
+	],
+	"materials": [
+		{
+			"flags": 0,
+			"blendingMode": 0
+		}
+	],
+	"textureCombos": [
+		0
+	],
+	"colors": [],
+	"textureWeights": [
+		{
+			"globalSeq": 65535,
+			"interpolation": 0,
+			"timestamps": [
+				[
+					0
+				]
+			],
+			"values": [
+				[
+					32767
+				]
+			],
+			"timestampOffsets": null,
+			"valueOffsets": null
+		}
+	],
+	"transparencyLookup": [
+		0
+	],
+	"textureTransforms": [],
+	"textureTransformsLookup": [
+		65535
+	],
+	"boundingBox": {
+		"min": [
+			-1.7277629375457764,
+			-0.7881148457527161,
+			-0.008782532066106796
+		],
+		"max": [
+			1.158199667930603,
+			0.7968544960021973,
+			1.2308229207992554
+		]
+	},
+	"boundingSphereRadius": 1.6467838287353516,
+	"collisionBox": {
+		"min": [
+			-1.7277631759643555,
+			-0.71015864610672,
+			0.03125815838575363
+		],
+		"max": [
+			1.1488157510757446,
+			0.6398431062698364,
+			1.2308229207992554
+		]
+	},
+	"collisionSphereRadius": 1.6200467348098755,
+	"skin": {
+		"subMeshes": [
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 0,
+				"vertexCount": 211,
+				"triangleStart": 0,
+				"triangleCount": 444,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					0.014451425522565842,
+					-0.03525099903345108,
+					0.5360655188560486
+				],
+				"sortCenterPosition": [
+					-0.28478163480758667,
+					0.004369825124740601,
+					0.6110202074050903
+				],
+				"sortRadius": 1.6467838287353516
+			}
+		],
+		"textureUnits": [
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 0,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 0,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 0,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			}
+		],
+		"fileName": "world/generic/passivedoodads/misc/wheelbarrow/caveminewheelbarrow0100.skin",
+		"fileDataID": 505750
+	}
+}

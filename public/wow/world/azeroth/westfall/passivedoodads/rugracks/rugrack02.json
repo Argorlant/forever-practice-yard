@@ -1,0 +1,178 @@
+{
+	"fileType": "m2",
+	"fileDataID": 190627,
+	"fileName": "world/azeroth/westfall/passivedoodads/rugracks/rugrack02.m2",
+	"internalName": "RugRack02",
+	"textures": [
+		{
+			"fileNameInternal": "world/azeroth/westfall/passivedoodads/rugracks/deadmineswood01.blp",
+			"fileNameExternal": "deadmineswood01.png",
+			"mtlName": "mat_deadmineswood01",
+			"flags": 3,
+			"fileDataID": 190625
+		},
+		{
+			"fileNameInternal": "world/generic/human/passive doodads/rugs/deadminesrug01.blp",
+			"fileNameExternal": "..\\..\\..\\..\\generic\\human\\passivedoodads\\rugs\\deadminesrug01.png",
+			"mtlName": "mat_deadminesrug01",
+			"flags": 0,
+			"fileDataID": 198424
+		}
+	],
+	"textureTypes": [
+		0,
+		0
+	],
+	"materials": [
+		{
+			"flags": 0,
+			"blendingMode": 0
+		},
+		{
+			"flags": 4,
+			"blendingMode": 1
+		}
+	],
+	"textureCombos": [
+		0,
+		1
+	],
+	"colors": [],
+	"textureWeights": [
+		{
+			"globalSeq": 65535,
+			"interpolation": 0,
+			"timestamps": [
+				[
+					0
+				]
+			],
+			"values": [
+				[
+					32767
+				]
+			],
+			"timestampOffsets": null,
+			"valueOffsets": null
+		}
+	],
+	"transparencyLookup": [
+		0
+	],
+	"textureTransforms": [],
+	"textureTransformsLookup": [
+		65535
+	],
+	"boundingBox": {
+		"min": [
+			-0.703726589679718,
+			-1.2644338607788086,
+			0.00036282010842114687
+		],
+		"max": [
+			0.6517930626869202,
+			1.3113123178482056,
+			1.7779382467269897
+		]
+	},
+	"boundingSphereRadius": 1.6986325979232788,
+	"collisionBox": {
+		"min": [
+			-0.699604332447052,
+			-1.2750197649002075,
+			0
+		],
+		"max": [
+			0.6420984268188477,
+			1.309665322303772,
+			1.7769505977630615
+		]
+	},
+	"collisionSphereRadius": 1.7057487964630127,
+	"skin": {
+		"subMeshes": [
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 0,
+				"vertexCount": 264,
+				"triangleStart": 0,
+				"triangleCount": 360,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					-0.027123088017106056,
+					0.00454776780679822,
+					0.7246736884117126
+				],
+				"sortCenterPosition": [
+					-0.027123088017106056,
+					0.00454776780679822,
+					0.7246736884117126
+				],
+				"sortRadius": 1.6344743967056274
+			},
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 264,
+				"vertexCount": 21,
+				"triangleStart": 360,
+				"triangleCount": 60,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					-0.03706474229693413,
+					0.0066713434644043446,
+					1.0324885845184326
+				],
+				"sortCenterPosition": [
+					-0.028209641575813293,
+					0.004512190818786621,
+					0.9247913956642151
+				],
+				"sortRadius": 1.2427623271942139
+			}
+		],
+		"textureUnits": [
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 0,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 0,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 0,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			},
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 16,
+				"skinSectionIndex": 1,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 1,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 1,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			}
+		],
+		"fileName": "world/azeroth/westfall/passivedoodads/rugracks/rugrack0200.skin",
+		"fileDataID": 494983
+	}
+}

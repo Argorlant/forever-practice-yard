@@ -1,0 +1,126 @@
+{
+	"fileType": "m2",
+	"fileDataID": 198049,
+	"fileName": "world/generic/human/passive doodads/bookshelves/abbeyshelf02.m2",
+	"internalName": "AbbeyShelf02",
+	"textures": [
+		{
+			"fileNameInternal": "world/generic/human/passive doodads/bookshelves/bookshelf.blp",
+			"fileNameExternal": "bookshelf.png",
+			"mtlName": "mat_bookshelf",
+			"flags": 3,
+			"fileDataID": 198051
+		}
+	],
+	"textureTypes": [
+		0
+	],
+	"materials": [
+		{
+			"flags": 0,
+			"blendingMode": 0
+		}
+	],
+	"textureCombos": [
+		0
+	],
+	"colors": [],
+	"textureWeights": [
+		{
+			"globalSeq": 65535,
+			"interpolation": 0,
+			"timestamps": [
+				[
+					0
+				]
+			],
+			"values": [
+				[
+					32767
+				]
+			],
+			"timestampOffsets": null,
+			"valueOffsets": null
+		}
+	],
+	"transparencyLookup": [
+		0
+	],
+	"textureTransforms": [],
+	"textureTransformsLookup": [
+		65535
+	],
+	"boundingBox": {
+		"min": [
+			-2.760472297668457,
+			-0.9392188191413879,
+			0.012151902541518211
+		],
+		"max": [
+			2.6839067935943604,
+			0.8646355271339417,
+			4.74654483795166
+		]
+	},
+	"boundingSphereRadius": 3.718522071838379,
+	"collisionBox": {
+		"min": [
+			-2.760471820831299,
+			-0.9392193555831909,
+			0
+		],
+		"max": [
+			2.6839065551757812,
+			0.8646549582481384,
+			4.74654483795166
+		]
+	},
+	"collisionSphereRadius": 3.7223949432373047,
+	"skin": {
+		"subMeshes": [
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 0,
+				"vertexCount": 439,
+				"triangleStart": 0,
+				"triangleCount": 516,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					-0.06530094891786575,
+					-0.03845840319991112,
+					2.2597312927246094
+				],
+				"sortCenterPosition": [
+					-0.03828275203704834,
+					-0.037291646003723145,
+					2.3793482780456543
+				],
+				"sortRadius": 3.718522071838379
+			}
+		],
+		"textureUnits": [
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 0,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 0,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 0,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			}
+		],
+		"fileName": "world/generic/human/passive doodads/bookshelves/abbeyshelf0200.skin",
+		"fileDataID": 504268
+	}
+}

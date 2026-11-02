@@ -1,0 +1,126 @@
+{
+	"fileType": "m2",
+	"fileDataID": 198435,
+	"fileName": "world/generic/human/passive doodads/rugs/stormwindrug01.m2",
+	"internalName": "StormwindRug01",
+	"textures": [
+		{
+			"fileNameInternal": "world/generic/human/passive doodads/rugs/deadminesrug02.blp",
+			"fileNameExternal": "deadminesrug02.png",
+			"mtlName": "mat_deadminesrug02",
+			"flags": 0,
+			"fileDataID": 198425
+		}
+	],
+	"textureTypes": [
+		0
+	],
+	"materials": [
+		{
+			"flags": 0,
+			"blendingMode": 1
+		}
+	],
+	"textureCombos": [
+		0
+	],
+	"colors": [],
+	"textureWeights": [
+		{
+			"globalSeq": 65535,
+			"interpolation": 0,
+			"timestamps": [
+				[
+					0
+				]
+			],
+			"values": [
+				[
+					32767
+				]
+			],
+			"timestampOffsets": null,
+			"valueOffsets": null
+		}
+	],
+	"transparencyLookup": [
+		0
+	],
+	"textureTransforms": [],
+	"textureTransformsLookup": [
+		65535
+	],
+	"boundingBox": {
+		"min": [
+			-1.4718332290649414,
+			-1.3870837688446045,
+			0.00020805995154660195
+		],
+		"max": [
+			1.6261322498321533,
+			1.4174820184707642,
+			0.013889048248529434
+		]
+	},
+	"boundingSphereRadius": 2.0645859241485596,
+	"collisionBox": {
+		"min": [
+			10000000,
+			10000000,
+			10000000
+		],
+		"max": [
+			-10000000,
+			-10000000,
+			-10000000
+		]
+	},
+	"collisionSphereRadius": 0,
+	"skin": {
+		"subMeshes": [
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 0,
+				"vertexCount": 42,
+				"triangleStart": 0,
+				"triangleCount": 144,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					0.053774233907461166,
+					-0.04012999311089516,
+					0.008351516909897327
+				],
+				"sortCenterPosition": [
+					0.07714951038360596,
+					0.015199124813079834,
+					0.007048554252833128
+				],
+				"sortRadius": 2.0645859241485596
+			}
+		],
+		"textureUnits": [
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 16,
+				"skinSectionIndex": 0,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 0,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 0,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			}
+		],
+		"fileName": "world/generic/human/passive doodads/rugs/stormwindrug0100.skin",
+		"fileDataID": 504567
+	}
+}

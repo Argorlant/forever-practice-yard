@@ -1,0 +1,6 @@
+newmtl mat_planterbox
+illum 1
+map_Kd planterbox.png
+newmtl mat_elwynndirtbase
+illum 1
+map_Kd ..\..\..\..\..\tileset\elwynn\elwynndirtbase.png

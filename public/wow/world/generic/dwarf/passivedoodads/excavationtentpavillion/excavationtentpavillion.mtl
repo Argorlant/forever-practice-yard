@@ -1,0 +1,9 @@
+newmtl mat_excavationtentsruined
+illum 1
+map_Kd ..\excavationtents\excavationtentsruined.png
+newmtl mat_excavationwood
+illum 1
+map_Kd ..\excavationtentpavillionruined\excavationwood.png
+newmtl mat_excavationtentroll
+illum 1
+map_Kd ..\..\..\..\..\dungeons\textures\brian\excavation\excavationtentroll.png

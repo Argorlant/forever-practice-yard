@@ -1,0 +1,126 @@
+{
+	"fileType": "m2",
+	"fileDataID": 198931,
+	"fileName": "world/generic/nightelf/passive doodads/statue/kalidarwoodstatue02.m2",
+	"internalName": "KalidarWoodStatue02",
+	"textures": [
+		{
+			"fileNameInternal": "world/generic/nightelf/passive doodads/statue/owlstatue02.blp",
+			"fileNameExternal": "owlstatue02.png",
+			"mtlName": "mat_owlstatue02",
+			"flags": 3,
+			"fileDataID": 198932
+		}
+	],
+	"textureTypes": [
+		0
+	],
+	"materials": [
+		{
+			"flags": 0,
+			"blendingMode": 0
+		}
+	],
+	"textureCombos": [
+		0
+	],
+	"colors": [],
+	"textureWeights": [
+		{
+			"globalSeq": 65535,
+			"interpolation": 0,
+			"timestamps": [
+				[
+					0
+				]
+			],
+			"values": [
+				[
+					32767
+				]
+			],
+			"timestampOffsets": null,
+			"valueOffsets": null
+		}
+	],
+	"transparencyLookup": [
+		0
+	],
+	"textureTransforms": [],
+	"textureTransformsLookup": [
+		65535
+	],
+	"boundingBox": {
+		"min": [
+			-2.1876509189605713,
+			-2.0748140811920166,
+			-0.16142785549163818
+		],
+		"max": [
+			2.1828207969665527,
+			2.1011688709259033,
+			3.9194700717926025
+		]
+	},
+	"boundingSphereRadius": 2.9924802780151367,
+	"collisionBox": {
+		"min": [
+			-2.2293405532836914,
+			-2.0879299640655518,
+			-0.14496400952339172
+		],
+		"max": [
+			2.197744131088257,
+			2.122476577758789,
+			3.7901904582977295
+		]
+	},
+	"collisionSphereRadius": 2.961609363555908,
+	"skin": {
+		"subMeshes": [
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 0,
+				"vertexCount": 152,
+				"triangleStart": 0,
+				"triangleCount": 594,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					-0.003608292667195201,
+					0.011901921592652798,
+					2.681933879852295
+				],
+				"sortCenterPosition": [
+					-0.0024150609970092773,
+					0.01317739486694336,
+					1.879021167755127
+				],
+				"sortRadius": 2.9924802780151367
+			}
+		],
+		"textureUnits": [
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 0,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 0,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 0,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			}
+		],
+		"fileName": "world/generic/nightelf/passive doodads/statue/kalidarwoodstatue0200.skin",
+		"fileDataID": 505014
+	}
+}

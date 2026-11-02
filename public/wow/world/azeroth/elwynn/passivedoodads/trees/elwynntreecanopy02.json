@@ -1,0 +1,178 @@
+{
+	"fileType": "m2",
+	"fileDataID": 189928,
+	"fileName": "world/azeroth/elwynn/passivedoodads/trees/elwynntreecanopy02.m2",
+	"internalName": "ElwynnTreeCanopy02",
+	"textures": [
+		{
+			"fileNameInternal": "world/generic/human/passive doodads/stormwind/elwynntreetallcanopy_new01.blp",
+			"fileNameExternal": "..\\..\\..\\..\\generic\\human\\passivedoodads\\stormwind\\elwynntreetallcanopy_new01.png",
+			"mtlName": "mat_elwynntreetallcanopy_new01",
+			"flags": 0,
+			"fileDataID": 198585
+		},
+		{
+			"fileNameInternal": "interface/glues/models/ui_human/elwynntreetallcomp_01.blp",
+			"fileNameExternal": "..\\..\\..\\..\\..\\interface\\glues\\models\\ui_human\\elwynntreetallcomp_01.png",
+			"mtlName": "mat_elwynntreetallcomp_01",
+			"flags": 0,
+			"fileDataID": 131942
+		}
+	],
+	"textureTypes": [
+		0,
+		0
+	],
+	"materials": [
+		{
+			"flags": 0,
+			"blendingMode": 1
+		},
+		{
+			"flags": 0,
+			"blendingMode": 0
+		}
+	],
+	"textureCombos": [
+		0,
+		1
+	],
+	"colors": [],
+	"textureWeights": [
+		{
+			"globalSeq": 65535,
+			"interpolation": 0,
+			"timestamps": [
+				[
+					0
+				]
+			],
+			"values": [
+				[
+					32767
+				]
+			],
+			"timestampOffsets": null,
+			"valueOffsets": null
+		}
+	],
+	"transparencyLookup": [
+		0
+	],
+	"textureTransforms": [],
+	"textureTransformsLookup": [
+		65535
+	],
+	"boundingBox": {
+		"min": [
+			-33.16655349731445,
+			-31.43439483642578,
+			-3.5090456008911133
+		],
+		"max": [
+			32.14168167114258,
+			31.77127456665039,
+			47.234764099121094
+		]
+	},
+	"boundingSphereRadius": 32.72182083129883,
+	"collisionBox": {
+		"min": [
+			-9.748529434204102,
+			-8.710530281066895,
+			-3.509045362472534
+		],
+		"max": [
+			6.438755989074707,
+			9.667695999145508,
+			11.447867393493652
+		]
+	},
+	"collisionSphereRadius": 11.998220443725586,
+	"skin": {
+		"subMeshes": [
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 0,
+				"vertexCount": 74,
+				"triangleStart": 0,
+				"triangleCount": 168,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					-0.48088517785072327,
+					0.11975086480379105,
+					27.728736877441406
+				],
+				"sortCenterPosition": [
+					-0.5124359130859375,
+					0.1684398651123047,
+					26.495014190673828
+				],
+				"sortRadius": 32.92509460449219
+			},
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 74,
+				"vertexCount": 69,
+				"triangleStart": 168,
+				"triangleCount": 198,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					-0.9120389223098755,
+					0.277959406375885,
+					6.682957649230957
+				],
+				"sortCenterPosition": [
+					0.22945642471313477,
+					-0.8361682891845703,
+					10.786558151245117
+				],
+				"sortRadius": 25.176742553710938
+			}
+		],
+		"textureUnits": [
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 16,
+				"skinSectionIndex": 0,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 0,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 0,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			},
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 1,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 1,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 1,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			}
+		],
+		"fileName": "world/azeroth/elwynn/passivedoodads/trees/elwynntreecanopy0200.skin",
+		"fileDataID": 494582
+	}
+}

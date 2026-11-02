@@ -1,0 +1,126 @@
+{
+	"fileType": "m2",
+	"fileDataID": 198426,
+	"fileName": "world/generic/human/passive doodads/rugs/generalbearskinrug01.m2",
+	"internalName": "GeneralBearSkinRug01",
+	"textures": [
+		{
+			"fileNameInternal": "dungeons/textures/decoration/bearskinrug01.blp",
+			"fileNameExternal": "..\\..\\..\\..\\..\\dungeons\\textures\\decoration\\bearskinrug01.png",
+			"mtlName": "mat_bearskinrug01",
+			"flags": 0,
+			"fileDataID": 127344
+		}
+	],
+	"textureTypes": [
+		0
+	],
+	"materials": [
+		{
+			"flags": 4,
+			"blendingMode": 1
+		}
+	],
+	"textureCombos": [
+		0
+	],
+	"colors": [],
+	"textureWeights": [
+		{
+			"globalSeq": 65535,
+			"interpolation": 0,
+			"timestamps": [
+				[
+					0
+				]
+			],
+			"values": [
+				[
+					32767
+				]
+			],
+			"timestampOffsets": null,
+			"valueOffsets": null
+		}
+	],
+	"transparencyLookup": [
+		0
+	],
+	"textureTransforms": [],
+	"textureTransformsLookup": [
+		65535
+	],
+	"boundingBox": {
+		"min": [
+			-2.6556954383850098,
+			-2.893340826034546,
+			-0.015288435854017735
+		],
+		"max": [
+			2.9269485473632812,
+			2.893340826034546,
+			0.8816429972648621
+		]
+	},
+	"boundingSphereRadius": 3.246387004852295,
+	"collisionBox": {
+		"min": [
+			-2.0986499786376953,
+			-2.893341064453125,
+			-0.015288432128727436
+		],
+		"max": [
+			2.9300317764282227,
+			2.893340826034546,
+			0.9119145274162292
+		]
+	},
+	"collisionSphereRadius": 3.3858940601348877,
+	"skin": {
+		"subMeshes": [
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 0,
+				"vertexCount": 213,
+				"triangleStart": 0,
+				"triangleCount": 852,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					1.0677558183670044,
+					-1.2592530573840577e-8,
+					0.2580426335334778
+				],
+				"sortCenterPosition": [
+					0.13562655448913574,
+					0,
+					0.43317729234695435
+				],
+				"sortRadius": 3.246387004852295
+			}
+		],
+		"textureUnits": [
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 16,
+				"skinSectionIndex": 0,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 0,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 0,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			}
+		],
+		"fileName": "world/generic/human/passive doodads/rugs/generalbearskinrug0100.skin",
+		"fileDataID": 504564
+	}
+}

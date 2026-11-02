@@ -1,0 +1,178 @@
+{
+	"fileType": "m2",
+	"fileDataID": 197841,
+	"fileName": "world/generic/human/passive doodads/animalheads/duskwoodboarhead01.m2",
+	"internalName": "DuskwoodBoarHead01",
+	"textures": [
+		{
+			"fileNameInternal": "world/generic/human/passive doodads/animalheads/wildboarskin.blp",
+			"fileNameExternal": "wildboarskin.png",
+			"mtlName": "mat_wildboarskin",
+			"flags": 0,
+			"fileDataID": 197848
+		},
+		{
+			"fileNameInternal": "world/generic/human/passive doodads/tables/duskwoodfurniture01.blp",
+			"fileNameExternal": "..\\tables\\duskwoodfurniture01.png",
+			"mtlName": "mat_duskwoodfurniture01",
+			"flags": 0,
+			"fileDataID": 198601
+		}
+	],
+	"textureTypes": [
+		0,
+		0
+	],
+	"materials": [
+		{
+			"flags": 0,
+			"blendingMode": 1
+		},
+		{
+			"flags": 0,
+			"blendingMode": 0
+		}
+	],
+	"textureCombos": [
+		0,
+		1
+	],
+	"colors": [],
+	"textureWeights": [
+		{
+			"globalSeq": 65535,
+			"interpolation": 0,
+			"timestamps": [
+				[
+					0
+				]
+			],
+			"values": [
+				[
+					32767
+				]
+			],
+			"timestampOffsets": null,
+			"valueOffsets": null
+		}
+	],
+	"transparencyLookup": [
+		0
+	],
+	"textureTransforms": [],
+	"textureTransformsLookup": [
+		65535
+	],
+	"boundingBox": {
+		"min": [
+			-0.05860339477658272,
+			-0.4753105938434601,
+			-0.30305078625679016
+		],
+		"max": [
+			0.8946850895881653,
+			0.4761445224285126,
+			0.9338406324386597
+		]
+	},
+	"boundingSphereRadius": 0.7808103561401367,
+	"collisionBox": {
+		"min": [
+			-0.05860339477658272,
+			-0.4753105938434601,
+			-0.30305078625679016
+		],
+		"max": [
+			0.878409206867218,
+			0.4761445224285126,
+			0.9338405728340149
+		]
+	},
+	"collisionSphereRadius": 0.7758693099021912,
+	"skin": {
+		"subMeshes": [
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 0,
+				"vertexCount": 147,
+				"triangleStart": 0,
+				"triangleCount": 483,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					0.3618302047252655,
+					0.0027474479284137487,
+					0.21571913361549377
+				],
+				"sortCenterPosition": [
+					0.4586482644081116,
+					0.0033647269010543823,
+					0.3624511957168579
+				],
+				"sortRadius": 0.6422675848007202
+			},
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 147,
+				"vertexCount": 40,
+				"triangleStart": 483,
+				"triangleCount": 66,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					-0.00980406254529953,
+					0.00041696877451613545,
+					0.3153950273990631
+				],
+				"sortCenterPosition": [
+					-0.01793728396296501,
+					0.0004169642925262451,
+					0.31539493799209595
+				],
+				"sortRadius": 0.6197813153266907
+			}
+		],
+		"textureUnits": [
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 16,
+				"skinSectionIndex": 0,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 0,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 0,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			},
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 1,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 1,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 1,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			}
+		],
+		"fileName": "world/generic/human/passive doodads/animalheads/duskwoodboarhead0100.skin",
+		"fileDataID": 504082
+	}
+}

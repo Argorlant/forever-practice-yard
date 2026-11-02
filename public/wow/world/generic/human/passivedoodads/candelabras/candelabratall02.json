@@ -1,0 +1,126 @@
+{
+	"fileType": "m2",
+	"fileDataID": 198074,
+	"fileName": "world/generic/human/passive doodads/candelabras/candelabratall02.m2",
+	"internalName": "CandelabraTall02",
+	"textures": [
+		{
+			"fileNameInternal": "world/generic/human/passive doodads/candelabras/candelbra_brass01.blp",
+			"fileNameExternal": "candelbra_brass01.png",
+			"mtlName": "mat_candelbra_brass01",
+			"flags": 3,
+			"fileDataID": 198075
+		}
+	],
+	"textureTypes": [
+		0
+	],
+	"materials": [
+		{
+			"flags": 0,
+			"blendingMode": 0
+		}
+	],
+	"textureCombos": [
+		0
+	],
+	"colors": [],
+	"textureWeights": [
+		{
+			"globalSeq": 65535,
+			"interpolation": 0,
+			"timestamps": [
+				[
+					0
+				]
+			],
+			"values": [
+				[
+					32767
+				]
+			],
+			"timestampOffsets": null,
+			"valueOffsets": null
+		}
+	],
+	"transparencyLookup": [
+		0
+	],
+	"textureTransforms": [],
+	"textureTransformsLookup": [
+		65535
+	],
+	"boundingBox": {
+		"min": [
+			-0.550726592540741,
+			-0.5537053346633911,
+			-0.004007580224424601
+		],
+		"max": [
+			0.5524417757987976,
+			0.5494630336761475,
+			3.462824583053589
+		]
+	},
+	"boundingSphereRadius": 1.7659919261932373,
+	"collisionBox": {
+		"min": [
+			-0.5474333763122559,
+			-0.553318977355957,
+			0
+		],
+		"max": [
+			0.5518211722373962,
+			0.55131596326828,
+			3.4626591205596924
+		]
+	},
+	"collisionSphereRadius": 1.821010947227478,
+	"skin": {
+		"subMeshes": [
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 0,
+				"vertexCount": 97,
+				"triangleStart": 0,
+				"triangleCount": 282,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					0.0010291952639818192,
+					-0.0027193163987249136,
+					2.54781436920166
+				],
+				"sortCenterPosition": [
+					0.0008575916290283203,
+					-0.002121150493621826,
+					1.7294085025787354
+				],
+				"sortRadius": 1.7659918069839478
+			}
+		],
+		"textureUnits": [
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 0,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 0,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 0,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			}
+		],
+		"fileName": "world/generic/human/passive doodads/candelabras/candelabratall0200.skin",
+		"fileDataID": 504282
+	}
+}

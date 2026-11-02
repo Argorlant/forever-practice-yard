@@ -1,0 +1,126 @@
+{
+	"fileType": "m2",
+	"fileDataID": 198154,
+	"fileName": "world/generic/human/passive doodads/clothing/hangingshirtbrown.m2",
+	"internalName": "HangingShirtBrown",
+	"textures": [
+		{
+			"fileNameInternal": "world/generic/human/passive doodads/cloth/clothstuff.blp",
+			"fileNameExternal": "..\\cloth\\clothstuff.png",
+			"mtlName": "mat_clothstuff",
+			"flags": 0,
+			"fileDataID": 198132
+		}
+	],
+	"textureTypes": [
+		0
+	],
+	"materials": [
+		{
+			"flags": 4,
+			"blendingMode": 1
+		}
+	],
+	"textureCombos": [
+		0
+	],
+	"colors": [],
+	"textureWeights": [
+		{
+			"globalSeq": 65535,
+			"interpolation": 0,
+			"timestamps": [
+				[
+					0
+				]
+			],
+			"values": [
+				[
+					32767
+				]
+			],
+			"timestampOffsets": null,
+			"valueOffsets": null
+		}
+	],
+	"transparencyLookup": [
+		0
+	],
+	"textureTransforms": [],
+	"textureTransformsLookup": [
+		65535
+	],
+	"boundingBox": {
+		"min": [
+			-0.013660580851137638,
+			-0.4390941858291626,
+			0
+		],
+		"max": [
+			0.15789982676506042,
+			0.4555780589580536,
+			0.903346836566925
+		]
+	},
+	"boundingSphereRadius": 0.48483800888061523,
+	"collisionBox": {
+		"min": [
+			10000000,
+			10000000,
+			10000000
+		],
+		"max": [
+			-10000000,
+			-10000000,
+			-10000000
+		]
+	},
+	"collisionSphereRadius": 0,
+	"skin": {
+		"subMeshes": [
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 0,
+				"vertexCount": 53,
+				"triangleStart": 0,
+				"triangleCount": 144,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					0.06455855071544647,
+					0.00006749045132892206,
+					0.5312819480895996
+				],
+				"sortCenterPosition": [
+					0.07211962342262268,
+					0.008241936564445496,
+					0.4538254737854004
+				],
+				"sortRadius": 0.4866821765899658
+			}
+		],
+		"textureUnits": [
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 16,
+				"skinSectionIndex": 0,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 0,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 0,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			}
+		],
+		"fileName": "world/generic/human/passive doodads/clothing/hangingshirtbrown00.skin",
+		"fileDataID": 504333
+	}
+}

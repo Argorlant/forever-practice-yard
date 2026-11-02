@@ -1,0 +1,126 @@
+{
+	"fileType": "m2",
+	"fileDataID": 197835,
+	"fileName": "world/generic/human/passive doodads/altars/generalaltar01.m2",
+	"internalName": "GeneralAltar01",
+	"textures": [
+		{
+			"fileNameInternal": "world/generic/human/passive doodads/altars/altar.blp",
+			"fileNameExternal": "altar.png",
+			"mtlName": "mat_altar",
+			"flags": 3,
+			"fileDataID": 197830
+		}
+	],
+	"textureTypes": [
+		0
+	],
+	"materials": [
+		{
+			"flags": 0,
+			"blendingMode": 0
+		}
+	],
+	"textureCombos": [
+		0
+	],
+	"colors": [],
+	"textureWeights": [
+		{
+			"globalSeq": 65535,
+			"interpolation": 0,
+			"timestamps": [
+				[
+					0
+				]
+			],
+			"values": [
+				[
+					32767
+				]
+			],
+			"timestampOffsets": null,
+			"valueOffsets": null
+		}
+	],
+	"transparencyLookup": [
+		0
+	],
+	"textureTransforms": [],
+	"textureTransformsLookup": [
+		65535
+	],
+	"boundingBox": {
+		"min": [
+			-0.7402075529098511,
+			-1.2581548690795898,
+			-0.16874846816062927
+		],
+		"max": [
+			3.1910831928253174,
+			1.2867588996887207,
+			1.3145278692245483
+		]
+	},
+	"boundingSphereRadius": 2.395364761352539,
+	"collisionBox": {
+		"min": [
+			-0.7402074933052063,
+			-1.2581548690795898,
+			-0.16869141161441803
+		],
+		"max": [
+			3.1910831928253174,
+			1.2867586612701416,
+			1.3145277500152588
+		]
+	},
+	"collisionSphereRadius": 2.3953588008880615,
+	"skin": {
+		"subMeshes": [
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 0,
+				"vertexCount": 218,
+				"triangleStart": 0,
+				"triangleCount": 390,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					1.248940110206604,
+					-0.010485836304724216,
+					0.6467666625976562
+				],
+				"sortCenterPosition": [
+					1.225437879562378,
+					0.01430201530456543,
+					0.5728896856307983
+				],
+				"sortRadius": 2.395364761352539
+			}
+		],
+		"textureUnits": [
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 0,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 0,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 0,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			}
+		],
+		"fileName": "world/generic/human/passive doodads/altars/generalaltar0100.skin",
+		"fileDataID": 504076
+	}
+}

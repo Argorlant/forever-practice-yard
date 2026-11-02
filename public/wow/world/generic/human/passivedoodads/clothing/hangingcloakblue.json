@@ -1,0 +1,126 @@
+{
+	"fileType": "m2",
+	"fileDataID": 198148,
+	"fileName": "world/generic/human/passive doodads/clothing/hangingcloakblue.m2",
+	"internalName": "HangingCloakBlue",
+	"textures": [
+		{
+			"fileNameInternal": "world/generic/human/passive doodads/cloth/clothstuff.blp",
+			"fileNameExternal": "..\\cloth\\clothstuff.png",
+			"mtlName": "mat_clothstuff",
+			"flags": 0,
+			"fileDataID": 198132
+		}
+	],
+	"textureTypes": [
+		0
+	],
+	"materials": [
+		{
+			"flags": 4,
+			"blendingMode": 1
+		}
+	],
+	"textureCombos": [
+		0
+	],
+	"colors": [],
+	"textureWeights": [
+		{
+			"globalSeq": 65535,
+			"interpolation": 0,
+			"timestamps": [
+				[
+					0
+				]
+			],
+			"values": [
+				[
+					32767
+				]
+			],
+			"timestampOffsets": null,
+			"valueOffsets": null
+		}
+	],
+	"transparencyLookup": [
+		0
+	],
+	"textureTransforms": [],
+	"textureTransformsLookup": [
+		65535
+	],
+	"boundingBox": {
+		"min": [
+			-0.10199568420648575,
+			-0.30733001232147217,
+			-0.07653750479221344
+		],
+		"max": [
+			0.09259840846061707,
+			0.2990402281284332,
+			1.5850268602371216
+		]
+	},
+	"boundingSphereRadius": 0.8374653458595276,
+	"collisionBox": {
+		"min": [
+			10000000,
+			10000000,
+			10000000
+		],
+		"max": [
+			-10000000,
+			-10000000,
+			-10000000
+		]
+	},
+	"collisionSphereRadius": 0,
+	"skin": {
+		"subMeshes": [
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 0,
+				"vertexCount": 30,
+				"triangleStart": 0,
+				"triangleCount": 96,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					-0.0022952610161155462,
+					-0.0028405585326254368,
+					0.9828213453292847
+				],
+				"sortCenterPosition": [
+					-0.004698637872934341,
+					-0.00414489209651947,
+					0.7542446851730347
+				],
+				"sortRadius": 0.8374653458595276
+			}
+		],
+		"textureUnits": [
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 16,
+				"skinSectionIndex": 0,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 0,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 0,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			}
+		],
+		"fileName": "world/generic/human/passive doodads/clothing/hangingcloakblue00.skin",
+		"fileDataID": 504347
+	}
+}

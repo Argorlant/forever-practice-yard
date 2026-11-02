@@ -1,0 +1,134 @@
+{
+	"fileType": "m2",
+	"fileDataID": 197012,
+	"fileName": "world/generic/activedoodads/instanceportal/instanceportal_white.m2",
+	"internalName": "",
+	"textures": [
+		{
+			"fileNameInternal": "world/generic/activedoodads/instanceportal/dust6.blp",
+			"fileNameExternal": "dust6.png",
+			"mtlName": "mat_dust6",
+			"flags": 0,
+			"fileDataID": 197005
+		},
+		{
+			"fileNameInternal": "world/generic/activedoodads/instanceportal/glowball.blp",
+			"fileNameExternal": "glowball.png",
+			"mtlName": "mat_glowball",
+			"flags": 0,
+			"fileDataID": 1068808
+		}
+	],
+	"textureTypes": [
+		0,
+		0
+	],
+	"materials": [
+		{
+			"flags": 0,
+			"blendingMode": 0
+		}
+	],
+	"textureCombos": [
+		1
+	],
+	"colors": [],
+	"textureWeights": [
+		{
+			"globalSeq": 65535,
+			"interpolation": 0,
+			"timestamps": [
+				[
+					0
+				]
+			],
+			"values": [
+				[
+					0
+				]
+			],
+			"timestampOffsets": null,
+			"valueOffsets": null
+		}
+	],
+	"transparencyLookup": [
+		0
+	],
+	"textureTransforms": [],
+	"textureTransformsLookup": [
+		65535
+	],
+	"boundingBox": {
+		"min": [
+			-0.4950540065765381,
+			-4.785760402679443,
+			-1.9137300252914429
+		],
+		"max": [
+			0.4950651526451111,
+			4.7850847244262695,
+			7.397095680236816
+		]
+	},
+	"boundingSphereRadius": 6.689661502838135,
+	"collisionBox": {
+		"min": [
+			10000000,
+			10000000,
+			10000000
+		],
+		"max": [
+			-10000000,
+			-10000000,
+			-10000000
+		]
+	},
+	"collisionSphereRadius": 0,
+	"skin": {
+		"subMeshes": [
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 0,
+				"vertexCount": 30,
+				"triangleStart": 0,
+				"triangleCount": 162,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					-7.947286384535346e-9,
+					-5.767793798128196e-9,
+					3.1577255725860596
+				],
+				"sortCenterPosition": [
+					0,
+					0,
+					2.8761887550354004
+				],
+				"sortRadius": 4.608602523803711
+			}
+		],
+		"textureUnits": [
+			{
+				"flags": 24,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 0,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 0,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 0,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			}
+		],
+		"fileName": "world/generic/activedoodads/instanceportal/instanceportal_white00.skin",
+		"fileDataID": 503102
+	}
+}

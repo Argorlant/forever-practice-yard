@@ -1,0 +1,126 @@
+{
+	"fileType": "m2",
+	"fileDataID": 198052,
+	"fileName": "world/generic/human/passive doodads/bookshelves/duskwoodbookshelf01.m2",
+	"internalName": "DuskwoodBookshelf01",
+	"textures": [
+		{
+			"fileNameInternal": "world/generic/human/passive doodads/tables/duskwoodfurniture01.blp",
+			"fileNameExternal": "..\\tables\\duskwoodfurniture01.png",
+			"mtlName": "mat_duskwoodfurniture01",
+			"flags": 0,
+			"fileDataID": 198601
+		}
+	],
+	"textureTypes": [
+		0
+	],
+	"materials": [
+		{
+			"flags": 0,
+			"blendingMode": 0
+		}
+	],
+	"textureCombos": [
+		0
+	],
+	"colors": [],
+	"textureWeights": [
+		{
+			"globalSeq": 65535,
+			"interpolation": 0,
+			"timestamps": [
+				[
+					0
+				]
+			],
+			"values": [
+				[
+					32767
+				]
+			],
+			"timestampOffsets": null,
+			"valueOffsets": null
+		}
+	],
+	"transparencyLookup": [
+		0
+	],
+	"textureTransforms": [],
+	"textureTransformsLookup": [
+		65535
+	],
+	"boundingBox": {
+		"min": [
+			-0.31685978174209595,
+			-1.4066601991653442,
+			-0.010438759811222553
+		],
+		"max": [
+			0.5661492347717285,
+			1.3997623920440674,
+			4.078447341918945
+		]
+	},
+	"boundingSphereRadius": 2.5182907581329346,
+	"collisionBox": {
+		"min": [
+			-0.3168596625328064,
+			-1.4066603183746338,
+			-0.0018049345817416906
+		],
+		"max": [
+			0.5661492347717285,
+			1.3997622728347778,
+			4.078447341918945
+		]
+	},
+	"collisionSphereRadius": 2.514787197113037,
+	"skin": {
+		"subMeshes": [
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 0,
+				"vertexCount": 162,
+				"triangleStart": 0,
+				"triangleCount": 252,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					0.0002729202969931066,
+					0.0022965639363974333,
+					1.7403253316879272
+				],
+				"sortCenterPosition": [
+					0.12464472651481628,
+					-0.0034489035606384277,
+					2.0340042114257812
+				],
+				"sortRadius": 2.5182907581329346
+			}
+		],
+		"textureUnits": [
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 0,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 0,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 0,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			}
+		],
+		"fileName": "world/generic/human/passive doodads/bookshelves/duskwoodbookshelf0100.skin",
+		"fileDataID": 504265
+	}
+}

@@ -1,0 +1,255 @@
+{
+	"fileType": "m2",
+	"fileDataID": 198776,
+	"fileName": "world/generic/nightelf/passive doodads/lamps/kalidarstreetlamp01.m2",
+	"internalName": "KalidarStreetLamp01",
+	"textures": [
+		{
+			"fileNameInternal": "creature/fireelemental/glowball.blp",
+			"fileNameExternal": "..\\..\\..\\..\\..\\creature\\fireelemental\\glowball.png",
+			"mtlName": "mat_glowball",
+			"flags": 0,
+			"fileDataID": 123938
+		},
+		{
+			"fileNameInternal": "world/generic/nightelf/passive doodads/lamps/kalidarlamppost_256.blp",
+			"fileNameExternal": "kalidarlamppost_256.png",
+			"mtlName": "mat_kalidarlamppost_256",
+			"flags": 3,
+			"fileDataID": 198775
+		},
+		{
+			"fileNameInternal": "world/generic/nightelf/passive doodads/lamps/glowblue32.blp",
+			"fileNameExternal": "glowblue32.png",
+			"mtlName": "mat_glowblue32",
+			"flags": 0,
+			"fileDataID": 198774
+		},
+		{
+			"fileNameInternal": "spells/lensflare1a.blp",
+			"fileNameExternal": "..\\..\\..\\..\\..\\spells\\lensflare1a.png",
+			"mtlName": "mat_lensflare1a",
+			"flags": 0,
+			"fileDataID": 166462
+		}
+	],
+	"textureTypes": [
+		0,
+		0,
+		0,
+		0
+	],
+	"materials": [
+		{
+			"flags": 4,
+			"blendingMode": 1
+		},
+		{
+			"flags": 19,
+			"blendingMode": 4
+		},
+		{
+			"flags": 19,
+			"blendingMode": 4
+		}
+	],
+	"textureCombos": [
+		1,
+		2,
+		3
+	],
+	"colors": [],
+	"textureWeights": [
+		{
+			"globalSeq": 65535,
+			"interpolation": 0,
+			"timestamps": [
+				[
+					0
+				]
+			],
+			"values": [
+				[
+					32767
+				]
+			],
+			"timestampOffsets": null,
+			"valueOffsets": null
+		},
+		{
+			"globalSeq": 65535,
+			"interpolation": 0,
+			"timestamps": [
+				[
+					0
+				]
+			],
+			"values": [
+				[
+					7209
+				]
+			],
+			"timestampOffsets": null,
+			"valueOffsets": null
+		}
+	],
+	"transparencyLookup": [
+		0,
+		1
+	],
+	"textureTransforms": [],
+	"textureTransformsLookup": [
+		65535
+	],
+	"boundingBox": {
+		"min": [
+			-2.131239652633667,
+			-3.2945640087127686,
+			-0.2008325755596161
+		],
+		"max": [
+			1.9811184406280518,
+			0.9107022881507874,
+			6.6572699546813965
+		]
+	},
+	"boundingSphereRadius": 4.010234832763672,
+	"collisionBox": {
+		"min": [
+			-0.8022378087043762,
+			-1.9424078464508057,
+			-0.2008325755596161
+		],
+		"max": [
+			0.7472798824310303,
+			0.9107022881507874,
+			5.3922438621521
+		]
+	},
+	"collisionSphereRadius": 3.1265337467193604,
+	"skin": {
+		"subMeshes": [
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 0,
+				"vertexCount": 116,
+				"triangleStart": 0,
+				"triangleCount": 321,
+				"boneCount": 3,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					-0.03693098574876785,
+					-0.651401937007904,
+					4.0231404304504395
+				],
+				"sortCenterPosition": [
+					-0.026778340339660645,
+					-0.538690447807312,
+					2.837770462036133
+				],
+				"sortRadius": 3.353564739227295
+			},
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 116,
+				"vertexCount": 4,
+				"triangleStart": 321,
+				"triangleCount": 6,
+				"boneCount": 3,
+				"boneStart": 0,
+				"boneInfluences": 1,
+				"centerBoneIndex": 1,
+				"centerPosition": [
+					-0.07506521791219711,
+					-1.2383849620819092,
+					4.601090908050537
+				],
+				"sortCenterPosition": [
+					-0.07506521046161652,
+					-1.2383849620819092,
+					4.601090908050537
+				],
+				"sortRadius": 2.0561790466308594
+			},
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 120,
+				"vertexCount": 4,
+				"triangleStart": 327,
+				"triangleCount": 6,
+				"boneCount": 3,
+				"boneStart": 0,
+				"boneInfluences": 1,
+				"centerBoneIndex": 2,
+				"centerPosition": [
+					-0.07506318390369415,
+					-1.1608654260635376,
+					4.584590911865234
+				],
+				"sortCenterPosition": [
+					-0.07506318390369415,
+					-1.1608654260635376,
+					4.584590911865234
+				],
+				"sortRadius": 1.1366029977798462
+			}
+		],
+		"textureUnits": [
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 16,
+				"skinSectionIndex": 0,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 0,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 0,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			},
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 16,
+				"skinSectionIndex": 1,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 1,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 1,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			},
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 16,
+				"skinSectionIndex": 2,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 2,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 2,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 1,
+				"textureTransformComboIndex": 0
+			}
+		],
+		"fileName": "world/generic/nightelf/passive doodads/lamps/kalidarstreetlamp0100.skin",
+		"fileDataID": 504873
+	}
+}

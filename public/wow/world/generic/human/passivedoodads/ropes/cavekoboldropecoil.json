@@ -1,0 +1,126 @@
+{
+	"fileType": "m2",
+	"fileDataID": 198422,
+	"fileName": "world/generic/human/passive doodads/ropes/cavekoboldropecoil.m2",
+	"internalName": "CaveKoboldRopeCoil",
+	"textures": [
+		{
+			"fileNameInternal": "world/generic/human/passive doodads/ropes/ropecoil.blp",
+			"fileNameExternal": "ropecoil.png",
+			"mtlName": "mat_ropecoil",
+			"flags": 0,
+			"fileDataID": 198423
+		}
+	],
+	"textureTypes": [
+		0
+	],
+	"materials": [
+		{
+			"flags": 4,
+			"blendingMode": 1
+		}
+	],
+	"textureCombos": [
+		0
+	],
+	"colors": [],
+	"textureWeights": [
+		{
+			"globalSeq": 65535,
+			"interpolation": 0,
+			"timestamps": [
+				[
+					0
+				]
+			],
+			"values": [
+				[
+					32767
+				]
+			],
+			"timestampOffsets": null,
+			"valueOffsets": null
+		}
+	],
+	"transparencyLookup": [
+		0
+	],
+	"textureTransforms": [],
+	"textureTransformsLookup": [
+		65535
+	],
+	"boundingBox": {
+		"min": [
+			-0.5466424822807312,
+			-0.612675130367279,
+			-1.389329380470513e-16
+		],
+		"max": [
+			0.7138787508010864,
+			0.5535362958908081,
+			0.10216310620307922
+		]
+	},
+	"boundingSphereRadius": 0.6793004274368286,
+	"collisionBox": {
+		"min": [
+			10000000,
+			10000000,
+			10000000
+		],
+		"max": [
+			-10000000,
+			-10000000,
+			-10000000
+		]
+	},
+	"collisionSphereRadius": 0,
+	"skin": {
+		"subMeshes": [
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 0,
+				"vertexCount": 12,
+				"triangleStart": 0,
+				"triangleCount": 48,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					0.06984032690525055,
+					-0.04711804538965225,
+					0.046081047505140305
+				],
+				"sortCenterPosition": [
+					0.08361813426017761,
+					-0.029569417238235474,
+					0.05108155310153961
+				],
+				"sortRadius": 0.6793004274368286
+			}
+		],
+		"textureUnits": [
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 16,
+				"skinSectionIndex": 0,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 0,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 0,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			}
+		],
+		"fileName": "world/generic/human/passive doodads/ropes/cavekoboldropecoil00.skin",
+		"fileDataID": 504563
+	}
+}

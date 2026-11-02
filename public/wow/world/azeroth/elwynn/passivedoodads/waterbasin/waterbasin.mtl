@@ -1,0 +1,9 @@
+newmtl mat_wood05
+illum 1
+map_Kd wood05.png
+newmtl mat_side
+illum 1
+map_Kd side.png
+newmtl mat_water
+illum 1
+map_Kd water.png

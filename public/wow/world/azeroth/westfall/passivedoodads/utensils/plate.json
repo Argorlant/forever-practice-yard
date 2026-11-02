@@ -1,0 +1,126 @@
+{
+	"fileType": "m2",
+	"fileDataID": 190653,
+	"fileName": "world/azeroth/westfall/passivedoodads/utensils/plate.m2",
+	"internalName": "Plate",
+	"textures": [
+		{
+			"fileNameInternal": "world/azeroth/westfall/passivedoodads/utensils/deadminesstein01.blp",
+			"fileNameExternal": "deadminesstein01.png",
+			"mtlName": "mat_deadminesstein01",
+			"flags": 0,
+			"fileDataID": 190651
+		}
+	],
+	"textureTypes": [
+		0
+	],
+	"materials": [
+		{
+			"flags": 0,
+			"blendingMode": 0
+		}
+	],
+	"textureCombos": [
+		0
+	],
+	"colors": [],
+	"textureWeights": [
+		{
+			"globalSeq": 65535,
+			"interpolation": 0,
+			"timestamps": [
+				[
+					0
+				]
+			],
+			"values": [
+				[
+					32767
+				]
+			],
+			"timestampOffsets": null,
+			"valueOffsets": null
+		}
+	],
+	"transparencyLookup": [
+		0
+	],
+	"textureTransforms": [],
+	"textureTransformsLookup": [
+		65535
+	],
+	"boundingBox": {
+		"min": [
+			-0.25540098547935486,
+			-0.2500990033149719,
+			0.0016333300154656172
+		],
+		"max": [
+			0.24195900559425354,
+			0.24726100265979767,
+			0.03253420069813728
+		]
+	},
+	"boundingSphereRadius": 0.24915899336338043,
+	"collisionBox": {
+		"min": [
+			10000000,
+			10000000,
+			10000000
+		],
+		"max": [
+			-10000000,
+			-10000000,
+			-10000000
+		]
+	},
+	"collisionSphereRadius": 0,
+	"skin": {
+		"subMeshes": [
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 0,
+				"vertexCount": 49,
+				"triangleStart": 0,
+				"triangleCount": 72,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					-0.0067212688736617565,
+					-0.0014189715730026364,
+					0.022006379440426826
+				],
+				"sortCenterPosition": [
+					-0.0067212688736617565,
+					-0.0014189715730026364,
+					0.022006379440426826
+				],
+				"sortRadius": 0.24890302121639252
+			}
+		],
+		"textureUnits": [
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 0,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 0,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 0,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			}
+		],
+		"fileName": "world/azeroth/westfall/passivedoodads/utensils/plate00.skin",
+		"fileDataID": 494998
+	}
+}

@@ -1,0 +1,290 @@
+{
+	"fileType": "m2",
+	"fileDataID": 198288,
+	"fileName": "world/generic/human/passive doodads/gypsywagons/stormwindgypsywagon01.m2",
+	"internalName": "StormwindGypsywagon01",
+	"textures": [
+		{
+			"fileNameInternal": "world/generic/dwarf/passive doodads/lanterns/gypsywagon.blp",
+			"fileNameExternal": "..\\..\\..\\dwarf\\passivedoodads\\lanterns\\gypsywagon.png",
+			"mtlName": "mat_gypsywagon",
+			"flags": 0,
+			"fileDataID": 197427
+		},
+		{
+			"fileNameInternal": "world/azeroth/bootybay/passivedoodad/bootyentrance/gypsydoor_01.blp",
+			"fileNameExternal": "..\\..\\..\\..\\azeroth\\bootybay\\passivedoodad\\bootyentrance\\gypsydoor_01.png",
+			"mtlName": "mat_gypsydoor_01",
+			"flags": 0,
+			"fileDataID": 189082
+		},
+		{
+			"fileNameInternal": "world/generic/human/passive doodads/gypsywagons/overhang copy.blp",
+			"fileNameExternal": "overhangcopy.png",
+			"mtlName": "mat_overhangcopy",
+			"flags": 0,
+			"fileDataID": 198287
+		},
+		{
+			"fileNameInternal": "world/azeroth/bootybay/passivedoodad/bootyentrance/elwynnlantern01.blp",
+			"fileNameExternal": "..\\..\\..\\..\\azeroth\\bootybay\\passivedoodad\\bootyentrance\\elwynnlantern01.png",
+			"mtlName": "mat_elwynnlantern01",
+			"flags": 3,
+			"fileDataID": 189080
+		},
+		{
+			"fileNameInternal": "world/generic/nightelf/passive doodads/magicalimplements/glow.blp",
+			"fileNameExternal": "..\\..\\..\\nightelf\\passivedoodads\\magicalimplements\\glow.png",
+			"mtlName": "mat_glow",
+			"flags": 0,
+			"fileDataID": 198784
+		}
+	],
+	"textureTypes": [
+		0,
+		0,
+		0,
+		0,
+		0
+	],
+	"materials": [
+		{
+			"flags": 0,
+			"blendingMode": 0
+		},
+		{
+			"flags": 0,
+			"blendingMode": 0
+		},
+		{
+			"flags": 4,
+			"blendingMode": 0
+		},
+		{
+			"flags": 1,
+			"blendingMode": 0
+		}
+	],
+	"textureCombos": [
+		0,
+		1,
+		2,
+		3
+	],
+	"colors": [],
+	"textureWeights": [
+		{
+			"globalSeq": 65535,
+			"interpolation": 0,
+			"timestamps": [
+				[
+					0
+				]
+			],
+			"values": [
+				[
+					32767
+				]
+			],
+			"timestampOffsets": null,
+			"valueOffsets": null
+		}
+	],
+	"transparencyLookup": [
+		0
+	],
+	"textureTransforms": [],
+	"textureTransformsLookup": [
+		65535
+	],
+	"boundingBox": {
+		"min": [
+			-4.573709964752197,
+			-2.6093480587005615,
+			-0.1624954342842102
+		],
+		"max": [
+			6.912896156311035,
+			4.535976409912109,
+			6.0743818283081055
+		]
+	},
+	"boundingSphereRadius": 7.131982803344727,
+	"collisionBox": {
+		"min": [
+			-4.647417068481445,
+			-2.493084669113159,
+			-0.16249532997608185
+		],
+		"max": [
+			6.912895202636719,
+			4.535976409912109,
+			5.239959239959717
+		]
+	},
+	"collisionSphereRadius": 6.771414279937744,
+	"skin": {
+		"subMeshes": [
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 0,
+				"vertexCount": 387,
+				"triangleStart": 0,
+				"triangleCount": 858,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					-0.0615210235118866,
+					-0.2779025435447693,
+					1.8093026876449585
+				],
+				"sortCenterPosition": [
+					0.2818185091018677,
+					-0.29350316524505615,
+					2.543178081512451
+				],
+				"sortRadius": 4.887227535247803
+			},
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 387,
+				"vertexCount": 676,
+				"triangleStart": 858,
+				"triangleCount": 1299,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					0.8761296272277832,
+					-0.11623533815145493,
+					3.0936319828033447
+				],
+				"sortCenterPosition": [
+					1.169593095779419,
+					0.9496861696243286,
+					2.5491743087768555
+				],
+				"sortRadius": 6.717822551727295
+			},
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 1063,
+				"vertexCount": 26,
+				"triangleStart": 2157,
+				"triangleCount": 60,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					-0.38291245698928833,
+					3.37785267829895,
+					3.1275057792663574
+				],
+				"sortCenterPosition": [
+					-0.3070365786552429,
+					3.111438274383545,
+					2.9651424884796143
+				],
+				"sortRadius": 2.4863686561584473
+			},
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 1089,
+				"vertexCount": 24,
+				"triangleStart": 2217,
+				"triangleCount": 48,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					3.924943447113037,
+					-0.2897181510925293,
+					4.033034324645996
+				],
+				"sortCenterPosition": [
+					3.9249439239501953,
+					-0.2897181212902069,
+					4.041192531585693
+				],
+				"sortRadius": 0.45241183042526245
+			}
+		],
+		"textureUnits": [
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 0,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 0,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 0,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			},
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 1,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 1,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 1,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			},
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 2,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 2,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 2,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			},
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 3,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 3,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 3,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			}
+		],
+		"fileName": "world/generic/human/passive doodads/gypsywagons/stormwindgypsywagon0100.skin",
+		"fileDataID": 504458
+	}
+}

@@ -1,0 +1,126 @@
+{
+	"fileType": "m2",
+	"fileDataID": 198146,
+	"fileName": "world/generic/human/passive doodads/clothing/foldedshirtbrown.m2",
+	"internalName": "FoldedShirtBrown",
+	"textures": [
+		{
+			"fileNameInternal": "world/generic/human/passive doodads/cloth/clothstuff.blp",
+			"fileNameExternal": "..\\cloth\\clothstuff.png",
+			"mtlName": "mat_clothstuff",
+			"flags": 0,
+			"fileDataID": 198132
+		}
+	],
+	"textureTypes": [
+		0
+	],
+	"materials": [
+		{
+			"flags": 4,
+			"blendingMode": 1
+		}
+	],
+	"textureCombos": [
+		0
+	],
+	"colors": [],
+	"textureWeights": [
+		{
+			"globalSeq": 65535,
+			"interpolation": 0,
+			"timestamps": [
+				[
+					0
+				]
+			],
+			"values": [
+				[
+					32767
+				]
+			],
+			"timestampOffsets": null,
+			"valueOffsets": null
+		}
+	],
+	"transparencyLookup": [
+		0
+	],
+	"textureTransforms": [],
+	"textureTransformsLookup": [
+		65535
+	],
+	"boundingBox": {
+		"min": [
+			-0.2606422007083893,
+			-0.2459711730480194,
+			0
+		],
+		"max": [
+			0.26423919200897217,
+			0.23642267286777496,
+			0.053068604320287704
+		]
+	},
+	"boundingSphereRadius": 0.31959399580955505,
+	"collisionBox": {
+		"min": [
+			10000000,
+			10000000,
+			10000000
+		],
+		"max": [
+			-10000000,
+			-10000000,
+			-10000000
+		]
+	},
+	"collisionSphereRadius": 0,
+	"skin": {
+		"subMeshes": [
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 0,
+				"vertexCount": 31,
+				"triangleStart": 0,
+				"triangleCount": 78,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					-0.06637367606163025,
+					0.00019555562175810337,
+					0.01813085563480854
+				],
+				"sortCenterPosition": [
+					0.0017984956502914429,
+					-0.004774250090122223,
+					0.02761854976415634
+				],
+				"sortRadius": 0.3196781277656555
+			}
+		],
+		"textureUnits": [
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 16,
+				"skinSectionIndex": 0,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 0,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 0,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			}
+		],
+		"fileName": "world/generic/human/passive doodads/clothing/foldedshirtbrown00.skin",
+		"fileDataID": 504336
+	}
+}

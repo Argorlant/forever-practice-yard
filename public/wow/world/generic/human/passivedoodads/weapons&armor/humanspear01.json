@@ -1,0 +1,126 @@
+{
+	"fileType": "m2",
+	"fileDataID": 198652,
+	"fileName": "world/generic/human/passive doodads/weapons&armor/humanspear01.m2",
+	"internalName": "HumanSpear01",
+	"textures": [
+		{
+			"fileNameInternal": "world/generic/human/passive doodads/weapons&armor/waeponpage01.blp",
+			"fileNameExternal": "waeponpage01.png",
+			"mtlName": "mat_waeponpage01",
+			"flags": 0,
+			"fileDataID": 198659
+		}
+	],
+	"textureTypes": [
+		0
+	],
+	"materials": [
+		{
+			"flags": 0,
+			"blendingMode": 0
+		}
+	],
+	"textureCombos": [
+		0
+	],
+	"colors": [],
+	"textureWeights": [
+		{
+			"globalSeq": 65535,
+			"interpolation": 0,
+			"timestamps": [
+				[
+					0
+				]
+			],
+			"values": [
+				[
+					32767
+				]
+			],
+			"timestampOffsets": null,
+			"valueOffsets": null
+		}
+	],
+	"transparencyLookup": [
+		0
+	],
+	"textureTransforms": [],
+	"textureTransformsLookup": [
+		65535
+	],
+	"boundingBox": {
+		"min": [
+			-1.3016599416732788,
+			-0.07175219804048538,
+			-0.16249600052833557
+		],
+		"max": [
+			1.3016599416732788,
+			0.0717519000172615,
+			0.16249600052833557
+		]
+	},
+	"boundingSphereRadius": 1.3016599416732788,
+	"collisionBox": {
+		"min": [
+			10000000,
+			10000000,
+			10000000
+		],
+		"max": [
+			-10000000,
+			-10000000,
+			-10000000
+		]
+	},
+	"collisionSphereRadius": 0,
+	"skin": {
+		"subMeshes": [
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 0,
+				"vertexCount": 55,
+				"triangleStart": 0,
+				"triangleCount": 168,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					0.10858608037233353,
+					-3.8268890278914114e-8,
+					-0.0000021113589809829136
+				],
+				"sortCenterPosition": [
+					0,
+					-1.4901161193847656e-7,
+					0
+				],
+				"sortRadius": 1.3016599416732788
+			}
+		],
+		"textureUnits": [
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 0,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 0,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 0,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			}
+		],
+		"fileName": "world/generic/human/passive doodads/weapons&armor/humanspear0100.skin",
+		"fileDataID": 504788
+	}
+}

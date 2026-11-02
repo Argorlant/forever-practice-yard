@@ -1,0 +1,3 @@
+newmtl mat_metalbanner01
+illum 1
+map_Kd ..\..\..\..\environment\doodad\ironforge\banners\ironforgebanner_ornate\texture\metalbanner01.png

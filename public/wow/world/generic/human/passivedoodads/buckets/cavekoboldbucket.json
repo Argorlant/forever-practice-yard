@@ -1,0 +1,178 @@
+{
+	"fileType": "m2",
+	"fileDataID": 198069,
+	"fileName": "world/generic/human/passive doodads/buckets/cavekoboldbucket.m2",
+	"internalName": "CaveKoboldBucket",
+	"textures": [
+		{
+			"fileNameInternal": "world/generic/human/passive doodads/buckets/dredgemetal.blp",
+			"fileNameExternal": "dredgemetal.png",
+			"mtlName": "mat_dredgemetal",
+			"flags": 3,
+			"fileDataID": 198071
+		},
+		{
+			"fileNameInternal": "world/generic/human/passive doodads/miningtroughs/dredgewood.blp",
+			"fileNameExternal": "..\\miningtroughs\\dredgewood.png",
+			"mtlName": "mat_dredgewood",
+			"flags": 3,
+			"fileDataID": 198354
+		}
+	],
+	"textureTypes": [
+		0,
+		0
+	],
+	"materials": [
+		{
+			"flags": 4,
+			"blendingMode": 0
+		},
+		{
+			"flags": 4,
+			"blendingMode": 0
+		}
+	],
+	"textureCombos": [
+		0,
+		1
+	],
+	"colors": [],
+	"textureWeights": [
+		{
+			"globalSeq": 65535,
+			"interpolation": 0,
+			"timestamps": [
+				[
+					0
+				]
+			],
+			"values": [
+				[
+					32767
+				]
+			],
+			"timestampOffsets": null,
+			"valueOffsets": null
+		}
+	],
+	"transparencyLookup": [
+		0
+	],
+	"textureTransforms": [],
+	"textureTransformsLookup": [
+		65535
+	],
+	"boundingBox": {
+		"min": [
+			-0.2856236696243286,
+			-0.3928585946559906,
+			0
+		],
+		"max": [
+			0.42180272936820984,
+			0.3272469639778137,
+			0.7445853352546692
+		]
+	},
+	"boundingSphereRadius": 0.5199905037879944,
+	"collisionBox": {
+		"min": [
+			-0.3700452744960785,
+			-0.34254637360572815,
+			0
+		],
+		"max": [
+			0.3513542711734772,
+			0.3361108899116516,
+			0.7290714979171753
+		]
+	},
+	"collisionSphereRadius": 0.5156516432762146,
+	"skin": {
+		"subMeshes": [
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 0,
+				"vertexCount": 113,
+				"triangleStart": 0,
+				"triangleCount": 342,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					-0.006536823231726885,
+					-0.044773172587156296,
+					0.3217441141605377
+				],
+				"sortCenterPosition": [
+					0.06808952987194061,
+					-0.03280581533908844,
+					0.37991008162498474
+				],
+				"sortRadius": 0.5149908661842346
+			},
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 113,
+				"vertexCount": 34,
+				"triangleStart": 342,
+				"triangleCount": 72,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					0.038696207106113434,
+					-0.03650037571787834,
+					0.2716216444969177
+				],
+				"sortCenterPosition": [
+					0.045745350420475006,
+					-0.06747409701347351,
+					0.3619634509086609
+				],
+				"sortRadius": 0.49052560329437256
+			}
+		],
+		"textureUnits": [
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 0,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 0,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 0,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			},
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 1,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 1,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 1,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			}
+		],
+		"fileName": "world/generic/human/passive doodads/buckets/cavekoboldbucket00.skin",
+		"fileDataID": 504281
+	}
+}

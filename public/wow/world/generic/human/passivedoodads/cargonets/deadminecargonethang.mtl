@@ -1,0 +1,6 @@
+newmtl mat_deadminehangnets
+illum 1
+map_Kd ..\..\..\goblin\passivedoodads\goblinmachinery\deadminehangnets.png
+newmtl mat_deadminehangnets02
+illum 1
+map_Kd deadminehangnets02.png

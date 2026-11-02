@@ -1,0 +1,134 @@
+{
+	"fileType": "m2",
+	"fileDataID": 199904,
+	"fileName": "world/generic/passivedoodads/particleemitters/ashenvalewisps.m2",
+	"internalName": "AshenvaleWisps",
+	"textures": [
+		{
+			"fileNameInternal": "world/kalimdor/kalidar/passivedoodads/kalidarbushes/kalidarshrub01.blp",
+			"fileNameExternal": "..\\..\\..\\kalimdor\\kalidar\\passivedoodads\\kalidarbushes\\kalidarshrub01.png",
+			"mtlName": "mat_kalidarshrub01",
+			"flags": 0,
+			"fileDataID": 202026
+		},
+		{
+			"fileNameInternal": "item/objectcomponents/weapon/flare.blp",
+			"fileNameExternal": "..\\..\\..\\..\\item\\objectcomponents\\weapon\\flare.png",
+			"mtlName": "mat_flare",
+			"flags": 0,
+			"fileDataID": 145515
+		}
+	],
+	"textureTypes": [
+		0,
+		0
+	],
+	"materials": [
+		{
+			"flags": 0,
+			"blendingMode": 0
+		}
+	],
+	"textureCombos": [
+		0
+	],
+	"colors": [],
+	"textureWeights": [
+		{
+			"globalSeq": 65535,
+			"interpolation": 0,
+			"timestamps": [
+				[
+					0
+				]
+			],
+			"values": [
+				[
+					32767
+				]
+			],
+			"timestampOffsets": null,
+			"valueOffsets": null
+		}
+	],
+	"transparencyLookup": [
+		0
+	],
+	"textureTransforms": [],
+	"textureTransformsLookup": [
+		65535
+	],
+	"boundingBox": {
+		"min": [
+			-14.10853385925293,
+			-14.220942497253418,
+			-0.29041385650634766
+		],
+		"max": [
+			14.075728416442871,
+			14.192082405090332,
+			28.42950439453125
+		]
+	},
+	"boundingSphereRadius": 19.911224365234375,
+	"collisionBox": {
+		"min": [
+			10000000,
+			10000000,
+			10000000
+		],
+		"max": [
+			-10000000,
+			-10000000,
+			-10000000
+		]
+	},
+	"collisionSphereRadius": 0,
+	"skin": {
+		"subMeshes": [
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 0,
+				"vertexCount": 15,
+				"triangleStart": 0,
+				"triangleCount": 15,
+				"boneCount": 5,
+				"boneStart": 0,
+				"boneInfluences": 1,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					-0.012063217349350452,
+					-0.021194839850068092,
+					0.2741575837135315
+				],
+				"sortCenterPosition": [
+					-0.016402721405029297,
+					-0.014429569244384766,
+					0.40777507424354553
+				],
+				"sortRadius": 19.821176528930664
+			}
+		],
+		"textureUnits": [
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 0,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 0,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 0,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			}
+		],
+		"fileName": "world/generic/passivedoodads/particleemitters/ashenvalewisps00.skin",
+		"fileDataID": 505790
+	}
+}

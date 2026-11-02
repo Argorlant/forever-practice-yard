@@ -1,0 +1,490 @@
+{
+	"fileType": "m2",
+	"fileDataID": 198247,
+	"fileName": "world/generic/human/passive doodads/fountains/stormwindfountain01.m2",
+	"internalName": "StormwindFountain01",
+	"textures": [
+		{
+			"fileNameInternal": "world/generic/human/passive doodads/fountains/stormwindplan2.blp",
+			"fileNameExternal": "stormwindplan2.png",
+			"mtlName": "mat_stormwindplan2",
+			"flags": 3,
+			"fileDataID": 198251
+		},
+		{
+			"fileNameInternal": "world/generic/human/passive doodads/fountains/stormwindside02.blp",
+			"fileNameExternal": "stormwindside02.png",
+			"mtlName": "mat_stormwindside02",
+			"flags": 3,
+			"fileDataID": 198252
+		},
+		{
+			"fileNameInternal": "world/generic/human/passive doodads/fountains/stormwindlady.blp",
+			"fileNameExternal": "stormwindlady.png",
+			"mtlName": "mat_stormwindlady",
+			"flags": 3,
+			"fileDataID": 198249
+		},
+		{
+			"fileNameInternal": "world/generic/human/passive doodads/fountains/stormwindarm.blp",
+			"fileNameExternal": "stormwindarm.png",
+			"mtlName": "mat_stormwindarm",
+			"flags": 3,
+			"fileDataID": 198244
+		},
+		{
+			"fileNameInternal": "world/generic/human/passive doodads/fountains/stormwindhead.blp",
+			"fileNameExternal": "stormwindhead.png",
+			"mtlName": "mat_stormwindhead",
+			"flags": 3,
+			"fileDataID": 198248
+		},
+		{
+			"fileNameInternal": "world/generic/human/passive doodads/fountains/stormwindleg.blp",
+			"fileNameExternal": "stormwindleg.png",
+			"mtlName": "mat_stormwindleg",
+			"flags": 3,
+			"fileDataID": 198250
+		},
+		{
+			"fileNameInternal": "world/generic/human/passive doodads/fountains/stormwindchest.blp",
+			"fileNameExternal": "stormwindchest.png",
+			"mtlName": "mat_stormwindchest",
+			"flags": 0,
+			"fileDataID": 198245
+		},
+		{
+			"fileNameInternal": "world/generic/human/passive doodads/fountains/stormwindfoundation01.blp",
+			"fileNameExternal": "stormwindfoundation01.png",
+			"mtlName": "mat_stormwindfoundation01",
+			"flags": 3,
+			"fileDataID": 198246
+		}
+	],
+	"textureTypes": [
+		0,
+		0,
+		0,
+		0,
+		0,
+		0,
+		0,
+		0
+	],
+	"materials": [
+		{
+			"flags": 0,
+			"blendingMode": 0
+		},
+		{
+			"flags": 0,
+			"blendingMode": 0
+		},
+		{
+			"flags": 4,
+			"blendingMode": 0
+		},
+		{
+			"flags": 0,
+			"blendingMode": 0
+		},
+		{
+			"flags": 0,
+			"blendingMode": 0
+		},
+		{
+			"flags": 0,
+			"blendingMode": 0
+		},
+		{
+			"flags": 0,
+			"blendingMode": 0
+		},
+		{
+			"flags": 0,
+			"blendingMode": 0
+		}
+	],
+	"textureCombos": [
+		0,
+		1,
+		2,
+		3,
+		4,
+		5,
+		6,
+		7
+	],
+	"colors": [],
+	"textureWeights": [
+		{
+			"globalSeq": 65535,
+			"interpolation": 0,
+			"timestamps": [
+				[
+					0
+				]
+			],
+			"values": [
+				[
+					32767
+				]
+			],
+			"timestampOffsets": null,
+			"valueOffsets": null
+		}
+	],
+	"transparencyLookup": [
+		0
+	],
+	"textureTransforms": [],
+	"textureTransformsLookup": [
+		65535
+	],
+	"boundingBox": {
+		"min": [
+			-5.033691883087158,
+			-4.986032962799072,
+			-0.26114335656166077
+		],
+		"max": [
+			5.035011291503906,
+			5.0826640129089355,
+			9.434200286865234
+		]
+	},
+	"boundingSphereRadius": 7.122455596923828,
+	"collisionBox": {
+		"min": [
+			-5.033691883087158,
+			-4.98603630065918,
+			0
+		],
+		"max": [
+			5.035011291503906,
+			5.082666873931885,
+			9.355183601379395
+		]
+	},
+	"collisionSphereRadius": 7.181434631347656,
+	"skin": {
+		"subMeshes": [
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 0,
+				"vertexCount": 91,
+				"triangleStart": 0,
+				"triangleCount": 120,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					-0.011890741996467113,
+					0.051581189036369324,
+					3.721708059310913
+				],
+				"sortCenterPosition": [
+					0.0006597042083740234,
+					0.04831528663635254,
+					2.6885688304901123
+				],
+				"sortRadius": 4.195446014404297
+			},
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 91,
+				"vertexCount": 121,
+				"triangleStart": 120,
+				"triangleCount": 192,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					0.075018011033535,
+					0.10898946970701218,
+					4.572292327880859
+				],
+				"sortCenterPosition": [
+					0.0006597042083740234,
+					0.04831671714782715,
+					4.323415279388428
+				],
+				"sortRadius": 2.851938009262085
+			},
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 212,
+				"vertexCount": 84,
+				"triangleStart": 312,
+				"triangleCount": 204,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					0.004052179399877787,
+					-0.0363435372710228,
+					2.101895809173584
+				],
+				"sortCenterPosition": [
+					0.004052179399877787,
+					-0.0363435372710228,
+					2.101895809173584
+				],
+				"sortRadius": 2.914548873901367
+			},
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 296,
+				"vertexCount": 64,
+				"triangleStart": 516,
+				"triangleCount": 174,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					0.16297166049480438,
+					0.010447867214679718,
+					8.186836242675781
+				],
+				"sortCenterPosition": [
+					0.10030137002468109,
+					0.010448634624481201,
+					8.304311752319336
+				],
+				"sortRadius": 0.8493225574493408
+			},
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 360,
+				"vertexCount": 54,
+				"triangleStart": 690,
+				"triangleCount": 159,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					0.013360178098082542,
+					0.018081599846482277,
+					9.22193431854248
+				],
+				"sortCenterPosition": [
+					0.01896291971206665,
+					0.011012077331542969,
+					9.205673217773438
+				],
+				"sortRadius": 0.27594977617263794
+			},
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 414,
+				"vertexCount": 16,
+				"triangleStart": 849,
+				"triangleCount": 36,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					0.012986787594854832,
+					0.010475389659404755,
+					6.882137298583984
+				],
+				"sortCenterPosition": [
+					-0.19275416433811188,
+					0.010448604822158813,
+					6.511719703674316
+				],
+				"sortRadius": 1.6882174015045166
+			},
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 430,
+				"vertexCount": 79,
+				"triangleStart": 885,
+				"triangleCount": 240,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					0.21944379806518555,
+					0.010550367645919323,
+					8.146712303161621
+				],
+				"sortCenterPosition": [
+					0.18762916326522827,
+					0.010448575019836426,
+					8.268865585327148
+				],
+				"sortRadius": 1.0086244344711304
+			},
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 509,
+				"vertexCount": 88,
+				"triangleStart": 1125,
+				"triangleCount": 174,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					0.3485976755619049,
+					0.06329406797885895,
+					4.467272758483887
+				],
+				"sortCenterPosition": [
+					0.0006597042083740234,
+					0.04831552505493164,
+					4.071730613708496
+				],
+				"sortRadius": 6.802361488342285
+			}
+		],
+		"textureUnits": [
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 0,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 0,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 0,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			},
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 1,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 1,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 1,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			},
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 2,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 2,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 2,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			},
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 3,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 3,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 3,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			},
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 4,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 4,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 4,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			},
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 5,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 5,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 5,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			},
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 6,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 6,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 6,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			},
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 7,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 7,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 7,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			}
+		],
+		"fileName": "world/generic/human/passive doodads/fountains/stormwindfountain0100.skin",
+		"fileDataID": 504426
+	}
+}

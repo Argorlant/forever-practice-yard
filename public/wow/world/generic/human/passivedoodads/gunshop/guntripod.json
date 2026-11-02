@@ -1,0 +1,178 @@
+{
+	"fileType": "m2",
+	"fileDataID": 198286,
+	"fileName": "world/generic/human/passive doodads/gunshop/guntripod.m2",
+	"internalName": "GunTripod",
+	"textures": [
+		{
+			"fileNameInternal": "world/goober/gunshop.blp",
+			"fileNameExternal": "..\\..\\..\\..\\goober\\gunshop.png",
+			"mtlName": "mat_gunshop",
+			"flags": 0,
+			"fileDataID": 201151
+		},
+		{
+			"fileNameInternal": "world/generic/dwarf/passive doodads/gunracks/dwarvenrifle01.blp",
+			"fileNameExternal": "..\\..\\..\\dwarf\\passivedoodads\\gunracks\\dwarvenrifle01.png",
+			"mtlName": "mat_dwarvenrifle01",
+			"flags": 0,
+			"fileDataID": 197396
+		}
+	],
+	"textureTypes": [
+		0,
+		0
+	],
+	"materials": [
+		{
+			"flags": 4,
+			"blendingMode": 1
+		},
+		{
+			"flags": 0,
+			"blendingMode": 0
+		}
+	],
+	"textureCombos": [
+		0,
+		1
+	],
+	"colors": [],
+	"textureWeights": [
+		{
+			"globalSeq": 65535,
+			"interpolation": 0,
+			"timestamps": [
+				[
+					0
+				]
+			],
+			"values": [
+				[
+					32767
+				]
+			],
+			"timestampOffsets": null,
+			"valueOffsets": null
+		}
+	],
+	"transparencyLookup": [
+		0
+	],
+	"textureTransforms": [],
+	"textureTransformsLookup": [
+		65535
+	],
+	"boundingBox": {
+		"min": [
+			-0.5359364151954651,
+			-0.7604687809944153,
+			-0.001823573256842792
+		],
+		"max": [
+			0.6010457873344421,
+			0.8798062801361084,
+			1.631960391998291
+		]
+	},
+	"boundingSphereRadius": 1.1267911195755005,
+	"collisionBox": {
+		"min": [
+			-0.5401886105537415,
+			-0.7770663499832153,
+			-0.0003885693149641156
+		],
+		"max": [
+			0.5931314826011658,
+			0.9292242527008057,
+			1.4070309400558472
+		]
+	},
+	"collisionSphereRadius": 1.1142100095748901,
+	"skin": {
+		"subMeshes": [
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 0,
+				"vertexCount": 194,
+				"triangleStart": 0,
+				"triangleCount": 342,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					0.0010908767580986023,
+					0.03329078480601311,
+					1.0420678853988647
+				],
+				"sortCenterPosition": [
+					0.032554686069488525,
+					-0.0828256905078888,
+					0.8150684237480164
+				],
+				"sortRadius": 1.1016892194747925
+			},
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 194,
+				"vertexCount": 60,
+				"triangleStart": 342,
+				"triangleCount": 246,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					-0.012661666609346867,
+					-0.041613735258579254,
+					1.2779282331466675
+				],
+				"sortCenterPosition": [
+					-0.014055944979190826,
+					0.05966874957084656,
+					1.2156147956848145
+				],
+				"sortRadius": 0.846165120601654
+			}
+		],
+		"textureUnits": [
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 16,
+				"skinSectionIndex": 0,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 0,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 0,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			},
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 1,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 1,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 1,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			}
+		],
+		"fileName": "world/generic/human/passive doodads/gunshop/guntripod00.skin",
+		"fileDataID": 504433
+	}
+}

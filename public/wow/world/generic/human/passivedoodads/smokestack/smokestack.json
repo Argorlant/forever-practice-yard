@@ -1,0 +1,342 @@
+{
+	"fileType": "m2",
+	"fileDataID": 198517,
+	"fileName": "world/generic/human/passive doodads/smokestack/smokestack.m2",
+	"internalName": "SmokeStack",
+	"textures": [
+		{
+			"fileNameInternal": "dungeons/textures/windows/mm_elwynn_wnd_ext__01.blp",
+			"fileNameExternal": "..\\..\\..\\..\\..\\dungeons\\textures\\windows\\mm_elwynn_wnd_ext__01.png",
+			"mtlName": "mat_mm_elwynn_wnd_ext__01",
+			"flags": 3,
+			"fileDataID": 130119
+		},
+		{
+			"fileNameInternal": "dungeons/textures/brian/alteracwatertower01.blp",
+			"fileNameExternal": "..\\..\\..\\..\\..\\dungeons\\textures\\brian\\alteracwatertower01.png",
+			"mtlName": "mat_alteracwatertower01",
+			"flags": 3,
+			"fileDataID": 127007
+		},
+		{
+			"fileNameInternal": "world/generic/human/passive doodads/smokestack/treerope01.blp",
+			"fileNameExternal": "treerope01.png",
+			"mtlName": "mat_treerope01",
+			"flags": 3,
+			"fileDataID": 198518
+		},
+		{
+			"fileNameInternal": "dungeons/textures/trim/mm_chimney_top_01x.blp",
+			"fileNameExternal": "..\\..\\..\\..\\..\\dungeons\\textures\\trim\\mm_chimney_top_01x.png",
+			"mtlName": "mat_mm_chimney_top_01x",
+			"flags": 3,
+			"fileDataID": 129255
+		},
+		{
+			"fileNameInternal": "dungeons/textures/metal/mm_metal_plating_01.blp",
+			"fileNameExternal": "..\\..\\..\\..\\..\\dungeons\\textures\\metal\\mm_metal_plating_01.png",
+			"mtlName": "mat_mm_metal_plating_01",
+			"flags": 3,
+			"fileDataID": 128157
+		},
+		{
+			"fileNameInternal": "creature/elementalearth/watermist.blp",
+			"fileNameExternal": "..\\..\\..\\..\\..\\creature\\elementalearth\\watermist.png",
+			"mtlName": "mat_watermist",
+			"flags": 0,
+			"fileDataID": 123755
+		}
+	],
+	"textureTypes": [
+		0,
+		0,
+		0,
+		0,
+		0,
+		0
+	],
+	"materials": [
+		{
+			"flags": 1,
+			"blendingMode": 0
+		},
+		{
+			"flags": 0,
+			"blendingMode": 0
+		},
+		{
+			"flags": 0,
+			"blendingMode": 0
+		},
+		{
+			"flags": 0,
+			"blendingMode": 0
+		},
+		{
+			"flags": 0,
+			"blendingMode": 0
+		}
+	],
+	"textureCombos": [
+		0,
+		1,
+		2,
+		3,
+		4
+	],
+	"colors": [],
+	"textureWeights": [
+		{
+			"globalSeq": 65535,
+			"interpolation": 0,
+			"timestamps": [
+				[
+					0
+				]
+			],
+			"values": [
+				[
+					32767
+				]
+			],
+			"timestampOffsets": null,
+			"valueOffsets": null
+		}
+	],
+	"transparencyLookup": [
+		0
+	],
+	"textureTransforms": [],
+	"textureTransformsLookup": [
+		65535
+	],
+	"boundingBox": {
+		"min": [
+			-9.730905532836914,
+			-10.167994499206543,
+			-0.14012673497200012
+		],
+		"max": [
+			8.078497886657715,
+			18.59441375732422,
+			63.672550201416016
+		]
+	},
+	"boundingSphereRadius": 37.175048828125,
+	"collisionBox": {
+		"min": [
+			-9.730905532836914,
+			-9.240702629089355,
+			-0.1831105649471283
+		],
+		"max": [
+			7.71199893951416,
+			12.134942054748535,
+			21.148948669433594
+		]
+	},
+	"collisionSphereRadius": 15.916207313537598,
+	"skin": {
+		"subMeshes": [
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 0,
+				"vertexCount": 6,
+				"triangleStart": 0,
+				"triangleCount": 12,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					7.057130813598633,
+					-0.051046691834926605,
+					5.442858695983887
+				],
+				"sortCenterPosition": [
+					7.057130813598633,
+					-0.051046691834926605,
+					5.442858695983887
+				],
+				"sortRadius": 2.4097089767456055
+			},
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 6,
+				"vertexCount": 96,
+				"triangleStart": 12,
+				"triangleCount": 234,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					3.3435006141662598,
+					9.564777374267578,
+					9.839248657226562
+				],
+				"sortCenterPosition": [
+					3.2163541316986084,
+					9.609130859375,
+					10.339951515197754
+				],
+				"sortRadius": 10.928524017333984
+			},
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 102,
+				"vertexCount": 168,
+				"triangleStart": 246,
+				"triangleCount": 468,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					3.2509024143218994,
+					9.958199501037598,
+					13.500157356262207
+				],
+				"sortCenterPosition": [
+					2.799656391143799,
+					7.167562484741211,
+					15.101690292358398
+				],
+				"sortRadius": 10.119189262390137
+			},
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 270,
+				"vertexCount": 42,
+				"triangleStart": 714,
+				"triangleCount": 144,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					0.8254182934761047,
+					0.11336404085159302,
+					12.846831321716309
+				],
+				"sortCenterPosition": [
+					0.8254182934761047,
+					0.11336404085159302,
+					12.846831321716309
+				],
+				"sortRadius": 14.654436111450195
+			},
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 312,
+				"vertexCount": 129,
+				"triangleStart": 858,
+				"triangleCount": 333,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					3.7974557876586914,
+					-0.16540519893169403,
+					10.152667999267578
+				],
+				"sortCenterPosition": [
+					-0.8262038230895996,
+					-0.07037162780761719,
+					15.003122329711914
+				],
+				"sortRadius": 18.285036087036133
+			}
+		],
+		"textureUnits": [
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 0,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 0,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 0,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			},
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 1,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 1,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 1,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			},
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 2,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 2,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 2,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			},
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 3,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 3,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 3,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			},
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 4,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 4,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 4,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			}
+		],
+		"fileName": "world/generic/human/passive doodads/smokestack/smokestack00.skin",
+		"fileDataID": 504621
+	}
+}

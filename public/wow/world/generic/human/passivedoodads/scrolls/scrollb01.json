@@ -1,0 +1,126 @@
+{
+	"fileType": "m2",
+	"fileDataID": 198453,
+	"fileName": "world/generic/human/passive doodads/scrolls/scrollb01.m2",
+	"internalName": "ScrollB01",
+	"textures": [
+		{
+			"fileNameInternal": "world/generic/human/passive doodads/books/books.blp",
+			"fileNameExternal": "..\\books\\books.png",
+			"mtlName": "mat_books",
+			"flags": 0,
+			"fileDataID": 198034
+		}
+	],
+	"textureTypes": [
+		0
+	],
+	"materials": [
+		{
+			"flags": 4,
+			"blendingMode": 0
+		}
+	],
+	"textureCombos": [
+		0
+	],
+	"colors": [],
+	"textureWeights": [
+		{
+			"globalSeq": 65535,
+			"interpolation": 0,
+			"timestamps": [
+				[
+					0
+				]
+			],
+			"values": [
+				[
+					32767
+				]
+			],
+			"timestampOffsets": null,
+			"valueOffsets": null
+		}
+	],
+	"transparencyLookup": [
+		0
+	],
+	"textureTransforms": [],
+	"textureTransformsLookup": [
+		65535
+	],
+	"boundingBox": {
+		"min": [
+			-0.45973899960517883,
+			-0.15842700004577637,
+			0.0014388900017365813
+		],
+		"max": [
+			0.4443579912185669,
+			0.1390089988708496,
+			0.1392579972743988
+		]
+	},
+	"boundingSphereRadius": 0.47695499658584595,
+	"collisionBox": {
+		"min": [
+			10000000,
+			10000000,
+			10000000
+		],
+		"max": [
+			-10000000,
+			-10000000,
+			-10000000
+		]
+	},
+	"collisionSphereRadius": 0,
+	"skin": {
+		"subMeshes": [
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 0,
+				"vertexCount": 88,
+				"triangleStart": 0,
+				"triangleCount": 150,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					0.002584218978881836,
+					-0.006627876311540604,
+					0.05781422182917595
+				],
+				"sortCenterPosition": [
+					-0.007690504193305969,
+					-0.009709000587463379,
+					0.07034844160079956
+				],
+				"sortRadius": 0.4769551753997803
+			}
+		],
+		"textureUnits": [
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 0,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 0,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 0,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			}
+		],
+		"fileName": "world/generic/human/passive doodads/scrolls/scrollb0100.skin",
+		"fileDataID": 504585
+	}
+}

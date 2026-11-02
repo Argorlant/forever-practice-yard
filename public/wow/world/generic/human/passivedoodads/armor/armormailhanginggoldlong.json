@@ -1,0 +1,126 @@
+{
+	"fileType": "m2",
+	"fileDataID": 197903,
+	"fileName": "world/generic/human/passive doodads/armor/armormailhanginggoldlong.m2",
+	"internalName": "ArmorMailHangingGoldLong",
+	"textures": [
+		{
+			"fileNameInternal": "world/generic/human/passive doodads/armor/armorermisc.blp",
+			"fileNameExternal": "armorermisc.png",
+			"mtlName": "mat_armorermisc",
+			"flags": 0,
+			"fileDataID": 197868
+		}
+	],
+	"textureTypes": [
+		0
+	],
+	"materials": [
+		{
+			"flags": 4,
+			"blendingMode": 1
+		}
+	],
+	"textureCombos": [
+		0
+	],
+	"colors": [],
+	"textureWeights": [
+		{
+			"globalSeq": 65535,
+			"interpolation": 0,
+			"timestamps": [
+				[
+					0
+				]
+			],
+			"values": [
+				[
+					32767
+				]
+			],
+			"timestampOffsets": null,
+			"valueOffsets": null
+		}
+	],
+	"transparencyLookup": [
+		0
+	],
+	"textureTransforms": [],
+	"textureTransformsLookup": [
+		65535
+	],
+	"boundingBox": {
+		"min": [
+			-0.09109000116586685,
+			-0.3738420009613037,
+			0.0011388900456950068
+		],
+		"max": [
+			0.08046969771385193,
+			0.42595601081848145,
+			1.2506500482559204
+		]
+	},
+	"boundingSphereRadius": 0.6256250143051147,
+	"collisionBox": {
+		"min": [
+			10000000,
+			10000000,
+			10000000
+		],
+		"max": [
+			-10000000,
+			-10000000,
+			-10000000
+		]
+	},
+	"collisionSphereRadius": 0,
+	"skin": {
+		"subMeshes": [
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 0,
+				"vertexCount": 65,
+				"triangleStart": 0,
+				"triangleCount": 180,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					-0.013123868964612484,
+					0.023811867460608482,
+					0.7751079201698303
+				],
+				"sortCenterPosition": [
+					-0.0053101517260074615,
+					0.026057004928588867,
+					0.6258944869041443
+				],
+				"sortRadius": 0.6256267428398132
+			}
+		],
+		"textureUnits": [
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 16,
+				"skinSectionIndex": 0,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 0,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 0,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			}
+		],
+		"fileName": "world/generic/human/passive doodads/armor/armormailhanginggoldlong00.skin",
+		"fileDataID": 504135
+	}
+}

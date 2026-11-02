@@ -1,0 +1,126 @@
+{
+	"fileType": "m2",
+	"fileDataID": 190926,
+	"fileName": "world/dungeon/scarletmonastery/passivedoodads/statues/statuehmcrusadersoldier.m2",
+	"internalName": "statueHMcrusaderSoldier",
+	"textures": [
+		{
+			"fileNameInternal": "world/dungeon/scarletmonastery/passivedoodads/statues/crusadersoldier.blp",
+			"fileNameExternal": "crusadersoldier.png",
+			"mtlName": "mat_crusadersoldier",
+			"flags": 0,
+			"fileDataID": 190905
+		}
+	],
+	"textureTypes": [
+		0
+	],
+	"materials": [
+		{
+			"flags": 0,
+			"blendingMode": 0
+		}
+	],
+	"textureCombos": [
+		0
+	],
+	"colors": [],
+	"textureWeights": [
+		{
+			"globalSeq": 65535,
+			"interpolation": 0,
+			"timestamps": [
+				[
+					0
+				]
+			],
+			"values": [
+				[
+					32767
+				]
+			],
+			"timestampOffsets": null,
+			"valueOffsets": null
+		}
+	],
+	"transparencyLookup": [
+		0
+	],
+	"textureTransforms": [],
+	"textureTransformsLookup": [
+		65535
+	],
+	"boundingBox": {
+		"min": [
+			-0.32333335280418396,
+			-0.5296222567558289,
+			-0.0028827779460698366
+		],
+		"max": [
+			0.4777805507183075,
+			0.5296222567558289,
+			1.9660778045654297
+		]
+	},
+	"boundingSphereRadius": 1.1198937892913818,
+	"collisionBox": {
+		"min": [
+			-0.33556389808654785,
+			-0.5681250095367432,
+			0
+		],
+		"max": [
+			0.5100610852241516,
+			0.5668416619300842,
+			1.962991714477539
+		]
+	},
+	"collisionSphereRadius": 1.1413884162902832,
+	"skin": {
+		"subMeshes": [
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 0,
+				"vertexCount": 530,
+				"triangleStart": 0,
+				"triangleCount": 1431,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					0.14464859664440155,
+					-0.006381847430020571,
+					1.1306732892990112
+				],
+				"sortCenterPosition": [
+					0.07722359895706177,
+					0,
+					0.9815975427627563
+				],
+				"sortRadius": 1.1198937892913818
+			}
+		],
+		"textureUnits": [
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 0,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 0,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 0,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			}
+		],
+		"fileName": "world/dungeon/scarletmonastery/passivedoodads/statues/statuehmcrusadersoldier00.skin",
+		"fileDataID": 495214
+	}
+}

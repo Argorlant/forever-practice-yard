@@ -1,0 +1,126 @@
+{
+	"fileType": "m2",
+	"fileDataID": 198647,
+	"fileName": "world/generic/human/passive doodads/weapons&armor/humanbow02.m2",
+	"internalName": "HumanBow02",
+	"textures": [
+		{
+			"fileNameInternal": "world/generic/human/passive doodads/weapons&armor/waeponpage01.blp",
+			"fileNameExternal": "waeponpage01.png",
+			"mtlName": "mat_waeponpage01",
+			"flags": 0,
+			"fileDataID": 198659
+		}
+	],
+	"textureTypes": [
+		0
+	],
+	"materials": [
+		{
+			"flags": 0,
+			"blendingMode": 0
+		}
+	],
+	"textureCombos": [
+		0
+	],
+	"colors": [],
+	"textureWeights": [
+		{
+			"globalSeq": 65535,
+			"interpolation": 0,
+			"timestamps": [
+				[
+					0
+				]
+			],
+			"values": [
+				[
+					32767
+				]
+			],
+			"timestampOffsets": null,
+			"valueOffsets": null
+		}
+	],
+	"transparencyLookup": [
+		0
+	],
+	"textureTransforms": [],
+	"textureTransformsLookup": [
+		65535
+	],
+	"boundingBox": {
+		"min": [
+			-0.39640700817108154,
+			-0.4124319851398468,
+			-0.1015779972076416
+		],
+		"max": [
+			0.909853994846344,
+			0.4343540072441101,
+			0.11535800248384476
+		]
+	},
+	"boundingSphereRadius": 0.6546099781990051,
+	"collisionBox": {
+		"min": [
+			10000000,
+			10000000,
+			10000000
+		],
+		"max": [
+			-10000000,
+			-10000000,
+			-10000000
+		]
+	},
+	"collisionSphereRadius": 0,
+	"skin": {
+		"subMeshes": [
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 0,
+				"vertexCount": 118,
+				"triangleStart": 0,
+				"triangleCount": 486,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					0.3972054123878479,
+					0.008281379006803036,
+					0.04833768308162689
+				],
+				"sortCenterPosition": [
+					0.2567234933376312,
+					0.010961011052131653,
+					0.006890002638101578
+				],
+				"sortRadius": 0.6546100974082947
+			}
+		],
+		"textureUnits": [
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 0,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 0,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 0,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			}
+		],
+		"fileName": "world/generic/human/passive doodads/weapons&armor/humanbow0200.skin",
+		"fileDataID": 504794
+	}
+}

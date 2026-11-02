@@ -1,0 +1,126 @@
+{
+	"fileType": "m2",
+	"fileDataID": 197406,
+	"fileName": "world/generic/dwarf/passive doodads/guns/rifledwarven.m2",
+	"internalName": "RifleDwarven",
+	"textures": [
+		{
+			"fileNameInternal": "world/generic/dwarf/passive doodads/gunracks/dwarvenrifle01.blp",
+			"fileNameExternal": "..\\gunracks\\dwarvenrifle01.png",
+			"mtlName": "mat_dwarvenrifle01",
+			"flags": 0,
+			"fileDataID": 197396
+		}
+	],
+	"textureTypes": [
+		0
+	],
+	"materials": [
+		{
+			"flags": 0,
+			"blendingMode": 0
+		}
+	],
+	"textureCombos": [
+		0
+	],
+	"colors": [],
+	"textureWeights": [
+		{
+			"globalSeq": 65535,
+			"interpolation": 0,
+			"timestamps": [
+				[
+					0
+				]
+			],
+			"values": [
+				[
+					32767
+				]
+			],
+			"timestampOffsets": null,
+			"valueOffsets": null
+		}
+	],
+	"transparencyLookup": [
+		0
+	],
+	"textureTransforms": [],
+	"textureTransformsLookup": [
+		65535
+	],
+	"boundingBox": {
+		"min": [
+			-0.1539262980222702,
+			-0.7756555676460266,
+			-0.12711438536643982
+		],
+		"max": [
+			0.06521622836589813,
+			0.8751349449157715,
+			0.22241854667663574
+		]
+	},
+	"boundingSphereRadius": 0.8432207107543945,
+	"collisionBox": {
+		"min": [
+			-0.16555523872375488,
+			-0.7778086066246033,
+			-0.14403827488422394
+		],
+		"max": [
+			0.07715962827205658,
+			0.8849473595619202,
+			0.23324571549892426
+		]
+	},
+	"collisionSphereRadius": 0.8525111079216003,
+	"skin": {
+		"subMeshes": [
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 0,
+				"vertexCount": 60,
+				"triangleStart": 0,
+				"triangleCount": 246,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					-0.04296077415347099,
+					-0.05111880227923393,
+					0.10566987097263336
+				],
+				"sortCenterPosition": [
+					-0.044355034828186035,
+					0.049739688634872437,
+					0.04765208065509796
+				],
+				"sortRadius": 0.8432206511497498
+			}
+		],
+		"textureUnits": [
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 0,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 0,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 0,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			}
+		],
+		"fileName": "world/generic/dwarf/passive doodads/guns/rifledwarven00.skin",
+		"fileDataID": 503399
+	}
+}

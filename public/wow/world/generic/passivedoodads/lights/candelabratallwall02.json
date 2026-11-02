@@ -1,0 +1,238 @@
+{
+	"fileType": "m2",
+	"fileDataID": 199804,
+	"fileName": "world/generic/passivedoodads/lights/candelabratallwall02.m2",
+	"internalName": "CandelabraTallWall02",
+	"textures": [
+		{
+			"fileNameInternal": "world/generic/human/passive doodads/candelabras/candelabra01.blp",
+			"fileNameExternal": "..\\..\\human\\passivedoodads\\candelabras\\candelabra01.png",
+			"mtlName": "mat_candelabra01",
+			"flags": 0,
+			"fileDataID": 198072
+		},
+		{
+			"fileNameInternal": "world/generic/human/passive doodads/candelabras/candelbra_brass01.blp",
+			"fileNameExternal": "..\\..\\human\\passivedoodads\\candelabras\\candelbra_brass01.png",
+			"mtlName": "mat_candelbra_brass01",
+			"flags": 3,
+			"fileDataID": 198075
+		},
+		{
+			"fileNameInternal": "item/objectcomponents/weapon/flamelicksmall.blp",
+			"fileNameExternal": "..\\..\\..\\..\\item\\objectcomponents\\weapon\\flamelicksmall.png",
+			"mtlName": "mat_flamelicksmall",
+			"flags": 0,
+			"fileDataID": 145513
+		},
+		{
+			"fileNameInternal": "world/generic/human/passive doodads/candelabras/glowwhite32.blp",
+			"fileNameExternal": "..\\..\\human\\passivedoodads\\candelabras\\glowwhite32.png",
+			"mtlName": "mat_glowwhite32",
+			"flags": 0,
+			"fileDataID": 198077
+		}
+	],
+	"textureTypes": [
+		0,
+		0,
+		0,
+		0
+	],
+	"materials": [
+		{
+			"flags": 0,
+			"blendingMode": 0
+		},
+		{
+			"flags": 0,
+			"blendingMode": 0
+		},
+		{
+			"flags": 17,
+			"blendingMode": 2
+		}
+	],
+	"textureCombos": [
+		1,
+		0,
+		3
+	],
+	"colors": [],
+	"textureWeights": [
+		{
+			"globalSeq": 65535,
+			"interpolation": 0,
+			"timestamps": [
+				[
+					0
+				]
+			],
+			"values": [
+				[
+					32767
+				]
+			],
+			"timestampOffsets": null,
+			"valueOffsets": null
+		}
+	],
+	"transparencyLookup": [
+		0
+	],
+	"textureTransforms": [],
+	"textureTransformsLookup": [
+		65535
+	],
+	"boundingBox": {
+		"min": [
+			-0.6245009303092957,
+			-0.62734055519104,
+			-0.0007577207288704813
+		],
+		"max": [
+			0.632552444934845,
+			0.6153489351272583,
+			4.106560230255127
+		]
+	},
+	"boundingSphereRadius": 2.433187246322632,
+	"collisionBox": {
+		"min": [
+			-0.5926287770271301,
+			-0.5169382095336914,
+			-9.327626671051803e-9
+		],
+		"max": [
+			0.5764694809913635,
+			0.5335551500320435,
+			3.9281702041625977
+		]
+	},
+	"collisionSphereRadius": 2.0135457515716553,
+	"skin": {
+		"subMeshes": [
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 0,
+				"vertexCount": 88,
+				"triangleStart": 0,
+				"triangleCount": 258,
+				"boneCount": 6,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					0.0009587739477865398,
+					-0.0025067487731575966,
+					2.8085007667541504
+				],
+				"sortCenterPosition": [
+					0.0008575916290283203,
+					-0.002121150493621826,
+					1.7310328483581543
+				],
+				"sortRadius": 1.7675833702087402
+			},
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 88,
+				"vertexCount": 100,
+				"triangleStart": 258,
+				"triangleCount": 240,
+				"boneCount": 6,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					-0.004025166854262352,
+					-0.004608293063938618,
+					3.5219781398773193
+				],
+				"sortCenterPosition": [
+					-0.004025166854262352,
+					-0.004608293063938618,
+					3.5219781398773193
+				],
+				"sortRadius": 0.6314367055892944
+			},
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 188,
+				"vertexCount": 20,
+				"triangleStart": 498,
+				"triangleCount": 30,
+				"boneCount": 6,
+				"boneStart": 0,
+				"boneInfluences": 1,
+				"centerBoneIndex": 1,
+				"centerPosition": [
+					0.005711412522941828,
+					-0.001719757216051221,
+					3.6873841285705566
+				],
+				"sortCenterPosition": [
+					0.004974767565727234,
+					-0.00606691837310791,
+					3.711329936981201
+				],
+				"sortRadius": 0.601733386516571
+			}
+		],
+		"textureUnits": [
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 1,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 0,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 1,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			},
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 0,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 1,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 0,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			},
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 16,
+				"skinSectionIndex": 2,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 2,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 2,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			}
+		],
+		"fileName": "world/generic/passivedoodads/lights/candelabratallwall0200.skin",
+		"fileDataID": 505701
+	}
+}

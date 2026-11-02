@@ -1,0 +1,221 @@
+{
+	"fileType": "m2",
+	"fileDataID": 197108,
+	"fileName": "world/generic/buildings/humantentlarge/humantentlarge.m2",
+	"internalName": "HumanTentLarge",
+	"textures": [
+		{
+			"fileNameInternal": "dungeons/textures/wood/elwynnfence.blp",
+			"fileNameExternal": "..\\..\\..\\..\\dungeons\\textures\\wood\\elwynnfence.png",
+			"mtlName": "mat_elwynnfence",
+			"flags": 0,
+			"fileDataID": 130279
+		},
+		{
+			"fileNameInternal": "world/environment/building/stranglethorn/humantents/textures/brian/humantentsdoor.blp",
+			"fileNameExternal": "..\\..\\..\\environment\\building\\stranglethorn\\humantents\\textures\\brian\\humantentsdoor.png",
+			"mtlName": "mat_humantentsdoor",
+			"flags": 0,
+			"fileDataID": 190941
+		}
+	],
+	"textureTypes": [
+		0,
+		0
+	],
+	"materials": [
+		{
+			"flags": 4,
+			"blendingMode": 0
+		},
+		{
+			"flags": 4,
+			"blendingMode": 0
+		},
+		{
+			"flags": 0,
+			"blendingMode": 0
+		}
+	],
+	"textureCombos": [
+		0,
+		1
+	],
+	"colors": [],
+	"textureWeights": [
+		{
+			"globalSeq": 65535,
+			"interpolation": 0,
+			"timestamps": [
+				[
+					0
+				]
+			],
+			"values": [
+				[
+					32767
+				]
+			],
+			"timestampOffsets": null,
+			"valueOffsets": null
+		}
+	],
+	"transparencyLookup": [
+		0
+	],
+	"textureTransforms": [],
+	"textureTransformsLookup": [
+		65535
+	],
+	"boundingBox": {
+		"min": [
+			-5.964588165283203,
+			-6.628485202789307,
+			-0.03174461051821709
+		],
+		"max": [
+			6.174105167388916,
+			6.633877754211426,
+			4.232684135437012
+		]
+	},
+	"boundingSphereRadius": 9.039044380187988,
+	"collisionBox": {
+		"min": [
+			-5.194796085357666,
+			-3.161454677581787,
+			0.007288394961506128
+		],
+		"max": [
+			5.546900272369385,
+			3.1614534854888916,
+			4.2326836585998535
+		]
+	},
+	"collisionSphereRadius": 6.578332901000977,
+	"skin": {
+		"subMeshes": [
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 0,
+				"vertexCount": 136,
+				"triangleStart": 0,
+				"triangleCount": 312,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					0.02419867366552353,
+					0.002695984672755003,
+					0.5261223316192627
+				],
+				"sortCenterPosition": [
+					0.10475850105285645,
+					0.0026962757110595703,
+					0.42373254895210266
+				],
+				"sortRadius": 8.945523262023926
+			},
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 136,
+				"vertexCount": 279,
+				"triangleStart": 312,
+				"triangleCount": 900,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					1.2101988792419434,
+					0.0006306675495579839,
+					1.6485929489135742
+				],
+				"sortCenterPosition": [
+					0.09264016151428223,
+					0.007333993911743164,
+					2.1199867725372314
+				],
+				"sortRadius": 8.744751930236816
+			},
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 415,
+				"vertexCount": 48,
+				"triangleStart": 1212,
+				"triangleCount": 120,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					0.11471056938171387,
+					0.005781378597021103,
+					1.954639196395874
+				],
+				"sortCenterPosition": [
+					0.12527704238891602,
+					-0.0004903152585029602,
+					2.0309994220733643
+				],
+				"sortRadius": 5.442904949188232
+			}
+		],
+		"textureUnits": [
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 0,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 0,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 0,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			},
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 1,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 1,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 1,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			},
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 2,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 2,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 0,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			}
+		],
+		"fileName": "world/generic/buildings/humantentlarge/humantentlarge00.skin",
+		"fileDataID": 503173
+	}
+}

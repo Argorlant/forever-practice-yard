@@ -1,0 +1,282 @@
+{
+	"fileType": "m2",
+	"fileDataID": 189825,
+	"fileName": "world/azeroth/elwynn/passivedoodads/lamppost/lamppost.m2",
+	"internalName": "LampPost",
+	"textures": [
+		{
+			"fileNameInternal": "dungeons/textures/wood/elwynnfence.blp",
+			"fileNameExternal": "..\\..\\..\\..\\..\\dungeons\\textures\\wood\\elwynnfence.png",
+			"mtlName": "mat_elwynnfence",
+			"flags": 3,
+			"fileDataID": 130279
+		},
+		{
+			"fileNameInternal": "world/azeroth/elwynn/passivedoodads/lamppost/elwynnchain01.blp",
+			"fileNameExternal": "elwynnchain01.png",
+			"mtlName": "mat_elwynnchain01",
+			"flags": 3,
+			"fileDataID": 189822
+		},
+		{
+			"fileNameInternal": "world/azeroth/bootybay/passivedoodad/bootyentrance/elwynnlantern01.blp",
+			"fileNameExternal": "..\\..\\..\\bootybay\\passivedoodad\\bootyentrance\\elwynnlantern01.png",
+			"mtlName": "mat_elwynnlantern01",
+			"flags": 0,
+			"fileDataID": 189080
+		},
+		{
+			"fileNameInternal": "world/azeroth/elwynn/passivedoodads/lamppost/glow32.blp",
+			"fileNameExternal": "glow32.png",
+			"mtlName": "mat_glow32",
+			"flags": 0,
+			"fileDataID": 189824
+		}
+	],
+	"textureTypes": [
+		0,
+		0,
+		0,
+		0
+	],
+	"materials": [
+		{
+			"flags": 0,
+			"blendingMode": 0
+		},
+		{
+			"flags": 4,
+			"blendingMode": 1
+		},
+		{
+			"flags": 1,
+			"blendingMode": 0
+		},
+		{
+			"flags": 19,
+			"blendingMode": 4
+		}
+	],
+	"textureCombos": [
+		0,
+		1,
+		2,
+		3
+	],
+	"colors": [],
+	"textureWeights": [
+		{
+			"globalSeq": 65535,
+			"interpolation": 0,
+			"timestamps": [
+				[
+					0
+				]
+			],
+			"values": [
+				[
+					32767
+				]
+			],
+			"timestampOffsets": null,
+			"valueOffsets": null
+		}
+	],
+	"transparencyLookup": [
+		0
+	],
+	"textureTransforms": [],
+	"textureTransformsLookup": [
+		65535
+	],
+	"boundingBox": {
+		"min": [
+			-0.9821707010269165,
+			-0.5687382817268372,
+			-0.008149642497301102
+		],
+		"max": [
+			1.1814697980880737,
+			1.981717586517334,
+			4.088675022125244
+		]
+	},
+	"boundingSphereRadius": 2.2518298625946045,
+	"collisionBox": {
+		"min": [
+			-0.10495829582214355,
+			-0.571380615234375,
+			-8.615782753906842e-9
+		],
+		"max": [
+			0.2892540395259857,
+			1.1804252862930298,
+			4.125
+		]
+	},
+	"collisionSphereRadius": 2.249436140060425,
+	"skin": {
+		"subMeshes": [
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 0,
+				"vertexCount": 48,
+				"triangleStart": 0,
+				"triangleCount": 90,
+				"boneCount": 5,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					0.09448038786649704,
+					0.222628653049469,
+					3.1380763053894043
+				],
+				"sortCenterPosition": [
+					0.09356831014156342,
+					0.29871323704719543,
+					2.0402626991271973
+				],
+				"sortRadius": 2.1187570095062256
+			},
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 48,
+				"vertexCount": 8,
+				"triangleStart": 90,
+				"triangleCount": 12,
+				"boneCount": 5,
+				"boneStart": 0,
+				"boneInfluences": 1,
+				"centerBoneIndex": 1,
+				"centerPosition": [
+					0.0838732123374939,
+					0.970434844493866,
+					3.321310520172119
+				],
+				"sortCenterPosition": [
+					0.08501219749450684,
+					0.9702557325363159,
+					3.321352243423462
+				],
+				"sortRadius": 0.27102145552635193
+			},
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 56,
+				"vertexCount": 16,
+				"triangleStart": 102,
+				"triangleCount": 36,
+				"boneCount": 5,
+				"boneStart": 0,
+				"boneInfluences": 1,
+				"centerBoneIndex": 3,
+				"centerPosition": [
+					0.09074526280164719,
+					0.9556912779808044,
+					2.840014934539795
+				],
+				"sortCenterPosition": [
+					0.09074531495571136,
+					0.9604213237762451,
+					2.840329170227051
+				],
+				"sortRadius": 0.4022141098976135
+			},
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 72,
+				"vertexCount": 4,
+				"triangleStart": 138,
+				"triangleCount": 6,
+				"boneCount": 5,
+				"boneStart": 0,
+				"boneInfluences": 1,
+				"centerBoneIndex": 4,
+				"centerPosition": [
+					0.09441210329532623,
+					0.9742218255996704,
+					2.8609619140625
+				],
+				"sortCenterPosition": [
+					0.09441210329532623,
+					0.9742218255996704,
+					2.8609619140625
+				],
+				"sortRadius": 1.0074957609176636
+			}
+		],
+		"textureUnits": [
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 0,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 0,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 0,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			},
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 16,
+				"skinSectionIndex": 1,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 1,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 1,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			},
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 2,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 2,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 2,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			},
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 16,
+				"skinSectionIndex": 3,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 3,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 3,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			}
+		],
+		"fileName": "world/azeroth/elwynn/passivedoodads/lamppost/lamppost00.skin",
+		"fileDataID": 494542
+	}
+}

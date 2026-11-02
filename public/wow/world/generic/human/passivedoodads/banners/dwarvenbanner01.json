@@ -1,0 +1,126 @@
+{
+	"fileType": "m2",
+	"fileDataID": 197968,
+	"fileName": "world/generic/human/passive doodads/banners/dwarvenbanner01.m2",
+	"internalName": "DwarvenBanner01",
+	"textures": [
+		{
+			"fileNameInternal": "world/generic/human/passive doodads/banners/dwarvenbanner01.blp",
+			"fileNameExternal": "dwarvenbanner01.png",
+			"mtlName": "mat_dwarvenbanner01",
+			"flags": 0,
+			"fileDataID": 197967
+		}
+	],
+	"textureTypes": [
+		0
+	],
+	"materials": [
+		{
+			"flags": 4,
+			"blendingMode": 1
+		}
+	],
+	"textureCombos": [
+		0
+	],
+	"colors": [],
+	"textureWeights": [
+		{
+			"globalSeq": 65535,
+			"interpolation": 0,
+			"timestamps": [
+				[
+					0
+				]
+			],
+			"values": [
+				[
+					32767
+				]
+			],
+			"timestampOffsets": null,
+			"valueOffsets": null
+		}
+	],
+	"transparencyLookup": [
+		0
+	],
+	"textureTransforms": [],
+	"textureTransformsLookup": [
+		65535
+	],
+	"boundingBox": {
+		"min": [
+			-7.692275403314852e-7,
+			-1.9389474391937256,
+			-0.040568772703409195
+		],
+		"max": [
+			0.1711714118719101,
+			1.9389474391937256,
+			6.4275641441345215
+		]
+	},
+	"boundingSphereRadius": 3.771740674972534,
+	"collisionBox": {
+		"min": [
+			10000000,
+			10000000,
+			10000000
+		],
+		"max": [
+			-10000000,
+			-10000000,
+			-10000000
+		]
+	},
+	"collisionSphereRadius": 0,
+	"skin": {
+		"subMeshes": [
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 0,
+				"vertexCount": 25,
+				"triangleStart": 0,
+				"triangleCount": 96,
+				"boneCount": 3,
+				"boneStart": 0,
+				"boneInfluences": 2,
+				"centerBoneIndex": 1,
+				"centerPosition": [
+					0.05256490036845207,
+					-3.33786012163273e-8,
+					3.2367935180664062
+				],
+				"sortCenterPosition": [
+					0.05919552966952324,
+					0,
+					3.1957478523254395
+				],
+				"sortRadius": 3.7693047523498535
+			}
+		],
+		"textureUnits": [
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 16,
+				"skinSectionIndex": 0,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 0,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 0,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			}
+		],
+		"fileName": "world/generic/human/passive doodads/banners/dwarvenbanner0100.skin",
+		"fileDataID": 504178
+	}
+}

@@ -1,0 +1,3 @@
+newmtl mat_piinetree01_green
+illum 1
+map_Kd piinetree01_green.png

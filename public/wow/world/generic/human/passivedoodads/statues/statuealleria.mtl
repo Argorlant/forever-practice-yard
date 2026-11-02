@@ -1,0 +1,15 @@
+newmtl mat_alleriacloak
+illum 1
+map_Kd alleriacloak.png
+newmtl mat_alleriastatue01
+illum 1
+map_Kd alleriastatue01.png
+newmtl mat_alleriastatueboottop
+illum 1
+map_Kd alleriastatueboottop.png
+newmtl mat_alleriastatuebird
+illum 1
+map_Kd alleriastatuebird.png
+newmtl mat_alleriaquiver
+illum 1
+map_Kd alleriaquiver.png

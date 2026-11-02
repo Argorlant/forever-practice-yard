@@ -1,0 +1,126 @@
+{
+	"fileType": "m2",
+	"fileDataID": 198757,
+	"fileName": "world/generic/nightelf/passive doodads/furniture/stonebench01.m2",
+	"internalName": "StoneBench01",
+	"textures": [
+		{
+			"fileNameInternal": "dungeons/textures/walls/mm_drnss_wall_05.blp",
+			"fileNameExternal": "..\\..\\..\\..\\..\\dungeons\\textures\\walls\\mm_drnss_wall_05.png",
+			"mtlName": "mat_mm_drnss_wall_05",
+			"flags": 3,
+			"fileDataID": 129907
+		}
+	],
+	"textureTypes": [
+		0
+	],
+	"materials": [
+		{
+			"flags": 0,
+			"blendingMode": 0
+		}
+	],
+	"textureCombos": [
+		0
+	],
+	"colors": [],
+	"textureWeights": [
+		{
+			"globalSeq": 65535,
+			"interpolation": 0,
+			"timestamps": [
+				[
+					0
+				]
+			],
+			"values": [
+				[
+					32767
+				]
+			],
+			"timestampOffsets": null,
+			"valueOffsets": null
+		}
+	],
+	"transparencyLookup": [
+		0
+	],
+	"textureTransforms": [],
+	"textureTransformsLookup": [
+		65535
+	],
+	"boundingBox": {
+		"min": [
+			-0.7610011696815491,
+			-2.237755537033081,
+			-0.06354830414056778
+		],
+		"max": [
+			0.7741917371749878,
+			2.2342512607574463,
+			1.384536623954773
+		]
+	},
+	"boundingSphereRadius": 2.3593454360961914,
+	"collisionBox": {
+		"min": [
+			-0.799409806728363,
+			-2.2690420150756836,
+			-0.05225394293665886
+		],
+		"max": [
+			0.7931002974510193,
+			2.251239538192749,
+			1.4005053043365479
+		]
+	},
+	"collisionSphereRadius": 2.3839282989501953,
+	"skin": {
+		"subMeshes": [
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 0,
+				"vertexCount": 100,
+				"triangleStart": 0,
+				"triangleCount": 222,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					0.0026381409261375666,
+					0.00046849370119161904,
+					0.767668604850769
+				],
+				"sortCenterPosition": [
+					0.0026381409261375666,
+					0.00046849370119161904,
+					0.767668604850769
+				],
+				"sortRadius": 2.3423779010772705
+			}
+		],
+		"textureUnits": [
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 0,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 0,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 0,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			}
+		],
+		"fileName": "world/generic/nightelf/passive doodads/furniture/stonebench0100.skin",
+		"fileDataID": 504858
+	}
+}

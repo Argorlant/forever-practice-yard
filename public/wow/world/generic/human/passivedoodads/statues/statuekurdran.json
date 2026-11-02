@@ -1,0 +1,178 @@
+{
+	"fileType": "m2",
+	"fileDataID": 198562,
+	"fileName": "world/generic/human/passive doodads/statues/statuekurdran.m2",
+	"internalName": "StatueKurdran",
+	"textures": [
+		{
+			"fileNameInternal": "world/generic/human/passive doodads/statues/kurdranstatue01.blp",
+			"fileNameExternal": "kurdranstatue01.png",
+			"mtlName": "mat_kurdranstatue01",
+			"flags": 0,
+			"fileDataID": 198557
+		},
+		{
+			"fileNameInternal": "world/generic/human/passive doodads/statues/kurdranbeard.blp",
+			"fileNameExternal": "kurdranbeard.png",
+			"mtlName": "mat_kurdranbeard",
+			"flags": 0,
+			"fileDataID": 198556
+		}
+	],
+	"textureTypes": [
+		0,
+		0
+	],
+	"materials": [
+		{
+			"flags": 0,
+			"blendingMode": 0
+		},
+		{
+			"flags": 0,
+			"blendingMode": 0
+		}
+	],
+	"textureCombos": [
+		0,
+		1
+	],
+	"colors": [],
+	"textureWeights": [
+		{
+			"globalSeq": 65535,
+			"interpolation": 0,
+			"timestamps": [
+				[
+					0
+				]
+			],
+			"values": [
+				[
+					32767
+				]
+			],
+			"timestampOffsets": null,
+			"valueOffsets": null
+		}
+	],
+	"transparencyLookup": [
+		0
+	],
+	"textureTransforms": [],
+	"textureTransformsLookup": [
+		65535
+	],
+	"boundingBox": {
+		"min": [
+			-5.9312872886657715,
+			-8.485156059265137,
+			0.00599790969863534
+		],
+		"max": [
+			3.411444664001465,
+			8.10476016998291,
+			20.81046485900879
+		]
+	},
+	"boundingSphereRadius": 12.567917823791504,
+	"collisionBox": {
+		"min": [
+			-4.417727470397949,
+			-7.348730564117432,
+			-6.979872750889626e-7
+		],
+		"max": [
+			3.2430896759033203,
+			5.9589128494262695,
+			16.817575454711914
+		]
+	},
+	"collisionSphereRadius": 10.606719970703125,
+	"skin": {
+		"subMeshes": [
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 0,
+				"vertexCount": 681,
+				"triangleStart": 0,
+				"triangleCount": 2133,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					0.08106765151023865,
+					-0.5623299479484558,
+					10.487833976745605
+				],
+				"sortCenterPosition": [
+					0.08106765151023865,
+					-0.5623299479484558,
+					10.487833976745605
+				],
+				"sortRadius": 12.381359100341797
+			},
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 681,
+				"vertexCount": 85,
+				"triangleStart": 2133,
+				"triangleCount": 324,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					-0.6449998617172241,
+					-1.7570135593414307,
+					11.827723503112793
+				],
+				"sortCenterPosition": [
+					-1.7371619939804077,
+					-3.682403802871704,
+					9.529236793518066
+				],
+				"sortRadius": 6.304234027862549
+			}
+		],
+		"textureUnits": [
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 0,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 0,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 0,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			},
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 1,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 1,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 1,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			}
+		],
+		"fileName": "world/generic/human/passive doodads/statues/statuekurdran00.skin",
+		"fileDataID": 504632
+	}
+}

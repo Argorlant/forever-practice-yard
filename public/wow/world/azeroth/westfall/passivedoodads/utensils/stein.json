@@ -1,0 +1,230 @@
+{
+	"fileType": "m2",
+	"fileDataID": 190654,
+	"fileName": "world/azeroth/westfall/passivedoodads/utensils/stein.m2",
+	"internalName": "Stein",
+	"textures": [
+		{
+			"fileNameInternal": "world/azeroth/westfall/passivedoodads/lampdeadmines/deadmineslanternmount02.blp",
+			"fileNameExternal": "..\\lampdeadmines\\deadmineslanternmount02.png",
+			"mtlName": "mat_deadmineslanternmount02",
+			"flags": 3,
+			"fileDataID": 190606
+		},
+		{
+			"fileNameInternal": "world/azeroth/westfall/passivedoodads/utensils/deadminesstein02.blp",
+			"fileNameExternal": "deadminesstein02.png",
+			"mtlName": "mat_deadminesstein02",
+			"flags": 3,
+			"fileDataID": 190652
+		},
+		{
+			"fileNameInternal": "world/azeroth/westfall/passivedoodads/utensils/deadminesstein01.blp",
+			"fileNameExternal": "deadminesstein01.png",
+			"mtlName": "mat_deadminesstein01",
+			"flags": 3,
+			"fileDataID": 190651
+		}
+	],
+	"textureTypes": [
+		0,
+		0,
+		0
+	],
+	"materials": [
+		{
+			"flags": 4,
+			"blendingMode": 0
+		},
+		{
+			"flags": 0,
+			"blendingMode": 0
+		},
+		{
+			"flags": 0,
+			"blendingMode": 0
+		}
+	],
+	"textureCombos": [
+		0,
+		1,
+		2
+	],
+	"colors": [],
+	"textureWeights": [
+		{
+			"globalSeq": 65535,
+			"interpolation": 0,
+			"timestamps": [
+				[
+					0
+				]
+			],
+			"values": [
+				[
+					32767
+				]
+			],
+			"timestampOffsets": null,
+			"valueOffsets": null
+		}
+	],
+	"transparencyLookup": [
+		0
+	],
+	"textureTransforms": [],
+	"textureTransformsLookup": [
+		65535
+	],
+	"boundingBox": {
+		"min": [
+			-0.10885665565729141,
+			-0.14893107116222382,
+			0
+		],
+		"max": [
+			0.09071958065032959,
+			0.12782853841781616,
+			0.31676235795021057
+		]
+	},
+	"boundingSphereRadius": 0.20919305086135864,
+	"collisionBox": {
+		"min": [
+			10000000,
+			10000000,
+			10000000
+		],
+		"max": [
+			-10000000,
+			-10000000,
+			-10000000
+		]
+	},
+	"collisionSphereRadius": 0,
+	"skin": {
+		"subMeshes": [
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 0,
+				"vertexCount": 24,
+				"triangleStart": 0,
+				"triangleCount": 42,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					-0.05932819843292236,
+					-0.09023094177246094,
+					0.17356717586517334
+				],
+				"sortCenterPosition": [
+					-0.055705200880765915,
+					-0.09429927170276642,
+					0.1593933403491974
+				],
+				"sortRadius": 0.12344641983509064
+			},
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 24,
+				"vertexCount": 12,
+				"triangleStart": 42,
+				"triangleCount": 24,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					-0.00906854122877121,
+					0.01814352348446846,
+					0.13061845302581787
+				],
+				"sortCenterPosition": [
+					-0.00906854122877121,
+					0.01814352348446846,
+					0.13061845302581787
+				],
+				"sortRadius": 0.16946853697299957
+			},
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 36,
+				"vertexCount": 21,
+				"triangleStart": 66,
+				"triangleCount": 30,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					-0.009068544954061508,
+					0.01814352162182331,
+					0.21309852600097656
+				],
+				"sortCenterPosition": [
+					-0.009068544954061508,
+					0.018143516033887863,
+					0.15927638113498688
+				],
+				"sortRadius": 0.19215808808803558
+			}
+		],
+		"textureUnits": [
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 0,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 0,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 0,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			},
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 1,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 1,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 1,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			},
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 2,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 2,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 2,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			}
+		],
+		"fileName": "world/azeroth/westfall/passivedoodads/utensils/stein00.skin",
+		"fileDataID": 494999
+	}
+}

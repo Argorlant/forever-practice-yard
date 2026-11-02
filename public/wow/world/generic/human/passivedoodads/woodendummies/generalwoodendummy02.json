@@ -1,0 +1,178 @@
+{
+	"fileType": "m2",
+	"fileDataID": 198665,
+	"fileName": "world/generic/human/passive doodads/woodendummies/generalwoodendummy02.m2",
+	"internalName": "GeneralWoodenDummy02",
+	"textures": [
+		{
+			"fileNameInternal": "item/objectcomponents/ammo/arrow_a_01brown.blp",
+			"fileNameExternal": "..\\..\\..\\..\\..\\item\\objectcomponents\\ammo\\arrow_a_01brown.png",
+			"mtlName": "mat_arrow_a_01brown",
+			"flags": 0,
+			"fileDataID": 137237
+		},
+		{
+			"fileNameInternal": "world/generic/human/passive doodads/woodendummies/woodendummy_02.blp",
+			"fileNameExternal": "woodendummy_02.png",
+			"mtlName": "mat_woodendummy_02",
+			"flags": 0,
+			"fileDataID": 198667
+		}
+	],
+	"textureTypes": [
+		0,
+		0
+	],
+	"materials": [
+		{
+			"flags": 4,
+			"blendingMode": 0
+		},
+		{
+			"flags": 0,
+			"blendingMode": 0
+		}
+	],
+	"textureCombos": [
+		1,
+		0
+	],
+	"colors": [],
+	"textureWeights": [
+		{
+			"globalSeq": 65535,
+			"interpolation": 0,
+			"timestamps": [
+				[
+					0
+				]
+			],
+			"values": [
+				[
+					32767
+				]
+			],
+			"timestampOffsets": null,
+			"valueOffsets": null
+		}
+	],
+	"transparencyLookup": [
+		0
+	],
+	"textureTransforms": [],
+	"textureTransformsLookup": [
+		65535
+	],
+	"boundingBox": {
+		"min": [
+			-1.8378145694732666,
+			-0.45579126477241516,
+			-0.45142608880996704
+		],
+		"max": [
+			1.8370287418365479,
+			1.026964783668518,
+			2.660905122756958
+		]
+	},
+	"boundingSphereRadius": 1.8792223930358887,
+	"collisionBox": {
+		"min": [
+			-1.7652850151062012,
+			-0.4379027485847473,
+			-0.44856780767440796
+		],
+		"max": [
+			1.7779808044433594,
+			0.4579562246799469,
+			2.415426015853882
+		]
+	},
+	"collisionSphereRadius": 1.9541305303573608,
+	"skin": {
+		"subMeshes": [
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 0,
+				"vertexCount": 229,
+				"triangleStart": 0,
+				"triangleCount": 630,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					0.010889248922467232,
+					0.023576417937874794,
+					1.415130853652954
+				],
+				"sortCenterPosition": [
+					-0.000392913818359375,
+					0.007905423641204834,
+					1.0320299863815308
+				],
+				"sortRadius": 1.8748186826705933
+			},
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 229,
+				"vertexCount": 86,
+				"triangleStart": 630,
+				"triangleCount": 132,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					-0.11960726976394653,
+					0.5647255778312683,
+					1.494133472442627
+				],
+				"sortCenterPosition": [
+					-0.21388377249240875,
+					0.6053223609924316,
+					1.6302748918533325
+				],
+				"sortRadius": 1.2305939197540283
+			}
+		],
+		"textureUnits": [
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 1,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 0,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 1,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			},
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 0,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 1,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 0,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			}
+		],
+		"fileName": "world/generic/human/passive doodads/woodendummies/generalwoodendummy0200.skin",
+		"fileDataID": 504798
+	}
+}

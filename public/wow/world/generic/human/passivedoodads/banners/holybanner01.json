@@ -1,0 +1,126 @@
+{
+	"fileType": "m2",
+	"fileDataID": 197971,
+	"fileName": "world/generic/human/passive doodads/banners/holybanner01.m2",
+	"internalName": "HolyBanner01",
+	"textures": [
+		{
+			"fileNameInternal": "world/generic/human/passive doodads/banners/holybanner01.blp",
+			"fileNameExternal": "holybanner01.png",
+			"mtlName": "mat_holybanner01",
+			"flags": 0,
+			"fileDataID": 197970
+		}
+	],
+	"textureTypes": [
+		0
+	],
+	"materials": [
+		{
+			"flags": 4,
+			"blendingMode": 1
+		}
+	],
+	"textureCombos": [
+		0
+	],
+	"colors": [],
+	"textureWeights": [
+		{
+			"globalSeq": 65535,
+			"interpolation": 0,
+			"timestamps": [
+				[
+					0
+				]
+			],
+			"values": [
+				[
+					32767
+				]
+			],
+			"timestampOffsets": null,
+			"valueOffsets": null
+		}
+	],
+	"transparencyLookup": [
+		0
+	],
+	"textureTransforms": [],
+	"textureTransformsLookup": [
+		65535
+	],
+	"boundingBox": {
+		"min": [
+			-5.034441414863977e-7,
+			-1.938947319984436,
+			-0.0405682697892189
+		],
+		"max": [
+			0.17117086052894592,
+			1.938947319984436,
+			6.4275641441345215
+		]
+	},
+	"boundingSphereRadius": 3.771740436553955,
+	"collisionBox": {
+		"min": [
+			10000000,
+			10000000,
+			10000000
+		],
+		"max": [
+			-10000000,
+			-10000000,
+			-10000000
+		]
+	},
+	"collisionSphereRadius": 0,
+	"skin": {
+		"subMeshes": [
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 0,
+				"vertexCount": 25,
+				"triangleStart": 0,
+				"triangleCount": 96,
+				"boneCount": 3,
+				"boneStart": 0,
+				"boneInfluences": 2,
+				"centerBoneIndex": 1,
+				"centerPosition": [
+					0.05256498232483864,
+					-2.3365019785615004e-7,
+					3.236792802810669
+				],
+				"sortCenterPosition": [
+					0.05919555947184563,
+					0,
+					3.1957483291625977
+				],
+				"sortRadius": 3.7693042755126953
+			}
+		],
+		"textureUnits": [
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 16,
+				"skinSectionIndex": 0,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 0,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 0,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			}
+		],
+		"fileName": "world/generic/human/passive doodads/banners/holybanner0100.skin",
+		"fileDataID": 504196
+	}
+}

@@ -1,0 +1,249 @@
+{
+	"fileType": "m2",
+	"fileDataID": 198636,
+	"fileName": "world/generic/human/passive doodads/weaponracks/generalweaponrack01.m2",
+	"internalName": "GeneralWeaponrack01",
+	"textures": [
+		{
+			"fileNameInternal": "world/azeroth/elwynn/passivedoodads/smalldock/elwynndocksupport01.blp",
+			"fileNameExternal": "..\\..\\..\\..\\azeroth\\elwynn\\passivedoodads\\smalldock\\elwynndocksupport01.png",
+			"mtlName": "mat_elwynndocksupport01",
+			"flags": 0,
+			"fileDataID": 189900
+		},
+		{
+			"fileNameInternal": "item/objectcomponents/weapon/polearm_2h_bladed_b_01black.blp",
+			"fileNameExternal": "..\\..\\..\\..\\..\\item\\objectcomponents\\weapon\\polearm_2h_bladed_b_01black.png",
+			"mtlName": "mat_polearm_2h_bladed_b_01black",
+			"flags": 0,
+			"fileDataID": 147217
+		},
+		{
+			"fileNameInternal": "item/objectcomponents/weapon/armorreflect3.blp",
+			"fileNameExternal": "..\\..\\..\\..\\..\\item\\objectcomponents\\weapon\\armorreflect3.png",
+			"mtlName": "mat_armorreflect3",
+			"flags": 0,
+			"fileDataID": 144328
+		},
+		{
+			"fileNameInternal": "item/objectcomponents/weapon/sword_2h_claymore_a_01silver.blp",
+			"fileNameExternal": "..\\..\\..\\..\\..\\item\\objectcomponents\\weapon\\sword_2h_claymore_a_01silver.png",
+			"mtlName": "mat_sword_2h_claymore_a_01silver",
+			"flags": 0,
+			"fileDataID": 148301
+		}
+	],
+	"textureTypes": [
+		0,
+		0,
+		0,
+		0
+	],
+	"materials": [
+		{
+			"flags": 0,
+			"blendingMode": 0
+		},
+		{
+			"flags": 0,
+			"blendingMode": 0
+		},
+		{
+			"flags": 16,
+			"blendingMode": 4
+		},
+		{
+			"flags": 0,
+			"blendingMode": 0
+		},
+		{
+			"flags": 16,
+			"blendingMode": 4
+		}
+	],
+	"textureCombos": [
+		0,
+		1,
+		2,
+		3,
+		2
+	],
+	"colors": [],
+	"textureWeights": [
+		{
+			"globalSeq": 65535,
+			"interpolation": 0,
+			"timestamps": [
+				[
+					0
+				]
+			],
+			"values": [
+				[
+					32767
+				]
+			],
+			"timestampOffsets": null,
+			"valueOffsets": null
+		}
+	],
+	"transparencyLookup": [
+		0
+	],
+	"textureTransforms": [],
+	"textureTransformsLookup": [
+		65535,
+		65535
+	],
+	"boundingBox": {
+		"min": [
+			-0.5983707904815674,
+			-0.3484728932380676,
+			-0.12303343415260315
+		],
+		"max": [
+			0.694301187992096,
+			0.7088263630867004,
+			2.7855021953582764
+		]
+	},
+	"boundingSphereRadius": 1.6676942110061646,
+	"collisionBox": {
+		"min": [
+			-0.5984774827957153,
+			-0.34972235560417175,
+			-0.12255214154720306
+		],
+		"max": [
+			0.6932379603385925,
+			0.7096049189567566,
+			2.392930269241333
+		]
+	},
+	"collisionSphereRadius": 1.5098307132720947,
+	"skin": {
+		"subMeshes": [
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 0,
+				"vertexCount": 100,
+				"triangleStart": 0,
+				"triangleCount": 186,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					0.05913078039884567,
+					0.16886794567108154,
+					0.8005466461181641
+				],
+				"sortCenterPosition": [
+					0.04796519875526428,
+					0.1801767349243164,
+					1.1269665956497192
+				],
+				"sortRadius": 1.4943785667419434
+			},
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 100,
+				"vertexCount": 63,
+				"triangleStart": 186,
+				"triangleCount": 186,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					-0.2130017727613449,
+					0.11455357819795609,
+					1.5888973474502563
+				],
+				"sortCenterPosition": [
+					-0.3020544648170471,
+					0.12897968292236328,
+					1.4331556558609009
+				],
+				"sortRadius": 1.354274034500122
+			},
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 163,
+				"vertexCount": 53,
+				"triangleStart": 372,
+				"triangleCount": 156,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					0.23566366732120514,
+					0.09844040870666504,
+					1.6797014474868774
+				],
+				"sortCenterPosition": [
+					0.23566162586212158,
+					0.09844038635492325,
+					1.365986704826355
+				],
+				"sortRadius": 1.2845126390457153
+			}
+		],
+		"textureUnits": [
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 0,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 0,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 0,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			},
+			{
+				"flags": 144,
+				"priority": 0,
+				"shaderID": 32769,
+				"skinSectionIndex": 1,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 1,
+				"materialLayer": 0,
+				"textureCount": 2,
+				"textureComboIndex": 1,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			},
+			{
+				"flags": 144,
+				"priority": 0,
+				"shaderID": 32769,
+				"skinSectionIndex": 2,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 3,
+				"materialLayer": 0,
+				"textureCount": 2,
+				"textureComboIndex": 3,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			}
+		],
+		"fileName": "world/generic/human/passive doodads/weaponracks/generalweaponrack0100.skin",
+		"fileDataID": 504776
+	}
+}

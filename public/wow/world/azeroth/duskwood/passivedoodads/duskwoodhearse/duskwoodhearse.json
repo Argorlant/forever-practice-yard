@@ -1,0 +1,342 @@
+{
+	"fileType": "m2",
+	"fileDataID": 189457,
+	"fileName": "world/azeroth/duskwood/passivedoodads/duskwoodhearse/duskwoodhearse.m2",
+	"internalName": "DuskwoodHearse",
+	"textures": [
+		{
+			"fileNameInternal": "world/azeroth/duskwood/passivedoodads/duskwoodhaywagon/westfallwagonwood.blp",
+			"fileNameExternal": "..\\duskwoodhaywagon\\westfallwagonwood.png",
+			"mtlName": "mat_westfallwagonwood",
+			"flags": 3,
+			"fileDataID": 189456
+		},
+		{
+			"fileNameInternal": "world/azeroth/westfall/passivedoodads/rakecart/westfallwagonwheel01.blp",
+			"fileNameExternal": "..\\..\\..\\westfall\\passivedoodads\\rakecart\\westfallwagonwheel01.png",
+			"mtlName": "mat_westfallwagonwheel01",
+			"flags": 3,
+			"fileDataID": 190621
+		},
+		{
+			"fileNameInternal": "interface/glues/models/ui_scourge/cemetery01.blp",
+			"fileNameExternal": "..\\..\\..\\..\\..\\interface\\glues\\models\\ui_scourge\\cemetery01.png",
+			"mtlName": "mat_cemetery01",
+			"flags": 3,
+			"fileDataID": 132027
+		},
+		{
+			"fileNameInternal": "world/azeroth/bootybay/passivedoodad/bootyentrance/elwynnlantern01.blp",
+			"fileNameExternal": "..\\..\\..\\bootybay\\passivedoodad\\bootyentrance\\elwynnlantern01.png",
+			"mtlName": "mat_elwynnlantern01",
+			"flags": 3,
+			"fileDataID": 189080
+		},
+		{
+			"fileNameInternal": "world/azeroth/duskwood/passivedoodads/darkshireentrance/bars.blp",
+			"fileNameExternal": "..\\darkshireentrance\\bars.png",
+			"mtlName": "mat_bars",
+			"flags": 3,
+			"fileDataID": 189421
+		},
+		{
+			"fileNameInternal": "world/generic/nightelf/passive doodads/magicalimplements/glow.blp",
+			"fileNameExternal": "..\\..\\..\\..\\generic\\nightelf\\passivedoodads\\magicalimplements\\glow.png",
+			"mtlName": "mat_glow",
+			"flags": 0,
+			"fileDataID": 198784
+		}
+	],
+	"textureTypes": [
+		0,
+		0,
+		0,
+		0,
+		0,
+		0
+	],
+	"materials": [
+		{
+			"flags": 0,
+			"blendingMode": 0
+		},
+		{
+			"flags": 0,
+			"blendingMode": 0
+		},
+		{
+			"flags": 0,
+			"blendingMode": 0
+		},
+		{
+			"flags": 5,
+			"blendingMode": 0
+		},
+		{
+			"flags": 0,
+			"blendingMode": 1
+		}
+	],
+	"textureCombos": [
+		1,
+		0,
+		2,
+		3,
+		4
+	],
+	"colors": [],
+	"textureWeights": [
+		{
+			"globalSeq": 65535,
+			"interpolation": 0,
+			"timestamps": [
+				[
+					0
+				]
+			],
+			"values": [
+				[
+					32767
+				]
+			],
+			"timestampOffsets": null,
+			"valueOffsets": null
+		}
+	],
+	"transparencyLookup": [
+		0
+	],
+	"textureTransforms": [],
+	"textureTransformsLookup": [
+		65535
+	],
+	"boundingBox": {
+		"min": [
+			-3.1941633224487305,
+			-2.024789810180664,
+			-0.19034133851528168
+		],
+		"max": [
+			5.047808647155762,
+			2.472663640975952,
+			3.702486038208008
+		]
+	},
+	"boundingSphereRadius": 4.705817699432373,
+	"collisionBox": {
+		"min": [
+			-3.1941635608673096,
+			-2.04451322555542,
+			-0.2125769406557083
+		],
+		"max": [
+			5.0478081703186035,
+			1.9862934350967407,
+			3.7220845222473145
+		]
+	},
+	"collisionSphereRadius": 4.765263557434082,
+	"skin": {
+		"subMeshes": [
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 0,
+				"vertexCount": 72,
+				"triangleStart": 0,
+				"triangleCount": 384,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					-0.18885628879070282,
+					-0.04463869333267212,
+					0.6424055695533752
+				],
+				"sortCenterPosition": [
+					-0.29313528537750244,
+					-0.03175508975982666,
+					0.6905114054679871
+				],
+				"sortRadius": 3.179581880569458
+			},
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 72,
+				"vertexCount": 288,
+				"triangleStart": 384,
+				"triangleCount": 522,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					0.35334697365760803,
+					0.04635145887732506,
+					1.77808678150177
+				],
+				"sortCenterPosition": [
+					0.9268226623535156,
+					0.05341559648513794,
+					1.765245795249939
+				],
+				"sortRadius": 4.616192817687988
+			},
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 360,
+				"vertexCount": 28,
+				"triangleStart": 906,
+				"triangleCount": 72,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					-0.9148340821266174,
+					0.05652959272265434,
+					2.0091960430145264
+				],
+				"sortCenterPosition": [
+					-0.9134541153907776,
+					0.05749744176864624,
+					2.0088160037994385
+				],
+				"sortRadius": 2.285752773284912
+			},
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 388,
+				"vertexCount": 48,
+				"triangleStart": 978,
+				"triangleCount": 72,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					1.397841453552246,
+					0.24045920372009277,
+					2.470273017883301
+				],
+				"sortCenterPosition": [
+					1.3978418111801147,
+					0.2393813133239746,
+					2.471034526824951
+				],
+				"sortRadius": 1.082637071609497
+			},
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 436,
+				"vertexCount": 68,
+				"triangleStart": 1050,
+				"triangleCount": 204,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					-1.281955361366272,
+					0.10482357442378998,
+					3.2677600383758545
+				],
+				"sortCenterPosition": [
+					-0.8806062936782837,
+					0.187538743019104,
+					3.235225200653076
+				],
+				"sortRadius": 2.7324295043945312
+			}
+		],
+		"textureUnits": [
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 1,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 0,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 1,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			},
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 0,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 1,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 0,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			},
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 2,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 2,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 2,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			},
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 3,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 3,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 3,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			},
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 16,
+				"skinSectionIndex": 4,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 4,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 4,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			}
+		],
+		"fileName": "world/azeroth/duskwood/passivedoodads/duskwoodhearse/duskwoodhearse00.skin",
+		"fileDataID": 494358
+	}
+}

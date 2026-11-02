@@ -1,0 +1,279 @@
+{
+	"fileType": "m2",
+	"fileDataID": 200202,
+	"fileName": "world/generic/passivedoodads/waterfall/newwaterfall.m2",
+	"internalName": "NewWaterfall",
+	"textures": [
+		{
+			"fileNameInternal": "world/generic/passivedoodads/waterfalls/waterfall02.blp",
+			"fileNameExternal": "..\\waterfalls\\waterfall02.png",
+			"mtlName": "mat_waterfall02",
+			"flags": 3,
+			"fileDataID": 200205
+		},
+		{
+			"fileNameInternal": "world/azeroth/stranglethorn/passivedoodads/waterfall/waterfalldrops.blp",
+			"fileNameExternal": "..\\..\\..\\azeroth\\stranglethorn\\passivedoodads\\waterfall\\waterfalldrops.png",
+			"mtlName": "mat_waterfalldrops",
+			"flags": 0,
+			"fileDataID": 190362
+		}
+	],
+	"textureTypes": [
+		0,
+		0
+	],
+	"materials": [
+		{
+			"flags": 20,
+			"blendingMode": 2
+		},
+		{
+			"flags": 20,
+			"blendingMode": 2
+		}
+	],
+	"textureCombos": [
+		0
+	],
+	"colors": [],
+	"textureWeights": [
+		{
+			"globalSeq": 65535,
+			"interpolation": 0,
+			"timestamps": [
+				[
+					0
+				]
+			],
+			"values": [
+				[
+					32767
+				]
+			],
+			"timestampOffsets": null,
+			"valueOffsets": null
+		}
+	],
+	"transparencyLookup": [
+		0
+	],
+	"textureTransforms": [
+		{
+			"translation": {
+				"globalSeq": 65535,
+				"interpolation": 1,
+				"timestamps": [
+					[
+						0,
+						1300,
+						2634
+					]
+				],
+				"values": [
+					[
+						[
+							0,
+							0,
+							0
+						],
+						[
+							0,
+							-0.4999999701976776,
+							0
+						],
+						[
+							0,
+							-0.9999999403953552,
+							0
+						]
+					]
+				],
+				"timestampOffsets": null,
+				"valueOffsets": null
+			},
+			"rotation": {
+				"globalSeq": 65535,
+				"interpolation": 0,
+				"timestamps": [],
+				"values": [],
+				"timestampOffsets": null,
+				"valueOffsets": null
+			},
+			"scaling": {
+				"globalSeq": 65535,
+				"interpolation": 0,
+				"timestamps": [],
+				"values": [],
+				"timestampOffsets": null,
+				"valueOffsets": null
+			}
+		},
+		{
+			"translation": {
+				"globalSeq": 65535,
+				"interpolation": 1,
+				"timestamps": [
+					[
+						0,
+						1300,
+						2634
+					]
+				],
+				"values": [
+					[
+						[
+							0,
+							0,
+							0
+						],
+						[
+							0,
+							-0.9999999403953552,
+							0
+						],
+						[
+							0,
+							-1.9999998807907104,
+							0
+						]
+					]
+				],
+				"timestampOffsets": null,
+				"valueOffsets": null
+			},
+			"rotation": {
+				"globalSeq": 65535,
+				"interpolation": 0,
+				"timestamps": [],
+				"values": [],
+				"timestampOffsets": null,
+				"valueOffsets": null
+			},
+			"scaling": {
+				"globalSeq": 65535,
+				"interpolation": 0,
+				"timestamps": [],
+				"values": [],
+				"timestampOffsets": null,
+				"valueOffsets": null
+			}
+		}
+	],
+	"textureTransformsLookup": [
+		0,
+		1
+	],
+	"boundingBox": {
+		"min": [
+			-5.817948341369629,
+			-5.849853515625,
+			-1.7292283773422241
+		],
+		"max": [
+			6.007181167602539,
+			5.975275993347168,
+			10.249383926391602
+		]
+	},
+	"boundingSphereRadius": 6.954721927642822,
+	"collisionBox": {
+		"min": [
+			10000000,
+			10000000,
+			10000000
+		],
+		"max": [
+			-10000000,
+			-10000000,
+			-10000000
+		]
+	},
+	"collisionSphereRadius": 0,
+	"skin": {
+		"subMeshes": [
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 0,
+				"vertexCount": 26,
+				"triangleStart": 0,
+				"triangleCount": 72,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					-0.4175630211830139,
+					-0.002526677679270506,
+					5.606783390045166
+				],
+				"sortCenterPosition": [
+					-0.6579575538635254,
+					-0.0027860403060913086,
+					4.367095947265625
+				],
+				"sortRadius": 5.076385498046875
+			},
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 26,
+				"vertexCount": 26,
+				"triangleStart": 72,
+				"triangleCount": 72,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					-0.7297689318656921,
+					-0.0000528830751136411,
+					5.805059909820557
+				],
+				"sortCenterPosition": [
+					-0.8726187348365784,
+					0.00020647048950195312,
+					4.345446586608887
+				],
+				"sortRadius": 5.023324966430664
+			}
+		],
+		"textureUnits": [
+			{
+				"flags": 0,
+				"priority": -1,
+				"shaderID": 16,
+				"skinSectionIndex": 0,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 0,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 0,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			},
+			{
+				"flags": 0,
+				"priority": -1,
+				"shaderID": 16,
+				"skinSectionIndex": 1,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 1,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 0,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 1
+			}
+		],
+		"fileName": "world/generic/passivedoodads/waterfall/newwaterfall00.skin",
+		"fileDataID": 505980
+	}
+}

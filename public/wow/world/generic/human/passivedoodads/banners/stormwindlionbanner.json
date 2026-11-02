@@ -1,0 +1,230 @@
+{
+	"fileType": "m2",
+	"fileDataID": 197996,
+	"fileName": "world/generic/human/passive doodads/banners/stormwindlionbanner.m2",
+	"internalName": "StormwindLionBanner",
+	"textures": [
+		{
+			"fileNameInternal": "world/generic/human/passive doodads/banners/stormwindpost01.blp",
+			"fileNameExternal": "stormwindpost01.png",
+			"mtlName": "mat_stormwindpost01",
+			"flags": 3,
+			"fileDataID": 197998
+		},
+		{
+			"fileNameInternal": "world/generic/human/passive doodads/banners/stormwindbanner02.blp",
+			"fileNameExternal": "stormwindbanner02.png",
+			"mtlName": "mat_stormwindbanner02",
+			"flags": 3,
+			"fileDataID": 197994
+		},
+		{
+			"fileNameInternal": "world/generic/human/passive doodads/banners/stormwindbanner01.blp",
+			"fileNameExternal": "stormwindbanner01.png",
+			"mtlName": "mat_stormwindbanner01",
+			"flags": 3,
+			"fileDataID": 197993
+		}
+	],
+	"textureTypes": [
+		0,
+		0,
+		0
+	],
+	"materials": [
+		{
+			"flags": 0,
+			"blendingMode": 0
+		},
+		{
+			"flags": 4,
+			"blendingMode": 1
+		},
+		{
+			"flags": 4,
+			"blendingMode": 0
+		}
+	],
+	"textureCombos": [
+		0,
+		1,
+		2
+	],
+	"colors": [],
+	"textureWeights": [
+		{
+			"globalSeq": 65535,
+			"interpolation": 0,
+			"timestamps": [
+				[
+					0
+				]
+			],
+			"values": [
+				[
+					32767
+				]
+			],
+			"timestampOffsets": null,
+			"valueOffsets": null
+		}
+	],
+	"transparencyLookup": [
+		0
+	],
+	"textureTransforms": [],
+	"textureTransformsLookup": [
+		65535
+	],
+	"boundingBox": {
+		"min": [
+			-0.20874249935150146,
+			-2.455719470977783,
+			-0.5505360960960388
+		],
+		"max": [
+			0.17081999778747559,
+			2.405386209487915,
+			6.455391883850098
+		]
+	},
+	"boundingSphereRadius": 4.266765594482422,
+	"collisionBox": {
+		"min": [
+			10000000,
+			10000000,
+			10000000
+		],
+		"max": [
+			-10000000,
+			-10000000,
+			-10000000
+		]
+	},
+	"collisionSphereRadius": 0,
+	"skin": {
+		"subMeshes": [
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 0,
+				"vertexCount": 14,
+				"triangleStart": 0,
+				"triangleCount": 24,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					-0.09205345809459686,
+					-0.02516661398112774,
+					6.250804424285889
+				],
+				"sortCenterPosition": [
+					-0.017890140414237976,
+					-0.025166630744934082,
+					6.287408828735352
+				],
+				"sortRadius": 2.443648338317871
+			},
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 14,
+				"vertexCount": 6,
+				"triangleStart": 24,
+				"triangleCount": 12,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					-0.2081795036792755,
+					-0.06546163558959961,
+					-0.3324759602546692
+				],
+				"sortCenterPosition": [
+					-0.20817944407463074,
+					-0.07282233238220215,
+					-0.3324766755104065
+				],
+				"sortRadius": 2.090029001235962
+			},
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 20,
+				"vertexCount": 15,
+				"triangleStart": 36,
+				"triangleCount": 48,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					-0.1968921422958374,
+					-0.06634989380836487,
+					2.967935562133789
+				],
+				"sortCenterPosition": [
+					-0.19689223170280457,
+					-0.07282090187072754,
+					2.997192144393921
+				],
+				"sortRadius": 3.750844717025757
+			}
+		],
+		"textureUnits": [
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 0,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 0,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 0,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			},
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 16,
+				"skinSectionIndex": 1,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 1,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 1,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			},
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 2,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 2,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 2,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			}
+		],
+		"fileName": "world/generic/human/passive doodads/banners/stormwindlionbanner00.skin",
+		"fileDataID": 504191
+	}
+}

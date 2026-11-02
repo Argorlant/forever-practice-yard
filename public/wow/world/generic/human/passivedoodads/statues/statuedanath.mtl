@@ -1,0 +1,12 @@
+newmtl mat_danathsword
+illum 1
+map_Kd danathsword.png
+newmtl mat_danathshoulder
+illum 1
+map_Kd danathshoulder.png
+newmtl mat_danathhelmet
+illum 1
+map_Kd danathhelmet.png
+newmtl mat_danath02
+illum 1
+map_Kd danath02.png

@@ -1,0 +1,9 @@
+newmtl mat_foundrypit04
+illum 1
+map_Kd foundrypit04.png
+newmtl mat_flame01
+illum 1
+map_Kd ..\..\..\..\..\creature\infernal\flame01.png
+newmtl mat_glowball
+illum 1
+map_Kd ..\..\..\..\..\creature\fireelemental\glowball.png

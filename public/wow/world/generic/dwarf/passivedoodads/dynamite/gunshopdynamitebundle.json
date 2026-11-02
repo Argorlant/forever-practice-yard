@@ -1,0 +1,126 @@
+{
+	"fileType": "m2",
+	"fileDataID": 197331,
+	"fileName": "world/generic/dwarf/passive doodads/dynamite/gunshopdynamitebundle.m2",
+	"internalName": "GunShopDynamiteBundle",
+	"textures": [
+		{
+			"fileNameInternal": "world/goober/gunshop.blp",
+			"fileNameExternal": "..\\..\\..\\..\\goober\\gunshop.png",
+			"mtlName": "mat_gunshop",
+			"flags": 0,
+			"fileDataID": 201151
+		}
+	],
+	"textureTypes": [
+		0
+	],
+	"materials": [
+		{
+			"flags": 4,
+			"blendingMode": 1
+		}
+	],
+	"textureCombos": [
+		0
+	],
+	"colors": [],
+	"textureWeights": [
+		{
+			"globalSeq": 65535,
+			"interpolation": 0,
+			"timestamps": [
+				[
+					0
+				]
+			],
+			"values": [
+				[
+					32767
+				]
+			],
+			"timestampOffsets": null,
+			"valueOffsets": null
+		}
+	],
+	"transparencyLookup": [
+		0
+	],
+	"textureTransforms": [],
+	"textureTransformsLookup": [
+		65535
+	],
+	"boundingBox": {
+		"min": [
+			-0.13429689407348633,
+			-0.12390664219856262,
+			-0.0002495977678336203
+		],
+		"max": [
+			0.12521521747112274,
+			0.12856118381023407,
+			0.7525814175605774
+		]
+	},
+	"boundingSphereRadius": 0.3961339294910431,
+	"collisionBox": {
+		"min": [
+			10000000,
+			10000000,
+			10000000
+		],
+		"max": [
+			-10000000,
+			-10000000,
+			-10000000
+		]
+	},
+	"collisionSphereRadius": 0,
+	"skin": {
+		"subMeshes": [
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 0,
+				"vertexCount": 113,
+				"triangleStart": 0,
+				"triangleCount": 399,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					-0.001635218970477581,
+					0.010608875192701817,
+					0.4448282718658447
+				],
+				"sortCenterPosition": [
+					-0.004540838301181793,
+					0.002327270805835724,
+					0.37616589665412903
+				],
+				"sortRadius": 0.3961338996887207
+			}
+		],
+		"textureUnits": [
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 16,
+				"skinSectionIndex": 0,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 0,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 0,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			}
+		],
+		"fileName": "world/generic/dwarf/passive doodads/dynamite/gunshopdynamitebundle00.skin",
+		"fileDataID": 503341
+	}
+}

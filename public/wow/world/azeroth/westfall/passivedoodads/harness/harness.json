@@ -1,0 +1,126 @@
+{
+	"fileType": "m2",
+	"fileDataID": 190596,
+	"fileName": "world/azeroth/westfall/passivedoodads/harness/harness.m2",
+	"internalName": "harness",
+	"textures": [
+		{
+			"fileNameInternal": "world/azeroth/westfall/passivedoodads/barrel/bar_but_hay_har_car.blp",
+			"fileNameExternal": "..\\barrel\\bar_but_hay_har_car.png",
+			"mtlName": "mat_bar_but_hay_har_car",
+			"flags": 0,
+			"fileDataID": 190534
+		}
+	],
+	"textureTypes": [
+		0
+	],
+	"materials": [
+		{
+			"flags": 0,
+			"blendingMode": 0
+		}
+	],
+	"textureCombos": [
+		0
+	],
+	"colors": [],
+	"textureWeights": [
+		{
+			"globalSeq": 65535,
+			"interpolation": 0,
+			"timestamps": [
+				[
+					0
+				]
+			],
+			"values": [
+				[
+					32767
+				]
+			],
+			"timestampOffsets": null,
+			"valueOffsets": null
+		}
+	],
+	"transparencyLookup": [
+		0
+	],
+	"textureTransforms": [],
+	"textureTransformsLookup": [
+		65535
+	],
+	"boundingBox": {
+		"min": [
+			-0.794209897518158,
+			-1.3508286476135254,
+			-0.48458513617515564
+		],
+		"max": [
+			0.6991472244262695,
+			1.3091734647750854,
+			1.1137951612472534
+		]
+	},
+	"boundingSphereRadius": 1.4897387027740479,
+	"collisionBox": {
+		"min": [
+			-0.9542160034179688,
+			-1.340582251548767,
+			-0.5434691309928894
+		],
+		"max": [
+			0.7637668251991272,
+			1.3299486637115479,
+			1.2076761722564697
+		]
+	},
+	"collisionSphereRadius": 1.6018476486206055,
+	"skin": {
+		"subMeshes": [
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 0,
+				"vertexCount": 156,
+				"triangleStart": 0,
+				"triangleCount": 678,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					-0.013448941521346569,
+					-0.01752348802983761,
+					0.38643312454223633
+				],
+				"sortCenterPosition": [
+					-0.013448941521346569,
+					-0.01752348802983761,
+					0.38643312454223633
+				],
+				"sortRadius": 1.452268123626709
+			}
+		],
+		"textureUnits": [
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 0,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 0,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 0,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			}
+		],
+		"fileName": "world/azeroth/westfall/passivedoodads/harness/harness00.skin",
+		"fileDataID": 494967
+	}
+}

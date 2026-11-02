@@ -1,0 +1,178 @@
+{
+	"fileType": "m2",
+	"fileDataID": 198344,
+	"fileName": "world/generic/human/passive doodads/meat/bloodymeat02.m2",
+	"internalName": "BloodyMeat02",
+	"textures": [
+		{
+			"fileNameInternal": "world/generic/human/passive doodads/meat/meat03.blp",
+			"fileNameExternal": "meat03.png",
+			"mtlName": "mat_meat03",
+			"flags": 3,
+			"fileDataID": 198345
+		},
+		{
+			"fileNameInternal": "world/generic/ogre/passive doodads/poodad/fly.blp",
+			"fileNameExternal": "..\\..\\..\\ogre\\passivedoodads\\poodad\\fly.png",
+			"mtlName": "mat_fly",
+			"flags": 0,
+			"fileDataID": 199026
+		}
+	],
+	"textureTypes": [
+		0,
+		0
+	],
+	"materials": [
+		{
+			"flags": 0,
+			"blendingMode": 0
+		},
+		{
+			"flags": 4,
+			"blendingMode": 1
+		}
+	],
+	"textureCombos": [
+		0,
+		1
+	],
+	"colors": [],
+	"textureWeights": [
+		{
+			"globalSeq": 65535,
+			"interpolation": 0,
+			"timestamps": [
+				[
+					0
+				]
+			],
+			"values": [
+				[
+					32767
+				]
+			],
+			"timestampOffsets": null,
+			"valueOffsets": null
+		}
+	],
+	"transparencyLookup": [
+		0
+	],
+	"textureTransforms": [],
+	"textureTransformsLookup": [
+		65535
+	],
+	"boundingBox": {
+		"min": [
+			-0.7342824935913086,
+			-1.026553750038147,
+			-0.004158811643719673
+		],
+		"max": [
+			0.4111737012863159,
+			0.5604663491249084,
+			0.7555599212646484
+		]
+	},
+	"boundingSphereRadius": 0.9488780498504639,
+	"collisionBox": {
+		"min": [
+			-0.5657282471656799,
+			-0.6202806830406189,
+			0
+		],
+		"max": [
+			0.053242817521095276,
+			0.5183889865875244,
+			0.17337560653686523
+		]
+	},
+	"collisionSphereRadius": 0.6537876129150391,
+	"skin": {
+		"subMeshes": [
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 0,
+				"vertexCount": 106,
+				"triangleStart": 0,
+				"triangleCount": 444,
+				"boneCount": 5,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					-0.13837768137454987,
+					-0.2857455611228943,
+					0.1247449666261673
+				],
+				"sortCenterPosition": [
+					-0.1141933798789978,
+					-0.08858445286750793,
+					0.37570056319236755
+				],
+				"sortRadius": 0.8170008659362793
+			},
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 106,
+				"vertexCount": 16,
+				"triangleStart": 444,
+				"triangleCount": 24,
+				"boneCount": 5,
+				"boneStart": 0,
+				"boneInfluences": 1,
+				"centerBoneIndex": 1,
+				"centerPosition": [
+					-0.03568858653306961,
+					-0.16618774831295013,
+					0.26651501655578613
+				],
+				"sortCenterPosition": [
+					-0.03419388830661774,
+					-0.22762620449066162,
+					0.2686275243759155
+				],
+				"sortRadius": 0.22604040801525116
+			}
+		],
+		"textureUnits": [
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 0,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 0,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 0,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			},
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 16,
+				"skinSectionIndex": 1,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 1,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 1,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			}
+		],
+		"fileName": "world/generic/human/passive doodads/meat/bloodymeat0200.skin",
+		"fileDataID": 504497
+	}
+}

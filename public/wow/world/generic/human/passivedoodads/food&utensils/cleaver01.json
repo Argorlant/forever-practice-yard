@@ -1,0 +1,126 @@
+{
+	"fileType": "m2",
+	"fileDataID": 198230,
+	"fileName": "world/generic/human/passive doodads/food&utensils/cleaver01.m2",
+	"internalName": "Cleaver01",
+	"textures": [
+		{
+			"fileNameInternal": "world/generic/human/passive doodads/food&utensils/cleaver_001.blp",
+			"fileNameExternal": "cleaver_001.png",
+			"mtlName": "mat_cleaver_001",
+			"flags": 3,
+			"fileDataID": 198231
+		}
+	],
+	"textureTypes": [
+		0
+	],
+	"materials": [
+		{
+			"flags": 0,
+			"blendingMode": 0
+		}
+	],
+	"textureCombos": [
+		0
+	],
+	"colors": [],
+	"textureWeights": [
+		{
+			"globalSeq": 65535,
+			"interpolation": 0,
+			"timestamps": [
+				[
+					0
+				]
+			],
+			"values": [
+				[
+					32767
+				]
+			],
+			"timestampOffsets": null,
+			"valueOffsets": null
+		}
+	],
+	"transparencyLookup": [
+		0
+	],
+	"textureTransforms": [],
+	"textureTransformsLookup": [
+		65535
+	],
+	"boundingBox": {
+		"min": [
+			-0.4978469908237457,
+			-0.05060720071196556,
+			-0.2115429937839508
+		],
+		"max": [
+			0.46513301134109497,
+			0.05060720071196556,
+			0.1304759979248047
+		]
+	},
+	"boundingSphereRadius": 0.5109580159187317,
+	"collisionBox": {
+		"min": [
+			10000000,
+			10000000,
+			10000000
+		],
+		"max": [
+			-10000000,
+			-10000000,
+			-10000000
+		]
+	},
+	"collisionSphereRadius": 0,
+	"skin": {
+		"subMeshes": [
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 0,
+				"vertexCount": 94,
+				"triangleStart": 0,
+				"triangleCount": 102,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					-0.17340314388275146,
+					0.00029924666159786284,
+					0.05407271161675453
+				],
+				"sortCenterPosition": [
+					-0.01635698974132538,
+					0,
+					-0.04053349792957306
+				],
+				"sortRadius": 0.5109568238258362
+			}
+		],
+		"textureUnits": [
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 0,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 0,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 0,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			}
+		],
+		"fileName": "world/generic/human/passive doodads/food&utensils/cleaver0100.skin",
+		"fileDataID": 504402
+	}
+}

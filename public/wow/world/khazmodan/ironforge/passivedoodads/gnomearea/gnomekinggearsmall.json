@@ -1,0 +1,126 @@
+{
+	"fileType": "m2",
+	"fileDataID": 203165,
+	"fileName": "world/khazmodan/ironforge/passivedoodads/gnomearea/gnomekinggearsmall.m2",
+	"internalName": "GnomeKingGearSmall",
+	"textures": [
+		{
+			"fileNameInternal": "world/khazmodan/ironforge/passivedoodads/gnomearea/gnomethronegear01.blp",
+			"fileNameExternal": "gnomethronegear01.png",
+			"mtlName": "mat_gnomethronegear01",
+			"flags": 0,
+			"fileDataID": 203170
+		}
+	],
+	"textureTypes": [
+		0
+	],
+	"materials": [
+		{
+			"flags": 0,
+			"blendingMode": 0
+		}
+	],
+	"textureCombos": [
+		0
+	],
+	"colors": [],
+	"textureWeights": [
+		{
+			"globalSeq": 65535,
+			"interpolation": 0,
+			"timestamps": [
+				[
+					0
+				]
+			],
+			"values": [
+				[
+					32767
+				]
+			],
+			"timestampOffsets": null,
+			"valueOffsets": null
+		}
+	],
+	"transparencyLookup": [
+		0
+	],
+	"textureTransforms": [],
+	"textureTransformsLookup": [
+		65535
+	],
+	"boundingBox": {
+		"min": [
+			-15.95191478729248,
+			-2.615420341491699,
+			-15.96174430847168
+		],
+		"max": [
+			16.010766983032227,
+			2.4355926513671875,
+			15.991037368774414
+		]
+	},
+	"boundingSphereRadius": 16.117725372314453,
+	"collisionBox": {
+		"min": [
+			10000000,
+			10000000,
+			10000000
+		],
+		"max": [
+			-10000000,
+			-10000000,
+			-10000000
+		]
+	},
+	"collisionSphereRadius": 0,
+	"skin": {
+		"subMeshes": [
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 0,
+				"vertexCount": 329,
+				"triangleStart": 0,
+				"triangleCount": 720,
+				"boneCount": 2,
+				"boneStart": 0,
+				"boneInfluences": 1,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					0.04770709201693535,
+					-0.07287805527448654,
+					0.2425345629453659
+				],
+				"sortCenterPosition": [
+					0.04770709201693535,
+					-0.07287805527448654,
+					0.2425345629453659
+				],
+				"sortRadius": 16.066341400146484
+			}
+		],
+		"textureUnits": [
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 0,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 0,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 0,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			}
+		],
+		"fileName": "world/khazmodan/ironforge/passivedoodads/gnomearea/gnomekinggearsmall00.skin",
+		"fileDataID": 508222
+	}
+}

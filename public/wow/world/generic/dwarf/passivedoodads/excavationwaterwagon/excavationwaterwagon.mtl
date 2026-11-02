@@ -1,0 +1,15 @@
+newmtl mat_westfallwagonwoodcopy
+illum 1
+map_Kd ..\..\..\goblin\passivedoodads\goblinrocketcarts\westfallwagonwoodcopy.png
+newmtl mat_westfallwagonwheel01
+illum 1
+map_Kd ..\..\..\..\azeroth\westfall\passivedoodads\rakecart\westfallwagonwheel01.png
+newmtl mat_barrel01
+illum 1
+map_Kd barrel01.png
+newmtl mat_stake
+illum 1
+map_Kd ..\excavationropestake\stake.png
+newmtl mat_rope01
+illum 1
+map_Kd ..\excavationropestake\rope01.png

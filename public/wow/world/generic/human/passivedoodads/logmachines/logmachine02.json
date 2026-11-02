@@ -1,0 +1,178 @@
+{
+	"fileType": "m2",
+	"fileDataID": 198332,
+	"fileName": "world/generic/human/passive doodads/logmachines/logmachine02.m2",
+	"internalName": "LogMachine02",
+	"textures": [
+		{
+			"fileNameInternal": "dungeons/textures/brian/alteracwatertower01.blp",
+			"fileNameExternal": "..\\..\\..\\..\\..\\dungeons\\textures\\brian\\alteracwatertower01.png",
+			"mtlName": "mat_alteracwatertower01",
+			"flags": 3,
+			"fileDataID": 127007
+		},
+		{
+			"fileNameInternal": "world/generic/human/passive doodads/smokestack/treerope01.blp",
+			"fileNameExternal": "..\\smokestack\\treerope01.png",
+			"mtlName": "mat_treerope01",
+			"flags": 3,
+			"fileDataID": 198518
+		}
+	],
+	"textureTypes": [
+		0,
+		0
+	],
+	"materials": [
+		{
+			"flags": 0,
+			"blendingMode": 0
+		},
+		{
+			"flags": 0,
+			"blendingMode": 0
+		}
+	],
+	"textureCombos": [
+		0,
+		1
+	],
+	"colors": [],
+	"textureWeights": [
+		{
+			"globalSeq": 65535,
+			"interpolation": 0,
+			"timestamps": [
+				[
+					0
+				]
+			],
+			"values": [
+				[
+					32767
+				]
+			],
+			"timestampOffsets": null,
+			"valueOffsets": null
+		}
+	],
+	"transparencyLookup": [
+		0
+	],
+	"textureTransforms": [],
+	"textureTransformsLookup": [
+		65535
+	],
+	"boundingBox": {
+		"min": [
+			-16.28067398071289,
+			-5.086121082305908,
+			-0.7022749185562134
+		],
+		"max": [
+			5.965016841888428,
+			5.556766033172607,
+			21.579322814941406
+		]
+	},
+	"boundingSphereRadius": 15.812529563903809,
+	"collisionBox": {
+		"min": [
+			-5.378353595733643,
+			-5.4221601486206055,
+			-0.7022746801376343
+		],
+		"max": [
+			5.9650163650512695,
+			5.556766510009766,
+			22.976747512817383
+		]
+	},
+	"collisionSphereRadius": 13.496927261352539,
+	"skin": {
+		"subMeshes": [
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 0,
+				"vertexCount": 820,
+				"triangleStart": 0,
+				"triangleCount": 1770,
+				"boneCount": 2,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					-3.002932548522949,
+					-0.08596481382846832,
+					10.04482650756836
+				],
+				"sortCenterPosition": [
+					-3.002932548522949,
+					-0.08596481382846832,
+					10.04482650756836
+				],
+				"sortRadius": 14.120865821838379
+			},
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 820,
+				"vertexCount": 236,
+				"triangleStart": 1770,
+				"triangleCount": 651,
+				"boneCount": 2,
+				"boneStart": 0,
+				"boneInfluences": 1,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					-5.349647045135498,
+					0.010708308778703213,
+					7.966094970703125
+				],
+				"sortCenterPosition": [
+					-5.947028160095215,
+					0.05825233459472656,
+					9.787043571472168
+				],
+				"sortRadius": 12.183730125427246
+			}
+		],
+		"textureUnits": [
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 0,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 0,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 0,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			},
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 1,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 1,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 1,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			}
+		],
+		"fileName": "world/generic/human/passive doodads/logmachines/logmachine0200.skin",
+		"fileDataID": 504490
+	}
+}

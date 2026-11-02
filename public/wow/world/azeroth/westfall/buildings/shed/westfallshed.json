@@ -1,0 +1,334 @@
+{
+	"fileType": "m2",
+	"fileDataID": 190517,
+	"fileName": "world/azeroth/westfall/buildings/shed/westfallshed.m2",
+	"internalName": "WestfallShed",
+	"textures": [
+		{
+			"fileNameInternal": "world/environment/doodad/westwood/grainsilo/textures/westfallweatheredbarn01skin.blp",
+			"fileNameExternal": "..\\..\\..\\..\\environment\\doodad\\westwood\\grainsilo\\textures\\westfallweatheredbarn01skin.png",
+			"mtlName": "mat_westfallweatheredbarn01skin",
+			"flags": 0,
+			"fileDataID": 191345
+		},
+		{
+			"fileNameInternal": "world/environment/doodad/westwood/grainsilo/textures/westfallweatheredbarn01roofskin.blp",
+			"fileNameExternal": "..\\..\\..\\..\\environment\\doodad\\westwood\\grainsilo\\textures\\westfallweatheredbarn01roofskin.png",
+			"mtlName": "mat_westfallweatheredbarn01roofskin",
+			"flags": 0,
+			"fileDataID": 191344
+		},
+		{
+			"fileNameInternal": "world/azeroth/westfall/buildings/church/westfalldoor.blp",
+			"fileNameExternal": "..\\church\\westfalldoor.png",
+			"mtlName": "mat_westfalldoor",
+			"flags": 0,
+			"fileDataID": 190506
+		},
+		{
+			"fileNameInternal": "world/azeroth/westfall/buildings/church/westfallbasestone.blp",
+			"fileNameExternal": "..\\church\\westfallbasestone.png",
+			"mtlName": "mat_westfallbasestone",
+			"flags": 0,
+			"fileDataID": 190504
+		},
+		{
+			"fileNameInternal": "world/azeroth/westfall/buildings/church/westfarmwindow.blp",
+			"fileNameExternal": "..\\church\\westfarmwindow.png",
+			"mtlName": "mat_westfarmwindow",
+			"flags": 3,
+			"fileDataID": 190507
+		}
+	],
+	"textureTypes": [
+		0,
+		0,
+		0,
+		0,
+		0
+	],
+	"materials": [
+		{
+			"flags": 0,
+			"blendingMode": 0
+		},
+		{
+			"flags": 0,
+			"blendingMode": 0
+		},
+		{
+			"flags": 0,
+			"blendingMode": 0
+		},
+		{
+			"flags": 0,
+			"blendingMode": 0
+		},
+		{
+			"flags": 0,
+			"blendingMode": 0
+		}
+	],
+	"textureCombos": [
+		0,
+		1,
+		2,
+		3,
+		4
+	],
+	"colors": [],
+	"textureWeights": [
+		{
+			"globalSeq": 65535,
+			"interpolation": 0,
+			"timestamps": [
+				[
+					0
+				]
+			],
+			"values": [
+				[
+					32767
+				]
+			],
+			"timestampOffsets": null,
+			"valueOffsets": null
+		}
+	],
+	"transparencyLookup": [
+		0
+	],
+	"textureTransforms": [],
+	"textureTransformsLookup": [
+		65535
+	],
+	"boundingBox": {
+		"min": [
+			-2.052286148071289,
+			-4.141925811767578,
+			-0.2034974843263626
+		],
+		"max": [
+			2.119194507598877,
+			4.132137298583984,
+			4.471334934234619
+		]
+	},
+	"boundingSphereRadius": 5.18930196762085,
+	"collisionBox": {
+		"min": [
+			-2.052286148071289,
+			-4.141925811767578,
+			-0.2034974843263626
+		],
+		"max": [
+			2.119194507598877,
+			4.132137298583984,
+			4.471334457397461
+		]
+	},
+	"collisionSphereRadius": 5.18930196762085,
+	"skin": {
+		"subMeshes": [
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 0,
+				"vertexCount": 104,
+				"triangleStart": 0,
+				"triangleCount": 180,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					-0.059505365788936615,
+					-0.002090004738420248,
+					2.577016592025757
+				],
+				"sortCenterPosition": [
+					-0.059505365788936615,
+					-0.002090004738420248,
+					2.577016592025757
+				],
+				"sortRadius": 4.969693660736084
+			},
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 104,
+				"vertexCount": 8,
+				"triangleStart": 180,
+				"triangleCount": 18,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					0.033454179763793945,
+					-0.0048940181732177734,
+					4.047667026519775
+				],
+				"sortCenterPosition": [
+					0.033454179763793945,
+					-0.004894256591796875,
+					3.9492201805114746
+				],
+				"sortRadius": 4.662397384643555
+			},
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 112,
+				"vertexCount": 4,
+				"triangleStart": 198,
+				"triangleCount": 6,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					1.244415521621704,
+					-0.004894137382507324,
+					1.551931381225586
+				],
+				"sortCenterPosition": [
+					1.244415521621704,
+					-0.004894137382507324,
+					1.5519315004348755
+				],
+				"sortRadius": 2.163822650909424
+			},
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 116,
+				"vertexCount": 34,
+				"triangleStart": 204,
+				"triangleCount": 54,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					0.06335989385843277,
+					-0.004894242621958256,
+					0.3128614127635956
+				],
+				"sortCenterPosition": [
+					0.04985576868057251,
+					-0.004894256591796875,
+					0.2841748595237732
+				],
+				"sortRadius": 4.531869888305664
+			},
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 150,
+				"vertexCount": 4,
+				"triangleStart": 258,
+				"triangleCount": 6,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					-1.3739222288131714,
+					-0.004894375801086426,
+					2.527276039123535
+				],
+				"sortCenterPosition": [
+					-1.3739222288131714,
+					-0.004894375801086426,
+					2.527276039123535
+				],
+				"sortRadius": 1.4863139390945435
+			}
+		],
+		"textureUnits": [
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 0,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 0,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 0,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			},
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 1,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 1,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 1,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			},
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 2,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 2,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 2,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			},
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 3,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 3,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 3,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			},
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 4,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 4,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 4,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			}
+		],
+		"fileName": "world/azeroth/westfall/buildings/shed/westfallshed00.skin",
+		"fileDataID": 494924
+	}
+}

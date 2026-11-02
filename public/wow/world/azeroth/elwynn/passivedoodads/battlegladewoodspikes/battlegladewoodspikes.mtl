@@ -1,0 +1,3 @@
+newmtl mat_battlegladepost01
+illum 1
+map_Kd ..\..\..\redridge\passivedoodads\spikewall\battlegladepost01.png

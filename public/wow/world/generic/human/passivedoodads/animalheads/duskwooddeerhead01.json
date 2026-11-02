@@ -1,0 +1,178 @@
+{
+	"fileType": "m2",
+	"fileDataID": 197842,
+	"fileName": "world/generic/human/passive doodads/animalheads/duskwooddeerhead01.m2",
+	"internalName": "DuskwoodDeerHead01",
+	"textures": [
+		{
+			"fileNameInternal": "world/generic/human/passive doodads/animalheads/deerhead01.blp",
+			"fileNameExternal": "deerhead01.png",
+			"mtlName": "mat_deerhead01",
+			"flags": 3,
+			"fileDataID": 197840
+		},
+		{
+			"fileNameInternal": "world/generic/human/passive doodads/tables/duskwoodfurniture01.blp",
+			"fileNameExternal": "..\\tables\\duskwoodfurniture01.png",
+			"mtlName": "mat_duskwoodfurniture01",
+			"flags": 3,
+			"fileDataID": 198601
+		}
+	],
+	"textureTypes": [
+		0,
+		0
+	],
+	"materials": [
+		{
+			"flags": 0,
+			"blendingMode": 0
+		},
+		{
+			"flags": 0,
+			"blendingMode": 0
+		}
+	],
+	"textureCombos": [
+		0,
+		1
+	],
+	"colors": [],
+	"textureWeights": [
+		{
+			"globalSeq": 65535,
+			"interpolation": 0,
+			"timestamps": [
+				[
+					0
+				]
+			],
+			"values": [
+				[
+					32767
+				]
+			],
+			"timestampOffsets": null,
+			"valueOffsets": null
+		}
+	],
+	"transparencyLookup": [
+		0
+	],
+	"textureTransforms": [],
+	"textureTransformsLookup": [
+		65535
+	],
+	"boundingBox": {
+		"min": [
+			-0.003206795547157526,
+			-0.8836134672164917,
+			0
+		],
+		"max": [
+			1.0784648656845093,
+			1.185459017753601,
+			1.9974899291992188
+		]
+	},
+	"boundingSphereRadius": 1.4382799863815308,
+	"collisionBox": {
+		"min": [
+			10000000,
+			10000000,
+			10000000
+		],
+		"max": [
+			-10000000,
+			-10000000,
+			-10000000
+		]
+	},
+	"collisionSphereRadius": 0,
+	"skin": {
+		"subMeshes": [
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 0,
+				"vertexCount": 145,
+				"triangleStart": 0,
+				"triangleCount": 408,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					0.634390652179718,
+					0.017286326736211777,
+					1.1139178276062012
+				],
+				"sortCenterPosition": [
+					0.5952000021934509,
+					0.1509227752685547,
+					1.0992939472198486
+				],
+				"sortRadius": 1.3728320598602295
+			},
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 145,
+				"vertexCount": 28,
+				"triangleStart": 408,
+				"triangleCount": 57,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					0.07129813730716705,
+					-0.017095860093832016,
+					0.6368656158447266
+				],
+				"sortCenterPosition": [
+					0.07129813730716705,
+					-0.017095860093832016,
+					0.6368656158447266
+				],
+				"sortRadius": 0.6268402934074402
+			}
+		],
+		"textureUnits": [
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 0,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 0,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 0,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			},
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 1,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 1,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 1,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			}
+		],
+		"fileName": "world/generic/human/passive doodads/animalheads/duskwooddeerhead0100.skin",
+		"fileDataID": 504079
+	}
+}

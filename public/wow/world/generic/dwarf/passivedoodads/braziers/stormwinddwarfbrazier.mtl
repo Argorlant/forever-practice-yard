@@ -1,0 +1,9 @@
+newmtl mat_orcbraziertex01
+illum 1
+map_Kd ..\..\..\orc\passivedoodads\lampposts\orcbraziertex01.png
+newmtl mat_toonsmoke16
+illum 1
+map_Kd ..\..\..\..\..\spells\toonsmoke16.png
+newmtl mat_lavalump2
+illum 1
+map_Kd ..\..\..\..\..\spells\lavalump2.png

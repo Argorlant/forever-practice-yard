@@ -1,0 +1,178 @@
+{
+	"fileType": "m2",
+	"fileDataID": 189821,
+	"fileName": "world/azeroth/elwynn/passivedoodads/jugs/jug02.m2",
+	"internalName": "jug02",
+	"textures": [
+		{
+			"fileNameInternal": "world/azeroth/elwynn/passivedoodads/jugs/handle.blp",
+			"fileNameExternal": "handle.png",
+			"mtlName": "mat_handle",
+			"flags": 0,
+			"fileDataID": 189819
+		},
+		{
+			"fileNameInternal": "world/azeroth/elwynn/passivedoodads/jugs/bottleblue.blp",
+			"fileNameExternal": "bottleblue.png",
+			"mtlName": "mat_bottleblue",
+			"flags": 3,
+			"fileDataID": 189818
+		}
+	],
+	"textureTypes": [
+		0,
+		0
+	],
+	"materials": [
+		{
+			"flags": 0,
+			"blendingMode": 1
+		},
+		{
+			"flags": 0,
+			"blendingMode": 0
+		}
+	],
+	"textureCombos": [
+		0,
+		1
+	],
+	"colors": [],
+	"textureWeights": [
+		{
+			"globalSeq": 65535,
+			"interpolation": 0,
+			"timestamps": [
+				[
+					0
+				]
+			],
+			"values": [
+				[
+					32767
+				]
+			],
+			"timestampOffsets": null,
+			"valueOffsets": null
+		}
+	],
+	"transparencyLookup": [
+		0
+	],
+	"textureTransforms": [],
+	"textureTransformsLookup": [
+		65535
+	],
+	"boundingBox": {
+		"min": [
+			-0.26655566692352295,
+			-0.26455312967300415,
+			0
+		],
+		"max": [
+			0.25674372911453247,
+			0.2686317563056946,
+			0.6507968306541443
+		]
+	},
+	"boundingSphereRadius": 0.40649178624153137,
+	"collisionBox": {
+		"min": [
+			-0.25196534395217896,
+			-0.2856140434741974,
+			0
+		],
+		"max": [
+			0.24340179562568665,
+			0.2833784818649292,
+			0.682507336139679
+		]
+	},
+	"collisionSphereRadius": 0.44501206278800964,
+	"skin": {
+		"subMeshes": [
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 0,
+				"vertexCount": 4,
+				"triangleStart": 0,
+				"triangleCount": 6,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					-0.10288099199533463,
+					-0.10958781838417053,
+					0.45037615299224854
+				],
+				"sortCenterPosition": [
+					-0.11996506154537201,
+					-0.12790824472904205,
+					0.4503662884235382
+				],
+				"sortRadius": 0.1946481466293335
+			},
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 4,
+				"vertexCount": 54,
+				"triangleStart": 6,
+				"triangleCount": 192,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					-0.018754741176962852,
+					-0.003067772137001157,
+					0.407097727060318
+				],
+				"sortCenterPosition": [
+					-0.004905968904495239,
+					0.002039313316345215,
+					0.3267555236816406
+				],
+				"sortRadius": 0.37156668305397034
+			}
+		],
+		"textureUnits": [
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 16,
+				"skinSectionIndex": 0,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 0,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 0,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			},
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 1,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 1,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 1,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			}
+		],
+		"fileName": "world/azeroth/elwynn/passivedoodads/jugs/jug0200.skin",
+		"fileDataID": 494541
+	}
+}

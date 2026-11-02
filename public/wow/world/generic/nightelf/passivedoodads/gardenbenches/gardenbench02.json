@@ -1,0 +1,126 @@
+{
+	"fileType": "m2",
+	"fileDataID": 198759,
+	"fileName": "world/generic/nightelf/passive doodads/gardenbenches/gardenbench02.m2",
+	"internalName": "GardenBench02",
+	"textures": [
+		{
+			"fileNameInternal": "dungeons/textures/doodads/elfgate/elfgate_wood01.blp",
+			"fileNameExternal": "..\\..\\..\\..\\..\\dungeons\\textures\\doodads\\elfgate\\elfgate_wood01.png",
+			"mtlName": "mat_elfgate_wood01",
+			"flags": 3,
+			"fileDataID": 127510
+		}
+	],
+	"textureTypes": [
+		0
+	],
+	"materials": [
+		{
+			"flags": 0,
+			"blendingMode": 0
+		}
+	],
+	"textureCombos": [
+		0
+	],
+	"colors": [],
+	"textureWeights": [
+		{
+			"globalSeq": 65535,
+			"interpolation": 0,
+			"timestamps": [
+				[
+					0
+				]
+			],
+			"values": [
+				[
+					32767
+				]
+			],
+			"timestampOffsets": null,
+			"valueOffsets": null
+		}
+	],
+	"transparencyLookup": [
+		0
+	],
+	"textureTransforms": [],
+	"textureTransformsLookup": [
+		65535
+	],
+	"boundingBox": {
+		"min": [
+			-0.4223661422729492,
+			-0.4615027606487274,
+			-0.03452710434794426
+		],
+		"max": [
+			0.4018329083919525,
+			0.4444396495819092,
+			0.7912580370903015
+		]
+	},
+	"boundingSphereRadius": 0.5949821472167969,
+	"collisionBox": {
+		"min": [
+			-0.37937113642692566,
+			-0.4317325949668884,
+			-0.10162176936864853
+		],
+		"max": [
+			0.3986371159553528,
+			0.4327210485935211,
+			0.8333333134651184
+		]
+	},
+	"collisionSphereRadius": 0.7461095452308655,
+	"skin": {
+		"subMeshes": [
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 0,
+				"vertexCount": 22,
+				"triangleStart": 0,
+				"triangleCount": 78,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					-0.010266643017530441,
+					-0.008531570434570312,
+					0.5310790538787842
+				],
+				"sortCenterPosition": [
+					-0.010266616940498352,
+					-0.008531555533409119,
+					0.3783654570579529
+				],
+				"sortRadius": 0.5949821472167969
+			}
+		],
+		"textureUnits": [
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 0,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 0,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 0,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			}
+		],
+		"fileName": "world/generic/nightelf/passive doodads/gardenbenches/gardenbench0200.skin",
+		"fileDataID": 504862
+	}
+}

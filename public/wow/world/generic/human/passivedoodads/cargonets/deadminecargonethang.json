@@ -1,0 +1,178 @@
+{
+	"fileType": "m2",
+	"fileDataID": 198089,
+	"fileName": "world/generic/human/passive doodads/cargonets/deadminecargonethang.m2",
+	"internalName": "DeadMineCargoNetHang",
+	"textures": [
+		{
+			"fileNameInternal": "world/generic/goblin/passivedoodads/goblinmachinery/deadminehangnets.blp",
+			"fileNameExternal": "..\\..\\..\\goblin\\passivedoodads\\goblinmachinery\\deadminehangnets.png",
+			"mtlName": "mat_deadminehangnets",
+			"flags": 3,
+			"fileDataID": 197764
+		},
+		{
+			"fileNameInternal": "world/generic/human/passive doodads/cargonets/deadminehangnets02.blp",
+			"fileNameExternal": "deadminehangnets02.png",
+			"mtlName": "mat_deadminehangnets02",
+			"flags": 3,
+			"fileDataID": 198092
+		}
+	],
+	"textureTypes": [
+		0,
+		0
+	],
+	"materials": [
+		{
+			"flags": 4,
+			"blendingMode": 1
+		},
+		{
+			"flags": 4,
+			"blendingMode": 1
+		}
+	],
+	"textureCombos": [
+		0,
+		1
+	],
+	"colors": [],
+	"textureWeights": [
+		{
+			"globalSeq": 65535,
+			"interpolation": 0,
+			"timestamps": [
+				[
+					0
+				]
+			],
+			"values": [
+				[
+					32767
+				]
+			],
+			"timestampOffsets": null,
+			"valueOffsets": null
+		}
+	],
+	"transparencyLookup": [
+		0
+	],
+	"textureTransforms": [],
+	"textureTransformsLookup": [
+		65535
+	],
+	"boundingBox": {
+		"min": [
+			-0.9371740818023682,
+			-1.5660005807876587,
+			3.635606050491333
+		],
+		"max": [
+			1.4019907712936401,
+			1.4950298070907593,
+			18.390424728393555
+		]
+	},
+	"boundingSphereRadius": 7.422367572784424,
+	"collisionBox": {
+		"min": [
+			-0.8883489966392517,
+			-1.5375417470932007,
+			3.635606050491333
+		],
+		"max": [
+			1.2296836376190186,
+			1.480339765548706,
+			18.390424728393555
+		]
+	},
+	"collisionSphereRadius": 7.417037010192871,
+	"skin": {
+		"subMeshes": [
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 0,
+				"vertexCount": 290,
+				"triangleStart": 0,
+				"triangleCount": 486,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					-0.08874374628067017,
+					-0.037014394998550415,
+					10.706650733947754
+				],
+				"sortCenterPosition": [
+					0.232408344745636,
+					-0.03548544645309448,
+					11.013015747070312
+				],
+				"sortRadius": 7.422367572784424
+			},
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 290,
+				"vertexCount": 18,
+				"triangleStart": 486,
+				"triangleCount": 18,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					0.07283781468868256,
+					0.020429497584700584,
+					6.309206485748291
+				],
+				"sortCenterPosition": [
+					0.07283781468868256,
+					0.020429497584700584,
+					6.309206485748291
+				],
+				"sortRadius": 2.4077959060668945
+			}
+		],
+		"textureUnits": [
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 16,
+				"skinSectionIndex": 0,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 0,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 0,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			},
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 16,
+				"skinSectionIndex": 1,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 1,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 1,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			}
+		],
+		"fileName": "world/generic/human/passive doodads/cargonets/deadminecargonethang00.skin",
+		"fileDataID": 504293
+	}
+}

@@ -1,0 +1,126 @@
+{
+	"fileType": "m2",
+	"fileDataID": 189540,
+	"fileName": "world/azeroth/duskwood/passivedoodads/tombs/woodcross01.m2",
+	"internalName": "WoodCross01",
+	"textures": [
+		{
+			"fileNameInternal": "world/azeroth/duskwood/passivedoodads/fence/westfallfence.blp",
+			"fileNameExternal": "..\\fence\\westfallfence.png",
+			"mtlName": "mat_westfallfence",
+			"flags": 0,
+			"fileDataID": 189479
+		}
+	],
+	"textureTypes": [
+		0
+	],
+	"materials": [
+		{
+			"flags": 0,
+			"blendingMode": 0
+		}
+	],
+	"textureCombos": [
+		0
+	],
+	"colors": [],
+	"textureWeights": [
+		{
+			"globalSeq": 65535,
+			"interpolation": 0,
+			"timestamps": [
+				[
+					0
+				]
+			],
+			"values": [
+				[
+					32767
+				]
+			],
+			"timestampOffsets": null,
+			"valueOffsets": null
+		}
+	],
+	"transparencyLookup": [
+		0
+	],
+	"textureTransforms": [],
+	"textureTransformsLookup": [
+		65535
+	],
+	"boundingBox": {
+		"min": [
+			-0.0654929056763649,
+			-0.3588142693042755,
+			-0.29885831475257874
+		],
+		"max": [
+			0.06549294292926788,
+			0.3979205787181854,
+			2.0134973526000977
+		]
+	},
+	"boundingSphereRadius": 1.1604059934616089,
+	"collisionBox": {
+		"min": [
+			-0.0654928907752037,
+			-0.3872329890727997,
+			-0.2988582253456116
+		],
+		"max": [
+			0.11083338409662247,
+			0.4264565110206604,
+			1.9232627153396606
+		]
+	},
+	"collisionSphereRadius": 1.117016077041626,
+	"skin": {
+		"subMeshes": [
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 0,
+				"vertexCount": 70,
+				"triangleStart": 0,
+				"triangleCount": 156,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					0.0007150473538786173,
+					0.02429996244609356,
+					1.1050916910171509
+				],
+				"sortCenterPosition": [
+					1.862645149230957e-8,
+					0.019553154706954956,
+					0.8573195338249207
+				],
+				"sortRadius": 1.1604059934616089
+			}
+		],
+		"textureUnits": [
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 0,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 0,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 0,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			}
+		],
+		"fileName": "world/azeroth/duskwood/passivedoodads/tombs/woodcross0100.skin",
+		"fileDataID": 494414
+	}
+}

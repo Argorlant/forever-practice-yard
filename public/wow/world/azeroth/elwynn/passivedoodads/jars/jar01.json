@@ -1,0 +1,126 @@
+{
+	"fileType": "m2",
+	"fileDataID": 189815,
+	"fileName": "world/azeroth/elwynn/passivedoodads/jars/jar01.m2",
+	"internalName": "Jar01",
+	"textures": [
+		{
+			"fileNameInternal": "world/azeroth/elwynn/passivedoodads/jars/deadmines_comp.blp",
+			"fileNameExternal": "deadmines_comp.png",
+			"mtlName": "mat_deadmines_comp",
+			"flags": 3,
+			"fileDataID": 189814
+		}
+	],
+	"textureTypes": [
+		0
+	],
+	"materials": [
+		{
+			"flags": 0,
+			"blendingMode": 0
+		}
+	],
+	"textureCombos": [
+		0
+	],
+	"colors": [],
+	"textureWeights": [
+		{
+			"globalSeq": 65535,
+			"interpolation": 0,
+			"timestamps": [
+				[
+					0
+				]
+			],
+			"values": [
+				[
+					32767
+				]
+			],
+			"timestampOffsets": null,
+			"valueOffsets": null
+		}
+	],
+	"transparencyLookup": [
+		0
+	],
+	"textureTransforms": [],
+	"textureTransformsLookup": [
+		65535
+	],
+	"boundingBox": {
+		"min": [
+			-0.22019800543785095,
+			-0.25393301248550415,
+			0
+		],
+		"max": [
+			0.21962900459766388,
+			0.2539350092411041,
+			0.7080810070037842
+		]
+	},
+	"boundingSphereRadius": 0.39147698879241943,
+	"collisionBox": {
+		"min": [
+			-0.2201939970254898,
+			-0.252810001373291,
+			0
+		],
+		"max": [
+			0.21771200001239777,
+			0.2528409957885742,
+			0.7055609822273254
+		]
+	},
+	"collisionSphereRadius": 0.3940560221672058,
+	"skin": {
+		"subMeshes": [
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 0,
+				"vertexCount": 31,
+				"triangleStart": 0,
+				"triangleCount": 126,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					-0.00028389354702085257,
+					0.0000010675960311345989,
+					0.38494113087654114
+				],
+				"sortCenterPosition": [
+					-0.0002845004200935364,
+					9.98377799987793e-7,
+					0.3540405035018921
+				],
+				"sortRadius": 0.39147719740867615
+			}
+		],
+		"textureUnits": [
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 0,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 0,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 0,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			}
+		],
+		"fileName": "world/azeroth/elwynn/passivedoodads/jars/jar0100.skin",
+		"fileDataID": 494537
+	}
+}

@@ -1,0 +1,126 @@
+{
+	"fileType": "m2",
+	"fileDataID": 198803,
+	"fileName": "world/generic/nightelf/passive doodads/pottery/elvenpottery03.m2",
+	"internalName": "ElvenPottery03",
+	"textures": [
+		{
+			"fileNameInternal": "dungeons/textures/doodads/elfgate/elfgate_wood01.blp",
+			"fileNameExternal": "..\\..\\..\\..\\..\\dungeons\\textures\\doodads\\elfgate\\elfgate_wood01.png",
+			"mtlName": "mat_elfgate_wood01",
+			"flags": 3,
+			"fileDataID": 127510
+		}
+	],
+	"textureTypes": [
+		0
+	],
+	"materials": [
+		{
+			"flags": 0,
+			"blendingMode": 0
+		}
+	],
+	"textureCombos": [
+		0
+	],
+	"colors": [],
+	"textureWeights": [
+		{
+			"globalSeq": 65535,
+			"interpolation": 0,
+			"timestamps": [
+				[
+					0
+				]
+			],
+			"values": [
+				[
+					32767
+				]
+			],
+			"timestampOffsets": null,
+			"valueOffsets": null
+		}
+	],
+	"transparencyLookup": [
+		0
+	],
+	"textureTransforms": [],
+	"textureTransformsLookup": [
+		65535
+	],
+	"boundingBox": {
+		"min": [
+			-1.1077016592025757,
+			-1.4700018167495728,
+			-0.019048426300287247
+		],
+		"max": [
+			1.1198747158050537,
+			1.4675805568695068,
+			1.18740975856781
+		]
+	},
+	"boundingSphereRadius": 1.5421876907348633,
+	"collisionBox": {
+		"min": [
+			-1.1435706615447998,
+			-1.1575149297714233,
+			-0.030038727447390556
+		],
+		"max": [
+			1.1661282777786255,
+			1.1521841287612915,
+			0.7199612855911255
+		]
+	},
+	"collisionSphereRadius": 1.3050384521484375,
+	"skin": {
+		"subMeshes": [
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 0,
+				"vertexCount": 96,
+				"triangleStart": 0,
+				"triangleCount": 270,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					0.0018714306643232703,
+					-0.003092892235144973,
+					0.6330876350402832
+				],
+				"sortCenterPosition": [
+					0.0018714306643232703,
+					-0.003092892235144973,
+					0.6330876350402832
+				],
+				"sortRadius": 1.5297760963439941
+			}
+		],
+		"textureUnits": [
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 0,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 0,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 0,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			}
+		],
+		"fileName": "world/generic/nightelf/passive doodads/pottery/elvenpottery0300.skin",
+		"fileDataID": 504893
+	}
+}

@@ -1,0 +1,126 @@
+{
+	"fileType": "m2",
+	"fileDataID": 190378,
+	"fileName": "world/azeroth/swamposorrow/passivedoodads/plants/swampplant04.m2",
+	"internalName": "SwampPlant04",
+	"textures": [
+		{
+			"fileNameInternal": "world/environment/doodad/swampofsorrows/plants/reeds/texture/swampreeds01a.blp",
+			"fileNameExternal": "..\\..\\..\\..\\environment\\doodad\\swampofsorrows\\plants\\reeds\\texture\\swampreeds01a.png",
+			"mtlName": "mat_swampreeds01a",
+			"flags": 3,
+			"fileDataID": 191275
+		}
+	],
+	"textureTypes": [
+		0
+	],
+	"materials": [
+		{
+			"flags": 4,
+			"blendingMode": 1
+		}
+	],
+	"textureCombos": [
+		0
+	],
+	"colors": [],
+	"textureWeights": [
+		{
+			"globalSeq": 65535,
+			"interpolation": 0,
+			"timestamps": [
+				[
+					0
+				]
+			],
+			"values": [
+				[
+					32767
+				]
+			],
+			"timestampOffsets": null,
+			"valueOffsets": null
+		}
+	],
+	"transparencyLookup": [
+		0
+	],
+	"textureTransforms": [],
+	"textureTransformsLookup": [
+		65535
+	],
+	"boundingBox": {
+		"min": [
+			-1.8302233219146729,
+			-1.3446794748306274,
+			-0.6727468967437744
+		],
+		"max": [
+			1.4547067880630493,
+			1.5238864421844482,
+			3.647395610809326
+		]
+	},
+	"boundingSphereRadius": 2.5844924449920654,
+	"collisionBox": {
+		"min": [
+			10000000,
+			10000000,
+			10000000
+		],
+		"max": [
+			-10000000,
+			-10000000,
+			-10000000
+		]
+	},
+	"collisionSphereRadius": 0,
+	"skin": {
+		"subMeshes": [
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 0,
+				"vertexCount": 40,
+				"triangleStart": 0,
+				"triangleCount": 60,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					0.05551847442984581,
+					-0.057530906051397324,
+					1.1482352018356323
+				],
+				"sortCenterPosition": [
+					-0.18775826692581177,
+					0.0896034836769104,
+					1.4873243570327759
+				],
+				"sortRadius": 2.5844924449920654
+			}
+		],
+		"textureUnits": [
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 16,
+				"skinSectionIndex": 0,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 0,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 0,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			}
+		],
+		"fileName": "world/azeroth/swamposorrow/passivedoodads/plants/swampplant0400.skin",
+		"fileDataID": 494832
+	}
+}

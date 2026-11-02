@@ -1,0 +1,126 @@
+{
+	"fileType": "m2",
+	"fileDataID": 198395,
+	"fileName": "world/generic/human/passive doodads/planterboxes/stormwindplanter.m2",
+	"internalName": "StormwindPlanter",
+	"textures": [
+		{
+			"fileNameInternal": "world/generic/human/passive doodads/planterboxes/stormwindplanter.blp",
+			"fileNameExternal": "stormwindplanter.png",
+			"mtlName": "mat_stormwindplanter",
+			"flags": 0,
+			"fileDataID": 198394
+		}
+	],
+	"textureTypes": [
+		0
+	],
+	"materials": [
+		{
+			"flags": 0,
+			"blendingMode": 1
+		}
+	],
+	"textureCombos": [
+		0
+	],
+	"colors": [],
+	"textureWeights": [
+		{
+			"globalSeq": 65535,
+			"interpolation": 0,
+			"timestamps": [
+				[
+					0
+				]
+			],
+			"values": [
+				[
+					32767
+				]
+			],
+			"timestampOffsets": null,
+			"valueOffsets": null
+		}
+	],
+	"transparencyLookup": [
+		0
+	],
+	"textureTransforms": [],
+	"textureTransformsLookup": [
+		65535
+	],
+	"boundingBox": {
+		"min": [
+			-2.6345932483673096,
+			-2.663689136505127,
+			-0.6572167873382568
+		],
+		"max": [
+			2.6345932483673096,
+			2.663689136505127,
+			1.7754204273223877
+		]
+	},
+	"boundingSphereRadius": 3.9390034675598145,
+	"collisionBox": {
+		"min": [
+			-2.6345932483673096,
+			-2.663689136505127,
+			-0.6572222709655762
+		],
+		"max": [
+			2.6345932483673096,
+			2.6636886596679688,
+			0.5724040865898132
+		]
+	},
+	"collisionSphereRadius": 3.796618938446045,
+	"skin": {
+		"subMeshes": [
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 0,
+				"vertexCount": 458,
+				"triangleStart": 0,
+				"triangleCount": 1392,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					-0.3601565957069397,
+					0.0022857501171529293,
+					0.3916887640953064
+				],
+				"sortCenterPosition": [
+					0,
+					0,
+					0.5591018199920654
+				],
+				"sortRadius": 3.9390034675598145
+			}
+		],
+		"textureUnits": [
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 16,
+				"skinSectionIndex": 0,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 0,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 0,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			}
+		],
+		"fileName": "world/generic/human/passive doodads/planterboxes/stormwindplanter00.skin",
+		"fileDataID": 504545
+	}
+}

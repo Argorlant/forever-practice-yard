@@ -1,0 +1,126 @@
+{
+	"fileType": "m2",
+	"fileDataID": 198012,
+	"fileName": "world/generic/human/passive doodads/benches/innbench.m2",
+	"internalName": "InnBench",
+	"textures": [
+		{
+			"fileNameInternal": "dungeons/textures/wood/mm_benchcombo.blp",
+			"fileNameExternal": "..\\..\\..\\..\\..\\dungeons\\textures\\wood\\mm_benchcombo.png",
+			"mtlName": "mat_mm_benchcombo",
+			"flags": 0,
+			"fileDataID": 130301
+		}
+	],
+	"textureTypes": [
+		0
+	],
+	"materials": [
+		{
+			"flags": 0,
+			"blendingMode": 0
+		}
+	],
+	"textureCombos": [
+		0
+	],
+	"colors": [],
+	"textureWeights": [
+		{
+			"globalSeq": 65535,
+			"interpolation": 0,
+			"timestamps": [
+				[
+					0
+				]
+			],
+			"values": [
+				[
+					32767
+				]
+			],
+			"timestampOffsets": null,
+			"valueOffsets": null
+		}
+	],
+	"transparencyLookup": [
+		0
+	],
+	"textureTransforms": [],
+	"textureTransformsLookup": [
+		65535
+	],
+	"boundingBox": {
+		"min": [
+			-0.418443888425827,
+			-2.099357843399048,
+			-0.001087897690013051
+		],
+		"max": [
+			0.38922062516212463,
+			2.099357843399048,
+			0.774861216545105
+		]
+	},
+	"boundingSphereRadius": 2.1632258892059326,
+	"collisionBox": {
+		"min": [
+			-0.3216177821159363,
+			-2.0993576049804688,
+			-0.0011545988963916898
+		],
+		"max": [
+			0.33719152212142944,
+			2.099357843399048,
+			0.774861216545105
+		]
+	},
+	"collisionSphereRadius": 2.1597325801849365,
+	"skin": {
+		"subMeshes": [
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 0,
+				"vertexCount": 163,
+				"triangleStart": 0,
+				"triangleCount": 276,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					-0.018839700147509575,
+					-0.041019752621650696,
+					0.3243387043476105
+				],
+				"sortCenterPosition": [
+					-0.014611631631851196,
+					0,
+					0.3868866562843323
+				],
+				"sortRadius": 2.1632258892059326
+			}
+		],
+		"textureUnits": [
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 0,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 0,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 0,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			}
+		],
+		"fileName": "world/generic/human/passive doodads/benches/innbench00.skin",
+		"fileDataID": 504208
+	}
+}

@@ -1,0 +1,9 @@
+newmtl mat_felwoodmushroom_tiny
+illum 1
+map_Kd felwoodmushroom_tiny.png
+newmtl mat_felwoodmushroom_white
+illum 1
+map_Kd felwoodmushroom_white.png
+newmtl mat_felwoodmushroom01
+illum 1
+map_Kd felwoodmushroom01.png

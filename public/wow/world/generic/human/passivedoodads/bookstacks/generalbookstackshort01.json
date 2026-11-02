@@ -1,0 +1,126 @@
+{
+	"fileType": "m2",
+	"fileDataID": 198055,
+	"fileName": "world/generic/human/passive doodads/bookstacks/generalbookstackshort01.m2",
+	"internalName": "GeneralBookStackShort01",
+	"textures": [
+		{
+			"fileNameInternal": "world/generic/human/passive doodads/books/bookstack01.blp",
+			"fileNameExternal": "..\\books\\bookstack01.png",
+			"mtlName": "mat_bookstack01",
+			"flags": 0,
+			"fileDataID": 198045
+		}
+	],
+	"textureTypes": [
+		0
+	],
+	"materials": [
+		{
+			"flags": 0,
+			"blendingMode": 0
+		}
+	],
+	"textureCombos": [
+		0
+	],
+	"colors": [],
+	"textureWeights": [
+		{
+			"globalSeq": 65535,
+			"interpolation": 0,
+			"timestamps": [
+				[
+					0
+				]
+			],
+			"values": [
+				[
+					32767
+				]
+			],
+			"timestampOffsets": null,
+			"valueOffsets": null
+		}
+	],
+	"transparencyLookup": [
+		0
+	],
+	"textureTransforms": [],
+	"textureTransformsLookup": [
+		65535
+	],
+	"boundingBox": {
+		"min": [
+			-0.5354532599449158,
+			-0.23256643116474152,
+			-3.324152331174446e-8
+		],
+		"max": [
+			0.25948870182037354,
+			0.3375573456287384,
+			0.35005635023117065
+		]
+	},
+	"boundingSphereRadius": 0.44085827469825745,
+	"collisionBox": {
+		"min": [
+			-0.4902426302433014,
+			-0.21569739282131195,
+			0
+		],
+		"max": [
+			0.22686831653118134,
+			0.3131074905395508,
+			0.34049877524375916
+		]
+	},
+	"collisionSphereRadius": 0.47692301869392395,
+	"skin": {
+		"subMeshes": [
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 0,
+				"vertexCount": 66,
+				"triangleStart": 0,
+				"triangleCount": 108,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					-0.1356654316186905,
+					0.0446324497461319,
+					0.18823426961898804
+				],
+				"sortCenterPosition": [
+					-0.13798227906227112,
+					0.052495457231998444,
+					0.17502816021442413
+				],
+				"sortRadius": 0.44085827469825745
+			}
+		],
+		"textureUnits": [
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 0,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 0,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 0,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			}
+		],
+		"fileName": "world/generic/human/passive doodads/bookstacks/generalbookstackshort0100.skin",
+		"fileDataID": 504272
+	}
+}

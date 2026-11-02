@@ -1,0 +1,178 @@
+{
+	"fileType": "m2",
+	"fileDataID": 190657,
+	"fileName": "world/azeroth/westfall/passivedoodads/westfall wagon/westfallwagon01.m2",
+	"internalName": "WestfallWagon01",
+	"textures": [
+		{
+			"fileNameInternal": "world/generic/goblin/passivedoodads/goblinrocketcarts/westfallwagonwood copy.blp",
+			"fileNameExternal": "..\\..\\..\\..\\generic\\goblin\\passivedoodads\\goblinrocketcarts\\westfallwagonwoodcopy.png",
+			"mtlName": "mat_westfallwagonwoodcopy",
+			"flags": 3,
+			"fileDataID": 197788
+		},
+		{
+			"fileNameInternal": "world/azeroth/westfall/passivedoodads/rakecart/westfallwagonwheel01.blp",
+			"fileNameExternal": "..\\rakecart\\westfallwagonwheel01.png",
+			"mtlName": "mat_westfallwagonwheel01",
+			"flags": 3,
+			"fileDataID": 190621
+		}
+	],
+	"textureTypes": [
+		0,
+		0
+	],
+	"materials": [
+		{
+			"flags": 0,
+			"blendingMode": 0
+		},
+		{
+			"flags": 0,
+			"blendingMode": 0
+		}
+	],
+	"textureCombos": [
+		0,
+		1
+	],
+	"colors": [],
+	"textureWeights": [
+		{
+			"globalSeq": 65535,
+			"interpolation": 0,
+			"timestamps": [
+				[
+					0
+				]
+			],
+			"values": [
+				[
+					32767
+				]
+			],
+			"timestampOffsets": null,
+			"valueOffsets": null
+		}
+	],
+	"transparencyLookup": [
+		0
+	],
+	"textureTransforms": [],
+	"textureTransformsLookup": [
+		65535
+	],
+	"boundingBox": {
+		"min": [
+			-3.716397523880005,
+			-2.2834436893463135,
+			-0.12994830310344696
+		],
+		"max": [
+			5.404753684997559,
+			2.7468197345733643,
+			2.4444637298583984
+		]
+	},
+	"boundingSphereRadius": 4.972879409790039,
+	"collisionBox": {
+		"min": [
+			-3.716397523880005,
+			-2.2834436893463135,
+			-0.12994828820228577
+		],
+		"max": [
+			5.404753684997559,
+			2.7468197345733643,
+			2.4444637298583984
+		]
+	},
+	"collisionSphereRadius": 4.972879409790039,
+	"skin": {
+		"subMeshes": [
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 0,
+				"vertexCount": 128,
+				"triangleStart": 0,
+				"triangleCount": 294,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					0.7471430897712708,
+					-0.04207829013466835,
+					1.3003894090652466
+				],
+				"sortCenterPosition": [
+					0.7471430897712708,
+					-0.04207829013466835,
+					1.3003894090652466
+				],
+				"sortRadius": 4.828831195831299
+			},
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 128,
+				"vertexCount": 88,
+				"triangleStart": 294,
+				"triangleCount": 432,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					0.08516504615545273,
+					-0.19282257556915283,
+					0.9074628353118896
+				],
+				"sortCenterPosition": [
+					0.007382512092590332,
+					-0.18921375274658203,
+					1.0191437005996704
+				],
+				"sortRadius": 3.143157482147217
+			}
+		],
+		"textureUnits": [
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 0,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 0,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 0,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			},
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 1,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 1,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 1,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			}
+		],
+		"fileName": "world/azeroth/westfall/passivedoodads/westfall wagon/westfallwagon0100.skin",
+		"fileDataID": 495001
+	}
+}

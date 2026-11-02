@@ -1,0 +1,282 @@
+{
+	"fileType": "m2",
+	"fileDataID": 189536,
+	"fileName": "world/azeroth/duskwood/passivedoodads/tombs/tombstonemonument01.m2",
+	"internalName": "TombStoneMonument01",
+	"textures": [
+		{
+			"fileNameInternal": "world/azeroth/duskwood/passivedoodads/tombs/tombstonemonument02.blp",
+			"fileNameExternal": "tombstonemonument02.png",
+			"mtlName": "mat_tombstonemonument02",
+			"flags": 0,
+			"fileDataID": 189537
+		},
+		{
+			"fileNameInternal": "world/azeroth/duskwood/passivedoodads/tombs/tombstonemonument03.blp",
+			"fileNameExternal": "tombstonemonument03.png",
+			"mtlName": "mat_tombstonemonument03",
+			"flags": 0,
+			"fileDataID": 189539
+		},
+		{
+			"fileNameInternal": "world/azeroth/duskwood/passivedoodads/tombs/tombstone05.blp",
+			"fileNameExternal": "tombstone05.png",
+			"mtlName": "mat_tombstone05",
+			"flags": 0,
+			"fileDataID": 189529
+		},
+		{
+			"fileNameInternal": "interface/glues/models/ui_scourge/warningtreeweb.blp",
+			"fileNameExternal": "..\\..\\..\\..\\..\\interface\\glues\\models\\ui_scourge\\warningtreeweb.png",
+			"mtlName": "mat_warningtreeweb",
+			"flags": 0,
+			"fileDataID": 132037
+		}
+	],
+	"textureTypes": [
+		0,
+		0,
+		0,
+		0
+	],
+	"materials": [
+		{
+			"flags": 0,
+			"blendingMode": 0
+		},
+		{
+			"flags": 0,
+			"blendingMode": 0
+		},
+		{
+			"flags": 0,
+			"blendingMode": 0
+		},
+		{
+			"flags": 20,
+			"blendingMode": 2
+		}
+	],
+	"textureCombos": [
+		0,
+		1,
+		2,
+		3
+	],
+	"colors": [],
+	"textureWeights": [
+		{
+			"globalSeq": 65535,
+			"interpolation": 0,
+			"timestamps": [
+				[
+					0
+				]
+			],
+			"values": [
+				[
+					32767
+				]
+			],
+			"timestampOffsets": null,
+			"valueOffsets": null
+		}
+	],
+	"transparencyLookup": [
+		0
+	],
+	"textureTransforms": [],
+	"textureTransformsLookup": [
+		65535
+	],
+	"boundingBox": {
+		"min": [
+			-1.2599999904632568,
+			-1.2599999904632568,
+			-0.0025460454635322094
+		],
+		"max": [
+			1.2599999904632568,
+			1.8111457824707031,
+			5.529630184173584
+		]
+	},
+	"boundingSphereRadius": 3.403343915939331,
+	"collisionBox": {
+		"min": [
+			-1.2599999904632568,
+			-1.2599999904632568,
+			0
+		],
+		"max": [
+			1.2599999904632568,
+			1.2599999904632568,
+			5.553791522979736
+		]
+	},
+	"collisionSphereRadius": 3.2994470596313477,
+	"skin": {
+		"subMeshes": [
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 0,
+				"vertexCount": 18,
+				"triangleStart": 0,
+				"triangleCount": 54,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					-0.14000006020069122,
+					3.311369178859991e-9,
+					0.5159258842468262
+				],
+				"sortCenterPosition": [
+					0,
+					0,
+					0.4473787546157837
+				],
+				"sortRadius": 1.8372119665145874
+			},
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 18,
+				"vertexCount": 168,
+				"triangleStart": 54,
+				"triangleCount": 390,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					0.005318319424986839,
+					-0.003727513365447521,
+					4.51151180267334
+				],
+				"sortCenterPosition": [
+					-5.960464477539063e-8,
+					0,
+					3.212193727493286
+				],
+				"sortRadius": 2.5707600116729736
+			},
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 186,
+				"vertexCount": 20,
+				"triangleStart": 444,
+				"triangleCount": 30,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					0.7145386934280396,
+					-0.004336726851761341,
+					1.2154794931411743
+				],
+				"sortCenterPosition": [
+					0.706671953201294,
+					-0.004336729645729065,
+					1.2154792547225952
+				],
+				"sortRadius": 0.4499550759792328
+			},
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 206,
+				"vertexCount": 15,
+				"triangleStart": 474,
+				"triangleCount": 21,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					0.28656238317489624,
+					0.4694669544696808,
+					3.2959446907043457
+				],
+				"sortCenterPosition": [
+					0.336214154958725,
+					0.5204955339431763,
+					2.468693971633911
+				],
+				"sortRadius": 2.8835833072662354
+			}
+		],
+		"textureUnits": [
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 0,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 0,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 0,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			},
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 1,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 1,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 1,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			},
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 2,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 2,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 2,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			},
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 16,
+				"skinSectionIndex": 3,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 3,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 3,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			}
+		],
+		"fileName": "world/azeroth/duskwood/passivedoodads/tombs/tombstonemonument0100.skin",
+		"fileDataID": 494409
+	}
+}

@@ -230,8 +230,10 @@ with trails and impacts that show the crit, Lightning Bolt as a real bolt, arrow
 hands while you cast, the Drain Life and Mind Flay streams, and the auras you wear (Lightning Shield's orbs, Holy
 Shield, Shadowform). It is all particles (`src/scene/vfx.ts`) driven by the engine's events (`src/combat-vfx.ts`).
 
-**Your own models (optional).** Settings → "Your own models" draws models from your own game files instead of the
-yard's: your character, the druid's Cat and Bear Forms, the training dummy, the yard itself and Onyxia's lair. Export them with
+**Published models and your own models.** The online yard loads the owner's exported characters (with race and sex
+selection), forms, companions, training dummy, map and Onyxia's lair automatically. Shared animation buffers and textures
+avoid repeating the same data for every equipment set; the original exports are unchanged. Settings → "Your own models"
+can replace these with personal files: your character, the druid's Cat and Bear Forms, the training dummy, the yard itself and Onyxia's lair. Export them with
 [wow.export](https://github.com/Kruithne/wow.export), which reads your own game files (open your WoW folder in it), as
 GLB from the arrow next to its Export button:
 - **Your character:** the Characters tab (Item Sets equips a whole tier set), with Export animations ticked.
@@ -254,7 +256,7 @@ AnimationData numbers) are matched to what you do; abilities with an animation o
 Ravage, Pounce, Maul, Swipe, Bash, Whirlwind, Shield Bash, Kick, the shouts and roars). Attacks and casts play on the
 upper body while you run, wow.export's helmets and shoulder pads (left at the feet in its glTF) go back on their
 attachment bones, models are turned to face forward, and Turn 90° fixes any other export. The files stay in your
-browser (IndexedDB): the site never uploads, hosts or shares them, and the yard's own models stay the default.
+browser (IndexedDB): imports by visitors are never uploaded or shared. The owner's published selection supplies the defaults.
 
 **Models on your own computer (`npm run dev` only).** The development server can also read your wow.export folder:
 `~/wow.export/yard-models.json` maps names to files in it. A slot's key draws that slot (`dummy`, `yard`, `onyxia-lair`,
@@ -262,7 +264,9 @@ browser (IndexedDB): the site never uploads, hosts or shares them, and the yard'
 warlock's demon (`minion:imp`), a totem (`totem:searingTotem`) and the raid at Onyxia (`raid:tank`, `raid:healer`,
 `raid:whelpTank`). Your character goes per spec, talent tree and race (`hunter-bm@nightelf-f`, `warrior:Fury@human-m`), and
 `@races:hunter` with `@default:hunter` fill a menu of races at the top right. A zone is `map:` and the folders holding
-its files (`map:maps,world,tileset`). None of this reaches the built site, which hosts no game files.
+its files (`map:maps,world,tileset`). To update the online selection, run `npm run export:wow` (optionally followed by
+`-- <export-folder>`), then build and deploy. This prepares `public/wow/manifest.json`, compressed model descriptions,
+shared binary resources and map files. Ordinary builds use these prepared assets and do not read the machine's export folder.
 
 **Encounters: Onyxia.** The menu at the top right switches from the training dummies to Onyxia, Classic's three-phase
 fight practiced alone (`src/encounters/onyxia.ts`): a simulated tank holds her (you hold her yourself as a tank spec or
@@ -295,6 +299,7 @@ Then open http://127.0.0.1:5180.
 
 - `npm run build`: type-checks and builds the static site into `dist/`, then `npm run seo` (`tools/seo_pages.ts`) writes
   one page per spec (`dist/<spec>/`: its rotation, builds and a link into the yard) and `dist/sitemap.xml` for search engines.
+- `npm run export:wow`: prepares the owner's `~/wow.export/yard-models.json` selection in `public/wow/` for publication.
 - `npm test`: plays the suggested rotation headless for 5 minutes and prints DPS and a breakdown.
 - `npm run model -- <folder>`: rebuilds `public/models/human.glb` from the Quaternius downloads (or set `QUATERNIUS_DIR`; default `./downloads`).
 - `npm run icons`: downloads the ability icons into `public/icons` (names in `src/ui/wow-icons.json`,
@@ -331,6 +336,7 @@ Then open http://127.0.0.1:5180.
   the weapons normalized: swords grip at the origin and blade along +Y, shields face along +Z, one unit long)
   with `tools/blender_dragon.py` and `tools/blender_weapons.py`.
 - Ability icons © Blizzard Entertainment, used so the buttons look as they do in the game.
+- Published wow.export character, creature and environment assets © Blizzard Entertainment; these game assets are not covered by the code's MIT license.
 - Dummy portrait: [game-icons.net](https://game-icons.net) by Lorc (CC BY 3.0).
 - Floors of your own places: [three-mesh-bvh](https://github.com/gkjohnson/three-mesh-bvh) (MIT).
 - Combat formulas follow [WoWSims](https://github.com/wowsims/classic) (MIT) and its WoW Forever

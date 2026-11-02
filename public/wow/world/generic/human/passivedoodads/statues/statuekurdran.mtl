@@ -1,0 +1,6 @@
+newmtl mat_kurdranstatue01
+illum 1
+map_Kd kurdranstatue01.png
+newmtl mat_kurdranbeard
+illum 1
+map_Kd kurdranbeard.png

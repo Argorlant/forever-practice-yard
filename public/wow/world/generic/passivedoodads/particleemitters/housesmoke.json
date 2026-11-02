@@ -1,0 +1,126 @@
+{
+	"fileType": "m2",
+	"fileDataID": 199954,
+	"fileName": "world/generic/passivedoodads/particleemitters/housesmoke.m2",
+	"internalName": "HouseSmoke",
+	"textures": [
+		{
+			"fileNameInternal": "creature/elementalearth/watermist.blp",
+			"fileNameExternal": "..\\..\\..\\..\\creature\\elementalearth\\watermist.png",
+			"mtlName": "mat_watermist",
+			"flags": 0,
+			"fileDataID": 123755
+		}
+	],
+	"textureTypes": [
+		0
+	],
+	"materials": [
+		{
+			"flags": 16,
+			"blendingMode": 2
+		}
+	],
+	"textureCombos": [
+		0
+	],
+	"colors": [],
+	"textureWeights": [
+		{
+			"globalSeq": 65535,
+			"interpolation": 0,
+			"timestamps": [
+				[
+					0
+				]
+			],
+			"values": [
+				[
+					0
+				]
+			],
+			"timestampOffsets": null,
+			"valueOffsets": null
+		}
+	],
+	"transparencyLookup": [
+		0
+	],
+	"textureTransforms": [],
+	"textureTransformsLookup": [
+		65535
+	],
+	"boundingBox": {
+		"min": [
+			-1.3296756744384766,
+			-1.2723661661148071,
+			-0.3605819344520569
+		],
+		"max": [
+			1.06844162940979,
+			1.2865184545516968,
+			11.239015579223633
+		]
+	},
+	"boundingSphereRadius": 6.0560126304626465,
+	"collisionBox": {
+		"min": [
+			10000000,
+			10000000,
+			10000000
+		],
+		"max": [
+			-10000000,
+			-10000000,
+			-10000000
+		]
+	},
+	"collisionSphereRadius": 0,
+	"skin": {
+		"subMeshes": [
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 0,
+				"vertexCount": 24,
+				"triangleStart": 0,
+				"triangleCount": 36,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					-0.06546264886856079,
+					0.003716816660016775,
+					4.495222568511963
+				],
+				"sortCenterPosition": [
+					-0.13061702251434326,
+					0.003718256950378418,
+					4.495222091674805
+				],
+				"sortRadius": 4.84860897064209
+			}
+		],
+		"textureUnits": [
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 16,
+				"skinSectionIndex": 0,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 0,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 0,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			}
+		],
+		"fileName": "world/generic/passivedoodads/particleemitters/housesmoke00.skin",
+		"fileDataID": 505830
+	}
+}

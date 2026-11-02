@@ -1,0 +1,126 @@
+{
+	"fileType": "m2",
+	"fileDataID": 198952,
+	"fileName": "world/generic/nightelf/passive doodads/tables/elvenwoodentable01.m2",
+	"internalName": "ElvenWoodenTable01",
+	"textures": [
+		{
+			"fileNameInternal": "dungeons/textures/doodads/elfgate/elfgate_wood01.blp",
+			"fileNameExternal": "..\\..\\..\\..\\..\\dungeons\\textures\\doodads\\elfgate\\elfgate_wood01.png",
+			"mtlName": "mat_elfgate_wood01",
+			"flags": 3,
+			"fileDataID": 127510
+		}
+	],
+	"textureTypes": [
+		0
+	],
+	"materials": [
+		{
+			"flags": 0,
+			"blendingMode": 0
+		}
+	],
+	"textureCombos": [
+		0
+	],
+	"colors": [],
+	"textureWeights": [
+		{
+			"globalSeq": 65535,
+			"interpolation": 0,
+			"timestamps": [
+				[
+					0
+				]
+			],
+			"values": [
+				[
+					32767
+				]
+			],
+			"timestampOffsets": null,
+			"valueOffsets": null
+		}
+	],
+	"transparencyLookup": [
+		0
+	],
+	"textureTransforms": [],
+	"textureTransformsLookup": [
+		65535
+	],
+	"boundingBox": {
+		"min": [
+			-1.3093363046646118,
+			-1.1778379678726196,
+			0
+		],
+		"max": [
+			0.8138629198074341,
+			0.9353054165840149,
+			1.8598626852035522
+		]
+	},
+	"boundingSphereRadius": 1.5956023931503296,
+	"collisionBox": {
+		"min": [
+			-0.9731832146644592,
+			-1.1505485773086548,
+			-0.03628561273217201
+		],
+		"max": [
+			0.8192423582077026,
+			0.9191660284996033,
+			1.8598626852035522
+		]
+	},
+	"collisionSphereRadius": 1.4034864902496338,
+	"skin": {
+		"subMeshes": [
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 0,
+				"vertexCount": 136,
+				"triangleStart": 0,
+				"triangleCount": 393,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					-0.08444878458976746,
+					-0.12149996310472488,
+					1.0225105285644531
+				],
+				"sortCenterPosition": [
+					-0.08444878458976746,
+					-0.12149996310472488,
+					1.0225105285644531
+				],
+				"sortRadius": 1.5841931104660034
+			}
+		],
+		"textureUnits": [
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 0,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 0,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 0,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			}
+		],
+		"fileName": "world/generic/nightelf/passive doodads/tables/elvenwoodentable0100.skin",
+		"fileDataID": 505027
+	}
+}

@@ -1,0 +1,126 @@
+{
+	"fileType": "m2",
+	"fileDataID": 199563,
+	"fileName": "world/generic/passivedoodads/barrel/barrel01.m2",
+	"internalName": "Barrel01",
+	"textures": [
+		{
+			"fileNameInternal": "world/generic/passivedoodads/barrel/barrel04dark2.blp",
+			"fileNameExternal": "barrel04dark2.png",
+			"mtlName": "mat_barrel04dark2",
+			"flags": 0,
+			"fileDataID": 199564
+		}
+	],
+	"textureTypes": [
+		0
+	],
+	"materials": [
+		{
+			"flags": 0,
+			"blendingMode": 0
+		}
+	],
+	"textureCombos": [
+		0
+	],
+	"colors": [],
+	"textureWeights": [
+		{
+			"globalSeq": 65535,
+			"interpolation": 0,
+			"timestamps": [
+				[
+					0
+				]
+			],
+			"values": [
+				[
+					32767
+				]
+			],
+			"timestampOffsets": null,
+			"valueOffsets": null
+		}
+	],
+	"transparencyLookup": [
+		0
+	],
+	"textureTransforms": [],
+	"textureTransformsLookup": [
+		65535
+	],
+	"boundingBox": {
+		"min": [
+			-0.43031901121139526,
+			-0.4678060710430145,
+			0.00010408445814391598
+		],
+		"max": [
+			0.4288332164287567,
+			0.524257481098175,
+			0.9920636415481567
+		]
+	},
+	"boundingSphereRadius": 0.6156487464904785,
+	"collisionBox": {
+		"min": [
+			-0.43031901121139526,
+			-0.4678060710430145,
+			1.2852583886058255e-8
+		],
+		"max": [
+			0.42883315682411194,
+			0.524257481098175,
+			0.9920635223388672
+		]
+	},
+	"collisionSphereRadius": 0.6156906485557556,
+	"skin": {
+		"subMeshes": [
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 0,
+				"vertexCount": 60,
+				"triangleStart": 0,
+				"triangleCount": 132,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					-0.0007429004181176424,
+					0.028225703164935112,
+					0.4960631728172302
+				],
+				"sortCenterPosition": [
+					-0.0007428973913192749,
+					0.02822570502758026,
+					0.4960838556289673
+				],
+				"sortRadius": 0.6156487464904785
+			}
+		],
+		"textureUnits": [
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 0,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 0,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 0,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			}
+		],
+		"fileName": "world/generic/passivedoodads/barrel/barrel0100.skin",
+		"fileDataID": 505486
+	}
+}

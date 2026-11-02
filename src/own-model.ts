@@ -2,7 +2,8 @@
 // yard's: their character, the druid's cat and bear, the training dummy and the
 // yard itself (src/scene/custom-model.ts, src/scene/custom-place.ts). All are
 // optional and the yard's own stay the default. The files stay in this browser
-// (src/ui/model-store.ts); the site never sends or hosts them.
+// (src/ui/model-store.ts). The owner's published exports are also available as
+// defaults; models a visitor imports stay in that visitor's browser.
 import { AdditiveBlending, type Mesh } from 'three';
 import { loadModelSource, type ModelFile, type ModelSource } from './scene/custom-model';
 import { isMapExport, loadMapSource } from './scene/wow-map';
@@ -20,14 +21,25 @@ export interface SlotSpec {
   kind: 'figure' | 'place';
   /** For a figure: the moments Settings reports as found or missing. */
   moments?: string[];
-  /** `npm run dev`: the names to look this slot up by in yard-models.json, best first (default: its key). */
+  /** Names in the published selection or local yard-models.json, best first. */
   localKeys?: () => string[];
 }
 
-/** `npm run dev` only: which file of your wow.export folder each slot draws (~/wow.export/yard-models.json; see vite.config.ts). */
+interface HostedModels {
+  models: Record<string, string>;
+  dependencies: Record<string, string[]>;
+  maps: Record<string, string[]>;
+  gzip: string[];
+  revision: string;
+}
+
+const HOSTED_ROOT = `${import.meta.env.BASE_URL}wow/`;
+const hosted: Promise<HostedModels | null> = import.meta.env.DEV ? Promise.resolve(null)
+  : fetch(`${HOSTED_ROOT}manifest.json`).then((r) => r.ok ? r.json() : null).catch(() => null);
+/** Local development reads wow.export directly; production reads its prepared static selection. */
 const localMap: Promise<Record<string, string>> = import.meta.env.DEV
   ? fetch('/@local-wow/yard-models.json').then((r) => (r.ok ? r.json() : {})).catch(() => ({}))
-  : Promise.resolve({});
+  : hosted.then((h) => h?.models ?? {});
 
 /** The file for the first key that has one; a key without a race ("warrior:Fury") means the class's default race. */
 async function localFile(keys: string[]): Promise<string | null> {
@@ -39,25 +51,59 @@ async function localFile(keys: string[]): Promise<string | null> {
   return null;
 }
 
-/** `npm run dev`: the races and sexes the class has in yard-models.json ("human-m"), and the one it starts with. */
+/** The races and sexes available for the class, and its default. */
 export async function localRaces(cls: string): Promise<{ list: string[]; start: string } | null> {
-  if (!import.meta.env.DEV) return null;
   const map = await localMap;
   const list = map[`@races:${cls}`]?.split(',');
   return list ? { list, start: map[`@default:${cls}`] ?? list[0] } : null;
 }
 
-/** `npm run dev`: whether that model has been exported yet. */
+/** Whether the selected model is available. */
 export async function localHas(keys: string[]): Promise<boolean> {
-  if (!import.meta.env.DEV) return false;
   const file = await localFile(keys);
+  if (!import.meta.env.DEV) return !!file;
   return !!file && (await fetch(`/@local-wow/${file}`, { method: 'HEAD' })).ok;
 }
 
+async function hostedFile(name: string, h: HostedModels): Promise<ModelFile> {
+  const compressed = h.gzip.includes(name);
+  // Ampersands are valid in path segments. Vite's static preview expects them
+  // literally (wow.export uses folders such as food&utensils).
+  const path = name.split('/').map((part) => encodeURIComponent(part).replace(/%26/gi, '&')).join('/');
+  const url = `${HOSTED_ROOT}${path}${compressed ? '.gz' : ''}`;
+  const response = await fetch(url);
+  if (!response.ok) throw new Error(`Could not load ${name} (${response.status}).`);
+  if (response.headers.get('content-type')?.includes('text/html')) throw new Error(`Missing model file: ${name}.`);
+  // Some static servers set Content-Encoding for .gz and the browser already
+  // decompresses it; others serve the gzip file as an ordinary binary asset.
+  const payload = await response.blob();
+  const magic = new Uint8Array(await payload.slice(0, 2).arrayBuffer());
+  const data = compressed && magic[0] === 0x1f && magic[1] === 0x8b
+    ? await new Response(payload.stream().pipeThrough(new DecompressionStream('gzip'))).blob()
+    : payload;
+  return { name, data };
+}
+
+async function modelLabel(file: string): Promise<string> {
+  const h = await hosted;
+  return h ? `hosted:${h.revision}:${file}` : file;
+}
+
 async function localModel(keys: string[]): Promise<StoredModel | null> {
-  if (!import.meta.env.DEV) return null;
   const file = await localFile(keys);
   if (!file) return null;
+  const h = await hosted;
+  if (h) {
+    const names = file.startsWith('map:') ? h.maps[file] : [file, ...(h.dependencies[file] ?? [])];
+    if (!names?.length) return null;
+    const files: ModelFile[] = new Array(names.length);
+    let next = 0;
+    await Promise.all(Array.from({ length: Math.min(12, names.length) }, async () => {
+      for (let i = next++; i < names.length; i = next++) files[i] = await hostedFile(names[i], h);
+    }));
+    return { files, label: await modelLabel(file), rotation: 0, enabled: true };
+  }
+  if (!import.meta.env.DEV) return null;
   if (file.startsWith('map:')) {
     const names: string[] = await (await fetch(`/@local-wow/@list?dirs=${file.slice(4)}`)).json();
     const files: ModelFile[] = new Array(names.length);
@@ -90,9 +136,8 @@ function blendGlows(source: ModelSource): ModelSource {
 }
 
 const localSources = new Map<string, Promise<ModelSource | null>>();
-/** `npm run dev`: a model yard-models.json names for what has no slot in Settings (a hunter's pet, a demon, a totem, the raid). */
+/** Models for companions, totems and the simulated raid. */
 export function localSource(key: string): Promise<ModelSource | null> {
-  if (!import.meta.env.DEV) return Promise.resolve(null);
   let source = localSources.get(key);
   if (!source) {
     source = localModel([key]).then((m) => (m ? loadModelSource(m.files).then(blendGlows) : null)).catch(() => null);
@@ -120,13 +165,18 @@ export class OwnModel {
     this.restore().finally(() => { this.busy = false; this.draw(); this.onChange(); });
   }
 
-  /** What this browser kept; with `npm run dev`, the file yard-models.json names comes first (a place keeps its anchor). */
+  /** Imported models stay personal; the hosted selection supplies defaults for empty slots. */
   private async restore(): Promise<void> {
     const kept = await getModel(this.slot.key);
     const keys = this.slot.localKeys?.() ?? [this.slot.key];
-    const name = import.meta.env.DEV ? await localFile(keys) : null;
+    const file = await localFile(keys);
+    const name = file ? await modelLabel(file) : null;
     // Already kept in this browser (with its anchor): a zone's files are not fetched again.
-    const local = name && kept?.label !== name ? await localModel(keys) : null;
+    const personal = kept && !kept.label.startsWith('hosted:') && !import.meta.env.DEV;
+    const local = name && kept?.label !== name && !personal ? await localModel(keys).catch((err) => {
+      console.error(err);
+      return null;
+    }) : null;
     const s = local ?? kept;
     if (!s) return;
     this.localFile = local?.label ?? (name === kept?.label ? name : null);
@@ -139,11 +189,13 @@ export class OwnModel {
     }
   }
 
-  /** `npm run dev`: the build changed, so the file yard-models.json names for this slot may have too. */
+  /** Refresh the character after a race or talent build change. */
   async refreshLocal(): Promise<void> {
-    if (!import.meta.env.DEV || !this.slot.localKeys) return;
-    const local = await localModel(this.slot.localKeys());
-    if (!local || local.label === this.localFile) return;
+    if (!this.slot.localKeys) return;
+    const file = await localFile(this.slot.localKeys());
+    if (!file || await modelLabel(file) === this.localFile) return;
+    // A deliberate race/build change replaces the currently selected figure.
+    if (!import.meta.env.DEV) await deleteModel(this.slot.key);
     this.busy = true;
     this.draw();
     await this.restore();
@@ -271,7 +323,9 @@ export class OwnModel {
     const s = this.stored;
     if (s) {
       const row = el('label', 'field toggle');
-      row.append(el('span', '', `Use <b>${escapeHtml(s.label)}</b>`));
+      const label = s.label.startsWith('hosted:')
+        ? (s.label.includes(':map:') ? 'Published map' : s.label.split('/').pop()!) : s.label;
+      row.append(el('span', '', `Use <b>${escapeHtml(label)}</b>`));
       const on = document.createElement('input');
       on.type = 'checkbox';
       on.checked = s.enabled;
@@ -364,7 +418,7 @@ async function droppedFiles(dt: DataTransfer): Promise<File[]> {
 
 /** The Settings section: what these are, then one part per slot. */
 export function ownModelsSection(sec: HTMLElement, slots: OwnModel[]): void {
-  sec.append(el('p', 'note', `Optional: models from your own game files instead of the yard's, exported with ${EXPORT_LINK} as GLB (the arrow next to its Export button). Open your WoW folder in it first. Each model stays in this browser: nothing is uploaded.`));
+  sec.append(el('p', 'note', `The published models load automatically. You can replace them with your own, exported with ${EXPORT_LINK} as GLB (the arrow next to its Export button). Models you import stay in this browser: nothing is uploaded.`));
   for (const s of slots) s.panel(sec);
 }
 

@@ -1,0 +1,126 @@
+{
+	"fileType": "m2",
+	"fileDataID": 197235,
+	"fileName": "world/generic/dwarf/passive doodads/banners/ironforgebanner_ornate01.m2",
+	"internalName": "IronForgeBanner_ornate01",
+	"textures": [
+		{
+			"fileNameInternal": "world/environment/doodad/ironforge/banners/ironforgebanner_ornate/texture/metalbanner01.blp",
+			"fileNameExternal": "..\\..\\..\\..\\environment\\doodad\\ironforge\\banners\\ironforgebanner_ornate\\texture\\metalbanner01.png",
+			"mtlName": "mat_metalbanner01",
+			"flags": 3,
+			"fileDataID": 191132
+		}
+	],
+	"textureTypes": [
+		0
+	],
+	"materials": [
+		{
+			"flags": 0,
+			"blendingMode": 0
+		}
+	],
+	"textureCombos": [
+		0
+	],
+	"colors": [],
+	"textureWeights": [
+		{
+			"globalSeq": 65535,
+			"interpolation": 0,
+			"timestamps": [
+				[
+					0
+				]
+			],
+			"values": [
+				[
+					32767
+				]
+			],
+			"timestampOffsets": null,
+			"valueOffsets": null
+		}
+	],
+	"transparencyLookup": [
+		0
+	],
+	"textureTransforms": [],
+	"textureTransformsLookup": [
+		65535
+	],
+	"boundingBox": {
+		"min": [
+			-0.7621241211891174,
+			-1.8795909881591797,
+			-0.42724162340164185
+		],
+		"max": [
+			0.26161858439445496,
+			1.8795909881591797,
+			6.522597312927246
+		]
+	},
+	"boundingSphereRadius": 3.8022754192352295,
+	"collisionBox": {
+		"min": [
+			-0.5148075222969055,
+			-1.5206211805343628,
+			-0.42723506689071655
+		],
+		"max": [
+			0.014301467686891556,
+			1.5206209421157837,
+			6.522590160369873
+		]
+	},
+	"collisionSphereRadius": 3.8022749423980713,
+	"skin": {
+		"subMeshes": [
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 0,
+				"vertexCount": 73,
+				"triangleStart": 0,
+				"triangleCount": 216,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					-0.25387680530548096,
+					-0.062491320073604584,
+					3.2121074199676514
+				],
+				"sortCenterPosition": [
+					-0.25025278329849243,
+					0,
+					3.047677755355835
+				],
+				"sortRadius": 3.8022754192352295
+			}
+		],
+		"textureUnits": [
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 0,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 0,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 0,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			}
+		],
+		"fileName": "world/generic/dwarf/passive doodads/banners/ironforgebanner_ornate0100.skin",
+		"fileDataID": 503269
+	}
+}

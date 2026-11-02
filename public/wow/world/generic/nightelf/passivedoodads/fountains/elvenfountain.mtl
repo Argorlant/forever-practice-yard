@@ -1,0 +1,9 @@
+newmtl mat_elfgate_stone01
+illum 1
+map_Kd elfgate_stone01.png
+newmtl mat_dust1
+illum 1
+map_Kd ..\..\..\..\..\item\objectcomponents\weapon\dust1.png
+newmtl mat_glowball
+illum 1
+map_Kd ..\..\..\..\..\creature\fireelemental\glowball.png

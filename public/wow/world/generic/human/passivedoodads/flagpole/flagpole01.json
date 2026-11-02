@@ -1,0 +1,126 @@
+{
+	"fileType": "m2",
+	"fileDataID": 198199,
+	"fileName": "world/generic/human/passive doodads/flagpole/flagpole01.m2",
+	"internalName": "Flagpole01",
+	"textures": [
+		{
+			"fileNameInternal": "world/generic/human/passive doodads/flagpole/pole1.blp",
+			"fileNameExternal": "pole1.png",
+			"mtlName": "mat_pole1",
+			"flags": 0,
+			"fileDataID": 198200
+		}
+	],
+	"textureTypes": [
+		0
+	],
+	"materials": [
+		{
+			"flags": 0,
+			"blendingMode": 0
+		}
+	],
+	"textureCombos": [
+		0
+	],
+	"colors": [],
+	"textureWeights": [
+		{
+			"globalSeq": 65535,
+			"interpolation": 0,
+			"timestamps": [
+				[
+					0
+				]
+			],
+			"values": [
+				[
+					32767
+				]
+			],
+			"timestampOffsets": null,
+			"valueOffsets": null
+		}
+	],
+	"transparencyLookup": [
+		0
+	],
+	"textureTransforms": [],
+	"textureTransformsLookup": [
+		65535
+	],
+	"boundingBox": {
+		"min": [
+			-0.5513461232185364,
+			-0.5715014338493347,
+			-0.08121207356452942
+		],
+		"max": [
+			0.4681898355484009,
+			0.5762394666671753,
+			9.904350280761719
+		]
+	},
+	"boundingSphereRadius": 5.051440715789795,
+	"collisionBox": {
+		"min": [
+			-0.5513461232185364,
+			-0.5715014338493347,
+			-0.08121207356452942
+		],
+		"max": [
+			0.4681897759437561,
+			0.5762394666671753,
+			9.904350280761719
+		]
+	},
+	"collisionSphereRadius": 5.051440715789795,
+	"skin": {
+		"subMeshes": [
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 0,
+				"vertexCount": 146,
+				"triangleStart": 0,
+				"triangleCount": 222,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					-0.04412977769970894,
+					-0.006634922232478857,
+					3.740483522415161
+				],
+				"sortCenterPosition": [
+					-0.04157814383506775,
+					0.002369016408920288,
+					4.911569118499756
+				],
+				"sortRadius": 5.051440715789795
+			}
+		],
+		"textureUnits": [
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 0,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 0,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 0,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			}
+		],
+		"fileName": "world/generic/human/passive doodads/flagpole/flagpole0100.skin",
+		"fileDataID": 504382
+	}
+}

@@ -1,0 +1,126 @@
+{
+	"fileType": "m2",
+	"fileDataID": 198593,
+	"fileName": "world/generic/human/passive doodads/stormwind/treefacade02.m2",
+	"internalName": "TreeFacade02",
+	"textures": [
+		{
+			"fileNameInternal": "world/generic/human/passive doodads/stormwind/elwynntreetallcanopy_new01.blp",
+			"fileNameExternal": "elwynntreetallcanopy_new01.png",
+			"mtlName": "mat_elwynntreetallcanopy_new01",
+			"flags": 0,
+			"fileDataID": 198585
+		}
+	],
+	"textureTypes": [
+		0
+	],
+	"materials": [
+		{
+			"flags": 0,
+			"blendingMode": 1
+		}
+	],
+	"textureCombos": [
+		0
+	],
+	"colors": [],
+	"textureWeights": [
+		{
+			"globalSeq": 65535,
+			"interpolation": 0,
+			"timestamps": [
+				[
+					0
+				]
+			],
+			"values": [
+				[
+					32767
+				]
+			],
+			"timestampOffsets": null,
+			"valueOffsets": null
+		}
+	],
+	"transparencyLookup": [
+		0
+	],
+	"textureTransforms": [],
+	"textureTransformsLookup": [
+		65535
+	],
+	"boundingBox": {
+		"min": [
+			-33.27507400512695,
+			-30.82820701599121,
+			-25.73575210571289
+		],
+		"max": [
+			32.03316116333008,
+			32.37746047973633,
+			42.75157165527344
+		]
+	},
+	"boundingSphereRadius": 39.739906311035156,
+	"collisionBox": {
+		"min": [
+			10000000,
+			10000000,
+			10000000
+		],
+		"max": [
+			-10000000,
+			-10000000,
+			-10000000
+		]
+	},
+	"collisionSphereRadius": 0,
+	"skin": {
+		"subMeshes": [
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 0,
+				"vertexCount": 72,
+				"triangleStart": 0,
+				"triangleCount": 168,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					-0.6296680569648743,
+					0.1253061294555664,
+					8.644745826721191
+				],
+				"sortCenterPosition": [
+					-0.6209564208984375,
+					0.7746267318725586,
+					8.507909774780273
+				],
+				"sortRadius": 39.739906311035156
+			}
+		],
+		"textureUnits": [
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 16,
+				"skinSectionIndex": 0,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 0,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 0,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			}
+		],
+		"fileName": "world/generic/human/passive doodads/stormwind/treefacade0200.skin",
+		"fileDataID": 504673
+	}
+}

@@ -1,0 +1,12 @@
+newmtl mat_darnassusmagicalimplements01
+illum 1
+map_Kd darnassusmagicalimplements01.png
+newmtl mat_darnassusmagicalimplements02
+illum 1
+map_Kd darnassusmagicalimplements02.png
+newmtl mat_glowstar
+illum 1
+map_Kd ..\..\..\..\..\interface\buttons\glowstar.png
+newmtl mat_shockwave10
+illum 1
+map_Kd ..\..\..\..\..\spells\shockwave10.png

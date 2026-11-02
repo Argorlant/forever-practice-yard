@@ -1,0 +1,126 @@
+{
+	"fileType": "m2",
+	"fileDataID": 198478,
+	"fileName": "world/generic/human/passive doodads/signposts/woodsignpointernice01.m2",
+	"internalName": "WoodSignPointerNice01",
+	"textures": [
+		{
+			"fileNameInternal": "world/generic/human/passive doodads/signposts/signpost01.blp",
+			"fileNameExternal": "signpost01.png",
+			"mtlName": "mat_signpost01",
+			"flags": 0,
+			"fileDataID": 198473
+		}
+	],
+	"textureTypes": [
+		0
+	],
+	"materials": [
+		{
+			"flags": 0,
+			"blendingMode": 1
+		}
+	],
+	"textureCombos": [
+		0
+	],
+	"colors": [],
+	"textureWeights": [
+		{
+			"globalSeq": 65535,
+			"interpolation": 0,
+			"timestamps": [
+				[
+					0
+				]
+			],
+			"values": [
+				[
+					32767
+				]
+			],
+			"timestampOffsets": null,
+			"valueOffsets": null
+		}
+	],
+	"transparencyLookup": [
+		0
+	],
+	"textureTransforms": [],
+	"textureTransformsLookup": [
+		65535
+	],
+	"boundingBox": {
+		"min": [
+			-0.0902891531586647,
+			-0.8076245188713074,
+			3.4631574153900146
+		],
+		"max": [
+			0.0902898982167244,
+			0.8648583889007568,
+			3.907381772994995
+		]
+	},
+	"boundingSphereRadius": 0.8699343800544739,
+	"collisionBox": {
+		"min": [
+			-0.09026974439620972,
+			-0.8099339604377747,
+			3.4658730030059814
+		],
+		"max": [
+			0.09130259603261948,
+			0.8649738430976868,
+			3.9072062969207764
+		]
+	},
+	"collisionSphereRadius": 0.8707841038703918,
+	"skin": {
+		"subMeshes": [
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 0,
+				"vertexCount": 34,
+				"triangleStart": 0,
+				"triangleCount": 90,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					3.7296729260560824e-7,
+					-0.07073137164115906,
+					3.6852705478668213
+				],
+				"sortCenterPosition": [
+					3.725290298461914e-7,
+					0.02861693501472473,
+					3.685269594192505
+				],
+				"sortRadius": 0.8699343800544739
+			}
+		],
+		"textureUnits": [
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 16,
+				"skinSectionIndex": 0,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 0,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 0,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			}
+		],
+		"fileName": "world/generic/human/passive doodads/signposts/woodsignpointernice0100.skin",
+		"fileDataID": 504604
+	}
+}

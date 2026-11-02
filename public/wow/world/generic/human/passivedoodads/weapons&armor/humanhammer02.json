@@ -1,0 +1,126 @@
+{
+	"fileType": "m2",
+	"fileDataID": 198649,
+	"fileName": "world/generic/human/passive doodads/weapons&armor/humanhammer02.m2",
+	"internalName": "HumanHammer02",
+	"textures": [
+		{
+			"fileNameInternal": "world/generic/human/passive doodads/weapons&armor/waeponpage01.blp",
+			"fileNameExternal": "waeponpage01.png",
+			"mtlName": "mat_waeponpage01",
+			"flags": 0,
+			"fileDataID": 198659
+		}
+	],
+	"textureTypes": [
+		0
+	],
+	"materials": [
+		{
+			"flags": 0,
+			"blendingMode": 0
+		}
+	],
+	"textureCombos": [
+		0
+	],
+	"colors": [],
+	"textureWeights": [
+		{
+			"globalSeq": 65535,
+			"interpolation": 0,
+			"timestamps": [
+				[
+					0
+				]
+			],
+			"values": [
+				[
+					32767
+				]
+			],
+			"timestampOffsets": null,
+			"valueOffsets": null
+		}
+	],
+	"transparencyLookup": [
+		0
+	],
+	"textureTransforms": [],
+	"textureTransformsLookup": [
+		65535
+	],
+	"boundingBox": {
+		"min": [
+			-0.0873238816857338,
+			-0.18759243190288544,
+			-0.2936030328273773
+		],
+		"max": [
+			1.3240057229995728,
+			0.19127029180526733,
+			0.2931169271469116
+		]
+	},
+	"boundingSphereRadius": 0.715314507484436,
+	"collisionBox": {
+		"min": [
+			-0.07925235480070114,
+			-0.20128808915615082,
+			-0.2950131893157959
+		],
+		"max": [
+			1.3310190439224243,
+			0.2217607945203781,
+			0.29238173365592957
+		]
+	},
+	"collisionSphereRadius": 0.7926015257835388,
+	"skin": {
+		"subMeshes": [
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 0,
+				"vertexCount": 93,
+				"triangleStart": 0,
+				"triangleCount": 348,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					0.9058240652084351,
+					0.0014967282768338919,
+					-0.002413406502455473
+				],
+				"sortCenterPosition": [
+					0.6183409094810486,
+					0.0018389299511909485,
+					-0.00024305284023284912
+				],
+				"sortRadius": 0.7153144478797913
+			}
+		],
+		"textureUnits": [
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 0,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 0,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 0,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			}
+		],
+		"fileName": "world/generic/human/passive doodads/weapons&armor/humanhammer0200.skin",
+		"fileDataID": 504777
+	}
+}

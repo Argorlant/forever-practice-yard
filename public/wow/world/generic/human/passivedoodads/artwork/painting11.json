@@ -1,0 +1,126 @@
+{
+	"fileType": "m2",
+	"fileDataID": 197933,
+	"fileName": "world/generic/human/passive doodads/artwork/painting11.m2",
+	"internalName": "Painting11",
+	"textures": [
+		{
+			"fileNameInternal": "world/generic/human/passive doodads/artwork/armor03.blp",
+			"fileNameExternal": "armor03.png",
+			"mtlName": "mat_armor03",
+			"flags": 0,
+			"fileDataID": 197914
+		}
+	],
+	"textureTypes": [
+		0
+	],
+	"materials": [
+		{
+			"flags": 0,
+			"blendingMode": 0
+		}
+	],
+	"textureCombos": [
+		0
+	],
+	"colors": [],
+	"textureWeights": [
+		{
+			"globalSeq": 65535,
+			"interpolation": 0,
+			"timestamps": [
+				[
+					0
+				]
+			],
+			"values": [
+				[
+					32767
+				]
+			],
+			"timestampOffsets": null,
+			"valueOffsets": null
+		}
+	],
+	"transparencyLookup": [
+		0
+	],
+	"textureTransforms": [],
+	"textureTransformsLookup": [
+		65535
+	],
+	"boundingBox": {
+		"min": [
+			-0.12488237023353577,
+			-1.2652745246887207,
+			-2.283147096633911
+		],
+		"max": [
+			0.10094182938337326,
+			1.265304446220398,
+			2.2831385135650635
+		]
+	},
+	"boundingSphereRadius": 2.6127471923828125,
+	"collisionBox": {
+		"min": [
+			10000000,
+			10000000,
+			10000000
+		],
+		"max": [
+			-10000000,
+			-10000000,
+			-10000000
+		]
+	},
+	"collisionSphereRadius": 0,
+	"skin": {
+		"subMeshes": [
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 0,
+				"vertexCount": 42,
+				"triangleStart": 0,
+				"triangleCount": 54,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					0.006037702783942223,
+					0.05478919669985771,
+					0.09336090087890625
+				],
+				"sortCenterPosition": [
+					-0.011970270425081253,
+					0.000014960765838623047,
+					-0.000004291534423828125
+				],
+				"sortRadius": 2.6127471923828125
+			}
+		],
+		"textureUnits": [
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 0,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 0,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 0,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			}
+		],
+		"fileName": "world/generic/human/passive doodads/artwork/painting1100.skin",
+		"fileDataID": 504165
+	}
+}

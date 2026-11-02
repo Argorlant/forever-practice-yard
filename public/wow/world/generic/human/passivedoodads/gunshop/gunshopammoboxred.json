@@ -1,0 +1,126 @@
+{
+	"fileType": "m2",
+	"fileDataID": 198265,
+	"fileName": "world/generic/human/passive doodads/gunshop/gunshopammoboxred.m2",
+	"internalName": "GunShopAmmoBoxRed",
+	"textures": [
+		{
+			"fileNameInternal": "world/goober/gunshop.blp",
+			"fileNameExternal": "..\\..\\..\\..\\goober\\gunshop.png",
+			"mtlName": "mat_gunshop",
+			"flags": 0,
+			"fileDataID": 201151
+		}
+	],
+	"textureTypes": [
+		0
+	],
+	"materials": [
+		{
+			"flags": 4,
+			"blendingMode": 1
+		}
+	],
+	"textureCombos": [
+		0
+	],
+	"colors": [],
+	"textureWeights": [
+		{
+			"globalSeq": 65535,
+			"interpolation": 0,
+			"timestamps": [
+				[
+					0
+				]
+			],
+			"values": [
+				[
+					32767
+				]
+			],
+			"timestampOffsets": null,
+			"valueOffsets": null
+		}
+	],
+	"transparencyLookup": [
+		0
+	],
+	"textureTransforms": [],
+	"textureTransformsLookup": [
+		65535
+	],
+	"boundingBox": {
+		"min": [
+			-0.12822571396827698,
+			-0.18271386623382568,
+			0.002612324198707938
+		],
+		"max": [
+			0.1228627935051918,
+			0.18623526394367218,
+			0.16645871102809906
+		]
+	},
+	"boundingSphereRadius": 0.23770493268966675,
+	"collisionBox": {
+		"min": [
+			-0.12822571396827698,
+			-0.18271386623382568,
+			0.002612324198707938
+		],
+		"max": [
+			0.1228627935051918,
+			0.18623526394367218,
+			0.16645871102809906
+		]
+	},
+	"collisionSphereRadius": 0.23770491778850555,
+	"skin": {
+		"subMeshes": [
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 0,
+				"vertexCount": 24,
+				"triangleStart": 0,
+				"triangleCount": 36,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					-0.0026814609300345182,
+					0.00176069641020149,
+					0.08453553169965744
+				],
+				"sortCenterPosition": [
+					-0.0026814602315425873,
+					0.0017606988549232483,
+					0.08453551679849625
+				],
+				"sortRadius": 0.23770491778850555
+			}
+		],
+		"textureUnits": [
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 16,
+				"skinSectionIndex": 0,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 0,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 0,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			}
+		],
+		"fileName": "world/generic/human/passive doodads/gunshop/gunshopammoboxred00.skin",
+		"fileDataID": 504440
+	}
+}

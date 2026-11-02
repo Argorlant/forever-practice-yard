@@ -1,0 +1,230 @@
+{
+	"fileType": "m2",
+	"fileDataID": 198261,
+	"fileName": "world/generic/human/passive doodads/gryphonroost/gryphonroost01.m2",
+	"internalName": "GryphonRoost01",
+	"textures": [
+		{
+			"fileNameInternal": "world/generic/human/passive doodads/gryphonroost/gryphonroost.blp",
+			"fileNameExternal": "gryphonroost.png",
+			"mtlName": "mat_gryphonroost",
+			"flags": 0,
+			"fileDataID": 198260
+		},
+		{
+			"fileNameInternal": "creature/gryphon/gryphon_skin01.blp",
+			"fileNameExternal": "..\\..\\..\\..\\..\\creature\\gryphon\\gryphon_skin01.png",
+			"mtlName": "mat_gryphon_skin01",
+			"flags": 0,
+			"fileDataID": 124303
+		},
+		{
+			"fileNameInternal": "creature/gryphon/gryphon_skin02.blp",
+			"fileNameExternal": "..\\..\\..\\..\\..\\creature\\gryphon\\gryphon_skin02.png",
+			"mtlName": "mat_gryphon_skin02",
+			"flags": 0,
+			"fileDataID": 124306
+		}
+	],
+	"textureTypes": [
+		0,
+		0,
+		0
+	],
+	"materials": [
+		{
+			"flags": 4,
+			"blendingMode": 1
+		},
+		{
+			"flags": 4,
+			"blendingMode": 1
+		},
+		{
+			"flags": 0,
+			"blendingMode": 1
+		}
+	],
+	"textureCombos": [
+		1,
+		2,
+		0
+	],
+	"colors": [],
+	"textureWeights": [
+		{
+			"globalSeq": 65535,
+			"interpolation": 0,
+			"timestamps": [
+				[
+					0
+				]
+			],
+			"values": [
+				[
+					32767
+				]
+			],
+			"timestampOffsets": null,
+			"valueOffsets": null
+		}
+	],
+	"transparencyLookup": [
+		0
+	],
+	"textureTransforms": [],
+	"textureTransformsLookup": [
+		65535
+	],
+	"boundingBox": {
+		"min": [
+			-3.3192386627197266,
+			-3.8361783027648926,
+			-0.5250886082649231
+		],
+		"max": [
+			2.123802661895752,
+			4.151243209838867,
+			4.835083484649658
+		]
+	},
+	"boundingSphereRadius": 4.55129861831665,
+	"collisionBox": {
+		"min": [
+			-1.7634121179580688,
+			-1.7645567655563354,
+			0.00033717844053171575
+		],
+		"max": [
+			1.779193639755249,
+			1.7746732234954834,
+			2.8592331409454346
+		]
+	},
+	"collisionSphereRadius": 2.8831183910369873,
+	"skin": {
+		"subMeshes": [
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 0,
+				"vertexCount": 675,
+				"triangleStart": 0,
+				"triangleCount": 2364,
+				"boneCount": 37,
+				"boneStart": 0,
+				"boneInfluences": 4,
+				"centerBoneIndex": 23,
+				"centerPosition": [
+					0.9333123564720154,
+					0.0022145304828882217,
+					2.2314178943634033
+				],
+				"sortCenterPosition": [
+					-0.07288658618927002,
+					-1.1920928955078125e-7,
+					2.3652544021606445
+				],
+				"sortRadius": 2.403982400894165
+			},
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 675,
+				"vertexCount": 51,
+				"triangleStart": 2364,
+				"triangleCount": 282,
+				"boneCount": 37,
+				"boneStart": 0,
+				"boneInfluences": 4,
+				"centerBoneIndex": 13,
+				"centerPosition": [
+					1.1063218116760254,
+					0.012134215794503689,
+					2.8508222103118896
+				],
+				"sortCenterPosition": [
+					1.1063218116760254,
+					0.012134215794503689,
+					2.8508222103118896
+				],
+				"sortRadius": 4.848723411560059
+			},
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 726,
+				"vertexCount": 295,
+				"triangleStart": 2646,
+				"triangleCount": 756,
+				"boneCount": 37,
+				"boneStart": 0,
+				"boneInfluences": 1,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					-0.003295428352430463,
+					-0.005703242961317301,
+					1.026713252067566
+				],
+				"sortCenterPosition": [
+					0.003323197364807129,
+					0.008102118968963623,
+					1.0170693397521973
+				],
+				"sortRadius": 2.555077075958252
+			}
+		],
+		"textureUnits": [
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 16,
+				"skinSectionIndex": 2,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 0,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 2,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			},
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 16,
+				"skinSectionIndex": 0,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 1,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 0,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			},
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 16,
+				"skinSectionIndex": 1,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 2,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 1,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			}
+		],
+		"fileName": "world/generic/human/passive doodads/gryphonroost/gryphonroost0100.skin",
+		"fileDataID": 504431
+	}
+}

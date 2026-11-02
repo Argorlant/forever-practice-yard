@@ -1,0 +1,126 @@
+{
+	"fileType": "m2",
+	"fileDataID": 189682,
+	"fileName": "world/azeroth/elwynn/passivedoodads/battlegladeskullhuman1/battlegladeskullhuman1.m2",
+	"internalName": "BattleGladeSkullHuman1",
+	"textures": [
+		{
+			"fileNameInternal": "world/azeroth/elwynn/passivedoodads/battlegladeskullhuman1/battlegladeskull02.blp",
+			"fileNameExternal": "battlegladeskull02.png",
+			"mtlName": "mat_battlegladeskull02",
+			"flags": 0,
+			"fileDataID": 189681
+		}
+	],
+	"textureTypes": [
+		0
+	],
+	"materials": [
+		{
+			"flags": 4,
+			"blendingMode": 1
+		}
+	],
+	"textureCombos": [
+		0
+	],
+	"colors": [],
+	"textureWeights": [
+		{
+			"globalSeq": 65535,
+			"interpolation": 0,
+			"timestamps": [
+				[
+					0
+				]
+			],
+			"values": [
+				[
+					32767
+				]
+			],
+			"timestampOffsets": null,
+			"valueOffsets": null
+		}
+	],
+	"transparencyLookup": [
+		0
+	],
+	"textureTransforms": [],
+	"textureTransformsLookup": [
+		65535
+	],
+	"boundingBox": {
+		"min": [
+			-0.13860808312892914,
+			-0.10404596477746964,
+			-0.0036314346361905336
+		],
+		"max": [
+			0.14473025500774384,
+			0.06117112189531326,
+			0.205467090010643
+		]
+	},
+	"boundingSphereRadius": 0.15288832783699036,
+	"collisionBox": {
+		"min": [
+			10000000,
+			10000000,
+			10000000
+		],
+		"max": [
+			-10000000,
+			-10000000,
+			-10000000
+		]
+	},
+	"collisionSphereRadius": 0,
+	"skin": {
+		"subMeshes": [
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 0,
+				"vertexCount": 131,
+				"triangleStart": 0,
+				"triangleCount": 384,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					0.04052154719829559,
+					-0.02311999723315239,
+					0.10658810287714005
+				],
+				"sortCenterPosition": [
+					0.0030610859394073486,
+					-0.021437421441078186,
+					0.10091783106327057
+				],
+				"sortRadius": 0.15288832783699036
+			}
+		],
+		"textureUnits": [
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 16,
+				"skinSectionIndex": 0,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 0,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 0,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			}
+		],
+		"fileName": "world/azeroth/elwynn/passivedoodads/battlegladeskullhuman1/battlegladeskullhuman100.skin",
+		"fileDataID": 494460
+	}
+}

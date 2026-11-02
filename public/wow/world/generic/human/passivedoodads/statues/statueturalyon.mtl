@@ -1,0 +1,15 @@
+newmtl mat_turalyon01
+illum 1
+map_Kd turalyon01.png
+newmtl mat_turalyonbook
+illum 1
+map_Kd turalyonbook.png
+newmtl mat_turalyonshoulder
+illum 1
+map_Kd turalyonshoulder.png
+newmtl mat_turalyonsword
+illum 1
+map_Kd turalyonsword.png
+newmtl mat_turalyonbelt
+illum 1
+map_Kd turalyonbelt.png

@@ -1,0 +1,178 @@
+{
+	"fileType": "m2",
+	"fileDataID": 198316,
+	"fileName": "world/generic/human/passive doodads/lamps/stormwindstreetlamp01.m2",
+	"internalName": "StormwindStreetlamp01",
+	"textures": [
+		{
+			"fileNameInternal": "world/generic/human/passive doodads/lamps/streetlamp.blp",
+			"fileNameExternal": "streetlamp.png",
+			"mtlName": "mat_streetlamp",
+			"flags": 0,
+			"fileDataID": 198317
+		},
+		{
+			"fileNameInternal": "dungeons/textures/doodads/stormwindlampglass.blp",
+			"fileNameExternal": "..\\..\\..\\..\\..\\dungeons\\textures\\doodads\\stormwindlampglass.png",
+			"mtlName": "mat_stormwindlampglass",
+			"flags": 3,
+			"fileDataID": 127516
+		}
+	],
+	"textureTypes": [
+		0,
+		0
+	],
+	"materials": [
+		{
+			"flags": 0,
+			"blendingMode": 0
+		},
+		{
+			"flags": 1,
+			"blendingMode": 0
+		}
+	],
+	"textureCombos": [
+		0,
+		1
+	],
+	"colors": [],
+	"textureWeights": [
+		{
+			"globalSeq": 65535,
+			"interpolation": 0,
+			"timestamps": [
+				[
+					0
+				]
+			],
+			"values": [
+				[
+					32767
+				]
+			],
+			"timestampOffsets": null,
+			"valueOffsets": null
+		}
+	],
+	"transparencyLookup": [
+		0
+	],
+	"textureTransforms": [],
+	"textureTransformsLookup": [
+		65535
+	],
+	"boundingBox": {
+		"min": [
+			-0.5846256017684937,
+			-1.025864601135254,
+			-2.2839765634330433e-8
+		],
+		"max": [
+			0.5846256017684937,
+			0.9965599179267883,
+			4.9005584716796875
+		]
+	},
+	"boundingSphereRadius": 2.5084686279296875,
+	"collisionBox": {
+		"min": [
+			-0.5846256017684937,
+			-1.025864601135254,
+			-2.2839765634330433e-8
+		],
+		"max": [
+			0.5846256017684937,
+			0.9965599179267883,
+			4.9005584716796875
+		]
+	},
+	"collisionSphereRadius": 2.5084686279296875,
+	"skin": {
+		"subMeshes": [
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 0,
+				"vertexCount": 66,
+				"triangleStart": 0,
+				"triangleCount": 246,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					0.0009608991676941514,
+					-0.003108016215264797,
+					2.972071886062622
+				],
+				"sortCenterPosition": [
+					0,
+					-0.014652341604232788,
+					2.4502792358398438
+				],
+				"sortRadius": 2.5084686279296875
+			},
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 66,
+				"vertexCount": 16,
+				"triangleStart": 246,
+				"triangleCount": 24,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					1.6763806343078613e-8,
+					3.825157790515732e-8,
+					4.34847354888916
+				],
+				"sortCenterPosition": [
+					2.9802322387695312e-8,
+					2.9802322387695312e-8,
+					4.348474502563477
+				],
+				"sortRadius": 0.5966548919677734
+			}
+		],
+		"textureUnits": [
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 0,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 0,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 0,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			},
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 1,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 1,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 1,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			}
+		],
+		"fileName": "world/generic/human/passive doodads/lamps/stormwindstreetlamp0100.skin",
+		"fileDataID": 504480
+	}
+}

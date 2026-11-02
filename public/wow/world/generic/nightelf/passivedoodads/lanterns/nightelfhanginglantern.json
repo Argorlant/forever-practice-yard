@@ -1,0 +1,177 @@
+{
+	"fileType": "m2",
+	"fileDataID": 198779,
+	"fileName": "world/generic/nightelf/passive doodads/lanterns/nightelfhanginglantern.m2",
+	"internalName": "NightElfHangingLantern",
+	"textures": [
+		{
+			"fileNameInternal": "world/generic/nightelf/passive doodads/magicalimplements/glow.blp",
+			"fileNameExternal": "..\\magicalimplements\\glow.png",
+			"mtlName": "mat_glow",
+			"flags": 0,
+			"fileDataID": 198784
+		},
+		{
+			"fileNameInternal": "world/environment/doodad/darkshore/lamppost/texture/brian/darkshorelamppost01.blp",
+			"fileNameExternal": "..\\..\\..\\..\\environment\\doodad\\darkshore\\lamppost\\texture\\brian\\darkshorelamppost01.png",
+			"mtlName": "mat_darkshorelamppost01",
+			"flags": 3,
+			"fileDataID": 191046
+		}
+	],
+	"textureTypes": [
+		0,
+		0
+	],
+	"materials": [
+		{
+			"flags": 5,
+			"blendingMode": 1
+		},
+		{
+			"flags": 4,
+			"blendingMode": 1
+		}
+	],
+	"textureCombos": [
+		1
+	],
+	"colors": [],
+	"textureWeights": [
+		{
+			"globalSeq": 65535,
+			"interpolation": 0,
+			"timestamps": [
+				[
+					0
+				]
+			],
+			"values": [
+				[
+					32767
+				]
+			],
+			"timestampOffsets": null,
+			"valueOffsets": null
+		}
+	],
+	"transparencyLookup": [
+		0
+	],
+	"textureTransforms": [],
+	"textureTransformsLookup": [
+		65535
+	],
+	"boundingBox": {
+		"min": [
+			-1.7721740007400513,
+			-3.663076162338257,
+			-5.231666564941406
+		],
+		"max": [
+			1.8329448699951172,
+			3.54716157913208,
+			1.0125815868377686
+		]
+	},
+	"boundingSphereRadius": 5.098407745361328,
+	"collisionBox": {
+		"min": [
+			10000000,
+			10000000,
+			10000000
+		],
+		"max": [
+			-10000000,
+			-10000000,
+			-10000000
+		]
+	},
+	"collisionSphereRadius": 0,
+	"skin": {
+		"subMeshes": [
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 0,
+				"vertexCount": 68,
+				"triangleStart": 0,
+				"triangleCount": 240,
+				"boneCount": 2,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					-0.024692876264452934,
+					0.0011669928207993507,
+					-1.9740488529205322
+				],
+				"sortCenterPosition": [
+					-0.024692876264452934,
+					0.0011669928207993507,
+					-1.9740488529205322
+				],
+				"sortRadius": 0.7815530300140381
+			},
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 68,
+				"vertexCount": 14,
+				"triangleStart": 240,
+				"triangleCount": 36,
+				"boneCount": 2,
+				"boneStart": 0,
+				"boneInfluences": 1,
+				"centerBoneIndex": 1,
+				"centerPosition": [
+					-0.017090346664190292,
+					0.0036591431125998497,
+					-0.8702274560928345
+				],
+				"sortCenterPosition": [
+					-0.017090341076254845,
+					0.003659158945083618,
+					-0.8617837429046631
+				],
+				"sortRadius": 0.8721225261688232
+			}
+		],
+		"textureUnits": [
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 16,
+				"skinSectionIndex": 0,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 0,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 0,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			},
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 16,
+				"skinSectionIndex": 1,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 1,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 0,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			}
+		],
+		"fileName": "world/generic/nightelf/passive doodads/lanterns/nightelfhanginglantern00.skin",
+		"fileDataID": 504878
+	}
+}

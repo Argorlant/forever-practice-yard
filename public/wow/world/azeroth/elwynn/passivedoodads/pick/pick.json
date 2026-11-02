@@ -1,0 +1,230 @@
+{
+	"fileType": "m2",
+	"fileDataID": 189834,
+	"fileName": "world/azeroth/elwynn/passivedoodads/pick/pick.m2",
+	"internalName": "Pick",
+	"textures": [
+		{
+			"fileNameInternal": "world/azeroth/elwynn/passivedoodads/pick/pick.blp",
+			"fileNameExternal": "pick.png",
+			"mtlName": "mat_pick",
+			"flags": 0,
+			"fileDataID": 189833
+		},
+		{
+			"fileNameInternal": "world/azeroth/elwynn/passivedoodads/pick/shovel.blp",
+			"fileNameExternal": "shovel.png",
+			"mtlName": "mat_shovel",
+			"flags": 3,
+			"fileDataID": 189835
+		},
+		{
+			"fileNameInternal": "world/azeroth/elwynn/passivedoodads/pick/shoveltop.blp",
+			"fileNameExternal": "shoveltop.png",
+			"mtlName": "mat_shoveltop",
+			"flags": 0,
+			"fileDataID": 189836
+		}
+	],
+	"textureTypes": [
+		0,
+		0,
+		0
+	],
+	"materials": [
+		{
+			"flags": 0,
+			"blendingMode": 0
+		},
+		{
+			"flags": 0,
+			"blendingMode": 0
+		},
+		{
+			"flags": 0,
+			"blendingMode": 0
+		}
+	],
+	"textureCombos": [
+		0,
+		1,
+		2
+	],
+	"colors": [],
+	"textureWeights": [
+		{
+			"globalSeq": 65535,
+			"interpolation": 0,
+			"timestamps": [
+				[
+					0
+				]
+			],
+			"values": [
+				[
+					32767
+				]
+			],
+			"timestampOffsets": null,
+			"valueOffsets": null
+		}
+	],
+	"transparencyLookup": [
+		0
+	],
+	"textureTransforms": [],
+	"textureTransformsLookup": [
+		65535
+	],
+	"boundingBox": {
+		"min": [
+			-0.07301080226898193,
+			-0.2572700083255768,
+			-0.006910829804837704
+		],
+		"max": [
+			0.07370439916849136,
+			0.40494999289512634,
+			0.870278000831604
+		]
+	},
+	"boundingSphereRadius": 0.4779140055179596,
+	"collisionBox": {
+		"min": [
+			10000000,
+			10000000,
+			10000000
+		],
+		"max": [
+			-10000000,
+			-10000000,
+			-10000000
+		]
+	},
+	"collisionSphereRadius": 0,
+	"skin": {
+		"subMeshes": [
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 0,
+				"vertexCount": 54,
+				"triangleStart": 0,
+				"triangleCount": 165,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					0.00497127091512084,
+					-0.060901083052158356,
+					0.7065321207046509
+				],
+				"sortCenterPosition": [
+					-0.0001400001347064972,
+					0.07383999228477478,
+					0.6923774480819702
+				],
+				"sortRadius": 0.3437594771385193
+			},
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 54,
+				"vertexCount": 25,
+				"triangleStart": 165,
+				"triangleCount": 66,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					0.009454946033656597,
+					0.012833829037845135,
+					0.4624098837375641
+				],
+				"sortCenterPosition": [
+					0.00034679844975471497,
+					0.0034085996448993683,
+					0.43168359994888306
+				],
+				"sortRadius": 0.4446868896484375
+			},
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 79,
+				"vertexCount": 8,
+				"triangleStart": 231,
+				"triangleCount": 12,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					0.00034677129588089883,
+					0.0034085018560290337,
+					0.43168359994888306
+				],
+				"sortCenterPosition": [
+					0.00034679844975471497,
+					0.0034085996448993683,
+					0.43168359994888306
+				],
+				"sortRadius": 0.4446868896484375
+			}
+		],
+		"textureUnits": [
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 0,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 0,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 0,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			},
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 1,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 1,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 1,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			},
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 2,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 2,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 2,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			}
+		],
+		"fileName": "world/azeroth/elwynn/passivedoodads/pick/pick00.skin",
+		"fileDataID": 494545
+	}
+}

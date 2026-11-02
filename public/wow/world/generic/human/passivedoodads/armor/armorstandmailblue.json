@@ -1,0 +1,126 @@
+{
+	"fileType": "m2",
+	"fileDataID": 197911,
+	"fileName": "world/generic/human/passive doodads/armor/armorstandmailblue.m2",
+	"internalName": "ArmorStandMailBlue",
+	"textures": [
+		{
+			"fileNameInternal": "world/generic/human/passive doodads/armor/armorermisc.blp",
+			"fileNameExternal": "armorermisc.png",
+			"mtlName": "mat_armorermisc",
+			"flags": 0,
+			"fileDataID": 197868
+		}
+	],
+	"textureTypes": [
+		0
+	],
+	"materials": [
+		{
+			"flags": 4,
+			"blendingMode": 1
+		}
+	],
+	"textureCombos": [
+		0
+	],
+	"colors": [],
+	"textureWeights": [
+		{
+			"globalSeq": 65535,
+			"interpolation": 0,
+			"timestamps": [
+				[
+					0
+				]
+			],
+			"values": [
+				[
+					32767
+				]
+			],
+			"timestampOffsets": null,
+			"valueOffsets": null
+		}
+	],
+	"transparencyLookup": [
+		0
+	],
+	"textureTransforms": [],
+	"textureTransformsLookup": [
+		65535
+	],
+	"boundingBox": {
+		"min": [
+			-0.44853898882865906,
+			-0.439736008644104,
+			0.0026194399688392878
+		],
+		"max": [
+			0.4472860097885132,
+			0.4289030134677887,
+			1.7877299785614014
+		]
+	},
+	"boundingSphereRadius": 0.9996539950370789,
+	"collisionBox": {
+		"min": [
+			-0.4507080018520355,
+			-0.43979400396347046,
+			0
+		],
+		"max": [
+			0.44615301489830017,
+			0.43091699481010437,
+			1.7777800559997559
+		]
+	},
+	"collisionSphereRadius": 1.0866230726242065,
+	"skin": {
+		"subMeshes": [
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 0,
+				"vertexCount": 218,
+				"triangleStart": 0,
+				"triangleCount": 354,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					0.0009240792132914066,
+					0.003529943060129881,
+					0.6534793376922607
+				],
+				"sortCenterPosition": [
+					-0.000626489520072937,
+					-0.005416497588157654,
+					0.8951746821403503
+				],
+				"sortRadius": 0.9996538758277893
+			}
+		],
+		"textureUnits": [
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 16,
+				"skinSectionIndex": 0,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 0,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 0,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			}
+		],
+		"fileName": "world/generic/human/passive doodads/armor/armorstandmailblue00.skin",
+		"fileDataID": 504131
+	}
+}

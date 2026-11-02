@@ -1,0 +1,126 @@
+{
+	"fileType": "m2",
+	"fileDataID": 199567,
+	"fileName": "world/generic/passivedoodads/barrel/brokenbarrel02.m2",
+	"internalName": "BrokenBarrel02",
+	"textures": [
+		{
+			"fileNameInternal": "world/generic/passivedoodads/barrel/westfallbarrel01skin.blp",
+			"fileNameExternal": "westfallbarrel01skin.png",
+			"mtlName": "mat_westfallbarrel01skin",
+			"flags": 3,
+			"fileDataID": 199568
+		}
+	],
+	"textureTypes": [
+		0
+	],
+	"materials": [
+		{
+			"flags": 4,
+			"blendingMode": 0
+		}
+	],
+	"textureCombos": [
+		0
+	],
+	"colors": [],
+	"textureWeights": [
+		{
+			"globalSeq": 65535,
+			"interpolation": 0,
+			"timestamps": [
+				[
+					0
+				]
+			],
+			"values": [
+				[
+					32767
+				]
+			],
+			"timestampOffsets": null,
+			"valueOffsets": null
+		}
+	],
+	"transparencyLookup": [
+		0
+	],
+	"textureTransforms": [],
+	"textureTransformsLookup": [
+		65535
+	],
+	"boundingBox": {
+		"min": [
+			-1.2347300052642822,
+			-0.5800219774246216,
+			-0.03521440178155899
+		],
+		"max": [
+			0.42882800102233887,
+			0.8156669735908508,
+			1.0184799432754517
+		]
+	},
+	"boundingSphereRadius": 1.045889973640442,
+	"collisionBox": {
+		"min": [
+			-0.4087330102920532,
+			-0.4720419943332672,
+			0
+		],
+		"max": [
+			0.4288310110569,
+			0.4107309877872467,
+			0.9992809891700745
+		]
+	},
+	"collisionSphereRadius": 0.7048722505569458,
+	"skin": {
+		"subMeshes": [
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 0,
+				"vertexCount": 86,
+				"triangleStart": 0,
+				"triangleCount": 192,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					-0.16622640192508698,
+					0.02138051949441433,
+					0.43441444635391235
+				],
+				"sortCenterPosition": [
+					-0.4029510021209717,
+					0.11782249808311462,
+					0.49163275957107544
+				],
+				"sortRadius": 1.0458909273147583
+			}
+		],
+		"textureUnits": [
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 0,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 0,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 0,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			}
+		],
+		"fileName": "world/generic/passivedoodads/barrel/brokenbarrel0200.skin",
+		"fileDataID": 505484
+	}
+}

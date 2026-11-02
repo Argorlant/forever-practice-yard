@@ -1,0 +1,126 @@
+{
+	"fileType": "m2",
+	"fileDataID": 189596,
+	"fileName": "world/azeroth/duskwood/passivedoodads/webs/webdangle02.m2",
+	"internalName": "WebDangle02",
+	"textures": [
+		{
+			"fileNameInternal": "world/azeroth/duskwood/passivedoodads/trees/duskwoodtree01_web.blp",
+			"fileNameExternal": "..\\trees\\duskwoodtree01_web.png",
+			"mtlName": "mat_duskwoodtree01_web",
+			"flags": 3,
+			"fileDataID": 189554
+		}
+	],
+	"textureTypes": [
+		0
+	],
+	"materials": [
+		{
+			"flags": 20,
+			"blendingMode": 2
+		}
+	],
+	"textureCombos": [
+		0
+	],
+	"colors": [],
+	"textureWeights": [
+		{
+			"globalSeq": 65535,
+			"interpolation": 0,
+			"timestamps": [
+				[
+					0
+				]
+			],
+			"values": [
+				[
+					32767
+				]
+			],
+			"timestampOffsets": null,
+			"valueOffsets": null
+		}
+	],
+	"transparencyLookup": [
+		0
+	],
+	"textureTransforms": [],
+	"textureTransformsLookup": [
+		65535
+	],
+	"boundingBox": {
+		"min": [
+			-1.1528500318527222,
+			-3.4870903491973877,
+			-0.3132985830307007
+		],
+		"max": [
+			1.157812476158142,
+			3.403874158859253,
+			5.995308876037598
+		]
+	},
+	"boundingSphereRadius": 4.671605110168457,
+	"collisionBox": {
+		"min": [
+			10000000,
+			10000000,
+			10000000
+		],
+		"max": [
+			-10000000,
+			-10000000,
+			-10000000
+		]
+	},
+	"collisionSphereRadius": 0,
+	"skin": {
+		"subMeshes": [
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 0,
+				"vertexCount": 7,
+				"triangleStart": 0,
+				"triangleCount": 15,
+				"boneCount": 3,
+				"boneStart": 0,
+				"boneInfluences": 2,
+				"centerBoneIndex": 1,
+				"centerPosition": [
+					0.02459997497498989,
+					-0.021307487040758133,
+					3.1947696208953857
+				],
+				"sortCenterPosition": [
+					0.02459997497498989,
+					-0.021307487040758133,
+					3.1947696208953857
+				],
+				"sortRadius": 4.455972194671631
+			}
+		],
+		"textureUnits": [
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 16,
+				"skinSectionIndex": 0,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 0,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 0,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			}
+		],
+		"fileName": "world/azeroth/duskwood/passivedoodads/webs/webdangle0200.skin",
+		"fileDataID": 494437
+	}
+}

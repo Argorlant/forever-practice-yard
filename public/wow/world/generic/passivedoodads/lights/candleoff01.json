@@ -1,0 +1,178 @@
+{
+	"fileType": "m2",
+	"fileDataID": 199810,
+	"fileName": "world/generic/passivedoodads/lights/candleoff01.m2",
+	"internalName": "CandleOff01",
+	"textures": [
+		{
+			"fileNameInternal": "world/generic/passivedoodads/lights/candel_cave01.blp",
+			"fileNameExternal": "candel_cave01.png",
+			"mtlName": "mat_candel_cave01",
+			"flags": 3,
+			"fileDataID": 199799
+		},
+		{
+			"fileNameInternal": "world/generic/passivedoodads/lights/candel_thread.blp",
+			"fileNameExternal": "candel_thread.png",
+			"mtlName": "mat_candel_thread",
+			"flags": 0,
+			"fileDataID": 199800
+		}
+	],
+	"textureTypes": [
+		0,
+		0
+	],
+	"materials": [
+		{
+			"flags": 0,
+			"blendingMode": 0
+		},
+		{
+			"flags": 4,
+			"blendingMode": 1
+		}
+	],
+	"textureCombos": [
+		0,
+		1
+	],
+	"colors": [],
+	"textureWeights": [
+		{
+			"globalSeq": 65535,
+			"interpolation": 0,
+			"timestamps": [
+				[
+					0
+				]
+			],
+			"values": [
+				[
+					32767
+				]
+			],
+			"timestampOffsets": null,
+			"valueOffsets": null
+		}
+	],
+	"transparencyLookup": [
+		0
+	],
+	"textureTransforms": [],
+	"textureTransformsLookup": [
+		65535
+	],
+	"boundingBox": {
+		"min": [
+			-0.11840178072452545,
+			-0.12108424305915833,
+			0
+		],
+		"max": [
+			0.12145736813545227,
+			0.1187749058008194,
+			0.5640877485275269
+		]
+	},
+	"boundingSphereRadius": 0.30648303031921387,
+	"collisionBox": {
+		"min": [
+			-0.11915940791368484,
+			-0.11977598816156387,
+			0
+		],
+		"max": [
+			0.11990664899349213,
+			0.1192968562245369,
+			0.534995973110199
+		]
+	},
+	"collisionSphereRadius": 0.2929929196834564,
+	"skin": {
+		"subMeshes": [
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 0,
+				"vertexCount": 16,
+				"triangleStart": 0,
+				"triangleCount": 36,
+				"boneCount": 2,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					-0.015504183247685432,
+					-0.0018681490328162909,
+					0.34971633553504944
+				],
+				"sortCenterPosition": [
+					0.0015277937054634094,
+					-0.0011546686291694641,
+					0.2672034800052643
+				],
+				"sortRadius": 0.29288360476493835
+			},
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 16,
+				"vertexCount": 3,
+				"triangleStart": 36,
+				"triangleCount": 3,
+				"boneCount": 2,
+				"boneStart": 0,
+				"boneInfluences": 1,
+				"centerBoneIndex": 1,
+				"centerPosition": [
+					1.6669117641754383e-8,
+					0.002550688572227955,
+					0.5112643837928772
+				],
+				"sortCenterPosition": [
+					1.678925798387354e-8,
+					0.003210357390344143,
+					0.5244702100753784
+				],
+				"sortRadius": 0.04090222716331482
+			}
+		],
+		"textureUnits": [
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 0,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 0,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 0,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			},
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 16,
+				"skinSectionIndex": 1,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 1,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 1,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			}
+		],
+		"fileName": "world/generic/passivedoodads/lights/candleoff0100.skin",
+		"fileDataID": 505702
+	}
+}

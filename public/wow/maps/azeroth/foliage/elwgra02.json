@@ -1,0 +1,126 @@
+{
+	"fileType": "m2",
+	"fileDataID": 218813,
+	"fileName": "world/nodxt/detail/elwgra02.m2",
+	"internalName": "ElwGra02",
+	"textures": [
+		{
+			"fileNameInternal": "world/nodxt/detail/newelynngrassflowerrock128.blp",
+			"fileNameExternal": "..\\..\\..\\world\\nodxt\\detail\\newelynngrassflowerrock128.png",
+			"mtlName": "mat_newelynngrassflowerrock128",
+			"flags": 0,
+			"fileDataID": 218982
+		}
+	],
+	"textureTypes": [
+		0
+	],
+	"materials": [
+		{
+			"flags": 4,
+			"blendingMode": 1
+		}
+	],
+	"textureCombos": [
+		0
+	],
+	"colors": [],
+	"textureWeights": [
+		{
+			"globalSeq": 65535,
+			"interpolation": 0,
+			"timestamps": [
+				[
+					0
+				]
+			],
+			"values": [
+				[
+					32767
+				]
+			],
+			"timestampOffsets": null,
+			"valueOffsets": null
+		}
+	],
+	"transparencyLookup": [
+		0
+	],
+	"textureTransforms": [],
+	"textureTransformsLookup": [
+		65535
+	],
+	"boundingBox": {
+		"min": [
+			-0.4733518958091736,
+			-0.5304431915283203,
+			-0.08000049740076065
+		],
+		"max": [
+			0.5897912383079529,
+			0.5993770956993103,
+			1.5129663944244385
+		]
+	},
+	"boundingSphereRadius": 0.977028489112854,
+	"collisionBox": {
+		"min": [
+			10000000,
+			10000000,
+			10000000
+		],
+		"max": [
+			-10000000,
+			-10000000,
+			-10000000
+		]
+	},
+	"collisionSphereRadius": 0,
+	"skin": {
+		"subMeshes": [
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 0,
+				"vertexCount": 8,
+				"triangleStart": 0,
+				"triangleCount": 12,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					0.013333833776414394,
+					0.004240609705448151,
+					0.5569255352020264
+				],
+				"sortCenterPosition": [
+					0.05821967124938965,
+					0.034466952085494995,
+					0.716482937335968
+				],
+				"sortRadius": 0.977028489112854
+			}
+		],
+		"textureUnits": [
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 16,
+				"skinSectionIndex": 0,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 0,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 0,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			}
+		],
+		"fileName": "world/nodxt/detail/elwgra0200.skin",
+		"fileDataID": 508883
+	}
+}

@@ -1,0 +1,178 @@
+{
+	"fileType": "m2",
+	"fileDataID": 189751,
+	"fileName": "world/azeroth/elwynn/passivedoodads/detail/elwynnflower01.m2",
+	"internalName": "ElwynnFlower01",
+	"textures": [
+		{
+			"fileNameInternal": "world/azeroth/elwynn/passivedoodads/detail/elwynnflowerleaf01.blp",
+			"fileNameExternal": "elwynnflowerleaf01.png",
+			"mtlName": "mat_elwynnflowerleaf01",
+			"flags": 3,
+			"fileDataID": 189753
+		},
+		{
+			"fileNameInternal": "world/generic/human/passive doodads/planterboxes/elwynnflowertop01a.blp",
+			"fileNameExternal": "..\\..\\..\\..\\generic\\human\\passivedoodads\\planterboxes\\elwynnflowertop01a.png",
+			"mtlName": "mat_elwynnflowertop01a",
+			"flags": 1,
+			"fileDataID": 198392
+		}
+	],
+	"textureTypes": [
+		0,
+		0
+	],
+	"materials": [
+		{
+			"flags": 4,
+			"blendingMode": 1
+		},
+		{
+			"flags": 4,
+			"blendingMode": 1
+		}
+	],
+	"textureCombos": [
+		0,
+		1
+	],
+	"colors": [],
+	"textureWeights": [
+		{
+			"globalSeq": 65535,
+			"interpolation": 0,
+			"timestamps": [
+				[
+					0
+				]
+			],
+			"values": [
+				[
+					32767
+				]
+			],
+			"timestampOffsets": null,
+			"valueOffsets": null
+		}
+	],
+	"transparencyLookup": [
+		0
+	],
+	"textureTransforms": [],
+	"textureTransformsLookup": [
+		65535
+	],
+	"boundingBox": {
+		"min": [
+			-0.6979811191558838,
+			-0.41495954990386963,
+			-0.017176268622279167
+		],
+		"max": [
+			0.22594158351421356,
+			0.37362128496170044,
+			0.8811953663825989
+		]
+	},
+	"boundingSphereRadius": 0.672930121421814,
+	"collisionBox": {
+		"min": [
+			10000000,
+			10000000,
+			10000000
+		],
+		"max": [
+			-10000000,
+			-10000000,
+			-10000000
+		]
+	},
+	"collisionSphereRadius": 0,
+	"skin": {
+		"subMeshes": [
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 0,
+				"vertexCount": 30,
+				"triangleStart": 0,
+				"triangleCount": 60,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					-0.10379818826913834,
+					0.022157639265060425,
+					0.211946040391922
+				],
+				"sortCenterPosition": [
+					-0.23601976037025452,
+					0.0032126307487487793,
+					0.30093300342559814
+				],
+				"sortRadius": 0.6130185723304749
+			},
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 30,
+				"vertexCount": 18,
+				"triangleStart": 60,
+				"triangleCount": 24,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					-0.16272827982902527,
+					-0.025418804958462715,
+					0.7406166195869446
+				],
+				"sortCenterPosition": [
+					-0.16028867661952972,
+					-0.046308621764183044,
+					0.7059274911880493
+				],
+				"sortRadius": 0.43446946144104004
+			}
+		],
+		"textureUnits": [
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 16,
+				"skinSectionIndex": 0,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 0,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 0,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			},
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 16,
+				"skinSectionIndex": 1,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 1,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 1,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			}
+		],
+		"fileName": "world/azeroth/elwynn/passivedoodads/detail/elwynnflower0100.skin",
+		"fileDataID": 494494
+	}
+}

@@ -1,0 +1,126 @@
+{
+	"fileType": "m2",
+	"fileDataID": 190635,
+	"fileName": "world/azeroth/westfall/passivedoodads/tombstones/tombstone03.m2",
+	"internalName": "TombStone03",
+	"textures": [
+		{
+			"fileNameInternal": "interface/glues/models/ui_scourge/cemetery01.blp",
+			"fileNameExternal": "..\\..\\..\\..\\..\\interface\\glues\\models\\ui_scourge\\cemetery01.png",
+			"mtlName": "mat_cemetery01",
+			"flags": 3,
+			"fileDataID": 132027
+		}
+	],
+	"textureTypes": [
+		0
+	],
+	"materials": [
+		{
+			"flags": 0,
+			"blendingMode": 0
+		}
+	],
+	"textureCombos": [
+		0
+	],
+	"colors": [],
+	"textureWeights": [
+		{
+			"globalSeq": 65535,
+			"interpolation": 0,
+			"timestamps": [
+				[
+					0
+				]
+			],
+			"values": [
+				[
+					32767
+				]
+			],
+			"timestampOffsets": null,
+			"valueOffsets": null
+		}
+	],
+	"transparencyLookup": [
+		0
+	],
+	"textureTransforms": [],
+	"textureTransformsLookup": [
+		65535
+	],
+	"boundingBox": {
+		"min": [
+			-0.2314511388540268,
+			-0.5607911944389343,
+			-0.002010822296142578
+		],
+		"max": [
+			0.1951407939195633,
+			0.5598866939544678,
+			1.6887482404708862
+		]
+	},
+	"boundingSphereRadius": 1.0364079475402832,
+	"collisionBox": {
+		"min": [
+			10000000,
+			10000000,
+			10000000
+		],
+		"max": [
+			-10000000,
+			-10000000,
+			-10000000
+		]
+	},
+	"collisionSphereRadius": 0,
+	"skin": {
+		"subMeshes": [
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 0,
+				"vertexCount": 22,
+				"triangleStart": 0,
+				"triangleCount": 48,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					-0.018155250698328018,
+					-0.00045226243673823774,
+					0.8667436242103577
+				],
+				"sortCenterPosition": [
+					-0.01815517246723175,
+					-0.00045225024223327637,
+					0.8433687090873718
+				],
+				"sortRadius": 1.0364079475402832
+			}
+		],
+		"textureUnits": [
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 0,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 0,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 0,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			}
+		],
+		"fileName": "world/azeroth/westfall/passivedoodads/tombstones/tombstone0300.skin",
+		"fileDataID": 494988
+	}
+}

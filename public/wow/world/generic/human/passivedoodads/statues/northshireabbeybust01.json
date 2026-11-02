@@ -1,0 +1,126 @@
+{
+	"fileType": "m2",
+	"fileDataID": 198558,
+	"fileName": "world/generic/human/passive doodads/statues/northshireabbeybust01.m2",
+	"internalName": "NorthshireAbbeyBust01",
+	"textures": [
+		{
+			"fileNameInternal": "world/generic/human/passive doodads/statues/bust01.blp",
+			"fileNameExternal": "bust01.png",
+			"mtlName": "mat_bust01",
+			"flags": 0,
+			"fileDataID": 198534
+		}
+	],
+	"textureTypes": [
+		0
+	],
+	"materials": [
+		{
+			"flags": 0,
+			"blendingMode": 0
+		}
+	],
+	"textureCombos": [
+		0
+	],
+	"colors": [],
+	"textureWeights": [
+		{
+			"globalSeq": 65535,
+			"interpolation": 0,
+			"timestamps": [
+				[
+					0
+				]
+			],
+			"values": [
+				[
+					32767
+				]
+			],
+			"timestampOffsets": null,
+			"valueOffsets": null
+		}
+	],
+	"transparencyLookup": [
+		0
+	],
+	"textureTransforms": [],
+	"textureTransformsLookup": [
+		65535
+	],
+	"boundingBox": {
+		"min": [
+			-0.26917099952697754,
+			-0.3889560103416443,
+			-0.06234360113739967
+		],
+		"max": [
+			0.2872920036315918,
+			0.3889560103416443,
+			1.0704100131988525
+		]
+	},
+	"boundingSphereRadius": 0.690339982509613,
+	"collisionBox": {
+		"min": [
+			-0.26578399538993835,
+			-0.39045000076293945,
+			-0.05555560067296028
+		],
+		"max": [
+			0.287075012922287,
+			0.3878059983253479,
+			1.0530400276184082
+		]
+	},
+	"collisionSphereRadius": 0.6813797950744629,
+	"skin": {
+		"subMeshes": [
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 0,
+				"vertexCount": 71,
+				"triangleStart": 0,
+				"triangleCount": 243,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					0.043022844940423965,
+					-1.0493774738051798e-9,
+					0.6340873837471008
+				],
+				"sortCenterPosition": [
+					0.009060502052307129,
+					0,
+					0.5040332078933716
+				],
+				"sortRadius": 0.6903377175331116
+			}
+		],
+		"textureUnits": [
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 0,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 0,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 0,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			}
+		],
+		"fileName": "world/generic/human/passive doodads/statues/northshireabbeybust0100.skin",
+		"fileDataID": 504638
+	}
+}

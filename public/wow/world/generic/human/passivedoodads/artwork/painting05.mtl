@@ -1,0 +1,3 @@
+newmtl mat_painting01
+illum 1
+map_Kd painting01.png

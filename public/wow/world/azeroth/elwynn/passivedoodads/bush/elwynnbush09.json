@@ -1,0 +1,126 @@
+{
+	"fileType": "m2",
+	"fileDataID": 189700,
+	"fileName": "world/azeroth/elwynn/passivedoodads/bush/elwynnbush09.m2",
+	"internalName": "ElwynnBush09",
+	"textures": [
+		{
+			"fileNameInternal": "world/azeroth/elwynn/passivedoodads/trees/stumps/elwynnshrub09.blp",
+			"fileNameExternal": "..\\trees\\stumps\\elwynnshrub09.png",
+			"mtlName": "mat_elwynnshrub09",
+			"flags": 0,
+			"fileDataID": 189937
+		}
+	],
+	"textureTypes": [
+		0
+	],
+	"materials": [
+		{
+			"flags": 4,
+			"blendingMode": 1
+		}
+	],
+	"textureCombos": [
+		0
+	],
+	"colors": [],
+	"textureWeights": [
+		{
+			"globalSeq": 65535,
+			"interpolation": 0,
+			"timestamps": [
+				[
+					0
+				]
+			],
+			"values": [
+				[
+					32767
+				]
+			],
+			"timestampOffsets": null,
+			"valueOffsets": null
+		}
+	],
+	"transparencyLookup": [
+		0
+	],
+	"textureTransforms": [],
+	"textureTransformsLookup": [
+		65535
+	],
+	"boundingBox": {
+		"min": [
+			-2.866702079772949,
+			-2.8298590183258057,
+			-0.43450504541397095
+		],
+		"max": [
+			2.8667023181915283,
+			2.8298590183258057,
+			4.222479343414307
+		]
+	},
+	"boundingSphereRadius": 4.050671100616455,
+	"collisionBox": {
+		"min": [
+			10000000,
+			10000000,
+			10000000
+		],
+		"max": [
+			-10000000,
+			-10000000,
+			-10000000
+		]
+	},
+	"collisionSphereRadius": 0,
+	"skin": {
+		"subMeshes": [
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 0,
+				"vertexCount": 22,
+				"triangleStart": 0,
+				"triangleCount": 54,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					-0.0007118962239474058,
+					0.0818312019109726,
+					0.9721099734306335
+				],
+				"sortCenterPosition": [
+					1.1920928955078125e-7,
+					0,
+					1.8939871788024902
+				],
+				"sortRadius": 4.050671100616455
+			}
+		],
+		"textureUnits": [
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 16,
+				"skinSectionIndex": 0,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 0,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 0,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			}
+		],
+		"fileName": "world/azeroth/elwynn/passivedoodads/bush/elwynnbush0900.skin",
+		"fileDataID": 494474
+	}
+}

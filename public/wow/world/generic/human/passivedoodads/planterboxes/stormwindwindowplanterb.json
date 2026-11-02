@@ -1,0 +1,334 @@
+{
+	"fileType": "m2",
+	"fileDataID": 198397,
+	"fileName": "world/generic/human/passive doodads/planterboxes/stormwindwindowplanterb.m2",
+	"internalName": "StormwindWindowPlanterB",
+	"textures": [
+		{
+			"fileNameInternal": "world/generic/human/passive doodads/planterboxes/planterbox.blp",
+			"fileNameExternal": "planterbox.png",
+			"mtlName": "mat_planterbox",
+			"flags": 0,
+			"fileDataID": 198393
+		},
+		{
+			"fileNameInternal": "tileset/elwynn/elwynndirtbase.blp",
+			"fileNameExternal": "..\\..\\..\\..\\..\\tileset\\elwynn\\elwynndirtbase.png",
+			"mtlName": "mat_elwynndirtbase",
+			"flags": 0,
+			"fileDataID": 187113
+		},
+		{
+			"fileNameInternal": "world/azeroth/elwynn/passivedoodads/detail/elwynnflowerleaf01.blp",
+			"fileNameExternal": "..\\..\\..\\..\\azeroth\\elwynn\\passivedoodads\\detail\\elwynnflowerleaf01.png",
+			"mtlName": "mat_elwynnflowerleaf01",
+			"flags": 3,
+			"fileDataID": 189753
+		},
+		{
+			"fileNameInternal": "world/generic/human/passive doodads/planterboxes/elwynnflowertop01a.blp",
+			"fileNameExternal": "elwynnflowertop01a.png",
+			"mtlName": "mat_elwynnflowertop01a",
+			"flags": 1,
+			"fileDataID": 198392
+		},
+		{
+			"fileNameInternal": "world/generic/human/passive doodads/planterboxes/elwynnflower03a.blp",
+			"fileNameExternal": "elwynnflower03a.png",
+			"mtlName": "mat_elwynnflower03a",
+			"flags": 1,
+			"fileDataID": 198391
+		}
+	],
+	"textureTypes": [
+		0,
+		0,
+		0,
+		0,
+		0
+	],
+	"materials": [
+		{
+			"flags": 0,
+			"blendingMode": 0
+		},
+		{
+			"flags": 0,
+			"blendingMode": 0
+		},
+		{
+			"flags": 4,
+			"blendingMode": 1
+		},
+		{
+			"flags": 4,
+			"blendingMode": 1
+		},
+		{
+			"flags": 4,
+			"blendingMode": 1
+		}
+	],
+	"textureCombos": [
+		2,
+		3,
+		4,
+		0,
+		1
+	],
+	"colors": [],
+	"textureWeights": [
+		{
+			"globalSeq": 65535,
+			"interpolation": 0,
+			"timestamps": [
+				[
+					0
+				]
+			],
+			"values": [
+				[
+					32767
+				]
+			],
+			"timestampOffsets": null,
+			"valueOffsets": null
+		}
+	],
+	"transparencyLookup": [
+		0
+	],
+	"textureTransforms": [],
+	"textureTransformsLookup": [
+		65535
+	],
+	"boundingBox": {
+		"min": [
+			-0.06237136200070381,
+			-2.81195068359375,
+			-0.5284408926963806
+		],
+		"max": [
+			2.199946165084839,
+			2.81195068359375,
+			1.9268485307693481
+		]
+	},
+	"boundingSphereRadius": 3.032144546508789,
+	"collisionBox": {
+		"min": [
+			-0.06237136200070381,
+			-2.81195068359375,
+			-0.5284408926963806
+		],
+		"max": [
+			1.9566481113433838,
+			2.81195068359375,
+			0.7847293615341187
+		]
+	},
+	"collisionSphereRadius": 3.058967351913452,
+	"skin": {
+		"subMeshes": [
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 0,
+				"vertexCount": 60,
+				"triangleStart": 0,
+				"triangleCount": 120,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					1.306949257850647,
+					0.1302291452884674,
+					0.8876470923423767
+				],
+				"sortCenterPosition": [
+					1.2367311716079712,
+					0.3068356513977051,
+					1.040259838104248
+				],
+				"sortRadius": 2.2130179405212402
+			},
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 60,
+				"vertexCount": 37,
+				"triangleStart": 120,
+				"triangleCount": 48,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					1.663277506828308,
+					0.01999839022755623,
+					1.7073416709899902
+				],
+				"sortCenterPosition": [
+					1.663277506828308,
+					0.01999839022755623,
+					1.7073416709899902
+				],
+				"sortRadius": 1.9620970487594604
+			},
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 97,
+				"vertexCount": 36,
+				"triangleStart": 168,
+				"triangleCount": 54,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					0.9291620254516602,
+					0.0019259718246757984,
+					0.8803113698959351
+				],
+				"sortCenterPosition": [
+					0.9291620254516602,
+					0.0019259718246757984,
+					0.8803113698959351
+				],
+				"sortRadius": 2.3871688842773438
+			},
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 133,
+				"vertexCount": 54,
+				"triangleStart": 222,
+				"triangleCount": 78,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					0.9191775321960449,
+					0.09164900332689285,
+					0.42403483390808105
+				],
+				"sortCenterPosition": [
+					0.9471383690834045,
+					0,
+					0.1281442642211914
+				],
+				"sortRadius": 3.058967351913452
+			},
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 187,
+				"vertexCount": 4,
+				"triangleStart": 300,
+				"triangleCount": 6,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					1.0025579929351807,
+					0,
+					0.3714560568332672
+				],
+				"sortCenterPosition": [
+					1.0025579929351807,
+					0,
+					0.3714560270309448
+				],
+				"sortRadius": 2.2110676765441895
+			}
+		],
+		"textureUnits": [
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 3,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 0,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 3,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			},
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 4,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 1,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 4,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			},
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 16,
+				"skinSectionIndex": 0,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 2,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 0,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			},
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 16,
+				"skinSectionIndex": 1,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 3,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 1,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			},
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 16,
+				"skinSectionIndex": 2,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 4,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 2,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			}
+		],
+		"fileName": "world/generic/human/passive doodads/planterboxes/stormwindwindowplanterb00.skin",
+		"fileDataID": 504553
+	}
+}

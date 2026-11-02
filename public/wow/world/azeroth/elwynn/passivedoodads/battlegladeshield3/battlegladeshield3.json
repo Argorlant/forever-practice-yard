@@ -1,0 +1,178 @@
+{
+	"fileType": "m2",
+	"fileDataID": 189680,
+	"fileName": "world/azeroth/elwynn/passivedoodads/battlegladeshield3/battlegladeshield3.m2",
+	"internalName": "BattleGladeShield3",
+	"textures": [
+		{
+			"fileNameInternal": "world/azeroth/elwynn/passivedoodads/battlegladeshield3/battlegladeshield3.blp",
+			"fileNameExternal": "battlegladeshield3.png",
+			"mtlName": "mat_battlegladeshield3",
+			"flags": 0,
+			"fileDataID": 189679
+		},
+		{
+			"fileNameInternal": "world/azeroth/elwynn/passivedoodads/ballistaruined/battlegladearrow.blp",
+			"fileNameExternal": "..\\ballistaruined\\battlegladearrow.png",
+			"mtlName": "mat_battlegladearrow",
+			"flags": 0,
+			"fileDataID": 189658
+		}
+	],
+	"textureTypes": [
+		0,
+		0
+	],
+	"materials": [
+		{
+			"flags": 4,
+			"blendingMode": 1
+		},
+		{
+			"flags": 4,
+			"blendingMode": 1
+		}
+	],
+	"textureCombos": [
+		0,
+		1
+	],
+	"colors": [],
+	"textureWeights": [
+		{
+			"globalSeq": 65535,
+			"interpolation": 0,
+			"timestamps": [
+				[
+					0
+				]
+			],
+			"values": [
+				[
+					32767
+				]
+			],
+			"timestampOffsets": null,
+			"valueOffsets": null
+		}
+	],
+	"transparencyLookup": [
+		0
+	],
+	"textureTransforms": [],
+	"textureTransformsLookup": [
+		65535
+	],
+	"boundingBox": {
+		"min": [
+			-0.687237560749054,
+			-0.6393558382987976,
+			-0.0012788777239620686
+		],
+		"max": [
+			0.8014829754829407,
+			0.5515626072883606,
+			0.6560018658638
+		]
+	},
+	"boundingSphereRadius": 0.8906780481338501,
+	"collisionBox": {
+		"min": [
+			-0.687237560749054,
+			-0.6393558979034424,
+			0.004093433730304241
+		],
+		"max": [
+			0.8014040589332581,
+			0.5515626072883606,
+			0.25619879364967346
+		]
+	},
+	"collisionSphereRadius": 0.8531663417816162,
+	"skin": {
+		"subMeshes": [
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 0,
+				"vertexCount": 14,
+				"triangleStart": 0,
+				"triangleCount": 48,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					0.0359252467751503,
+					0.006544509436935186,
+					0.09275881201028824
+				],
+				"sortCenterPosition": [
+					0.0359252467751503,
+					0.006544509436935186,
+					0.09275881201028824
+				],
+				"sortRadius": 0.8012708425521851
+			},
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 14,
+				"vertexCount": 16,
+				"triangleStart": 48,
+				"triangleCount": 24,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					-0.10893642902374268,
+					0.21120905876159668,
+					0.4052790105342865
+				],
+				"sortCenterPosition": [
+					-0.09072461724281311,
+					0.2447730451822281,
+					0.40962228178977966
+				],
+				"sortRadius": 0.4540020227432251
+			}
+		],
+		"textureUnits": [
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 16,
+				"skinSectionIndex": 0,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 0,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 0,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			},
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 16,
+				"skinSectionIndex": 1,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 1,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 1,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			}
+		],
+		"fileName": "world/azeroth/elwynn/passivedoodads/battlegladeshield3/battlegladeshield300.skin",
+		"fileDataID": 494459
+	}
+}

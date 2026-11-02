@@ -1,0 +1,126 @@
+{
+	"fileType": "m2",
+	"fileDataID": 190885,
+	"fileName": "world/dungeon/goldshireinn/innbarrel/innbarrel.m2",
+	"internalName": "InnBarrel",
+	"textures": [
+		{
+			"fileNameInternal": "dungeons/textures/devices/mm_barrel_side_opt.blp",
+			"fileNameExternal": "..\\..\\..\\..\\dungeons\\textures\\devices\\mm_barrel_side_opt.png",
+			"mtlName": "mat_mm_barrel_side_opt",
+			"flags": 0,
+			"fileDataID": 127463
+		}
+	],
+	"textureTypes": [
+		0
+	],
+	"materials": [
+		{
+			"flags": 0,
+			"blendingMode": 0
+		}
+	],
+	"textureCombos": [
+		0
+	],
+	"colors": [],
+	"textureWeights": [
+		{
+			"globalSeq": 65535,
+			"interpolation": 0,
+			"timestamps": [
+				[
+					0
+				]
+			],
+			"values": [
+				[
+					32767
+				]
+			],
+			"timestampOffsets": null,
+			"valueOffsets": null
+		}
+	],
+	"transparencyLookup": [
+		0
+	],
+	"textureTransforms": [],
+	"textureTransformsLookup": [
+		65535
+	],
+	"boundingBox": {
+		"min": [
+			-0.6885592341423035,
+			-0.688559353351593,
+			-0.000946945627219975
+		],
+		"max": [
+			0.688559353351593,
+			0.6885591745376587,
+			1.6666666269302368
+		]
+	},
+	"boundingSphereRadius": 1.0427268743515015,
+	"collisionBox": {
+		"min": [
+			-0.6868996620178223,
+			-0.686899721622467,
+			0
+		],
+		"max": [
+			0.6883014440536499,
+			0.6883013844490051,
+			1.6586326360702515
+		]
+	},
+	"collisionSphereRadius": 1.0772929191589355,
+	"skin": {
+		"subMeshes": [
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 0,
+				"vertexCount": 86,
+				"triangleStart": 0,
+				"triangleCount": 288,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					4.816052978640073e-8,
+					-9.495158792560687e-8,
+					0.8331738710403442
+				],
+				"sortCenterPosition": [
+					5.960464477539063e-8,
+					-8.940696716308594e-8,
+					0.8328598141670227
+				],
+				"sortRadius": 1.0427268743515015
+			}
+		],
+		"textureUnits": [
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 0,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 0,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 0,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			}
+		],
+		"fileName": "world/dungeon/goldshireinn/innbarrel/innbarrel00.skin",
+		"fileDataID": 495206
+	}
+}

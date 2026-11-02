@@ -1,0 +1,142 @@
+{
+	"fileType": "m2",
+	"fileDataID": 198780,
+	"fileName": "world/generic/nightelf/passive doodads/lanterns/nightelflantern01.m2",
+	"internalName": "NightelfLantern01",
+	"textures": [
+		{
+			"fileNameInternal": "world/generic/nightelf/passive doodads/fountains/elfgate_stone01.blp",
+			"fileNameExternal": "..\\fountains\\elfgate_stone01.png",
+			"mtlName": "mat_elfgate_stone01",
+			"flags": 3,
+			"fileDataID": 198753
+		},
+		{
+			"fileNameInternal": "world/azeroth/karazahn/passivedoodads/bonfire/flamelicksmallblue.blp",
+			"fileNameExternal": "..\\..\\..\\..\\azeroth\\karazahn\\passivedoodads\\bonfire\\flamelicksmallblue.png",
+			"mtlName": "mat_flamelicksmallblue",
+			"flags": 0,
+			"fileDataID": 189982
+		},
+		{
+			"fileNameInternal": "world/generic/nightelf/passive doodads/magicalimplements/glow.blp",
+			"fileNameExternal": "..\\magicalimplements\\glow.png",
+			"mtlName": "mat_glow",
+			"flags": 0,
+			"fileDataID": 198784
+		}
+	],
+	"textureTypes": [
+		0,
+		0,
+		0
+	],
+	"materials": [
+		{
+			"flags": 0,
+			"blendingMode": 0
+		}
+	],
+	"textureCombos": [
+		0
+	],
+	"colors": [],
+	"textureWeights": [
+		{
+			"globalSeq": 65535,
+			"interpolation": 0,
+			"timestamps": [
+				[
+					0
+				]
+			],
+			"values": [
+				[
+					32767
+				]
+			],
+			"timestampOffsets": null,
+			"valueOffsets": null
+		}
+	],
+	"transparencyLookup": [
+		0
+	],
+	"textureTransforms": [],
+	"textureTransformsLookup": [
+		65535
+	],
+	"boundingBox": {
+		"min": [
+			-0.8187206387519836,
+			-0.8468958735466003,
+			-0.14041244983673096
+		],
+		"max": [
+			0.8827853798866272,
+			0.8546101450920105,
+			2.0321173667907715
+		]
+	},
+	"boundingSphereRadius": 1.233897089958191,
+	"collisionBox": {
+		"min": [
+			-0.6370736956596375,
+			-0.6947986483573914,
+			-0.14719370007514954
+		],
+		"max": [
+			0.7360274791717529,
+			0.6947986483573914,
+			1.915691614151001
+		]
+	},
+	"collisionSphereRadius": 1.326203465461731,
+	"skin": {
+		"subMeshes": [
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 0,
+				"vertexCount": 180,
+				"triangleStart": 0,
+				"triangleCount": 432,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					0.049476925283670425,
+					0.005582795478403568,
+					0.7308322787284851
+				],
+				"sortCenterPosition": [
+					0.04947689175605774,
+					0,
+					0.887639582157135
+				],
+				"sortRadius": 1.1730042695999146
+			}
+		],
+		"textureUnits": [
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 0,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 0,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 0,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			}
+		],
+		"fileName": "world/generic/nightelf/passive doodads/lanterns/nightelflantern0100.skin",
+		"fileDataID": 504880
+	}
+}

@@ -1,0 +1,126 @@
+{
+	"fileType": "m2",
+	"fileDataID": 199054,
+	"fileName": "world/generic/orc/passive doodads/animalskulls/tigerskull.m2",
+	"internalName": "TigerSkull",
+	"textures": [
+		{
+			"fileNameInternal": "world/generic/orc/passive doodads/animalskulls/tigerskull.blp",
+			"fileNameExternal": "tigerskull.png",
+			"mtlName": "mat_tigerskull",
+			"flags": 0,
+			"fileDataID": 199053
+		}
+	],
+	"textureTypes": [
+		0
+	],
+	"materials": [
+		{
+			"flags": 4,
+			"blendingMode": 1
+		}
+	],
+	"textureCombos": [
+		0
+	],
+	"colors": [],
+	"textureWeights": [
+		{
+			"globalSeq": 65535,
+			"interpolation": 0,
+			"timestamps": [
+				[
+					0
+				]
+			],
+			"values": [
+				[
+					32767
+				]
+			],
+			"timestampOffsets": null,
+			"valueOffsets": null
+		}
+	],
+	"transparencyLookup": [
+		0
+	],
+	"textureTransforms": [],
+	"textureTransformsLookup": [
+		65535
+	],
+	"boundingBox": {
+		"min": [
+			-0.29286232590675354,
+			-0.273888498544693,
+			-0.20650534331798553
+		],
+		"max": [
+			0.3487382233142853,
+			0.27378353476524353,
+			0.3907129466533661
+		]
+	},
+	"boundingSphereRadius": 0.39905691146850586,
+	"collisionBox": {
+		"min": [
+			-0.32725074887275696,
+			-0.30378085374832153,
+			-0.16129370033740997
+		],
+		"max": [
+			0.40804076194763184,
+			0.29306158423423767,
+			0.4681147038936615
+		]
+	},
+	"collisionSphereRadius": 0.4839562177658081,
+	"skin": {
+		"subMeshes": [
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 0,
+				"vertexCount": 41,
+				"triangleStart": 0,
+				"triangleCount": 159,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					0.021695958450436592,
+					-0.0014773420989513397,
+					0.09598056226968765
+				],
+				"sortCenterPosition": [
+					0.021695958450436592,
+					-0.0014773420989513397,
+					0.09598056226968765
+				],
+				"sortRadius": 0.3917313814163208
+			}
+		],
+		"textureUnits": [
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 16,
+				"skinSectionIndex": 0,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 0,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 0,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			}
+		],
+		"fileName": "world/generic/orc/passive doodads/animalskulls/tigerskull00.skin",
+		"fileDataID": 505098
+	}
+}

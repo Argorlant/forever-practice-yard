@@ -1,0 +1,6 @@
+newmtl mat_dust6
+illum 1
+map_Kd dust6.png
+newmtl mat_glowball
+illum 1
+map_Kd glowball.png

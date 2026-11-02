@@ -1,0 +1,290 @@
+{
+	"fileType": "m2",
+	"fileDataID": 189904,
+	"fileName": "world/azeroth/elwynn/passivedoodads/smalldock/smalldock.m2",
+	"internalName": "SmallDock",
+	"textures": [
+		{
+			"fileNameInternal": "world/azeroth/elwynn/passivedoodads/smalldock/dockplanks.blp",
+			"fileNameExternal": "dockplanks.png",
+			"mtlName": "mat_dockplanks",
+			"flags": 3,
+			"fileDataID": 189899
+		},
+		{
+			"fileNameInternal": "world/azeroth/elwynn/passivedoodads/smalldock/elwynndocksupport01.blp",
+			"fileNameExternal": "elwynndocksupport01.png",
+			"mtlName": "mat_elwynndocksupport01",
+			"flags": 3,
+			"fileDataID": 189900
+		},
+		{
+			"fileNameInternal": "world/azeroth/elwynn/passivedoodads/smalldock/elwynnironsign01a.blp",
+			"fileNameExternal": "elwynnironsign01a.png",
+			"mtlName": "mat_elwynnironsign01a",
+			"flags": 0,
+			"fileDataID": 189901
+		},
+		{
+			"fileNameInternal": "world/azeroth/elwynn/passivedoodads/smalldock/elwynnroadsignwood02.blp",
+			"fileNameExternal": "elwynnroadsignwood02.png",
+			"mtlName": "mat_elwynnroadsignwood02",
+			"flags": 3,
+			"fileDataID": 189902
+		},
+		{
+			"fileNameInternal": "world/azeroth/elwynn/passivedoodads/smalldock/flamelicksmallblue.blp",
+			"fileNameExternal": "flamelicksmallblue.png",
+			"mtlName": "mat_flamelicksmallblue",
+			"flags": 0,
+			"fileDataID": 189903
+		}
+	],
+	"textureTypes": [
+		0,
+		0,
+		0,
+		0,
+		0
+	],
+	"materials": [
+		{
+			"flags": 0,
+			"blendingMode": 0
+		},
+		{
+			"flags": 0,
+			"blendingMode": 0
+		},
+		{
+			"flags": 4,
+			"blendingMode": 1
+		},
+		{
+			"flags": 0,
+			"blendingMode": 0
+		}
+	],
+	"textureCombos": [
+		0,
+		1,
+		2,
+		3
+	],
+	"colors": [],
+	"textureWeights": [
+		{
+			"globalSeq": 65535,
+			"interpolation": 0,
+			"timestamps": [
+				[
+					0
+				]
+			],
+			"values": [
+				[
+					32767
+				]
+			],
+			"timestampOffsets": null,
+			"valueOffsets": null
+		}
+	],
+	"transparencyLookup": [
+		0
+	],
+	"textureTransforms": [],
+	"textureTransformsLookup": [
+		65535
+	],
+	"boundingBox": {
+		"min": [
+			-9.89845085144043,
+			-4.987883567810059,
+			-21.338953018188477
+		],
+		"max": [
+			6.767938137054443,
+			3.7118306159973145,
+			7.925571441650391
+		]
+	},
+	"boundingSphereRadius": 16.359989166259766,
+	"collisionBox": {
+		"min": [
+			-9.200818061828613,
+			-4.834238052368164,
+			-21.339815139770508
+		],
+		"max": [
+			6.767937660217285,
+			3.456451177597046,
+			4.960869789123535
+		]
+	},
+	"collisionSphereRadius": 14.829755783081055,
+	"skin": {
+		"subMeshes": [
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 0,
+				"vertexCount": 133,
+				"triangleStart": 0,
+				"triangleCount": 222,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					-5.285727024078369,
+					0.4223021864891052,
+					1.2487068176269531
+				],
+				"sortCenterPosition": [
+					-1.205317735671997,
+					-0.75029456615448,
+					1.2294964790344238
+				],
+				"sortRadius": 8.879192352294922
+			},
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 133,
+				"vertexCount": 57,
+				"triangleStart": 222,
+				"triangleCount": 234,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					0.5288217067718506,
+					-0.4010472595691681,
+					-8.193037033081055
+				],
+				"sortCenterPosition": [
+					0.744195818901062,
+					-0.6380264759063721,
+					-9.088064193725586
+				],
+				"sortRadius": 13.388840675354004
+			},
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 190,
+				"vertexCount": 24,
+				"triangleStart": 456,
+				"triangleCount": 48,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					-6.266623497009277,
+					0.9863038063049316,
+					4.450928688049316
+				],
+				"sortCenterPosition": [
+					-6.311002731323242,
+					0.9653346538543701,
+					4.454440593719482
+				],
+				"sortRadius": 2.5421555042266846
+			},
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 214,
+				"vertexCount": 32,
+				"triangleStart": 504,
+				"triangleCount": 108,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					-6.219955921173096,
+					0.97986900806427,
+					-2.9301533699035645
+				],
+				"sortCenterPosition": [
+					-6.216770648956299,
+					0.9982516765594482,
+					-8.72755241394043
+				],
+				"sortRadius": 12.748517036437988
+			}
+		],
+		"textureUnits": [
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 0,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 0,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 0,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			},
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 1,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 1,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 1,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			},
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 16,
+				"skinSectionIndex": 2,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 2,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 2,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			},
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 3,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 3,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 3,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			}
+		],
+		"fileName": "world/azeroth/elwynn/passivedoodads/smalldock/smalldock00.skin",
+		"fileDataID": 494569
+	}
+}

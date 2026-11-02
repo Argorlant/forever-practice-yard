@@ -1,0 +1,186 @@
+{
+	"fileType": "m2",
+	"fileDataID": 199823,
+	"fileName": "world/generic/passivedoodads/lights/torch.m2",
+	"internalName": "Torch",
+	"textures": [
+		{
+			"fileNameInternal": "world/generic/passivedoodads/lights/torch2.blp",
+			"fileNameExternal": "torch2.png",
+			"mtlName": "mat_torch2",
+			"flags": 0,
+			"fileDataID": 199824
+		},
+		{
+			"fileNameInternal": "item/objectcomponents/weapon/flamelicksmall.blp",
+			"fileNameExternal": "..\\..\\..\\..\\item\\objectcomponents\\weapon\\flamelicksmall.png",
+			"mtlName": "mat_flamelicksmall",
+			"flags": 0,
+			"fileDataID": 145513
+		},
+		{
+			"fileNameInternal": "world/generic/passivedoodads/lights/gloworange32.blp",
+			"fileNameExternal": "gloworange32.png",
+			"mtlName": "mat_gloworange32",
+			"flags": 0,
+			"fileDataID": 199822
+		}
+	],
+	"textureTypes": [
+		0,
+		0,
+		0
+	],
+	"materials": [
+		{
+			"flags": 4,
+			"blendingMode": 1
+		},
+		{
+			"flags": 17,
+			"blendingMode": 2
+		}
+	],
+	"textureCombos": [
+		0,
+		2
+	],
+	"colors": [],
+	"textureWeights": [
+		{
+			"globalSeq": 65535,
+			"interpolation": 0,
+			"timestamps": [
+				[
+					0
+				]
+			],
+			"values": [
+				[
+					32767
+				]
+			],
+			"timestampOffsets": null,
+			"valueOffsets": null
+		}
+	],
+	"transparencyLookup": [
+		0
+	],
+	"textureTransforms": [],
+	"textureTransformsLookup": [
+		65535
+	],
+	"boundingBox": {
+		"min": [
+			-0.6746484637260437,
+			-0.6728139519691467,
+			-0.00043982930947095156
+		],
+		"max": [
+			0.6793544888496399,
+			0.6811890006065369,
+			1.695495843887329
+		]
+	},
+	"boundingSphereRadius": 0.9315332174301147,
+	"collisionBox": {
+		"min": [
+			-0.34492921829223633,
+			-0.16557657718658447,
+			0
+		],
+		"max": [
+			0.15519274771213531,
+			0.16129298508167267,
+			1.0070816278457642
+		]
+	},
+	"collisionSphereRadius": 0.5854867696762085,
+	"skin": {
+		"subMeshes": [
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 0,
+				"vertexCount": 51,
+				"triangleStart": 0,
+				"triangleCount": 150,
+				"boneCount": 2,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					-0.047041263431310654,
+					0.0017183935269713402,
+					0.4386146068572998
+				],
+				"sortCenterPosition": [
+					-0.09508800506591797,
+					-0.000763721764087677,
+					0.502930760383606
+				],
+				"sortRadius": 0.5850368738174438
+			},
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 51,
+				"vertexCount": 4,
+				"triangleStart": 150,
+				"triangleCount": 6,
+				"boneCount": 2,
+				"boneStart": 0,
+				"boneInfluences": 1,
+				"centerBoneIndex": 1,
+				"centerPosition": [
+					0.00235120952129364,
+					0.0041875168681144714,
+					1.0184942483901978
+				],
+				"sortCenterPosition": [
+					0.00235120952129364,
+					0.004187524318695068,
+					1.0184942483901978
+				],
+				"sortRadius": 0.6770012974739075
+			}
+		],
+		"textureUnits": [
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 16,
+				"skinSectionIndex": 0,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 0,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 0,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			},
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 16,
+				"skinSectionIndex": 1,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 1,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 1,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			}
+		],
+		"fileName": "world/generic/passivedoodads/lights/torch00.skin",
+		"fileDataID": 505695
+	}
+}

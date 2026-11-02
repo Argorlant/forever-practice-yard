@@ -1,0 +1,178 @@
+{
+	"fileType": "m2",
+	"fileDataID": 190437,
+	"fileName": "world/azeroth/theblastedlands/passivedoodads/bones/blastedlandsbonepile02.m2",
+	"internalName": "BlastedLandsBonePile02",
+	"textures": [
+		{
+			"fileNameInternal": "world/kalimdor/kalidar/passivedoodads/kalidarharpynest/spine02.blp",
+			"fileNameExternal": "..\\..\\..\\..\\kalimdor\\kalidar\\passivedoodads\\kalidarharpynest\\spine02.png",
+			"mtlName": "mat_spine02",
+			"flags": 3,
+			"fileDataID": 202032
+		},
+		{
+			"fileNameInternal": "world/azeroth/theblastedlands/passivedoodads/bones/skull03.blp",
+			"fileNameExternal": "skull03.png",
+			"mtlName": "mat_skull03",
+			"flags": 3,
+			"fileDataID": 190442
+		}
+	],
+	"textureTypes": [
+		0,
+		0
+	],
+	"materials": [
+		{
+			"flags": 4,
+			"blendingMode": 0
+		},
+		{
+			"flags": 4,
+			"blendingMode": 1
+		}
+	],
+	"textureCombos": [
+		0,
+		1
+	],
+	"colors": [],
+	"textureWeights": [
+		{
+			"globalSeq": 65535,
+			"interpolation": 0,
+			"timestamps": [
+				[
+					0
+				]
+			],
+			"values": [
+				[
+					32767
+				]
+			],
+			"timestampOffsets": null,
+			"valueOffsets": null
+		}
+	],
+	"transparencyLookup": [
+		0
+	],
+	"textureTransforms": [],
+	"textureTransformsLookup": [
+		65535
+	],
+	"boundingBox": {
+		"min": [
+			-0.0990801751613617,
+			-0.5617459416389465,
+			-0.13333722949028015
+		],
+		"max": [
+			0.7726299166679382,
+			0.5907078385353088,
+			0.4218915104866028
+		]
+	},
+	"boundingSphereRadius": 0.5848497152328491,
+	"collisionBox": {
+		"min": [
+			10000000,
+			10000000,
+			10000000
+		],
+		"max": [
+			-10000000,
+			-10000000,
+			-10000000
+		]
+	},
+	"collisionSphereRadius": 0,
+	"skin": {
+		"subMeshes": [
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 0,
+				"vertexCount": 176,
+				"triangleStart": 0,
+				"triangleCount": 336,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					0.3220590353012085,
+					0.033763885498046875,
+					0.1366489976644516
+				],
+				"sortCenterPosition": [
+					0.33677488565444946,
+					0.014480948448181152,
+					0.18376442790031433
+				],
+				"sortRadius": 0.5923581123352051
+			},
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 176,
+				"vertexCount": 21,
+				"triangleStart": 336,
+				"triangleCount": 90,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					0.5187686681747437,
+					-0.007003870792686939,
+					0.05310140550136566
+				],
+				"sortCenterPosition": [
+					0.5187686681747437,
+					-0.007003870792686939,
+					0.05310140550136566
+				],
+				"sortRadius": 0.26853251457214355
+			}
+		],
+		"textureUnits": [
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 0,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 0,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 0,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			},
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 16,
+				"skinSectionIndex": 1,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 1,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 1,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			}
+		],
+		"fileName": "world/azeroth/theblastedlands/passivedoodads/bones/blastedlandsbonepile0200.skin",
+		"fileDataID": 494881
+	}
+}

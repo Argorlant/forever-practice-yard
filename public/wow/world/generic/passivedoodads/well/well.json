@@ -1,0 +1,438 @@
+{
+	"fileType": "m2",
+	"fileDataID": 200252,
+	"fileName": "world/generic/passivedoodads/well/well.m2",
+	"internalName": "Well",
+	"textures": [
+		{
+			"fileNameInternal": "world/azeroth/duskwood/passivedoodads/duskwoodbarn/westfallbasestone.blp",
+			"fileNameExternal": "..\\..\\..\\azeroth\\duskwood\\passivedoodads\\duskwoodbarn\\westfallbasestone.png",
+			"mtlName": "mat_westfallbasestone",
+			"flags": 3,
+			"fileDataID": 189451
+		},
+		{
+			"fileNameInternal": "world/generic/passivedoodads/well/elwynnpillarwood01.blp",
+			"fileNameExternal": "elwynnpillarwood01.png",
+			"mtlName": "mat_elwynnpillarwood01",
+			"flags": 3,
+			"fileDataID": 200251
+		},
+		{
+			"fileNameInternal": "world/generic/passivedoodads/well/elwynnmiscrope03.blp",
+			"fileNameExternal": "elwynnmiscrope03.png",
+			"mtlName": "mat_elwynnmiscrope03",
+			"flags": 0,
+			"fileDataID": 200249
+		},
+		{
+			"fileNameInternal": "world/generic/passivedoodads/well/elwynnmiscrope02.blp",
+			"fileNameExternal": "elwynnmiscrope02.png",
+			"mtlName": "mat_elwynnmiscrope02",
+			"flags": 3,
+			"fileDataID": 200248
+		},
+		{
+			"fileNameInternal": "world/generic/passivedoodads/well/elwynnmiscwellwater.blp",
+			"fileNameExternal": "elwynnmiscwellwater.png",
+			"mtlName": "mat_elwynnmiscwellwater",
+			"flags": 0,
+			"fileDataID": 200250
+		},
+		{
+			"fileNameInternal": "world/generic/passivedoodads/well/elwynnmiscbucketdark64.blp",
+			"fileNameExternal": "elwynnmiscbucketdark64.png",
+			"mtlName": "mat_elwynnmiscbucketdark64",
+			"flags": 3,
+			"fileDataID": 200247
+		},
+		{
+			"fileNameInternal": "world/azeroth/elwynn/passivedoodads/trees/stumps/elwynntreestump01.blp",
+			"fileNameExternal": "..\\..\\..\\azeroth\\elwynn\\passivedoodads\\trees\\stumps\\elwynntreestump01.png",
+			"mtlName": "mat_elwynntreestump01",
+			"flags": 0,
+			"fileDataID": 189938
+		}
+	],
+	"textureTypes": [
+		0,
+		0,
+		0,
+		0,
+		0,
+		0,
+		0
+	],
+	"materials": [
+		{
+			"flags": 0,
+			"blendingMode": 0
+		},
+		{
+			"flags": 0,
+			"blendingMode": 0
+		},
+		{
+			"flags": 4,
+			"blendingMode": 1
+		},
+		{
+			"flags": 4,
+			"blendingMode": 1
+		},
+		{
+			"flags": 0,
+			"blendingMode": 0
+		},
+		{
+			"flags": 4,
+			"blendingMode": 1
+		},
+		{
+			"flags": 0,
+			"blendingMode": 0
+		}
+	],
+	"textureCombos": [
+		1,
+		5,
+		6,
+		0,
+		2,
+		3,
+		4
+	],
+	"colors": [],
+	"textureWeights": [
+		{
+			"globalSeq": 65535,
+			"interpolation": 0,
+			"timestamps": [
+				[
+					0
+				]
+			],
+			"values": [
+				[
+					32767
+				]
+			],
+			"timestampOffsets": null,
+			"valueOffsets": null
+		}
+	],
+	"transparencyLookup": [
+		0
+	],
+	"textureTransforms": [],
+	"textureTransformsLookup": [
+		65535
+	],
+	"boundingBox": {
+		"min": [
+			-1.2344223260879517,
+			-1.2296416759490967,
+			0
+		],
+		"max": [
+			0.9764742255210876,
+			1.3312710523605347,
+			3.1936237812042236
+		]
+	},
+	"boundingSphereRadius": 2.0794713497161865,
+	"collisionBox": {
+		"min": [
+			-1.2344223260879517,
+			-1.2929539680480957,
+			0
+		],
+		"max": [
+			0.9764999747276306,
+			1.4117169380187988,
+			3.203664779663086
+		]
+	},
+	"collisionSphereRadius": 2.181042432785034,
+	"skin": {
+		"subMeshes": [
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 0,
+				"vertexCount": 50,
+				"triangleStart": 0,
+				"triangleCount": 135,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					-0.0036108612548559904,
+					0.026256386190652847,
+					2.335805654525757
+				],
+				"sortCenterPosition": [
+					-0.0036108612548559904,
+					0.026256386190652847,
+					2.335805654525757
+				],
+				"sortRadius": 1.5480263233184814
+			},
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 50,
+				"vertexCount": 20,
+				"triangleStart": 135,
+				"triangleCount": 30,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					0.08869151026010513,
+					-0.5543539524078369,
+					1.6638145446777344
+				],
+				"sortCenterPosition": [
+					0.08869151026010513,
+					-0.5543539524078369,
+					1.6638145446777344
+				],
+				"sortRadius": 0.4136953353881836
+			},
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 70,
+				"vertexCount": 12,
+				"triangleStart": 165,
+				"triangleCount": 30,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					-0.0300209429115057,
+					0.05519471317529678,
+					2.857743263244629
+				],
+				"sortCenterPosition": [
+					-0.030090153217315674,
+					0.050814688205718994,
+					2.888578176498413
+				],
+				"sortRadius": 1.4711331129074097
+			},
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 82,
+				"vertexCount": 104,
+				"triangleStart": 195,
+				"triangleCount": 336,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					-0.0673053041100502,
+					0.09007284790277481,
+					0.9194076061248779
+				],
+				"sortCenterPosition": [
+					-0.128974050283432,
+					0.12567731738090515,
+					0.694444477558136
+				],
+				"sortRadius": 1.338658332824707
+			},
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 186,
+				"vertexCount": 4,
+				"triangleStart": 531,
+				"triangleCount": 6,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					0.3066945970058441,
+					-0.5096798539161682,
+					1.4069355726242065
+				],
+				"sortCenterPosition": [
+					0.3066945970058441,
+					-0.5096798539161682,
+					1.4069355726242065
+				],
+				"sortRadius": 0.4035235345363617
+			},
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 190,
+				"vertexCount": 20,
+				"triangleStart": 537,
+				"triangleCount": 54,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					0.024797899648547173,
+					-0.04781483858823776,
+					1.7732508182525635
+				],
+				"sortCenterPosition": [
+					0.037558987736701965,
+					-0.06067712604999542,
+					1.4144893884658813
+				],
+				"sortRadius": 1.4178407192230225
+			},
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 210,
+				"vertexCount": 9,
+				"triangleStart": 591,
+				"triangleCount": 24,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					-0.1289740651845932,
+					0.12567731738090515,
+					0.1484094262123108
+				],
+				"sortCenterPosition": [
+					-0.1289740651845932,
+					0.12567734718322754,
+					0.1484094262123108
+				],
+				"sortRadius": 0.6299694180488586
+			}
+		],
+		"textureUnits": [
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 3,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 0,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 3,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			},
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 0,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 1,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 0,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			},
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 16,
+				"skinSectionIndex": 4,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 2,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 4,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			},
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 16,
+				"skinSectionIndex": 5,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 3,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 5,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			},
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 6,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 4,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 6,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			},
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 16,
+				"skinSectionIndex": 1,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 5,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 1,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			},
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 2,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 6,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 2,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			}
+		],
+		"fileName": "world/generic/passivedoodads/well/well00.skin",
+		"fileDataID": 506039
+	}
+}

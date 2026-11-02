@@ -1,0 +1,178 @@
+{
+	"fileType": "m2",
+	"fileDataID": 190567,
+	"fileName": "world/azeroth/westfall/passivedoodads/detail/westfallcabbage.m2",
+	"internalName": "WestFallCabbage",
+	"textures": [
+		{
+			"fileNameInternal": "world/azeroth/westfall/passivedoodads/detail/cabbage.blp",
+			"fileNameExternal": "cabbage.png",
+			"mtlName": "mat_cabbage",
+			"flags": 0,
+			"fileDataID": 190555
+		},
+		{
+			"fileNameInternal": "world/azeroth/westfall/passivedoodads/detail/cabbage02.blp",
+			"fileNameExternal": "cabbage02.png",
+			"mtlName": "mat_cabbage02",
+			"flags": 1,
+			"fileDataID": 190556
+		}
+	],
+	"textureTypes": [
+		0,
+		0
+	],
+	"materials": [
+		{
+			"flags": 0,
+			"blendingMode": 0
+		},
+		{
+			"flags": 4,
+			"blendingMode": 1
+		}
+	],
+	"textureCombos": [
+		0,
+		1
+	],
+	"colors": [],
+	"textureWeights": [
+		{
+			"globalSeq": 65535,
+			"interpolation": 0,
+			"timestamps": [
+				[
+					0
+				]
+			],
+			"values": [
+				[
+					32767
+				]
+			],
+			"timestampOffsets": null,
+			"valueOffsets": null
+		}
+	],
+	"transparencyLookup": [
+		0
+	],
+	"textureTransforms": [],
+	"textureTransformsLookup": [
+		65535
+	],
+	"boundingBox": {
+		"min": [
+			-0.326433002948761,
+			-0.24729199707508087,
+			-0.006853329949080944
+		],
+		"max": [
+			0.25189900398254395,
+			0.30273300409317017,
+			0.2544269859790802
+		]
+	},
+	"boundingSphereRadius": 0.35304200649261475,
+	"collisionBox": {
+		"min": [
+			10000000,
+			10000000,
+			10000000
+		],
+		"max": [
+			-10000000,
+			-10000000,
+			-10000000
+		]
+	},
+	"collisionSphereRadius": 0,
+	"skin": {
+		"subMeshes": [
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 0,
+				"vertexCount": 11,
+				"triangleStart": 0,
+				"triangleCount": 45,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					-0.03726768121123314,
+					-0.001312804059125483,
+					0.09483794122934341
+				],
+				"sortCenterPosition": [
+					-0.03726768121123314,
+					-0.001312804059125483,
+					0.09483794122934341
+				],
+				"sortRadius": 0.23191308975219727
+			},
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 11,
+				"vertexCount": 20,
+				"triangleStart": 45,
+				"triangleCount": 30,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					-0.03726761415600777,
+					-0.0013128038262948394,
+					0.1237868219614029
+				],
+				"sortCenterPosition": [
+					-0.03726761415600777,
+					-0.0013128038262948394,
+					0.1237868219614029
+				],
+				"sortRadius": 0.3309258818626404
+			}
+		],
+		"textureUnits": [
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 0,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 0,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 0,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			},
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 16,
+				"skinSectionIndex": 1,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 1,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 1,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			}
+		],
+		"fileName": "world/azeroth/westfall/passivedoodads/detail/westfallcabbage00.skin",
+		"fileDataID": 494949
+	}
+}

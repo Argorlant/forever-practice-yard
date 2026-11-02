@@ -1,0 +1,126 @@
+{
+	"fileType": "m2",
+	"fileDataID": 197906,
+	"fileName": "world/generic/human/passive doodads/armor/armorshoulderblue.m2",
+	"internalName": "ArmorShoulderBlue",
+	"textures": [
+		{
+			"fileNameInternal": "world/generic/human/passive doodads/armor/armorermisc.blp",
+			"fileNameExternal": "armorermisc.png",
+			"mtlName": "mat_armorermisc",
+			"flags": 0,
+			"fileDataID": 197868
+		}
+	],
+	"textureTypes": [
+		0
+	],
+	"materials": [
+		{
+			"flags": 4,
+			"blendingMode": 1
+		}
+	],
+	"textureCombos": [
+		0
+	],
+	"colors": [],
+	"textureWeights": [
+		{
+			"globalSeq": 65535,
+			"interpolation": 0,
+			"timestamps": [
+				[
+					0
+				]
+			],
+			"values": [
+				[
+					32767
+				]
+			],
+			"timestampOffsets": null,
+			"valueOffsets": null
+		}
+	],
+	"transparencyLookup": [
+		0
+	],
+	"textureTransforms": [],
+	"textureTransformsLookup": [
+		65535
+	],
+	"boundingBox": {
+		"min": [
+			-0.28075799345970154,
+			-0.26980701088905334,
+			-0.005373890046030283
+		],
+		"max": [
+			0.246955007314682,
+			0.20708000659942627,
+			0.2834610044956207
+		]
+	},
+	"boundingSphereRadius": 0.34079599380493164,
+	"collisionBox": {
+		"min": [
+			10000000,
+			10000000,
+			10000000
+		],
+		"max": [
+			-10000000,
+			-10000000,
+			-10000000
+		]
+	},
+	"collisionSphereRadius": 0,
+	"skin": {
+		"subMeshes": [
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 0,
+				"vertexCount": 19,
+				"triangleStart": 0,
+				"triangleCount": 54,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					-0.008827303536236286,
+					-0.036161284893751144,
+					0.13955457508563995
+				],
+				"sortCenterPosition": [
+					-0.008827303536236286,
+					-0.036161284893751144,
+					0.13955457508563995
+				],
+				"sortRadius": 0.33488601446151733
+			}
+		],
+		"textureUnits": [
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 16,
+				"skinSectionIndex": 0,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 0,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 0,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			}
+		],
+		"fileName": "world/generic/human/passive doodads/armor/armorshoulderblue00.skin",
+		"fileDataID": 504124
+	}
+}

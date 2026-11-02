@@ -1,0 +1,126 @@
+{
+	"fileType": "m2",
+	"fileDataID": 198654,
+	"fileName": "world/generic/human/passive doodads/weapons&armor/humanstaff01.m2",
+	"internalName": "HumanStaff01",
+	"textures": [
+		{
+			"fileNameInternal": "world/generic/human/passive doodads/weapons&armor/waeponpage01.blp",
+			"fileNameExternal": "waeponpage01.png",
+			"mtlName": "mat_waeponpage01",
+			"flags": 0,
+			"fileDataID": 198659
+		}
+	],
+	"textureTypes": [
+		0
+	],
+	"materials": [
+		{
+			"flags": 0,
+			"blendingMode": 0
+		}
+	],
+	"textureCombos": [
+		0
+	],
+	"colors": [],
+	"textureWeights": [
+		{
+			"globalSeq": 65535,
+			"interpolation": 0,
+			"timestamps": [
+				[
+					0
+				]
+			],
+			"values": [
+				[
+					32767
+				]
+			],
+			"timestampOffsets": null,
+			"valueOffsets": null
+		}
+	],
+	"transparencyLookup": [
+		0
+	],
+	"textureTransforms": [],
+	"textureTransformsLookup": [
+		65535
+	],
+	"boundingBox": {
+		"min": [
+			-0.9963970184326172,
+			-0.049663301557302475,
+			-0.15002299845218658
+		],
+		"max": [
+			1.5440200567245483,
+			0.049663301557302475,
+			0.1609559953212738
+		]
+	},
+	"boundingSphereRadius": 1.2779200077056885,
+	"collisionBox": {
+		"min": [
+			10000000,
+			10000000,
+			10000000
+		],
+		"max": [
+			-10000000,
+			-10000000,
+			-10000000
+		]
+	},
+	"collisionSphereRadius": 0,
+	"skin": {
+		"subMeshes": [
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 0,
+				"vertexCount": 54,
+				"triangleStart": 0,
+				"triangleCount": 240,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					0.28182709217071533,
+					0.00017309890245087445,
+					0.007495276629924774
+				],
+				"sortCenterPosition": [
+					0.2738115191459656,
+					0,
+					0.00546649843454361
+				],
+				"sortRadius": 1.2779210805892944
+			}
+		],
+		"textureUnits": [
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 0,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 0,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 0,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			}
+		],
+		"fileName": "world/generic/human/passive doodads/weapons&armor/humanstaff0100.skin",
+		"fileDataID": 504780
+	}
+}

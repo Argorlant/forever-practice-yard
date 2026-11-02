@@ -1,0 +1,126 @@
+{
+	"fileType": "m2",
+	"fileDataID": 203168,
+	"fileName": "world/khazmodan/ironforge/passivedoodads/gnomearea/gnomekingspiralgear.m2",
+	"internalName": "GnomeKingSpiralGear",
+	"textures": [
+		{
+			"fileNameInternal": "dungeons/textures/devices/mm_gnome_gear_01.blp",
+			"fileNameExternal": "..\\..\\..\\..\\..\\dungeons\\textures\\devices\\mm_gnome_gear_01.png",
+			"mtlName": "mat_mm_gnome_gear_01",
+			"flags": 3,
+			"fileDataID": 127478
+		}
+	],
+	"textureTypes": [
+		0
+	],
+	"materials": [
+		{
+			"flags": 0,
+			"blendingMode": 0
+		}
+	],
+	"textureCombos": [
+		0
+	],
+	"colors": [],
+	"textureWeights": [
+		{
+			"globalSeq": 65535,
+			"interpolation": 0,
+			"timestamps": [
+				[
+					0
+				]
+			],
+			"values": [
+				[
+					32767
+				]
+			],
+			"timestampOffsets": null,
+			"valueOffsets": null
+		}
+	],
+	"transparencyLookup": [
+		0
+	],
+	"textureTransforms": [],
+	"textureTransformsLookup": [
+		65535
+	],
+	"boundingBox": {
+		"min": [
+			-0.876453697681427,
+			-10.09086799621582,
+			-10.090872764587402
+		],
+		"max": [
+			6.984124183654785,
+			10.090864181518555,
+			10.09087085723877
+		]
+	},
+	"boundingSphereRadius": 10.829261779785156,
+	"collisionBox": {
+		"min": [
+			10000000,
+			10000000,
+			10000000
+		],
+		"max": [
+			-10000000,
+			-10000000,
+			-10000000
+		]
+	},
+	"collisionSphereRadius": 0,
+	"skin": {
+		"subMeshes": [
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 0,
+				"vertexCount": 192,
+				"triangleStart": 0,
+				"triangleCount": 360,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					3.0538339614868164,
+					0.000002605219833640149,
+					-0.000008096298188320361
+				],
+				"sortCenterPosition": [
+					3.053835153579712,
+					0.0000019073486328125,
+					-0.000008106231689453125
+				],
+				"sortRadius": 10.829252243041992
+			}
+		],
+		"textureUnits": [
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 0,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 0,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 0,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			}
+		],
+		"fileName": "world/khazmodan/ironforge/passivedoodads/gnomearea/gnomekingspiralgear00.skin",
+		"fileDataID": 508223
+	}
+}

@@ -1,0 +1,126 @@
+{
+	"fileType": "m2",
+	"fileDataID": 197378,
+	"fileName": "world/generic/dwarf/passive doodads/excavationropestake/excavationrope.m2",
+	"internalName": "ExcavationRope",
+	"textures": [
+		{
+			"fileNameInternal": "world/generic/dwarf/passive doodads/excavationropestake/rope01.blp",
+			"fileNameExternal": "rope01.png",
+			"mtlName": "mat_rope01",
+			"flags": 3,
+			"fileDataID": 197380
+		}
+	],
+	"textureTypes": [
+		0
+	],
+	"materials": [
+		{
+			"flags": 0,
+			"blendingMode": 0
+		}
+	],
+	"textureCombos": [
+		0
+	],
+	"colors": [],
+	"textureWeights": [
+		{
+			"globalSeq": 65535,
+			"interpolation": 0,
+			"timestamps": [
+				[
+					0
+				]
+			],
+			"values": [
+				[
+					32767
+				]
+			],
+			"timestampOffsets": null,
+			"valueOffsets": null
+		}
+	],
+	"transparencyLookup": [
+		0
+	],
+	"textureTransforms": [],
+	"textureTransformsLookup": [
+		65535
+	],
+	"boundingBox": {
+		"min": [
+			-0.016248134896159172,
+			-0.05651914328336716,
+			0
+		],
+		"max": [
+			3.1628754138946533,
+			0.08131495863199234,
+			0.4088604152202606
+		]
+	},
+	"boundingSphereRadius": 1.602687120437622,
+	"collisionBox": {
+		"min": [
+			-0.026022592559456825,
+			-0.07461406290531158,
+			-0.006610320881009102
+		],
+		"max": [
+			3.174778461456299,
+			0.10664791613817215,
+			0.4291156530380249
+		]
+	},
+	"collisionSphereRadius": 1.6177021265029907,
+	"skin": {
+		"subMeshes": [
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 0,
+				"vertexCount": 17,
+				"triangleStart": 0,
+				"triangleCount": 36,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					1.557437777519226,
+					0.007476947735995054,
+					0.2751588523387909
+				],
+				"sortCenterPosition": [
+					1.573313593864441,
+					0.012397907674312592,
+					0.3127610385417938
+				],
+				"sortRadius": 1.5924978256225586
+			}
+		],
+		"textureUnits": [
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 0,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 0,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 0,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			}
+		],
+		"fileName": "world/generic/dwarf/passive doodads/excavationropestake/excavationrope00.skin",
+		"fileDataID": 503379
+	}
+}

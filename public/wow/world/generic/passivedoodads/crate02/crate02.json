@@ -1,0 +1,126 @@
+{
+	"fileType": "m2",
+	"fileDataID": 199634,
+	"fileName": "world/generic/passivedoodads/crate02/crate02.m2",
+	"internalName": "Crate02",
+	"textures": [
+		{
+			"fileNameInternal": "world/generic/passivedoodads/crate02/crates02sides.blp",
+			"fileNameExternal": "crates02sides.png",
+			"mtlName": "mat_crates02sides",
+			"flags": 3,
+			"fileDataID": 199635
+		}
+	],
+	"textureTypes": [
+		0
+	],
+	"materials": [
+		{
+			"flags": 0,
+			"blendingMode": 0
+		}
+	],
+	"textureCombos": [
+		0
+	],
+	"colors": [],
+	"textureWeights": [
+		{
+			"globalSeq": 65535,
+			"interpolation": 0,
+			"timestamps": [
+				[
+					0
+				]
+			],
+			"values": [
+				[
+					32767
+				]
+			],
+			"timestampOffsets": null,
+			"valueOffsets": null
+		}
+	],
+	"transparencyLookup": [
+		0
+	],
+	"textureTransforms": [],
+	"textureTransformsLookup": [
+		65535
+	],
+	"boundingBox": {
+		"min": [
+			-0.4357079863548279,
+			-0.7637689709663391,
+			0.003150559961795807
+		],
+		"max": [
+			0.42892199754714966,
+			0.7640029788017273,
+			0.5033419728279114
+		]
+	},
+	"boundingSphereRadius": 0.9126700162887573,
+	"collisionBox": {
+		"min": [
+			-0.4404419958591461,
+			-0.7560170292854309,
+			0
+		],
+		"max": [
+			0.4339359998703003,
+			0.7558109760284424,
+			0.5077030062675476
+		]
+	},
+	"collisionSphereRadius": 0.9093848466873169,
+	"skin": {
+		"subMeshes": [
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 0,
+				"vertexCount": 68,
+				"triangleStart": 0,
+				"triangleCount": 102,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					-0.0022659350652247667,
+					0.0001537799835205078,
+					0.2974492609500885
+				],
+				"sortCenterPosition": [
+					-0.0022659350652247667,
+					0.0001537799835205078,
+					0.2974492609500885
+				],
+				"sortRadius": 0.9021318554878235
+			}
+		],
+		"textureUnits": [
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 0,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 0,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 0,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			}
+		],
+		"fileName": "world/generic/passivedoodads/crate02/crate0200.skin",
+		"fileDataID": 505540
+	}
+}

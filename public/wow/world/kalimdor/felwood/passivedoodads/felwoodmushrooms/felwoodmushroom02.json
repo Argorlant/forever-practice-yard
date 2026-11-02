@@ -1,0 +1,126 @@
+{
+	"fileType": "m2",
+	"fileDataID": 201860,
+	"fileName": "world/kalimdor/felwood/passivedoodads/felwoodmushrooms/felwoodmushroom02.m2",
+	"internalName": "FelwoodMushroom02",
+	"textures": [
+		{
+			"fileNameInternal": "world/kalimdor/felwood/passivedoodads/felwoodmushrooms/felwoodmushroom_purple.blp",
+			"fileNameExternal": "felwoodmushroom_purple.png",
+			"mtlName": "mat_felwoodmushroom_purple",
+			"flags": 3,
+			"fileDataID": 201861
+		}
+	],
+	"textureTypes": [
+		0
+	],
+	"materials": [
+		{
+			"flags": 4,
+			"blendingMode": 0
+		}
+	],
+	"textureCombos": [
+		0
+	],
+	"colors": [],
+	"textureWeights": [
+		{
+			"globalSeq": 65535,
+			"interpolation": 0,
+			"timestamps": [
+				[
+					0
+				]
+			],
+			"values": [
+				[
+					32767
+				]
+			],
+			"timestampOffsets": null,
+			"valueOffsets": null
+		}
+	],
+	"transparencyLookup": [
+		0
+	],
+	"textureTransforms": [],
+	"textureTransformsLookup": [
+		65535
+	],
+	"boundingBox": {
+		"min": [
+			-0.4199744760990143,
+			-1.2071559429168701,
+			-0.09245099872350693
+		],
+		"max": [
+			0.9714279174804688,
+			1.3167482614517212,
+			1.6405751705169678
+		]
+	},
+	"boundingSphereRadius": 1.3617463111877441,
+	"collisionBox": {
+		"min": [
+			-0.41997453570365906,
+			-1.2071559429168701,
+			-0.09245099872350693
+		],
+		"max": [
+			0.9714279174804688,
+			1.3167482614517212,
+			1.6405751705169678
+		]
+	},
+	"collisionSphereRadius": 1.3617463111877441,
+	"skin": {
+		"subMeshes": [
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 0,
+				"vertexCount": 36,
+				"triangleStart": 0,
+				"triangleCount": 141,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					0.14092642068862915,
+					0.011196374893188477,
+					0.6279380917549133
+				],
+				"sortCenterPosition": [
+					0.14092642068862915,
+					0.011196374893188477,
+					0.6279380917549133
+				],
+				"sortRadius": 1.3558589220046997
+			}
+		],
+		"textureUnits": [
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 0,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 0,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 0,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			}
+		],
+		"fileName": "world/kalimdor/felwood/passivedoodads/felwoodmushrooms/felwoodmushroom0200.skin",
+		"fileDataID": 507211
+	}
+}

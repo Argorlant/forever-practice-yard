@@ -1,0 +1,126 @@
+{
+	"fileType": "m2",
+	"fileDataID": 190726,
+	"fileName": "world/critter/butterflies/butterflypurple01.m2",
+	"internalName": "ButterflyPurple01",
+	"textures": [
+		{
+			"fileNameInternal": "world/critter/butterflies/butterflywingpurple01.blp",
+			"fileNameExternal": "butterflywingpurple01.png",
+			"mtlName": "mat_butterflywingpurple01",
+			"flags": 0,
+			"fileDataID": 190729
+		}
+	],
+	"textureTypes": [
+		0
+	],
+	"materials": [
+		{
+			"flags": 4,
+			"blendingMode": 1
+		}
+	],
+	"textureCombos": [
+		0
+	],
+	"colors": [],
+	"textureWeights": [
+		{
+			"globalSeq": 65535,
+			"interpolation": 0,
+			"timestamps": [
+				[
+					0
+				]
+			],
+			"values": [
+				[
+					32767
+				]
+			],
+			"timestampOffsets": null,
+			"valueOffsets": null
+		}
+	],
+	"transparencyLookup": [
+		0
+	],
+	"textureTransforms": [],
+	"textureTransformsLookup": [
+		65535
+	],
+	"boundingBox": {
+		"min": [
+			-2.738265037536621,
+			-1.9189203977584839,
+			1.5153898000717163
+		],
+		"max": [
+			1.5897603034973145,
+			2.0420494079589844,
+			2.4393808841705322
+		]
+	},
+	"boundingSphereRadius": 2.4411981105804443,
+	"collisionBox": {
+		"min": [
+			10000000,
+			10000000,
+			10000000
+		],
+		"max": [
+			-10000000,
+			-10000000,
+			-10000000
+		]
+	},
+	"collisionSphereRadius": 0,
+	"skin": {
+		"subMeshes": [
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 0,
+				"vertexCount": 6,
+				"triangleStart": 0,
+				"triangleCount": 12,
+				"boneCount": 2,
+				"boneStart": 0,
+				"boneInfluences": 2,
+				"centerBoneIndex": 3,
+				"centerPosition": [
+					0.04425875470042229,
+					1.9065102338790894,
+					1.644470453262329
+				],
+				"sortCenterPosition": [
+					0.04425875097513199,
+					1.9065124988555908,
+					1.6444694995880127
+				],
+				"sortRadius": 0.14489778876304626
+			}
+		],
+		"textureUnits": [
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 16,
+				"skinSectionIndex": 0,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 0,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 0,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			}
+		],
+		"fileName": "world/critter/butterflies/butterflypurple0100.skin",
+		"fileDataID": 495123
+	}
+}

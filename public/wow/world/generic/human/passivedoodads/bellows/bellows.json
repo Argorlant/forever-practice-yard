@@ -1,0 +1,178 @@
+{
+	"fileType": "m2",
+	"fileDataID": 198008,
+	"fileName": "world/generic/human/passive doodads/bellows/bellows.m2",
+	"internalName": "bellows",
+	"textures": [
+		{
+			"fileNameInternal": "dungeons/textures/trim/mm_metal_floor_border_01x.blp",
+			"fileNameExternal": "..\\..\\..\\..\\..\\dungeons\\textures\\trim\\mm_metal_floor_border_01x.png",
+			"mtlName": "mat_mm_metal_floor_border_01x",
+			"flags": 0,
+			"fileDataID": 129318
+		},
+		{
+			"fileNameInternal": "dungeons/textures/metal/mm_metal_trims_01.blp",
+			"fileNameExternal": "..\\..\\..\\..\\..\\dungeons\\textures\\metal\\mm_metal_trims_01.png",
+			"mtlName": "mat_mm_metal_trims_01",
+			"flags": 0,
+			"fileDataID": 128159
+		}
+	],
+	"textureTypes": [
+		0,
+		0
+	],
+	"materials": [
+		{
+			"flags": 0,
+			"blendingMode": 0
+		},
+		{
+			"flags": 0,
+			"blendingMode": 0
+		}
+	],
+	"textureCombos": [
+		0,
+		1
+	],
+	"colors": [],
+	"textureWeights": [
+		{
+			"globalSeq": 65535,
+			"interpolation": 0,
+			"timestamps": [
+				[
+					0
+				]
+			],
+			"values": [
+				[
+					32767
+				]
+			],
+			"timestampOffsets": null,
+			"valueOffsets": null
+		}
+	],
+	"transparencyLookup": [
+		0
+	],
+	"textureTransforms": [],
+	"textureTransformsLookup": [
+		65535
+	],
+	"boundingBox": {
+		"min": [
+			-4.054646968841553,
+			-3.530043601989746,
+			-0.014448306523263454
+		],
+		"max": [
+			5.402347564697266,
+			3.7361347675323486,
+			9.072752952575684
+		]
+	},
+	"boundingSphereRadius": 7.296502113342285,
+	"collisionBox": {
+		"min": [
+			-4.066349029541016,
+			-3.530043840408325,
+			0
+		],
+		"max": [
+			5.402347564697266,
+			3.7361347675323486,
+			9.087007522583008
+		]
+	},
+	"collisionSphereRadius": 7.292912483215332,
+	"skin": {
+		"subMeshes": [
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 0,
+				"vertexCount": 28,
+				"triangleStart": 0,
+				"triangleCount": 54,
+				"boneCount": 8,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					0.3127964735031128,
+					-0.16831441223621368,
+					2.7387006282806396
+				],
+				"sortCenterPosition": [
+					-0.13978099822998047,
+					0.10304558277130127,
+					2.2910420894622803
+				],
+				"sortRadius": 5.792963027954102
+			},
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 28,
+				"vertexCount": 235,
+				"triangleStart": 54,
+				"triangleCount": 432,
+				"boneCount": 8,
+				"boneStart": 0,
+				"boneInfluences": 3,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					1.4238723516464233,
+					-0.07803402841091156,
+					5.909247398376465
+				],
+				"sortCenterPosition": [
+					1.2441127300262451,
+					0.1207953691482544,
+					6.656822204589844
+				],
+				"sortRadius": 5.168564796447754
+			}
+		],
+		"textureUnits": [
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 0,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 0,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 0,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			},
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 1,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 1,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 1,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			}
+		],
+		"fileName": "world/generic/human/passive doodads/bellows/bellows00.skin",
+		"fileDataID": 504203
+	}
+}

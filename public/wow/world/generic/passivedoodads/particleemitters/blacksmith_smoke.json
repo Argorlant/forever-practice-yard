@@ -1,0 +1,134 @@
+{
+	"fileType": "m2",
+	"fileDataID": 199929,
+	"fileName": "world/generic/passivedoodads/particleemitters/blacksmith_smoke.m2",
+	"internalName": "Blacksmith_smoke",
+	"textures": [
+		{
+			"fileNameInternal": "world/generic/human/passive doodads/cauldrons/waterfallsteam.blp",
+			"fileNameExternal": "..\\..\\human\\passivedoodads\\cauldrons\\waterfallsteam.png",
+			"mtlName": "mat_waterfallsteam",
+			"flags": 0,
+			"fileDataID": 198103
+		},
+		{
+			"fileNameInternal": "creature/elementalearth/watermist.blp",
+			"fileNameExternal": "..\\..\\..\\..\\creature\\elementalearth\\watermist.png",
+			"mtlName": "mat_watermist",
+			"flags": 0,
+			"fileDataID": 123755
+		}
+	],
+	"textureTypes": [
+		0,
+		0
+	],
+	"materials": [
+		{
+			"flags": 16,
+			"blendingMode": 2
+		}
+	],
+	"textureCombos": [
+		0
+	],
+	"colors": [],
+	"textureWeights": [
+		{
+			"globalSeq": 65535,
+			"interpolation": 0,
+			"timestamps": [
+				[
+					0
+				]
+			],
+			"values": [
+				[
+					0
+				]
+			],
+			"timestampOffsets": null,
+			"valueOffsets": null
+		}
+	],
+	"transparencyLookup": [
+		0
+	],
+	"textureTransforms": [],
+	"textureTransformsLookup": [
+		65535
+	],
+	"boundingBox": {
+		"min": [
+			-17.67572021484375,
+			-12.07983684539795,
+			-4.541987895965576
+		],
+		"max": [
+			2.4733688831329346,
+			55.966156005859375,
+			25.198314666748047
+		]
+	},
+	"boundingSphereRadius": 44.08787536621094,
+	"collisionBox": {
+		"min": [
+			10000000,
+			10000000,
+			10000000
+		],
+		"max": [
+			-10000000,
+			-10000000,
+			-10000000
+		]
+	},
+	"collisionSphereRadius": 0,
+	"skin": {
+		"subMeshes": [
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 0,
+				"vertexCount": 3,
+				"triangleStart": 0,
+				"triangleCount": 3,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					2.4462192271812455e-9,
+					18.652801513671875,
+					0.16788892447948456
+				],
+				"sortCenterPosition": [
+					0,
+					27.98114013671875,
+					0.16788890957832336
+				],
+				"sortRadius": 28.00972557067871
+			}
+		],
+		"textureUnits": [
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 16,
+				"skinSectionIndex": 0,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 0,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 0,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			}
+		],
+		"fileName": "world/generic/passivedoodads/particleemitters/blacksmith_smoke00.skin",
+		"fileDataID": 505785
+	}
+}

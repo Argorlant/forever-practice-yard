@@ -1,0 +1,334 @@
+{
+	"fileType": "m2",
+	"fileDataID": 198564,
+	"fileName": "world/generic/human/passive doodads/statues/statueturalyon.m2",
+	"internalName": "StatueTuralyon",
+	"textures": [
+		{
+			"fileNameInternal": "world/generic/human/passive doodads/statues/turalyon01.blp",
+			"fileNameExternal": "turalyon01.png",
+			"mtlName": "mat_turalyon01",
+			"flags": 0,
+			"fileDataID": 198565
+		},
+		{
+			"fileNameInternal": "world/generic/human/passive doodads/statues/turalyonbook.blp",
+			"fileNameExternal": "turalyonbook.png",
+			"mtlName": "mat_turalyonbook",
+			"flags": 0,
+			"fileDataID": 198567
+		},
+		{
+			"fileNameInternal": "world/generic/human/passive doodads/statues/turalyonshoulder.blp",
+			"fileNameExternal": "turalyonshoulder.png",
+			"mtlName": "mat_turalyonshoulder",
+			"flags": 0,
+			"fileDataID": 198568
+		},
+		{
+			"fileNameInternal": "world/generic/human/passive doodads/statues/turalyonsword.blp",
+			"fileNameExternal": "turalyonsword.png",
+			"mtlName": "mat_turalyonsword",
+			"flags": 0,
+			"fileDataID": 198569
+		},
+		{
+			"fileNameInternal": "world/generic/human/passive doodads/statues/turalyonbelt.blp",
+			"fileNameExternal": "turalyonbelt.png",
+			"mtlName": "mat_turalyonbelt",
+			"flags": 0,
+			"fileDataID": 198566
+		}
+	],
+	"textureTypes": [
+		0,
+		0,
+		0,
+		0,
+		0
+	],
+	"materials": [
+		{
+			"flags": 0,
+			"blendingMode": 0
+		},
+		{
+			"flags": 0,
+			"blendingMode": 0
+		},
+		{
+			"flags": 0,
+			"blendingMode": 0
+		},
+		{
+			"flags": 0,
+			"blendingMode": 0
+		},
+		{
+			"flags": 0,
+			"blendingMode": 0
+		}
+	],
+	"textureCombos": [
+		0,
+		4,
+		1,
+		2,
+		3
+	],
+	"colors": [],
+	"textureWeights": [
+		{
+			"globalSeq": 65535,
+			"interpolation": 0,
+			"timestamps": [
+				[
+					0
+				]
+			],
+			"values": [
+				[
+					32767
+				]
+			],
+			"timestampOffsets": null,
+			"valueOffsets": null
+		}
+	],
+	"transparencyLookup": [
+		0
+	],
+	"textureTransforms": [],
+	"textureTransformsLookup": [
+		65535
+	],
+	"boundingBox": {
+		"min": [
+			-5.1491618156433105,
+			-5.491629600524902,
+			-0.016317734494805336
+		],
+		"max": [
+			3.677706003189087,
+			5.860533237457275,
+			19.579233169555664
+		]
+	},
+	"boundingSphereRadius": 11.265921592712402,
+	"collisionBox": {
+		"min": [
+			-5.149162292480469,
+			-4.4530181884765625,
+			-0.016318654641509056
+		],
+		"max": [
+			2.105717897415161,
+			5.62092924118042,
+			17.90363883972168
+		]
+	},
+	"collisionSphereRadius": 10.477509498596191,
+	"skin": {
+		"subMeshes": [
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 0,
+				"vertexCount": 612,
+				"triangleStart": 0,
+				"triangleCount": 2004,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					0.02297033928334713,
+					0.31096121668815613,
+					10.958194732666016
+				],
+				"sortCenterPosition": [
+					-0.7392482757568359,
+					0.3770575523376465,
+					9.781457901000977
+				],
+				"sortRadius": 11.17467212677002
+			},
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 612,
+				"vertexCount": 24,
+				"triangleStart": 2004,
+				"triangleCount": 96,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					0.6935006380081177,
+					-0.4387892484664917,
+					11.440917015075684
+				],
+				"sortCenterPosition": [
+					0.6935006380081177,
+					-0.4387892484664917,
+					11.440917015075684
+				],
+				"sortRadius": 2.578680992126465
+			},
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 636,
+				"vertexCount": 30,
+				"triangleStart": 2100,
+				"triangleCount": 60,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					-0.7384222149848938,
+					2.501995801925659,
+					10.893171310424805
+				],
+				"sortCenterPosition": [
+					-0.7589901685714722,
+					2.8168654441833496,
+					10.291361808776855
+				],
+				"sortRadius": 3.962567090988159
+			},
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 666,
+				"vertexCount": 62,
+				"triangleStart": 2160,
+				"triangleCount": 216,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					-1.0180050134658813,
+					-0.6113137006759644,
+					15.531261444091797
+				],
+				"sortCenterPosition": [
+					-0.79267817735672,
+					-0.3111574649810791,
+					15.609209060668945
+				],
+				"sortRadius": 5.416878700256348
+			},
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 728,
+				"vertexCount": 41,
+				"triangleStart": 2376,
+				"triangleCount": 138,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					2.4563698768615723,
+					-0.4074269235134125,
+					14.435708999633789
+				],
+				"sortCenterPosition": [
+					2.544362783432007,
+					-0.817008912563324,
+					13.850295066833496
+				],
+				"sortRadius": 4.1611456871032715
+			}
+		],
+		"textureUnits": [
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 0,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 0,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 0,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			},
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 2,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 1,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 2,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			},
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 3,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 2,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 3,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			},
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 4,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 3,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 4,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			},
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 1,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 4,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 1,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			}
+		],
+		"fileName": "world/generic/human/passive doodads/statues/statueturalyon00.skin",
+		"fileDataID": 504633
+	}
+}

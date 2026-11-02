@@ -1,0 +1,178 @@
+{
+	"fileType": "m2",
+	"fileDataID": 198185,
+	"fileName": "world/generic/human/passive doodads/drapery/drapery01.m2",
+	"internalName": "Drapery01",
+	"textures": [
+		{
+			"fileNameInternal": "world/generic/human/passive doodads/drapery/mm_knob.blp",
+			"fileNameExternal": "mm_knob.png",
+			"mtlName": "mat_mm_knob",
+			"flags": 3,
+			"fileDataID": 198188
+		},
+		{
+			"fileNameInternal": "world/generic/human/passive doodads/drapery/mm_canopy_side_01.blp",
+			"fileNameExternal": "mm_canopy_side_01.png",
+			"mtlName": "mat_mm_canopy_side_01",
+			"flags": 3,
+			"fileDataID": 198187
+		}
+	],
+	"textureTypes": [
+		0,
+		0
+	],
+	"materials": [
+		{
+			"flags": 0,
+			"blendingMode": 0
+		},
+		{
+			"flags": 4,
+			"blendingMode": 0
+		}
+	],
+	"textureCombos": [
+		0,
+		1
+	],
+	"colors": [],
+	"textureWeights": [
+		{
+			"globalSeq": 65535,
+			"interpolation": 0,
+			"timestamps": [
+				[
+					0
+				]
+			],
+			"values": [
+				[
+					32767
+				]
+			],
+			"timestampOffsets": null,
+			"valueOffsets": null
+		}
+	],
+	"transparencyLookup": [
+		0
+	],
+	"textureTransforms": [],
+	"textureTransformsLookup": [
+		65535
+	],
+	"boundingBox": {
+		"min": [
+			-0.21733200550079346,
+			-2.1748499870300293,
+			0
+		],
+		"max": [
+			0.40446901321411133,
+			2.606100082397461,
+			5.627699851989746
+		]
+	},
+	"boundingSphereRadius": 3.6336400508880615,
+	"collisionBox": {
+		"min": [
+			10000000,
+			10000000,
+			10000000
+		],
+		"max": [
+			-10000000,
+			-10000000,
+			-10000000
+		]
+	},
+	"collisionSphereRadius": 0,
+	"skin": {
+		"subMeshes": [
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 0,
+				"vertexCount": 46,
+				"triangleStart": 0,
+				"triangleCount": 102,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					0.08993831276893616,
+					0.2156262844800949,
+					5.031482219696045
+				],
+				"sortCenterPosition": [
+					0.09368200600147247,
+					0.21562504768371582,
+					5.2484846115112305
+				],
+				"sortRadius": 2.342280864715576
+			},
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 46,
+				"vertexCount": 47,
+				"triangleStart": 102,
+				"triangleCount": 156,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					-0.07909741997718811,
+					0.21562518179416656,
+					3.1730687618255615
+				],
+				"sortCenterPosition": [
+					-0.01811150461435318,
+					0.21562504768371582,
+					2.6689999103546143
+				],
+				"sortRadius": 3.5145621299743652
+			}
+		],
+		"textureUnits": [
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 0,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 0,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 0,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			},
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 1,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 1,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 1,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			}
+		],
+		"fileName": "world/generic/human/passive doodads/drapery/drapery0100.skin",
+		"fileDataID": 504371
+	}
+}

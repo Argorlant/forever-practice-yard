@@ -1,0 +1,126 @@
+{
+	"fileType": "m2",
+	"fileDataID": 198085,
+	"fileName": "world/generic/human/passive doodads/cargoboxes/deadminecargoboxes.m2",
+	"internalName": "DeadMineCargoBoxes",
+	"textures": [
+		{
+			"fileNameInternal": "world/generic/tauren/passive doodads/taurentravois/deadminenetswood.blp",
+			"fileNameExternal": "..\\..\\..\\tauren\\passivedoodads\\taurentravois\\deadminenetswood.png",
+			"mtlName": "mat_deadminenetswood",
+			"flags": 3,
+			"fileDataID": 200543
+		}
+	],
+	"textureTypes": [
+		0
+	],
+	"materials": [
+		{
+			"flags": 4,
+			"blendingMode": 0
+		}
+	],
+	"textureCombos": [
+		0
+	],
+	"colors": [],
+	"textureWeights": [
+		{
+			"globalSeq": 65535,
+			"interpolation": 0,
+			"timestamps": [
+				[
+					0
+				]
+			],
+			"values": [
+				[
+					32767
+				]
+			],
+			"timestampOffsets": null,
+			"valueOffsets": null
+		}
+	],
+	"transparencyLookup": [
+		0
+	],
+	"textureTransforms": [],
+	"textureTransformsLookup": [
+		65535
+	],
+	"boundingBox": {
+		"min": [
+			-1.2782434225082397,
+			-1.1433348655700684,
+			-0.019199376925826073
+		],
+		"max": [
+			1.2942079305648804,
+			1.1195303201675415,
+			1.7595572471618652
+		]
+	},
+	"boundingSphereRadius": 1.9178253412246704,
+	"collisionBox": {
+		"min": [
+			-1.2723510265350342,
+			-1.1474529504776,
+			-0.019199375063180923
+		],
+		"max": [
+			1.2942079305648804,
+			1.1195303201675415,
+			1.763028860092163
+		]
+	},
+	"collisionSphereRadius": 1.9217960834503174,
+	"skin": {
+		"subMeshes": [
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 0,
+				"vertexCount": 120,
+				"triangleStart": 0,
+				"triangleCount": 180,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					-0.43263620138168335,
+					-0.12203144282102585,
+					0.8306573033332825
+				],
+				"sortCenterPosition": [
+					0.007982254028320312,
+					-0.011902272701263428,
+					0.8701789379119873
+				],
+				"sortRadius": 1.91782546043396
+			}
+		],
+		"textureUnits": [
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 0,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 0,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 0,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			}
+		],
+		"fileName": "world/generic/human/passive doodads/cargoboxes/deadminecargoboxes00.skin",
+		"fileDataID": 504290
+	}
+}

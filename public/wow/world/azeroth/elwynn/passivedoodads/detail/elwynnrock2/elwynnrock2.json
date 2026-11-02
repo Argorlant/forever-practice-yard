@@ -1,0 +1,126 @@
+{
+	"fileType": "m2",
+	"fileDataID": 189770,
+	"fileName": "world/azeroth/elwynn/passivedoodads/detail/elwynnrock2/elwynnrock2.m2",
+	"internalName": "ElwynnRock2",
+	"textures": [
+		{
+			"fileNameInternal": "world/azeroth/elwynn/passivedoodads/detail/elwynnrock2/elwynnrock2skin.blp",
+			"fileNameExternal": "elwynnrock2skin.png",
+			"mtlName": "mat_elwynnrock2skin",
+			"flags": 0,
+			"fileDataID": 189771
+		}
+	],
+	"textureTypes": [
+		0
+	],
+	"materials": [
+		{
+			"flags": 0,
+			"blendingMode": 0
+		}
+	],
+	"textureCombos": [
+		0
+	],
+	"colors": [],
+	"textureWeights": [
+		{
+			"globalSeq": 65535,
+			"interpolation": 0,
+			"timestamps": [
+				[
+					0
+				]
+			],
+			"values": [
+				[
+					32767
+				]
+			],
+			"timestampOffsets": null,
+			"valueOffsets": null
+		}
+	],
+	"transparencyLookup": [
+		0
+	],
+	"textureTransforms": [],
+	"textureTransformsLookup": [
+		65535
+	],
+	"boundingBox": {
+		"min": [
+			-0.2595861256122589,
+			-0.24658751487731934,
+			0
+		],
+		"max": [
+			0.2113477736711502,
+			0.1996971219778061,
+			0.14776907861232758
+		]
+	},
+	"boundingSphereRadius": 0.31501469016075134,
+	"collisionBox": {
+		"min": [
+			-0.2595861256122589,
+			-0.24658751487731934,
+			0
+		],
+		"max": [
+			0.2113477736711502,
+			0.1996971219778061,
+			0.14776907861232758
+		]
+	},
+	"collisionSphereRadius": 0.31501471996307373,
+	"skin": {
+		"subMeshes": [
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 0,
+				"vertexCount": 8,
+				"triangleStart": 0,
+				"triangleCount": 24,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					-0.03619709610939026,
+					-0.0013497015461325645,
+					0.03386702388525009
+				],
+				"sortCenterPosition": [
+					-0.03619709610939026,
+					-0.0013497015461325645,
+					0.03386702388525009
+				],
+				"sortRadius": 0.28926271200180054
+			}
+		],
+		"textureUnits": [
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 0,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 0,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 0,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			}
+		],
+		"fileName": "world/azeroth/elwynn/passivedoodads/detail/elwynnrock2/elwynnrock200.skin",
+		"fileDataID": 494516
+	}
+}

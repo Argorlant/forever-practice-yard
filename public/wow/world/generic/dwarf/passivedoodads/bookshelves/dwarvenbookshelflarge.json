@@ -1,0 +1,126 @@
+{
+	"fileType": "m2",
+	"fileDataID": 197288,
+	"fileName": "world/generic/dwarf/passive doodads/bookshelves/dwarvenbookshelflarge.m2",
+	"internalName": "DwarvenBookshelfLarge",
+	"textures": [
+		{
+			"fileNameInternal": "world/generic/dwarf/passive doodads/beds/dwarvenbookshelfbase.blp",
+			"fileNameExternal": "..\\beds\\dwarvenbookshelfbase.png",
+			"mtlName": "mat_dwarvenbookshelfbase",
+			"flags": 1,
+			"fileDataID": 197268
+		}
+	],
+	"textureTypes": [
+		0
+	],
+	"materials": [
+		{
+			"flags": 0,
+			"blendingMode": 0
+		}
+	],
+	"textureCombos": [
+		0
+	],
+	"colors": [],
+	"textureWeights": [
+		{
+			"globalSeq": 65535,
+			"interpolation": 0,
+			"timestamps": [
+				[
+					0
+				]
+			],
+			"values": [
+				[
+					32767
+				]
+			],
+			"timestampOffsets": null,
+			"valueOffsets": null
+		}
+	],
+	"transparencyLookup": [
+		0
+	],
+	"textureTransforms": [],
+	"textureTransformsLookup": [
+		65535
+	],
+	"boundingBox": {
+		"min": [
+			-2.570849657058716,
+			-0.982950747013092,
+			-0.009974091313779354
+		],
+		"max": [
+			2.6782515048980713,
+			0.9336997270584106,
+			4.537970542907715
+		]
+	},
+	"boundingSphereRadius": 3.6011626720428467,
+	"collisionBox": {
+		"min": [
+			-2.570849895477295,
+			-0.9829506278038025,
+			-0.007943498902022839
+		],
+		"max": [
+			2.6782515048980713,
+			0.9336997270584106,
+			4.537970542907715
+		]
+	},
+	"collisionSphereRadius": 3.6018033027648926,
+	"skin": {
+		"subMeshes": [
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 0,
+				"vertexCount": 620,
+				"triangleStart": 0,
+				"triangleCount": 924,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					0.01933513768017292,
+					-0.18071508407592773,
+					2.2499969005584717
+				],
+				"sortCenterPosition": [
+					0.053700923919677734,
+					-0.024625509977340698,
+					2.26399827003479
+				],
+				"sortRadius": 3.6011626720428467
+			}
+		],
+		"textureUnits": [
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 0,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 0,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 0,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			}
+		],
+		"fileName": "world/generic/dwarf/passive doodads/bookshelves/dwarvenbookshelflarge00.skin",
+		"fileDataID": 503305
+	}
+}

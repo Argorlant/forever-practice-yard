@@ -1,0 +1,230 @@
+{
+	"fileType": "m2",
+	"fileDataID": 198001,
+	"fileName": "world/generic/human/passive doodads/beds/bunkbed01.m2",
+	"internalName": "Bunkbed01",
+	"textures": [
+		{
+			"fileNameInternal": "dungeons/textures/wood/mm_beam_side__01x.blp",
+			"fileNameExternal": "..\\..\\..\\..\\..\\dungeons\\textures\\wood\\mm_beam_side__01x.png",
+			"mtlName": "mat_mm_beam_side__01x",
+			"flags": 3,
+			"fileDataID": 130299
+		},
+		{
+			"fileNameInternal": "world/generic/human/passive doodads/beds/mm_quilt_opt.blp",
+			"fileNameExternal": "mm_quilt_opt.png",
+			"mtlName": "mat_mm_quilt_opt",
+			"flags": 0,
+			"fileDataID": 198003
+		},
+		{
+			"fileNameInternal": "dungeons/textures/wood/mm_beam_end__01x.blp",
+			"fileNameExternal": "..\\..\\..\\..\\..\\dungeons\\textures\\wood\\mm_beam_end__01x.png",
+			"mtlName": "mat_mm_beam_end__01x",
+			"flags": 0,
+			"fileDataID": 130298
+		}
+	],
+	"textureTypes": [
+		0,
+		0,
+		0
+	],
+	"materials": [
+		{
+			"flags": 0,
+			"blendingMode": 0
+		},
+		{
+			"flags": 0,
+			"blendingMode": 0
+		},
+		{
+			"flags": 0,
+			"blendingMode": 0
+		}
+	],
+	"textureCombos": [
+		0,
+		1,
+		2
+	],
+	"colors": [],
+	"textureWeights": [
+		{
+			"globalSeq": 65535,
+			"interpolation": 0,
+			"timestamps": [
+				[
+					0
+				]
+			],
+			"values": [
+				[
+					32767
+				]
+			],
+			"timestampOffsets": null,
+			"valueOffsets": null
+		}
+	],
+	"transparencyLookup": [
+		0
+	],
+	"textureTransforms": [],
+	"textureTransformsLookup": [
+		65535
+	],
+	"boundingBox": {
+		"min": [
+			-2.562305450439453,
+			-1.3594356775283813,
+			0
+		],
+		"max": [
+			2.704543113708496,
+			1.4208717346191406,
+			3.445753574371338
+		]
+	},
+	"boundingSphereRadius": 3.4403128623962402,
+	"collisionBox": {
+		"min": [
+			-2.562305212020874,
+			-1.3594355583190918,
+			3.178914482759865e-7
+		],
+		"max": [
+			2.6304543018341064,
+			1.3331577777862549,
+			3.4513893127441406
+		]
+	},
+	"collisionSphereRadius": 3.395839214324951,
+	"skin": {
+		"subMeshes": [
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 0,
+				"vertexCount": 252,
+				"triangleStart": 0,
+				"triangleCount": 636,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					0.04113525152206421,
+					0.1124817505478859,
+					1.810774326324463
+				],
+				"sortCenterPosition": [
+					0.07111883163452148,
+					0.03071802854537964,
+					1.722876787185669
+				],
+				"sortRadius": 3.4403128623962402
+			},
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 252,
+				"vertexCount": 82,
+				"triangleStart": 636,
+				"triangleCount": 252,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					-0.019788915291428566,
+					0.05583769828081131,
+					1.4348868131637573
+				],
+				"sortCenterPosition": [
+					0.08155488967895508,
+					-0.000961005687713623,
+					1.4038275480270386
+				],
+				"sortRadius": 2.8764519691467285
+			},
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 334,
+				"vertexCount": 24,
+				"triangleStart": 888,
+				"triangleCount": 48,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					0.04206846281886101,
+					0.025635242462158203,
+					3.4431896209716797
+				],
+				"sortCenterPosition": [
+					0.0683588981628418,
+					0.05010390281677246,
+					3.4431886672973633
+				],
+				"sortRadius": 2.9660112857818604
+			}
+		],
+		"textureUnits": [
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 0,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 0,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 0,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			},
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 1,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 1,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 1,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			},
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 2,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 2,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 2,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			}
+		],
+		"fileName": "world/generic/human/passive doodads/beds/bunkbed0100.skin",
+		"fileDataID": 504198
+	}
+}

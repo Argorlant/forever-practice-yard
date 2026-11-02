@@ -1,0 +1,126 @@
+{
+	"fileType": "m2",
+	"fileDataID": 198130,
+	"fileName": "world/generic/human/passive doodads/cloth/clothspoolredlow.m2",
+	"internalName": "ClothSpoolRedLow",
+	"textures": [
+		{
+			"fileNameInternal": "world/generic/human/passive doodads/cloth/clothstuff.blp",
+			"fileNameExternal": "clothstuff.png",
+			"mtlName": "mat_clothstuff",
+			"flags": 3,
+			"fileDataID": 198132
+		}
+	],
+	"textureTypes": [
+		0
+	],
+	"materials": [
+		{
+			"flags": 4,
+			"blendingMode": 1
+		}
+	],
+	"textureCombos": [
+		0
+	],
+	"colors": [],
+	"textureWeights": [
+		{
+			"globalSeq": 65535,
+			"interpolation": 0,
+			"timestamps": [
+				[
+					0
+				]
+			],
+			"values": [
+				[
+					32767
+				]
+			],
+			"timestampOffsets": null,
+			"valueOffsets": null
+		}
+	],
+	"transparencyLookup": [
+		0
+	],
+	"textureTransforms": [],
+	"textureTransformsLookup": [
+		65535
+	],
+	"boundingBox": {
+		"min": [
+			-0.09311830252408981,
+			-0.10752400010824203,
+			0.036093901842832565
+		],
+		"max": [
+			0.09311830252408981,
+			0.10752400010824203,
+			0.28501901030540466
+		]
+	},
+	"boundingSphereRadius": 0.16447600722312927,
+	"collisionBox": {
+		"min": [
+			10000000,
+			10000000,
+			10000000
+		],
+		"max": [
+			-10000000,
+			-10000000,
+			-10000000
+		]
+	},
+	"collisionSphereRadius": 0,
+	"skin": {
+		"subMeshes": [
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 0,
+				"vertexCount": 44,
+				"triangleStart": 0,
+				"triangleCount": 180,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					-1.6933138224928257e-10,
+					1.6933138224928257e-10,
+					0.16055674850940704
+				],
+				"sortCenterPosition": [
+					0,
+					0,
+					0.16055645048618317
+				],
+				"sortRadius": 0.1644759476184845
+			}
+		],
+		"textureUnits": [
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 16,
+				"skinSectionIndex": 0,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 0,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 0,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			}
+		],
+		"fileName": "world/generic/human/passive doodads/cloth/clothspoolredlow00.skin",
+		"fileDataID": 504317
+	}
+}

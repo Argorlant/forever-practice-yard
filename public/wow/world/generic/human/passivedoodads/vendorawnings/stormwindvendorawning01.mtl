@@ -1,0 +1,6 @@
+newmtl mat_gypsywagon
+illum 1
+map_Kd ..\..\..\dwarf\passivedoodads\lanterns\gypsywagon.png
+newmtl mat_overhangcopy
+illum 1
+map_Kd ..\gypsywagons\overhangcopy.png

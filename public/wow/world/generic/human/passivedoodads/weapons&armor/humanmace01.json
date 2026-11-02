@@ -1,0 +1,126 @@
+{
+	"fileType": "m2",
+	"fileDataID": 198650,
+	"fileName": "world/generic/human/passive doodads/weapons&armor/humanmace01.m2",
+	"internalName": "HumanMace01",
+	"textures": [
+		{
+			"fileNameInternal": "world/generic/human/passive doodads/weapons&armor/waeponpage01.blp",
+			"fileNameExternal": "waeponpage01.png",
+			"mtlName": "mat_waeponpage01",
+			"flags": 0,
+			"fileDataID": 198659
+		}
+	],
+	"textureTypes": [
+		0
+	],
+	"materials": [
+		{
+			"flags": 0,
+			"blendingMode": 0
+		}
+	],
+	"textureCombos": [
+		0
+	],
+	"colors": [],
+	"textureWeights": [
+		{
+			"globalSeq": 65535,
+			"interpolation": 0,
+			"timestamps": [
+				[
+					0
+				]
+			],
+			"values": [
+				[
+					32767
+				]
+			],
+			"timestampOffsets": null,
+			"valueOffsets": null
+		}
+	],
+	"transparencyLookup": [
+		0
+	],
+	"textureTransforms": [],
+	"textureTransformsLookup": [
+		65535
+	],
+	"boundingBox": {
+		"min": [
+			-0.35558098554611206,
+			-0.10573700070381165,
+			-0.0997224971652031
+		],
+		"max": [
+			0.3708469867706299,
+			0.10573700070381165,
+			0.10224299877882004
+		]
+	},
+	"boundingSphereRadius": 0.36321601271629333,
+	"collisionBox": {
+		"min": [
+			10000000,
+			10000000,
+			10000000
+		],
+		"max": [
+			-10000000,
+			-10000000,
+			-10000000
+		]
+	},
+	"collisionSphereRadius": 0,
+	"skin": {
+		"subMeshes": [
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 0,
+				"vertexCount": 204,
+				"triangleStart": 0,
+				"triangleCount": 264,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					0.08927654474973679,
+					-2.81222911624468e-9,
+					-0.0003295967180747539
+				],
+				"sortCenterPosition": [
+					0.007633000612258911,
+					0,
+					0.0012602508068084717
+				],
+				"sortRadius": 0.36321619153022766
+			}
+		],
+		"textureUnits": [
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 0,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 0,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 0,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			}
+		],
+		"fileName": "world/generic/human/passive doodads/weapons&armor/humanmace0100.skin",
+		"fileDataID": 504784
+	}
+}

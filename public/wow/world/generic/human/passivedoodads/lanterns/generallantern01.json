@@ -1,0 +1,178 @@
+{
+	"fileType": "m2",
+	"fileDataID": 198327,
+	"fileName": "world/generic/human/passive doodads/lanterns/generallantern01.m2",
+	"internalName": "GeneralLantern01",
+	"textures": [
+		{
+			"fileNameInternal": "world/azeroth/bootybay/passivedoodad/bootyentrance/gypsydoor_01.blp",
+			"fileNameExternal": "..\\..\\..\\..\\azeroth\\bootybay\\passivedoodad\\bootyentrance\\gypsydoor_01.png",
+			"mtlName": "mat_gypsydoor_01",
+			"flags": 0,
+			"fileDataID": 189082
+		},
+		{
+			"fileNameInternal": "world/azeroth/bootybay/passivedoodad/bootyentrance/elwynnlantern01.blp",
+			"fileNameExternal": "..\\..\\..\\..\\azeroth\\bootybay\\passivedoodad\\bootyentrance\\elwynnlantern01.png",
+			"mtlName": "mat_elwynnlantern01",
+			"flags": 3,
+			"fileDataID": 189080
+		}
+	],
+	"textureTypes": [
+		0,
+		0
+	],
+	"materials": [
+		{
+			"flags": 0,
+			"blendingMode": 0
+		},
+		{
+			"flags": 3,
+			"blendingMode": 0
+		}
+	],
+	"textureCombos": [
+		0,
+		1
+	],
+	"colors": [],
+	"textureWeights": [
+		{
+			"globalSeq": 65535,
+			"interpolation": 0,
+			"timestamps": [
+				[
+					0
+				]
+			],
+			"values": [
+				[
+					32767
+				]
+			],
+			"timestampOffsets": null,
+			"valueOffsets": null
+		}
+	],
+	"transparencyLookup": [
+		0
+	],
+	"textureTransforms": [],
+	"textureTransformsLookup": [
+		65535
+	],
+	"boundingBox": {
+		"min": [
+			-0.3462796211242676,
+			-0.3547680974006653,
+			-0.003823600010946393
+		],
+		"max": [
+			0.3695209324359894,
+			0.36103251576423645,
+			1.3718456029891968
+		]
+	},
+	"boundingSphereRadius": 0.7715992331504822,
+	"collisionBox": {
+		"min": [
+			-0.35248109698295593,
+			-0.3623049259185791,
+			0
+		],
+		"max": [
+			0.3672720491886139,
+			0.3574482500553131,
+			1.3719499111175537
+		]
+	},
+	"collisionSphereRadius": 0.7746436595916748,
+	"skin": {
+		"subMeshes": [
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 0,
+				"vertexCount": 98,
+				"triangleStart": 0,
+				"triangleCount": 150,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					0.011905278079211712,
+					0.0013245756272226572,
+					0.853866457939148
+				],
+				"sortCenterPosition": [
+					0.011620655655860901,
+					0.0031322240829467773,
+					0.6840109825134277
+				],
+				"sortRadius": 0.7715992331504822
+			},
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 98,
+				"vertexCount": 24,
+				"triangleStart": 150,
+				"triangleCount": 48,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					0.01162065751850605,
+					0.0031321924179792404,
+					0.4282834529876709
+				],
+				"sortCenterPosition": [
+					0.011620655655860901,
+					0.0031322091817855835,
+					0.43644294142723083
+				],
+				"sortRadius": 0.45241183042526245
+			}
+		],
+		"textureUnits": [
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 0,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 0,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 0,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			},
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 1,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 1,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 1,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			}
+		],
+		"fileName": "world/generic/human/passive doodads/lanterns/generallantern0100.skin",
+		"fileDataID": 504484
+	}
+}

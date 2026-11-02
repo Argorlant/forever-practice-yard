@@ -1,0 +1,298 @@
+{
+	"fileType": "m2",
+	"fileDataID": 190890,
+	"fileName": "world/dungeon/goldshireinn/innchandelier/innchandelier.m2",
+	"internalName": "",
+	"textures": [
+		{
+			"fileNameInternal": "world/dungeon/goldshireinn/innchandelier/mm_candle_01.blp",
+			"fileNameExternal": "mm_candle_01.png",
+			"mtlName": "mat_mm_candle_01",
+			"flags": 3,
+			"fileDataID": 190891
+		},
+		{
+			"fileNameInternal": "dungeons/textures/devices/mm_chain_01.blp",
+			"fileNameExternal": "..\\..\\..\\..\\dungeons\\textures\\devices\\mm_chain_01.png",
+			"mtlName": "mat_mm_chain_01",
+			"flags": 3,
+			"fileDataID": 127465
+		},
+		{
+			"fileNameInternal": "world/dungeon/goldshireinn/innchandelier/mm_chandelier_side_01.blp",
+			"fileNameExternal": "mm_chandelier_side_01.png",
+			"mtlName": "mat_mm_chandelier_side_01",
+			"flags": 3,
+			"fileDataID": 190892
+		},
+		{
+			"fileNameInternal": "dungeons/textures/wood/mm_beam_side__01x.blp",
+			"fileNameExternal": "..\\..\\..\\..\\dungeons\\textures\\wood\\mm_beam_side__01x.png",
+			"mtlName": "mat_mm_beam_side__01x",
+			"flags": 3,
+			"fileDataID": 130299
+		},
+		{
+			"fileNameInternal": "world/generic/nightelf/passive doodads/magicalimplements/glow.blp",
+			"fileNameExternal": "..\\..\\..\\generic\\nightelf\\passivedoodads\\magicalimplements\\glow.png",
+			"mtlName": "mat_glow",
+			"flags": 0,
+			"fileDataID": 198784
+		},
+		{
+			"fileNameInternal": "world/azeroth/karazahn/passivedoodads/bonfire/flamelicksmallblue.blp",
+			"fileNameExternal": "..\\..\\..\\azeroth\\karazahn\\passivedoodads\\bonfire\\flamelicksmallblue.png",
+			"mtlName": "mat_flamelicksmallblue",
+			"flags": 0,
+			"fileDataID": 189982
+		}
+	],
+	"textureTypes": [
+		0,
+		0,
+		0,
+		0,
+		0,
+		0
+	],
+	"materials": [
+		{
+			"flags": 0,
+			"blendingMode": 0
+		},
+		{
+			"flags": 0,
+			"blendingMode": 1
+		},
+		{
+			"flags": 0,
+			"blendingMode": 0
+		},
+		{
+			"flags": 0,
+			"blendingMode": 0
+		}
+	],
+	"textureCombos": [
+		0,
+		1,
+		2,
+		3
+	],
+	"colors": [],
+	"textureWeights": [
+		{
+			"globalSeq": 65535,
+			"interpolation": 0,
+			"timestamps": [
+				[
+					0
+				]
+			],
+			"values": [
+				[
+					32767
+				]
+			],
+			"timestampOffsets": null,
+			"valueOffsets": null
+		}
+	],
+	"transparencyLookup": [
+		0
+	],
+	"textureTransforms": [],
+	"textureTransformsLookup": [
+		65535
+	],
+	"boundingBox": {
+		"min": [
+			-2.2337424755096436,
+			-2.2334933280944824,
+			-2.452866315841675
+		],
+		"max": [
+			2.2330210208892822,
+			2.2332701683044434,
+			2.233381748199463
+		]
+	},
+	"boundingSphereRadius": 3.6450438499450684,
+	"collisionBox": {
+		"min": [
+			-1.5232179164886475,
+			-1.4834578037261963,
+			-2.4528703689575195
+		],
+		"max": [
+			1.5995248556137085,
+			1.4841902256011963,
+			-0.0024791294708848
+		]
+	},
+	"collisionSphereRadius": 1.997888207435608,
+	"skin": {
+		"subMeshes": [
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 0,
+				"vertexCount": 108,
+				"triangleStart": 0,
+				"triangleCount": 270,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					0.02700885199010372,
+					0.009325215592980385,
+					-1.9926731586456299
+				],
+				"sortCenterPosition": [
+					0.03933978080749512,
+					0.0003662109375,
+					-2.0819039344787598
+				],
+				"sortRadius": 1.4793787002563477
+			},
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 108,
+				"vertexCount": 32,
+				"triangleStart": 270,
+				"triangleCount": 96,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					0.05234455317258835,
+					-0.002016314771026373,
+					-1.5985190868377686
+				],
+				"sortCenterPosition": [
+					0.05234455317258835,
+					-0.002016314771026373,
+					-1.5985190868377686
+				],
+				"sortRadius": 1.6045122146606445
+			},
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 140,
+				"vertexCount": 44,
+				"triangleStart": 366,
+				"triangleCount": 120,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					-0.07691043615341187,
+					0.0003662034869194031,
+					-2.239582061767578
+				],
+				"sortCenterPosition": [
+					0.03933978080749512,
+					0.0003662109375,
+					-2.239582061767578
+				],
+				"sortRadius": 1.5746959447860718
+			},
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 184,
+				"vertexCount": 40,
+				"triangleStart": 486,
+				"triangleCount": 120,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					0.039339762181043625,
+					0.00036622435436584055,
+					-2.239582061767578
+				],
+				"sortCenterPosition": [
+					0.03933978080749512,
+					0.0003662109375,
+					-2.239582061767578
+				],
+				"sortRadius": 1.5746959447860718
+			}
+		],
+		"textureUnits": [
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 0,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 0,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 0,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			},
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 16,
+				"skinSectionIndex": 1,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 1,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 1,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			},
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 2,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 2,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 2,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			},
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 3,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 3,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 3,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			}
+		],
+		"fileName": "world/dungeon/goldshireinn/innchandelier/innchandelier00.skin",
+		"fileDataID": 495209
+	}
+}

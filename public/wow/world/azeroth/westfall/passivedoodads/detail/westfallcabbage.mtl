@@ -1,0 +1,6 @@
+newmtl mat_cabbage
+illum 1
+map_Kd cabbage.png
+newmtl mat_cabbage02
+illum 1
+map_Kd cabbage02.png

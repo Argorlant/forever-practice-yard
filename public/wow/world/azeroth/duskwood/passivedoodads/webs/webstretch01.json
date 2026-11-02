@@ -1,0 +1,126 @@
+{
+	"fileType": "m2",
+	"fileDataID": 189597,
+	"fileName": "world/azeroth/duskwood/passivedoodads/webs/webstretch01.m2",
+	"internalName": "WebStretch01",
+	"textures": [
+		{
+			"fileNameInternal": "world/azeroth/duskwood/passivedoodads/trees/duskwoodtree01_web.blp",
+			"fileNameExternal": "..\\trees\\duskwoodtree01_web.png",
+			"mtlName": "mat_duskwoodtree01_web",
+			"flags": 3,
+			"fileDataID": 189554
+		}
+	],
+	"textureTypes": [
+		0
+	],
+	"materials": [
+		{
+			"flags": 20,
+			"blendingMode": 2
+		}
+	],
+	"textureCombos": [
+		0
+	],
+	"colors": [],
+	"textureWeights": [
+		{
+			"globalSeq": 65535,
+			"interpolation": 0,
+			"timestamps": [
+				[
+					0
+				]
+			],
+			"values": [
+				[
+					32767
+				]
+			],
+			"timestampOffsets": null,
+			"valueOffsets": null
+		}
+	],
+	"transparencyLookup": [
+		0
+	],
+	"textureTransforms": [],
+	"textureTransformsLookup": [
+		65535
+	],
+	"boundingBox": {
+		"min": [
+			-0.0005682048504240811,
+			-3.3524487018585205,
+			0
+		],
+		"max": [
+			0.009971259161829948,
+			0.011496031656861305,
+			3.1344926357269287
+		]
+	},
+	"boundingSphereRadius": 2.2968568801879883,
+	"collisionBox": {
+		"min": [
+			10000000,
+			10000000,
+			10000000
+		],
+		"max": [
+			-10000000,
+			-10000000,
+			-10000000
+		]
+	},
+	"collisionSphereRadius": 0,
+	"skin": {
+		"subMeshes": [
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 0,
+				"vertexCount": 7,
+				"triangleStart": 0,
+				"triangleCount": 15,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					0.0054542748257517815,
+					-1.1174609661102295,
+					1.9602324962615967
+				],
+				"sortCenterPosition": [
+					0.004701527301222086,
+					-1.6704763174057007,
+					1.5819791555404663
+				],
+				"sortRadius": 2.288964033126831
+			}
+		],
+		"textureUnits": [
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 16,
+				"skinSectionIndex": 0,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 0,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 0,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			}
+		],
+		"fileName": "world/azeroth/duskwood/passivedoodads/webs/webstretch0100.skin",
+		"fileDataID": 494436
+	}
+}

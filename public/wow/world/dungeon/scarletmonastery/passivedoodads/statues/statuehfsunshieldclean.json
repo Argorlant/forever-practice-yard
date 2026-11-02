@@ -1,0 +1,126 @@
+{
+	"fileType": "m2",
+	"fileDataID": 190920,
+	"fileName": "world/dungeon/scarletmonastery/passivedoodads/statues/statuehfsunshieldclean.m2",
+	"internalName": "statueHFsunshieldClean",
+	"textures": [
+		{
+			"fileNameInternal": "world/dungeon/scarletmonastery/passivedoodads/statues/sunshield01.blp",
+			"fileNameExternal": "sunshield01.png",
+			"mtlName": "mat_sunshield01",
+			"flags": 0,
+			"fileDataID": 190930
+		}
+	],
+	"textureTypes": [
+		0
+	],
+	"materials": [
+		{
+			"flags": 0,
+			"blendingMode": 0
+		}
+	],
+	"textureCombos": [
+		0
+	],
+	"colors": [],
+	"textureWeights": [
+		{
+			"globalSeq": 65535,
+			"interpolation": 0,
+			"timestamps": [
+				[
+					0
+				]
+			],
+			"values": [
+				[
+					32767
+				]
+			],
+			"timestampOffsets": null,
+			"valueOffsets": null
+		}
+	],
+	"transparencyLookup": [
+		0
+	],
+	"textureTransforms": [],
+	"textureTransformsLookup": [
+		65535
+	],
+	"boundingBox": {
+		"min": [
+			-0.3114435374736786,
+			-0.5085970163345337,
+			-0.0020388022530823946
+		],
+		"max": [
+			0.2825855612754822,
+			0.5540326237678528,
+			1.8634111881256104
+		]
+	},
+	"boundingSphereRadius": 1.0595263242721558,
+	"collisionBox": {
+		"min": [
+			-0.32649728655815125,
+			-0.5037752985954285,
+			0
+		],
+		"max": [
+			0.29037490487098694,
+			0.5367876887321472,
+			1.8564324378967285
+		]
+	},
+	"collisionSphereRadius": 1.0914846658706665,
+	"skin": {
+		"subMeshes": [
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 0,
+				"vertexCount": 431,
+				"triangleStart": 0,
+				"triangleCount": 1470,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					-0.0398755818605423,
+					0.0930972471833229,
+					1.138214111328125
+				],
+				"sortCenterPosition": [
+					-0.014428988099098206,
+					0.022717803716659546,
+					0.9306861758232117
+				],
+				"sortRadius": 1.0595263242721558
+			}
+		],
+		"textureUnits": [
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 0,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 0,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 0,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			}
+		],
+		"fileName": "world/dungeon/scarletmonastery/passivedoodads/statues/statuehfsunshieldclean00.skin",
+		"fileDataID": 495227
+	}
+}

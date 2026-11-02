@@ -1,0 +1,178 @@
+{
+	"fileType": "m2",
+	"fileDataID": 198254,
+	"fileName": "world/generic/human/passive doodads/globes/globe01.m2",
+	"internalName": "Globe01",
+	"textures": [
+		{
+			"fileNameInternal": "world/generic/human/passive doodads/globes/potbellystove copy.blp",
+			"fileNameExternal": "potbellystovecopy.png",
+			"mtlName": "mat_potbellystovecopy",
+			"flags": 0,
+			"fileDataID": 198255
+		},
+		{
+			"fileNameInternal": "world/generic/human/passive doodads/buckets/desk.blp",
+			"fileNameExternal": "..\\buckets\\desk.png",
+			"mtlName": "mat_desk",
+			"flags": 0,
+			"fileDataID": 198070
+		}
+	],
+	"textureTypes": [
+		0,
+		0
+	],
+	"materials": [
+		{
+			"flags": 0,
+			"blendingMode": 0
+		},
+		{
+			"flags": 0,
+			"blendingMode": 0
+		}
+	],
+	"textureCombos": [
+		0,
+		1
+	],
+	"colors": [],
+	"textureWeights": [
+		{
+			"globalSeq": 65535,
+			"interpolation": 0,
+			"timestamps": [
+				[
+					0
+				]
+			],
+			"values": [
+				[
+					32767
+				]
+			],
+			"timestampOffsets": null,
+			"valueOffsets": null
+		}
+	],
+	"transparencyLookup": [
+		0
+	],
+	"textureTransforms": [],
+	"textureTransformsLookup": [
+		65535
+	],
+	"boundingBox": {
+		"min": [
+			-0.3809659779071808,
+			-0.5093557238578796,
+			-0.004169878084212542
+		],
+		"max": [
+			0.4050634205341339,
+			0.40533193945884705,
+			1.6725643873214722
+		]
+	},
+	"boundingSphereRadius": 0.9437918066978455,
+	"collisionBox": {
+		"min": [
+			-0.3750355541706085,
+			-0.4409361481666565,
+			0
+		],
+		"max": [
+			0.40607118606567383,
+			0.3886720836162567,
+			1.410202145576477
+		]
+	},
+	"collisionSphereRadius": 0.9065108299255371,
+	"skin": {
+		"subMeshes": [
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 0,
+				"vertexCount": 119,
+				"triangleStart": 0,
+				"triangleCount": 204,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					-0.006018688436597586,
+					-0.0963178500533104,
+					0.7020660042762756
+				],
+				"sortCenterPosition": [
+					-0.005052328109741211,
+					-0.06412486732006073,
+					0.8341972827911377
+				],
+				"sortRadius": 0.9492576122283936
+			},
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 119,
+				"vertexCount": 46,
+				"triangleStart": 204,
+				"triangleCount": 240,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					0.03868855908513069,
+					0.016623085364699364,
+					1.0134919881820679
+				],
+				"sortCenterPosition": [
+					0.012048721313476562,
+					0.013845443725585938,
+					1.0121068954467773
+				],
+				"sortRadius": 0.4132402241230011
+			}
+		],
+		"textureUnits": [
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 0,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 0,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 0,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			},
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 1,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 1,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 1,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			}
+		],
+		"fileName": "world/generic/human/passive doodads/globes/globe0100.skin",
+		"fileDataID": 504429
+	}
+}

@@ -1,0 +1,230 @@
+{
+	"fileType": "m2",
+	"fileDataID": 190376,
+	"fileName": "world/azeroth/swamposorrow/passivedoodads/plants/swampofsorrowlilypad02.m2",
+	"internalName": "SwampofSorrowLilyPad02",
+	"textures": [
+		{
+			"fileNameInternal": "world/azeroth/swamposorrow/passivedoodads/plants/lilypadskingreen.blp",
+			"fileNameExternal": "lilypadskingreen.png",
+			"mtlName": "mat_lilypadskingreen",
+			"flags": 0,
+			"fileDataID": 190369
+		},
+		{
+			"fileNameInternal": "world/azeroth/swamposorrow/passivedoodads/plants/lilypadskin copy.blp",
+			"fileNameExternal": "lilypadskincopy.png",
+			"mtlName": "mat_lilypadskincopy",
+			"flags": 0,
+			"fileDataID": 190367
+		},
+		{
+			"fileNameInternal": "world/azeroth/swamposorrow/passivedoodads/plants/lilypadskin.blp",
+			"fileNameExternal": "lilypadskin.png",
+			"mtlName": "mat_lilypadskin",
+			"flags": 0,
+			"fileDataID": 190368
+		}
+	],
+	"textureTypes": [
+		0,
+		0,
+		0
+	],
+	"materials": [
+		{
+			"flags": 4,
+			"blendingMode": 1
+		},
+		{
+			"flags": 4,
+			"blendingMode": 1
+		},
+		{
+			"flags": 0,
+			"blendingMode": 0
+		}
+	],
+	"textureCombos": [
+		0,
+		1,
+		2
+	],
+	"colors": [],
+	"textureWeights": [
+		{
+			"globalSeq": 65535,
+			"interpolation": 0,
+			"timestamps": [
+				[
+					0
+				]
+			],
+			"values": [
+				[
+					32767
+				]
+			],
+			"timestampOffsets": null,
+			"valueOffsets": null
+		}
+	],
+	"transparencyLookup": [
+		0
+	],
+	"textureTransforms": [],
+	"textureTransformsLookup": [
+		65535
+	],
+	"boundingBox": {
+		"min": [
+			-0.9655110239982605,
+			-0.8840939998626709,
+			-1.2079600095748901
+		],
+		"max": [
+			0.8735809922218323,
+			1.0405299663543701,
+			0.1731259971857071
+		]
+	},
+	"boundingSphereRadius": 1.3084700107574463,
+	"collisionBox": {
+		"min": [
+			10000000,
+			10000000,
+			10000000
+		],
+		"max": [
+			-10000000,
+			-10000000,
+			-10000000
+		]
+	},
+	"collisionSphereRadius": 0,
+	"skin": {
+		"subMeshes": [
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 0,
+				"vertexCount": 5,
+				"triangleStart": 0,
+				"triangleCount": 12,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					0.3004632294178009,
+					-0.3109781742095947,
+					0.009878161363303661
+				],
+				"sortCenterPosition": [
+					0.3004632294178009,
+					-0.3109781742095947,
+					0.009878161363303661
+				],
+				"sortRadius": 0.574928343296051
+			},
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 5,
+				"vertexCount": 5,
+				"triangleStart": 12,
+				"triangleCount": 12,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					-0.34465301036834717,
+					0.41966792941093445,
+					0.019206559285521507
+				],
+				"sortCenterPosition": [
+					-0.34465301036834717,
+					0.41966792941093445,
+					0.019206559285521507
+				],
+				"sortRadius": 0.7589074373245239
+			},
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 10,
+				"vertexCount": 11,
+				"triangleStart": 24,
+				"triangleCount": 36,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					0.04436606168746948,
+					0.11455344408750534,
+					-0.42140433192253113
+				],
+				"sortCenterPosition": [
+					-0.029733002185821533,
+					0.18017904460430145,
+					-0.5300459861755371
+				],
+				"sortRadius": 0.7704584002494812
+			}
+		],
+		"textureUnits": [
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 16,
+				"skinSectionIndex": 0,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 0,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 0,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			},
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 16,
+				"skinSectionIndex": 1,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 1,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 1,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			},
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 2,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 2,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 2,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			}
+		],
+		"fileName": "world/azeroth/swamposorrow/passivedoodads/plants/swampofsorrowlilypad0200.skin",
+		"fileDataID": 494828
+	}
+}

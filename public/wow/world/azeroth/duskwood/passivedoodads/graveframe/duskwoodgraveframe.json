@@ -1,0 +1,126 @@
+{
+	"fileType": "m2",
+	"fileDataID": 189485,
+	"fileName": "world/azeroth/duskwood/passivedoodads/graveframe/duskwoodgraveframe.m2",
+	"internalName": "DuskWoodGraveFrame",
+	"textures": [
+		{
+			"fileNameInternal": "interface/glues/models/ui_scourge/cemetery01.blp",
+			"fileNameExternal": "..\\..\\..\\..\\..\\interface\\glues\\models\\ui_scourge\\cemetery01.png",
+			"mtlName": "mat_cemetery01",
+			"flags": 3,
+			"fileDataID": 132027
+		}
+	],
+	"textureTypes": [
+		0
+	],
+	"materials": [
+		{
+			"flags": 0,
+			"blendingMode": 0
+		}
+	],
+	"textureCombos": [
+		0
+	],
+	"colors": [],
+	"textureWeights": [
+		{
+			"globalSeq": 65535,
+			"interpolation": 0,
+			"timestamps": [
+				[
+					0
+				]
+			],
+			"values": [
+				[
+					32767
+				]
+			],
+			"timestampOffsets": null,
+			"valueOffsets": null
+		}
+	],
+	"transparencyLookup": [
+		0
+	],
+	"textureTransforms": [],
+	"textureTransformsLookup": [
+		65535
+	],
+	"boundingBox": {
+		"min": [
+			-2.6596059799194336,
+			-1.0916012525558472,
+			-0.05871088057756424
+		],
+		"max": [
+			2.558598756790161,
+			1.3599863052368164,
+			0.22304688394069672
+		]
+	},
+	"boundingSphereRadius": 2.8487133979797363,
+	"collisionBox": {
+		"min": [
+			-2.6596062183380127,
+			-1.0916012525558472,
+			-0.05871088057756424
+		],
+		"max": [
+			2.558598756790161,
+			1.359986424446106,
+			0.22304688394069672
+		]
+	},
+	"collisionSphereRadius": 2.8487131595611572,
+	"skin": {
+		"subMeshes": [
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 0,
+				"vertexCount": 146,
+				"triangleStart": 0,
+				"triangleCount": 252,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					-0.06187629699707031,
+					0.14658571779727936,
+					0.09203051775693893
+				],
+				"sortCenterPosition": [
+					-0.05050361156463623,
+					0.13419252634048462,
+					0.08216799795627594
+				],
+				"sortRadius": 2.8487133979797363
+			}
+		],
+		"textureUnits": [
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 0,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 0,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 0,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			}
+		],
+		"fileName": "world/azeroth/duskwood/passivedoodads/graveframe/duskwoodgraveframe00.skin",
+		"fileDataID": 494378
+	}
+}

@@ -1,0 +1,172 @@
+{
+	"fileType": "m2",
+	"fileDataID": 190104,
+	"fileName": "world/azeroth/redridge/passivedoodads/rowboat/rowboat01.m2",
+	"internalName": "RowBoat01",
+	"textures": [
+		{
+			"flags": 3,
+			"fileDataID": 0
+		},
+		{
+			"flags": 3,
+			"fileDataID": 0
+		}
+	],
+	"textureTypes": [
+		0,
+		0
+	],
+	"materials": [
+		{
+			"flags": 0,
+			"blendingMode": 0
+		},
+		{
+			"flags": 0,
+			"blendingMode": 0
+		}
+	],
+	"textureCombos": [
+		0,
+		1
+	],
+	"colors": [],
+	"textureWeights": [
+		{
+			"globalSeq": 65535,
+			"interpolation": 0,
+			"timestamps": [
+				[
+					0
+				]
+			],
+			"values": [
+				[
+					32767
+				]
+			],
+			"timestampOffsets": null,
+			"valueOffsets": null
+		}
+	],
+	"transparencyLookup": [
+		0
+	],
+	"textureTransforms": [],
+	"textureTransformsLookup": [
+		65535
+	],
+	"boundingBox": {
+		"min": [
+			-6.756660461425781,
+			-1.306907296180725,
+			-0.1977667212486267
+		],
+		"max": [
+			1.583431601524353,
+			2.983114242553711,
+			1.457720398902893
+		]
+	},
+	"boundingSphereRadius": 4.5076494216918945,
+	"collisionBox": {
+		"min": [
+			-6.764453411102295,
+			-1.3054182529449463,
+			-0.17744846642017365
+		],
+		"max": [
+			1.5894584655761719,
+			3.0032200813293457,
+			1.4143460988998413
+		]
+	},
+	"collisionSphereRadius": 4.511929512023926,
+	"skin": {
+		"subMeshes": [
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 0,
+				"vertexCount": 82,
+				"triangleStart": 0,
+				"triangleCount": 192,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					-1.5581339597702026,
+					0.8455797433853149,
+					1.0616346597671509
+				],
+				"sortCenterPosition": [
+					-2.606027841567993,
+					0.8381034731864929,
+					0.9459695219993591
+				],
+				"sortRadius": 4.491573810577393
+			},
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 82,
+				"vertexCount": 97,
+				"triangleStart": 192,
+				"triangleCount": 258,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					-1.614253044128418,
+					0.8319454193115234,
+					0.6911909580230713
+				],
+				"sortCenterPosition": [
+					-2.2038488388061523,
+					0.8381033539772034,
+					0.4905996024608612
+				],
+				"sortRadius": 4.064063549041748
+			}
+		],
+		"textureUnits": [
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 0,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 0,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 0,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			},
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 1,
+				"flags2": 1,
+				"colorIndex": 65535,
+				"materialIndex": 1,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 1,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			}
+		],
+		"fileName": "world/azeroth/redridge/passivedoodads/rowboat/rowboat0100.skin",
+		"fileDataID": 494697
+	}
+}

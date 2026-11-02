@@ -1,0 +1,178 @@
+{
+	"fileType": "m2",
+	"fileDataID": 198662,
+	"fileName": "world/generic/human/passive doodads/weapons&armor/wallsword01.m2",
+	"internalName": "WallSword01",
+	"textures": [
+		{
+			"fileNameInternal": "world/generic/human/passive doodads/weapons&armor/blade_sword1h_01.blp",
+			"fileNameExternal": "blade_sword1h_01.png",
+			"mtlName": "mat_blade_sword1h_01",
+			"flags": 0,
+			"fileDataID": 198638
+		},
+		{
+			"fileNameInternal": "world/generic/human/passive doodads/weapons&armor/handle_sword1h_01.blp",
+			"fileNameExternal": "handle_sword1h_01.png",
+			"mtlName": "mat_handle_sword1h_01",
+			"flags": 0,
+			"fileDataID": 198641
+		}
+	],
+	"textureTypes": [
+		0,
+		0
+	],
+	"materials": [
+		{
+			"flags": 0,
+			"blendingMode": 0
+		},
+		{
+			"flags": 0,
+			"blendingMode": 0
+		}
+	],
+	"textureCombos": [
+		0,
+		1
+	],
+	"colors": [],
+	"textureWeights": [
+		{
+			"globalSeq": 65535,
+			"interpolation": 0,
+			"timestamps": [
+				[
+					0
+				]
+			],
+			"values": [
+				[
+					32767
+				]
+			],
+			"timestampOffsets": null,
+			"valueOffsets": null
+		}
+	],
+	"transparencyLookup": [
+		0
+	],
+	"textureTransforms": [],
+	"textureTransformsLookup": [
+		65535
+	],
+	"boundingBox": {
+		"min": [
+			-0.19120380282402039,
+			-0.03493160754442215,
+			-1.047564148902893
+		],
+		"max": [
+			0.18950806558132172,
+			0.03493168577551842,
+			0.45059776306152344
+		]
+	},
+	"boundingSphereRadius": 0.7499703168869019,
+	"collisionBox": {
+		"min": [
+			10000000,
+			10000000,
+			10000000
+		],
+		"max": [
+			-10000000,
+			-10000000,
+			-10000000
+		]
+	},
+	"collisionSphereRadius": 0,
+	"skin": {
+		"subMeshes": [
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 0,
+				"vertexCount": 15,
+				"triangleStart": 0,
+				"triangleCount": 36,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					-0.0008480596588924527,
+					5.845238248980422e-8,
+					-0.5730542540550232
+				],
+				"sortCenterPosition": [
+					-0.0008478760719299316,
+					3.91155481338501e-8,
+					-0.5126103758811951
+				],
+				"sortRadius": 0.5360931158065796
+			},
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 15,
+				"vertexCount": 44,
+				"triangleStart": 36,
+				"triangleCount": 66,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					-0.0008467831648886204,
+					1.87957827080254e-8,
+					0.20558956265449524
+				],
+				"sortCenterPosition": [
+					-0.0008467831648886204,
+					1.87957827080254e-8,
+					0.20558956265449524
+				],
+				"sortRadius": 0.26422515511512756
+			}
+		],
+		"textureUnits": [
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 0,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 0,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 0,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			},
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 1,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 1,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 1,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			}
+		],
+		"fileName": "world/generic/human/passive doodads/weapons&armor/wallsword0100.skin",
+		"fileDataID": 504796
+	}
+}

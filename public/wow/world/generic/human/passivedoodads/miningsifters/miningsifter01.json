@@ -1,0 +1,178 @@
+{
+	"fileType": "m2",
+	"fileDataID": 198351,
+	"fileName": "world/generic/human/passive doodads/miningsifters/miningsifter01.m2",
+	"internalName": "miningsifter01",
+	"textures": [
+		{
+			"fileNameInternal": "world/generic/human/passive doodads/miningsifters/js_troff_6.blp",
+			"fileNameExternal": "js_troff_6.png",
+			"mtlName": "mat_js_troff_6",
+			"flags": 3,
+			"fileDataID": 198349
+		},
+		{
+			"fileNameInternal": "world/generic/human/passive doodads/miningsifters/js_troff_9.blp",
+			"fileNameExternal": "js_troff_9.png",
+			"mtlName": "mat_js_troff_9",
+			"flags": 3,
+			"fileDataID": 198350
+		}
+	],
+	"textureTypes": [
+		0,
+		0
+	],
+	"materials": [
+		{
+			"flags": 0,
+			"blendingMode": 0
+		},
+		{
+			"flags": 4,
+			"blendingMode": 1
+		}
+	],
+	"textureCombos": [
+		0,
+		1
+	],
+	"colors": [],
+	"textureWeights": [
+		{
+			"globalSeq": 65535,
+			"interpolation": 0,
+			"timestamps": [
+				[
+					0
+				]
+			],
+			"values": [
+				[
+					32767
+				]
+			],
+			"timestampOffsets": null,
+			"valueOffsets": null
+		}
+	],
+	"transparencyLookup": [
+		0
+	],
+	"textureTransforms": [],
+	"textureTransformsLookup": [
+		65535
+	],
+	"boundingBox": {
+		"min": [
+			-0.7535930871963501,
+			-0.7540297508239746,
+			-0.12935079634189606
+		],
+		"max": [
+			0.7540465593338013,
+			0.7536097168922424,
+			0.12935082614421844
+		]
+	},
+	"boundingSphereRadius": 1.073880910873413,
+	"collisionBox": {
+		"min": [
+			-0.7535930275917053,
+			-0.7540296316146851,
+			-0.1293506622314453
+		],
+		"max": [
+			0.7540465593338013,
+			0.7536097168922424,
+			0.1293506920337677
+		]
+	},
+	"collisionSphereRadius": 1.0738807916641235,
+	"skin": {
+		"subMeshes": [
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 0,
+				"vertexCount": 56,
+				"triangleStart": 0,
+				"triangleCount": 96,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					0.0002267084055347368,
+					-0.0002100382698699832,
+					0.018478695303201675
+				],
+				"sortCenterPosition": [
+					0.00022673606872558594,
+					-0.00021001696586608887,
+					1.4901161193847656e-8
+				],
+				"sortRadius": 1.0738807916641235
+			},
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 56,
+				"vertexCount": 4,
+				"triangleStart": 96,
+				"triangleCount": 6,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					-0.007326677441596985,
+					-0.0076838284730911255,
+					-0.0255170539021492
+				],
+				"sortCenterPosition": [
+					-0.007326662540435791,
+					-0.007683843374252319,
+					-0.0255170539021492
+				],
+				"sortRadius": 0.9791311621665955
+			}
+		],
+		"textureUnits": [
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 0,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 0,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 0,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			},
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 16,
+				"skinSectionIndex": 1,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 1,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 1,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			}
+		],
+		"fileName": "world/generic/human/passive doodads/miningsifters/miningsifter0100.skin",
+		"fileDataID": 504506
+	}
+}

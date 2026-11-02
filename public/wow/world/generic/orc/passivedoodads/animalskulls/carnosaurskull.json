@@ -1,0 +1,126 @@
+{
+	"fileType": "m2",
+	"fileDataID": 199050,
+	"fileName": "world/generic/orc/passive doodads/animalskulls/carnosaurskull.m2",
+	"internalName": "CarnosaurSkull",
+	"textures": [
+		{
+			"fileNameInternal": "dungeons/textures/carlo/carnosaur copy.blp",
+			"fileNameExternal": "..\\..\\..\\..\\..\\dungeons\\textures\\carlo\\carnosaurcopy.png",
+			"mtlName": "mat_carnosaurcopy",
+			"flags": 0,
+			"fileDataID": 127116
+		}
+	],
+	"textureTypes": [
+		0
+	],
+	"materials": [
+		{
+			"flags": 4,
+			"blendingMode": 1
+		}
+	],
+	"textureCombos": [
+		0
+	],
+	"colors": [],
+	"textureWeights": [
+		{
+			"globalSeq": 65535,
+			"interpolation": 0,
+			"timestamps": [
+				[
+					0
+				]
+			],
+			"values": [
+				[
+					32767
+				]
+			],
+			"timestampOffsets": null,
+			"valueOffsets": null
+		}
+	],
+	"transparencyLookup": [
+		0
+	],
+	"textureTransforms": [],
+	"textureTransformsLookup": [
+		65535
+	],
+	"boundingBox": {
+		"min": [
+			-0.6532767415046692,
+			-0.22749853134155273,
+			-0.11855445802211761
+		],
+		"max": [
+			0.4163997769355774,
+			0.22881324589252472,
+			0.7354835271835327
+		]
+	},
+	"boundingSphereRadius": 0.5843158960342407,
+	"collisionBox": {
+		"min": [
+			-0.6507173776626587,
+			-0.23468561470508575,
+			-0.22991037368774414
+		],
+		"max": [
+			0.4299364984035492,
+			0.23763735592365265,
+			0.5924280285835266
+		]
+	},
+	"collisionSphereRadius": 0.7188779711723328,
+	"skin": {
+		"subMeshes": [
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 0,
+				"vertexCount": 174,
+				"triangleStart": 0,
+				"triangleCount": 447,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					-0.2127102166414261,
+					0.00025074477889575064,
+					0.22110368311405182
+				],
+				"sortCenterPosition": [
+					-0.1184384822845459,
+					0.0006573572754859924,
+					0.30846452713012695
+				],
+				"sortRadius": 0.5843158960342407
+			}
+		],
+		"textureUnits": [
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 16,
+				"skinSectionIndex": 0,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 0,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 0,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			}
+		],
+		"fileName": "world/generic/orc/passive doodads/animalskulls/carnosaurskull00.skin",
+		"fileDataID": 505095
+	}
+}

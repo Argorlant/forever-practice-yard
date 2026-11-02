@@ -1,0 +1,126 @@
+{
+	"fileType": "m2",
+	"fileDataID": 189792,
+	"fileName": "world/azeroth/elwynn/passivedoodads/elwynnfences/elwynnfencetop.m2",
+	"internalName": "ElwynnFenceTop",
+	"textures": [
+		{
+			"fileNameInternal": "dungeons/textures/wood/elwynnfence.blp",
+			"fileNameExternal": "..\\..\\..\\..\\..\\dungeons\\textures\\wood\\elwynnfence.png",
+			"mtlName": "mat_elwynnfence",
+			"flags": 0,
+			"fileDataID": 130279
+		}
+	],
+	"textureTypes": [
+		0
+	],
+	"materials": [
+		{
+			"flags": 0,
+			"blendingMode": 0
+		}
+	],
+	"textureCombos": [
+		0
+	],
+	"colors": [],
+	"textureWeights": [
+		{
+			"globalSeq": 65535,
+			"interpolation": 0,
+			"timestamps": [
+				[
+					0
+				]
+			],
+			"values": [
+				[
+					32767
+				]
+			],
+			"timestampOffsets": null,
+			"valueOffsets": null
+		}
+	],
+	"transparencyLookup": [
+		0
+	],
+	"textureTransforms": [],
+	"textureTransformsLookup": [
+		65535
+	],
+	"boundingBox": {
+		"min": [
+			-4.157594680786133,
+			-0.2559664249420166,
+			-0.5586665272712708
+		],
+		"max": [
+			0.14094562828540802,
+			0.14331696927547455,
+			1.9017482995986938
+		]
+	},
+	"boundingSphereRadius": 2.483504056930542,
+	"collisionBox": {
+		"min": [
+			-4.143442630767822,
+			-0.16564412415027618,
+			-0.5491906404495239
+		],
+		"max": [
+			0.13660770654678345,
+			0.15287137031555176,
+			1.7841428518295288
+		]
+	},
+	"collisionSphereRadius": 2.4425768852233887,
+	"skin": {
+		"subMeshes": [
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 0,
+				"vertexCount": 45,
+				"triangleStart": 0,
+				"triangleCount": 99,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					-1.2107645273208618,
+					-0.011038919910788536,
+					0.9404914975166321
+				],
+				"sortCenterPosition": [
+					-2.00832462310791,
+					-0.05632472783327103,
+					0.6715408563613892
+				],
+				"sortRadius": 2.483504056930542
+			}
+		],
+		"textureUnits": [
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 0,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 0,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 0,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			}
+		],
+		"fileName": "world/azeroth/elwynn/passivedoodads/elwynnfences/elwynnfencetop00.skin",
+		"fileDataID": 494529
+	}
+}

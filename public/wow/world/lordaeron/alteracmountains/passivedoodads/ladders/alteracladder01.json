@@ -1,0 +1,126 @@
+{
+	"fileType": "m2",
+	"fileDataID": 203607,
+	"fileName": "world/lordaeron/alteracmountains/passivedoodads/ladders/alteracladder01.m2",
+	"internalName": "AlteracLadder01",
+	"textures": [
+		{
+			"fileNameInternal": "world/lordaeron/alteracmountains/passivedoodads/fruitbuckets/apple_bucket03.blp",
+			"fileNameExternal": "..\\fruitbuckets\\apple_bucket03.png",
+			"mtlName": "mat_apple_bucket03",
+			"flags": 3,
+			"fileDataID": 203606
+		}
+	],
+	"textureTypes": [
+		0
+	],
+	"materials": [
+		{
+			"flags": 0,
+			"blendingMode": 0
+		}
+	],
+	"textureCombos": [
+		0
+	],
+	"colors": [],
+	"textureWeights": [
+		{
+			"globalSeq": 65535,
+			"interpolation": 0,
+			"timestamps": [
+				[
+					0
+				]
+			],
+			"values": [
+				[
+					32767
+				]
+			],
+			"timestampOffsets": null,
+			"valueOffsets": null
+		}
+	],
+	"transparencyLookup": [
+		0
+	],
+	"textureTransforms": [],
+	"textureTransformsLookup": [
+		65535
+	],
+	"boundingBox": {
+		"min": [
+			-0.3330709636211395,
+			-0.8374460339546204,
+			-0.19113469123840332
+		],
+		"max": [
+			0.20242980122566223,
+			0.8112116456031799,
+			6.428389549255371
+		]
+	},
+	"boundingSphereRadius": 3.4165728092193604,
+	"collisionBox": {
+		"min": [
+			-0.329470157623291,
+			-0.84132981300354,
+			-0.20547612011432648
+		],
+		"max": [
+			0.2130284607410431,
+			0.8303161263465881,
+			6.43112850189209
+		]
+	},
+	"collisionSphereRadius": 3.4326820373535156,
+	"skin": {
+		"subMeshes": [
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 0,
+				"vertexCount": 102,
+				"triangleStart": 0,
+				"triangleCount": 264,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					-0.10503949970006943,
+					-0.05929854139685631,
+					3.3127381801605225
+				],
+				"sortCenterPosition": [
+					-0.06532058119773865,
+					-0.013117194175720215,
+					3.1186275482177734
+				],
+				"sortRadius": 3.4165728092193604
+			}
+		],
+		"textureUnits": [
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 0,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 0,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 0,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			}
+		],
+		"fileName": "world/lordaeron/alteracmountains/passivedoodads/ladders/alteracladder0100.skin",
+		"fileDataID": 508507
+	}
+}

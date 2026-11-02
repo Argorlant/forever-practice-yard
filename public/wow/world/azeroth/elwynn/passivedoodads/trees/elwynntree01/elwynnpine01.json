@@ -1,0 +1,126 @@
+{
+	"fileType": "m2",
+	"fileDataID": 189924,
+	"fileName": "world/azeroth/elwynn/passivedoodads/trees/elwynntree01/elwynnpine01.m2",
+	"internalName": "ElwynnPine01",
+	"textures": [
+		{
+			"fileNameInternal": "dungeons/textures/brian/abbey/piinetree01.blp",
+			"fileNameExternal": "..\\..\\..\\..\\..\\..\\dungeons\\textures\\brian\\abbey\\piinetree01.png",
+			"mtlName": "mat_piinetree01",
+			"flags": 3,
+			"fileDataID": 127006
+		}
+	],
+	"textureTypes": [
+		0
+	],
+	"materials": [
+		{
+			"flags": 4,
+			"blendingMode": 1
+		}
+	],
+	"textureCombos": [
+		0
+	],
+	"colors": [],
+	"textureWeights": [
+		{
+			"globalSeq": 65535,
+			"interpolation": 0,
+			"timestamps": [
+				[
+					0
+				]
+			],
+			"values": [
+				[
+					32767
+				]
+			],
+			"timestampOffsets": null,
+			"valueOffsets": null
+		}
+	],
+	"transparencyLookup": [
+		0
+	],
+	"textureTransforms": [],
+	"textureTransformsLookup": [
+		65535
+	],
+	"boundingBox": {
+		"min": [
+			-1.5288398265838623,
+			-1.6240242719650269,
+			-0.28843873739242554
+		],
+		"max": [
+			1.6291836500167847,
+			1.8131283521652222,
+			9.223980903625488
+		]
+	},
+	"boundingSphereRadius": 4.805049419403076,
+	"collisionBox": {
+		"min": [
+			-1.2564767599105835,
+			-1.2259517908096313,
+			-0.2863563597202301
+		],
+		"max": [
+			1.2259517908096313,
+			1.2564767599105835,
+			9.728769302368164
+		]
+	},
+	"collisionSphereRadius": 5.159101963043213,
+	"skin": {
+		"subMeshes": [
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 0,
+				"vertexCount": 47,
+				"triangleStart": 0,
+				"triangleCount": 204,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					0.007485398557037115,
+					0.013416336849331856,
+					3.680206775665283
+				],
+				"sortCenterPosition": [
+					0.05017191171646118,
+					0.09455204010009766,
+					4.467771053314209
+				],
+				"sortRadius": 4.805049419403076
+			}
+		],
+		"textureUnits": [
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 16,
+				"skinSectionIndex": 0,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 0,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 0,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			}
+		],
+		"fileName": "world/azeroth/elwynn/passivedoodads/trees/elwynntree01/elwynnpine0100.skin",
+		"fileDataID": 494586
+	}
+}

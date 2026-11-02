@@ -1,0 +1,3 @@
+newmtl mat_apple_bucket03
+illum 1
+map_Kd ..\fruitbuckets\apple_bucket03.png

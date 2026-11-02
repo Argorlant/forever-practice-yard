@@ -1,0 +1,126 @@
+{
+	"fileType": "m2",
+	"fileDataID": 189854,
+	"fileName": "world/azeroth/elwynn/passivedoodads/shovel/shovel.m2",
+	"internalName": "Shovel",
+	"textures": [
+		{
+			"fileNameInternal": "world/azeroth/elwynn/passivedoodads/pick/shovel.blp",
+			"fileNameExternal": "..\\pick\\shovel.png",
+			"mtlName": "mat_shovel",
+			"flags": 0,
+			"fileDataID": 189835
+		}
+	],
+	"textureTypes": [
+		0
+	],
+	"materials": [
+		{
+			"flags": 4,
+			"blendingMode": 0
+		}
+	],
+	"textureCombos": [
+		0
+	],
+	"colors": [],
+	"textureWeights": [
+		{
+			"globalSeq": 65535,
+			"interpolation": 0,
+			"timestamps": [
+				[
+					0
+				]
+			],
+			"values": [
+				[
+					32767
+				]
+			],
+			"timestampOffsets": null,
+			"valueOffsets": null
+		}
+	],
+	"transparencyLookup": [
+		0
+	],
+	"textureTransforms": [],
+	"textureTransformsLookup": [
+		65535
+	],
+	"boundingBox": {
+		"min": [
+			-0.05536174774169922,
+			-0.18649613857269287,
+			0.0013195406645536423
+		],
+		"max": [
+			0.05630927532911301,
+			0.18732260167598724,
+			1.5591551065444946
+		]
+	},
+	"boundingSphereRadius": 0.7809165120124817,
+	"collisionBox": {
+		"min": [
+			10000000,
+			10000000,
+			10000000
+		],
+		"max": [
+			-10000000,
+			-10000000,
+			-10000000
+		]
+	},
+	"collisionSphereRadius": 0,
+	"skin": {
+		"subMeshes": [
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 0,
+				"vertexCount": 22,
+				"triangleStart": 0,
+				"triangleCount": 84,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					-0.009588916786015034,
+					0.00025480054318904877,
+					0.6710613369941711
+				],
+				"sortCenterPosition": [
+					0.0004737637937068939,
+					0.0004132315516471863,
+					0.7802373170852661
+				],
+				"sortRadius": 0.7809165120124817
+			}
+		],
+		"textureUnits": [
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 0,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 0,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 0,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			}
+		],
+		"fileName": "world/azeroth/elwynn/passivedoodads/shovel/shovel00.skin",
+		"fileDataID": 494548
+	}
+}

@@ -1,0 +1,230 @@
+{
+	"fileType": "m2",
+	"fileDataID": 198604,
+	"fileName": "world/generic/human/passive doodads/tables/inntablesmall.m2",
+	"internalName": "",
+	"textures": [
+		{
+			"fileNameInternal": "world/generic/human/passive doodads/tables/mm_beam_side__01x.blp",
+			"fileNameExternal": "mm_beam_side__01x.png",
+			"mtlName": "mat_mm_beam_side__01x",
+			"flags": 3,
+			"fileDataID": 6426091
+		},
+		{
+			"fileNameInternal": "world/generic/human/passive doodads/tables/mm_tabletop_01.blp",
+			"fileNameExternal": "mm_tabletop_01.png",
+			"mtlName": "mat_mm_tabletop_01",
+			"flags": 3,
+			"fileDataID": 198607
+		},
+		{
+			"fileNameInternal": "world/generic/human/passive doodads/tables/mm_support_front_01x.blp",
+			"fileNameExternal": "mm_support_front_01x.png",
+			"mtlName": "mat_mm_support_front_01x",
+			"flags": 3,
+			"fileDataID": 198606
+		}
+	],
+	"textureTypes": [
+		0,
+		0,
+		0
+	],
+	"materials": [
+		{
+			"flags": 0,
+			"blendingMode": 0
+		},
+		{
+			"flags": 0,
+			"blendingMode": 0
+		},
+		{
+			"flags": 0,
+			"blendingMode": 0
+		}
+	],
+	"textureCombos": [
+		0,
+		1,
+		2
+	],
+	"colors": [],
+	"textureWeights": [
+		{
+			"globalSeq": 65535,
+			"interpolation": 0,
+			"timestamps": [
+				[
+					0
+				]
+			],
+			"values": [
+				[
+					32767
+				]
+			],
+			"timestampOffsets": null,
+			"valueOffsets": null
+		}
+	],
+	"transparencyLookup": [
+		0
+	],
+	"textureTransforms": [],
+	"textureTransformsLookup": [
+		65535
+	],
+	"boundingBox": {
+		"min": [
+			-1.0873627662658691,
+			-1.074148416519165,
+			-7.01827858051729e-8
+		],
+		"max": [
+			1.0394337177276611,
+			1.0867446660995483,
+			1.1319655179977417
+		]
+	},
+	"boundingSphereRadius": 1.6051186323165894,
+	"collisionBox": {
+		"min": [
+			-1.019195795059204,
+			-1.033364176750183,
+			0
+		],
+		"max": [
+			1.0353779792785645,
+			1.0849552154541016,
+			1.1278090476989746
+		]
+	},
+	"collisionSphereRadius": 1.5795968770980835,
+	"skin": {
+		"subMeshes": [
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 0,
+				"vertexCount": 32,
+				"triangleStart": 0,
+				"triangleCount": 48,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					-1.862645149230957e-8,
+					1.862645149230957e-9,
+					0.19210682809352875
+				],
+				"sortCenterPosition": [
+					-1.862645149230957e-8,
+					1.862645149230957e-9,
+					0.19210682809352875
+				],
+				"sortRadius": 0.8319125175476074
+			},
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 32,
+				"vertexCount": 42,
+				"triangleStart": 48,
+				"triangleCount": 96,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					-0.013553749769926071,
+					0.014406363479793072,
+					1.0100786685943604
+				],
+				"sortCenterPosition": [
+					-0.013553749769926071,
+					0.014406363479793072,
+					1.0100786685943604
+				],
+				"sortRadius": 1.4985262155532837
+			},
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 74,
+				"vertexCount": 40,
+				"triangleStart": 144,
+				"triangleCount": 72,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					-6.631017157587848e-8,
+					0,
+					0.3976692259311676
+				],
+				"sortCenterPosition": [
+					-6.631017157587848e-8,
+					0,
+					0.3976692259311676
+				],
+				"sortRadius": 0.9015427827835083
+			}
+		],
+		"textureUnits": [
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 0,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 0,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 0,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			},
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 1,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 1,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 1,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			},
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 2,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 2,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 2,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			}
+		],
+		"fileName": "world/generic/human/passive doodads/tables/inntablesmall00.skin",
+		"fileDataID": 504747
+	}
+}

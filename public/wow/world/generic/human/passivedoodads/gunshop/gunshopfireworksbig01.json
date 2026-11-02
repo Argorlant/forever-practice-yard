@@ -1,0 +1,126 @@
+{
+	"fileType": "m2",
+	"fileDataID": 198274,
+	"fileName": "world/generic/human/passive doodads/gunshop/gunshopfireworksbig01.m2",
+	"internalName": "GunShopFireworksBig01",
+	"textures": [
+		{
+			"fileNameInternal": "world/goober/gunshop.blp",
+			"fileNameExternal": "..\\..\\..\\..\\goober\\gunshop.png",
+			"mtlName": "mat_gunshop",
+			"flags": 0,
+			"fileDataID": 201151
+		}
+	],
+	"textureTypes": [
+		0
+	],
+	"materials": [
+		{
+			"flags": 4,
+			"blendingMode": 1
+		}
+	],
+	"textureCombos": [
+		0
+	],
+	"colors": [],
+	"textureWeights": [
+		{
+			"globalSeq": 65535,
+			"interpolation": 0,
+			"timestamps": [
+				[
+					0
+				]
+			],
+			"values": [
+				[
+					32767
+				]
+			],
+			"timestampOffsets": null,
+			"valueOffsets": null
+		}
+	],
+	"transparencyLookup": [
+		0
+	],
+	"textureTransforms": [],
+	"textureTransformsLookup": [
+		65535
+	],
+	"boundingBox": {
+		"min": [
+			-0.11571228504180908,
+			-0.1546550840139389,
+			0
+		],
+		"max": [
+			0.09720555692911148,
+			0.1046690046787262,
+			1.1835389137268066
+		]
+	},
+	"boundingSphereRadius": 0.5962359309196472,
+	"collisionBox": {
+		"min": [
+			10000000,
+			10000000,
+			10000000
+		],
+		"max": [
+			-10000000,
+			-10000000,
+			-10000000
+		]
+	},
+	"collisionSphereRadius": 0,
+	"skin": {
+		"subMeshes": [
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 0,
+				"vertexCount": 47,
+				"triangleStart": 0,
+				"triangleCount": 144,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					-0.0074882484041154385,
+					-0.02445945516228676,
+					0.6769154667854309
+				],
+				"sortCenterPosition": [
+					-0.0092533640563488,
+					-0.024993039667606354,
+					0.5919609665870667
+				],
+				"sortRadius": 0.5964258313179016
+			}
+		],
+		"textureUnits": [
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 16,
+				"skinSectionIndex": 0,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 0,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 0,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			}
+		],
+		"fileName": "world/generic/human/passive doodads/gunshop/gunshopfireworksbig0100.skin",
+		"fileDataID": 504436
+	}
+}

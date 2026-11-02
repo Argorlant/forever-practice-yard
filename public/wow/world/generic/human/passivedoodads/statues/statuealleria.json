@@ -1,0 +1,334 @@
+{
+	"fileType": "m2",
+	"fileDataID": 198559,
+	"fileName": "world/generic/human/passive doodads/statues/statuealleria.m2",
+	"internalName": "StatueAlleria",
+	"textures": [
+		{
+			"fileNameInternal": "world/generic/human/passive doodads/statues/alleriacloak.blp",
+			"fileNameExternal": "alleriacloak.png",
+			"mtlName": "mat_alleriacloak",
+			"flags": 0,
+			"fileDataID": 198529
+		},
+		{
+			"fileNameInternal": "world/generic/human/passive doodads/statues/alleriastatue01.blp",
+			"fileNameExternal": "alleriastatue01.png",
+			"mtlName": "mat_alleriastatue01",
+			"flags": 0,
+			"fileDataID": 198531
+		},
+		{
+			"fileNameInternal": "world/generic/human/passive doodads/statues/alleriastatueboottop.blp",
+			"fileNameExternal": "alleriastatueboottop.png",
+			"mtlName": "mat_alleriastatueboottop",
+			"flags": 0,
+			"fileDataID": 198533
+		},
+		{
+			"fileNameInternal": "world/generic/human/passive doodads/statues/alleriastatuebird.blp",
+			"fileNameExternal": "alleriastatuebird.png",
+			"mtlName": "mat_alleriastatuebird",
+			"flags": 0,
+			"fileDataID": 198532
+		},
+		{
+			"fileNameInternal": "world/generic/human/passive doodads/statues/alleriaquiver.blp",
+			"fileNameExternal": "alleriaquiver.png",
+			"mtlName": "mat_alleriaquiver",
+			"flags": 0,
+			"fileDataID": 198530
+		}
+	],
+	"textureTypes": [
+		0,
+		0,
+		0,
+		0,
+		0
+	],
+	"materials": [
+		{
+			"flags": 0,
+			"blendingMode": 0
+		},
+		{
+			"flags": 0,
+			"blendingMode": 0
+		},
+		{
+			"flags": 0,
+			"blendingMode": 0
+		},
+		{
+			"flags": 4,
+			"blendingMode": 1
+		},
+		{
+			"flags": 0,
+			"blendingMode": 0
+		}
+	],
+	"textureCombos": [
+		2,
+		1,
+		3,
+		0,
+		4
+	],
+	"colors": [],
+	"textureWeights": [
+		{
+			"globalSeq": 65535,
+			"interpolation": 0,
+			"timestamps": [
+				[
+					0
+				]
+			],
+			"values": [
+				[
+					32767
+				]
+			],
+			"timestampOffsets": null,
+			"valueOffsets": null
+		}
+	],
+	"transparencyLookup": [
+		0
+	],
+	"textureTransforms": [],
+	"textureTransformsLookup": [
+		65535
+	],
+	"boundingBox": {
+		"min": [
+			-7.849184036254883,
+			-11.259712219238281,
+			-0.06849046796560287
+		],
+		"max": [
+			5.9881768226623535,
+			9.917550086975098,
+			20.531980514526367
+		]
+	},
+	"boundingSphereRadius": 13.560873985290527,
+	"collisionBox": {
+		"min": [
+			-3.825610637664795,
+			-4.147838592529297,
+			-0.06849046051502228
+		],
+		"max": [
+			2.2420897483825684,
+			4.223926067352295,
+			9.683443069458008
+		]
+	},
+	"collisionSphereRadius": 6.788430213928223,
+	"skin": {
+		"subMeshes": [
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 0,
+				"vertexCount": 52,
+				"triangleStart": 0,
+				"triangleCount": 126,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					-0.22739404439926147,
+					0.65375816822052,
+					6.418891429901123
+				],
+				"sortCenterPosition": [
+					-0.22739404439926147,
+					0.65375816822052,
+					6.418891429901123
+				],
+				"sortRadius": 2.9918935298919678
+			},
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 52,
+				"vertexCount": 686,
+				"triangleStart": 126,
+				"triangleCount": 2094,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					-0.2101191133260727,
+					0.4144940674304962,
+					10.765931129455566
+				],
+				"sortCenterPosition": [
+					-0.2101191133260727,
+					0.4144940674304962,
+					10.765931129455566
+				],
+				"sortRadius": 11.847016334533691
+			},
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 738,
+				"vertexCount": 228,
+				"triangleStart": 2220,
+				"triangleCount": 588,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					1.160233736038208,
+					-3.9694535732269287,
+					17.79233741760254
+				],
+				"sortCenterPosition": [
+					-1.416785478591919,
+					-5.690700054168701,
+					16.818574905395508
+				],
+				"sortRadius": 7.00437068939209
+			},
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 966,
+				"vertexCount": 36,
+				"triangleStart": 2808,
+				"triangleCount": 126,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					-0.9271836876869202,
+					0.7604350447654724,
+					13.930502891540527
+				],
+				"sortCenterPosition": [
+					-0.9335132241249084,
+					0.7896108031272888,
+					12.42373275756836
+				],
+				"sortRadius": 3.701604127883911
+			},
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 1002,
+				"vertexCount": 21,
+				"triangleStart": 2934,
+				"triangleCount": 48,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					0.5054801106452942,
+					-1.3178242444992065,
+					8.220846176147461
+				],
+				"sortCenterPosition": [
+					0.4135962128639221,
+					-1.3871201276779175,
+					8.069746017456055
+				],
+				"sortRadius": 3.1081864833831787
+			}
+		],
+		"textureUnits": [
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 3,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 0,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 3,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			},
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 1,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 1,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 1,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			},
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 0,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 2,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 0,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			},
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 16,
+				"skinSectionIndex": 2,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 3,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 2,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			},
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 4,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 4,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 4,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			}
+		],
+		"fileName": "world/generic/human/passive doodads/statues/statuealleria00.skin",
+		"fileDataID": 504629
+	}
+}

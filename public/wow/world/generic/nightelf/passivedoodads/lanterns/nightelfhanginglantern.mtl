@@ -1,0 +1,6 @@
+newmtl mat_glow
+illum 1
+map_Kd ..\magicalimplements\glow.png
+newmtl mat_darkshorelamppost01
+illum 1
+map_Kd ..\..\..\..\environment\doodad\darkshore\lamppost\texture\brian\darkshorelamppost01.png

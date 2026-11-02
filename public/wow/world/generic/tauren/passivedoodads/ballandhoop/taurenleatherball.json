@@ -1,0 +1,126 @@
+{
+	"fileType": "m2",
+	"fileDataID": 200370,
+	"fileName": "world/generic/tauren/passive doodads/ballandhoop/taurenleatherball.m2",
+	"internalName": "TaurenLeatherBall",
+	"textures": [
+		{
+			"fileNameInternal": "world/generic/tauren/passive doodads/kites/taurenmisc01.blp",
+			"fileNameExternal": "..\\kites\\taurenmisc01.png",
+			"mtlName": "mat_taurenmisc01",
+			"flags": 0,
+			"fileDataID": 200413
+		}
+	],
+	"textureTypes": [
+		0
+	],
+	"materials": [
+		{
+			"flags": 4,
+			"blendingMode": 1
+		}
+	],
+	"textureCombos": [
+		0
+	],
+	"colors": [],
+	"textureWeights": [
+		{
+			"globalSeq": 65535,
+			"interpolation": 0,
+			"timestamps": [
+				[
+					0
+				]
+			],
+			"values": [
+				[
+					32767
+				]
+			],
+			"timestampOffsets": null,
+			"valueOffsets": null
+		}
+	],
+	"transparencyLookup": [
+		0
+	],
+	"textureTransforms": [],
+	"textureTransformsLookup": [
+		65535
+	],
+	"boundingBox": {
+		"min": [
+			-0.2553466856479645,
+			-0.24468445777893066,
+			-0.0018881987780332565
+		],
+		"max": [
+			0.2530728876590729,
+			0.2781241536140442,
+			0.45997047424316406
+		]
+	},
+	"boundingSphereRadius": 0.28123408555984497,
+	"collisionBox": {
+		"min": [
+			-0.25176969170570374,
+			-0.23512418568134308,
+			-0.00018443752196617424
+		],
+		"max": [
+			0.2518468201160431,
+			0.28692901134490967,
+			0.47496673464775085
+		]
+	},
+	"collisionSphereRadius": 0.4335717260837555,
+	"skin": {
+		"subMeshes": [
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 0,
+				"vertexCount": 48,
+				"triangleStart": 0,
+				"triangleCount": 144,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					-0.000777754932641983,
+					0.0158693864941597,
+					0.2294030785560608
+				],
+				"sortCenterPosition": [
+					-0.0011368989944458008,
+					0.016719847917556763,
+					0.22904114425182343
+				],
+				"sortRadius": 0.28123408555984497
+			}
+		],
+		"textureUnits": [
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 16,
+				"skinSectionIndex": 0,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 0,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 0,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			}
+		],
+		"fileName": "world/generic/tauren/passive doodads/ballandhoop/taurenleatherball00.skin",
+		"fileDataID": 506158
+	}
+}

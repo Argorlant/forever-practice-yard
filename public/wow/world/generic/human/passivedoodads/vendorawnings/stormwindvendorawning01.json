@@ -1,0 +1,178 @@
+{
+	"fileType": "m2",
+	"fileDataID": 198620,
+	"fileName": "world/generic/human/passive doodads/vendorawnings/stormwindvendorawning01.m2",
+	"internalName": "StormwindVendorAwning01",
+	"textures": [
+		{
+			"fileNameInternal": "world/generic/dwarf/passive doodads/lanterns/gypsywagon.blp",
+			"fileNameExternal": "..\\..\\..\\dwarf\\passivedoodads\\lanterns\\gypsywagon.png",
+			"mtlName": "mat_gypsywagon",
+			"flags": 0,
+			"fileDataID": 197427
+		},
+		{
+			"fileNameInternal": "world/generic/human/passive doodads/gypsywagons/overhang copy.blp",
+			"fileNameExternal": "..\\gypsywagons\\overhangcopy.png",
+			"mtlName": "mat_overhangcopy",
+			"flags": 0,
+			"fileDataID": 198287
+		}
+	],
+	"textureTypes": [
+		0,
+		0
+	],
+	"materials": [
+		{
+			"flags": 0,
+			"blendingMode": 0
+		},
+		{
+			"flags": 4,
+			"blendingMode": 0
+		}
+	],
+	"textureCombos": [
+		0,
+		1
+	],
+	"colors": [],
+	"textureWeights": [
+		{
+			"globalSeq": 65535,
+			"interpolation": 0,
+			"timestamps": [
+				[
+					0
+				]
+			],
+			"values": [
+				[
+					32767
+				]
+			],
+			"timestampOffsets": null,
+			"valueOffsets": null
+		}
+	],
+	"transparencyLookup": [
+		0
+	],
+	"textureTransforms": [],
+	"textureTransformsLookup": [
+		65535
+	],
+	"boundingBox": {
+		"min": [
+			-2.2722461223602295,
+			-1.3905726671218872,
+			-0.15476840734481812
+		],
+		"max": [
+			1.694780945777893,
+			1.9792535305023193,
+			3.5042848587036133
+		]
+	},
+	"boundingSphereRadius": 3.1812613010406494,
+	"collisionBox": {
+		"min": [
+			-2.220614194869995,
+			0.22980806231498718,
+			-0.1547681838274002
+		],
+		"max": [
+			1.6947808265686035,
+			1.966357946395874,
+			3.4132611751556396
+		]
+	},
+	"collisionSphereRadius": 2.755150318145752,
+	"skin": {
+		"subMeshes": [
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 0,
+				"vertexCount": 134,
+				"triangleStart": 0,
+				"triangleCount": 336,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					-0.30770576000213623,
+					1.3174073696136475,
+					0.7337077856063843
+				],
+				"sortCenterPosition": [
+					-0.2576426863670349,
+					1.1045308113098145,
+					1.6292463541030884
+				],
+				"sortRadius": 2.6539928913116455
+			},
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 134,
+				"vertexCount": 26,
+				"triangleStart": 336,
+				"triangleCount": 60,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					-0.38291245698928833,
+					0.3003796339035034,
+					3.1275057792663574
+				],
+				"sortCenterPosition": [
+					-0.3070365786552429,
+					0.033965468406677246,
+					2.9651424884796143
+				],
+				"sortRadius": 2.4863686561584473
+			}
+		],
+		"textureUnits": [
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 0,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 0,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 0,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			},
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 1,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 1,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 1,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			}
+		],
+		"fileName": "world/generic/human/passive doodads/vendorawnings/stormwindvendorawning0100.skin",
+		"fileDataID": 504767
+	}
+}

@@ -1,0 +1,12 @@
+newmtl mat_candel_cave01
+illum 1
+map_Kd candel_cave01.png
+newmtl mat_candel_thread
+illum 1
+map_Kd candel_thread.png
+newmtl mat_flamelicksmallblue
+illum 1
+map_Kd ..\..\..\azeroth\karazahn\passivedoodads\bonfire\flamelicksmallblue.png
+newmtl mat_glowwhite32
+illum 1
+map_Kd ..\..\human\passivedoodads\candelabras\glowwhite32.png

@@ -1,0 +1,142 @@
+{
+	"fileType": "m2",
+	"fileDataID": 189193,
+	"fileName": "world/azeroth/burningsteppes/passivedoodads/orcfoundrypit/orcsmallfoundrypit.m2",
+	"internalName": "OrcSmallFoundryPit",
+	"textures": [
+		{
+			"fileNameInternal": "world/azeroth/burningsteppes/passivedoodads/orcfoundrypit/foundrypit04.blp",
+			"fileNameExternal": "foundrypit04.png",
+			"mtlName": "mat_foundrypit04",
+			"flags": 3,
+			"fileDataID": 189192
+		},
+		{
+			"fileNameInternal": "creature/infernal/flame01.blp",
+			"fileNameExternal": "..\\..\\..\\..\\..\\creature\\infernal\\flame01.png",
+			"mtlName": "mat_flame01",
+			"flags": 0,
+			"fileDataID": 124636
+		},
+		{
+			"fileNameInternal": "creature/fireelemental/glowball.blp",
+			"fileNameExternal": "..\\..\\..\\..\\..\\creature\\fireelemental\\glowball.png",
+			"mtlName": "mat_glowball",
+			"flags": 0,
+			"fileDataID": 123938
+		}
+	],
+	"textureTypes": [
+		0,
+		0,
+		0
+	],
+	"materials": [
+		{
+			"flags": 0,
+			"blendingMode": 0
+		}
+	],
+	"textureCombos": [
+		0
+	],
+	"colors": [],
+	"textureWeights": [
+		{
+			"globalSeq": 65535,
+			"interpolation": 0,
+			"timestamps": [
+				[
+					0
+				]
+			],
+			"values": [
+				[
+					32767
+				]
+			],
+			"timestampOffsets": null,
+			"valueOffsets": null
+		}
+	],
+	"transparencyLookup": [
+		0
+	],
+	"textureTransforms": [],
+	"textureTransformsLookup": [
+		65535
+	],
+	"boundingBox": {
+		"min": [
+			-0.9737493991851807,
+			-1.1274620294570923,
+			0.00018586052465252578
+		],
+		"max": [
+			0.9728831052780151,
+			1.1203157901763916,
+			1.7143267393112183
+		]
+	},
+	"boundingSphereRadius": 1.3703254461288452,
+	"collisionBox": {
+		"min": [
+			-0.9796079993247986,
+			-1.135799765586853,
+			0
+		],
+		"max": [
+			0.9722632169723511,
+			1.1180269718170166,
+			0.9640286564826965
+		]
+	},
+	"collisionSphereRadius": 1.2256720066070557,
+	"skin": {
+		"subMeshes": [
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 0,
+				"vertexCount": 55,
+				"triangleStart": 0,
+				"triangleCount": 225,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					-0.12266078591346741,
+					-0.007121052127331495,
+					1.034084439277649
+				],
+				"sortCenterPosition": [
+					-0.00043314695358276367,
+					-0.003573119640350342,
+					0.7840175628662109
+				],
+				"sortRadius": 1.3703254461288452
+			}
+		],
+		"textureUnits": [
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 0,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 0,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 0,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			}
+		],
+		"fileName": "world/azeroth/burningsteppes/passivedoodads/orcfoundrypit/orcsmallfoundrypit00.skin",
+		"fileDataID": 494225
+	}
+}

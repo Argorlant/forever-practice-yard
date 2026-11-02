@@ -1,0 +1,6 @@
+newmtl mat_mm_metal_floor_border_01x
+illum 1
+map_Kd ..\..\..\..\..\dungeons\textures\trim\mm_metal_floor_border_01x.png
+newmtl mat_mm_metal_trims_01
+illum 1
+map_Kd ..\..\..\..\..\dungeons\textures\metal\mm_metal_trims_01.png

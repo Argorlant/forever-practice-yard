@@ -9,6 +9,7 @@
     "dev": "vite --port 5180 --host 127.0.0.1",
     "build": "tsc --noEmit && vite build && npm run seo",
     "preview": "vite preview --port 5181",
+    "export:wow": "node tools/publish_wow_models.mjs",
     "model": "node tools/build_model.mjs",
     "icons": "node tools/icons.mjs && node tools/wow_icons.mjs",
     "talents": "node tools/talent_layout.mjs",

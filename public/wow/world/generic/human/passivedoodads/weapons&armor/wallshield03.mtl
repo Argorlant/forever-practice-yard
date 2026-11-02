@@ -1,0 +1,3 @@
+newmtl mat_shield_crest_a_01silver
+illum 1
+map_Kd ..\..\..\..\..\item\objectcomponents\shield\shield_crest_a_01silver.png

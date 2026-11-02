@@ -1,0 +1,230 @@
+{
+	"fileType": "m2",
+	"fileDataID": 189908,
+	"fileName": "world/azeroth/elwynn/passivedoodads/statue/lionstatue.m2",
+	"internalName": "LionStatue",
+	"textures": [
+		{
+			"fileNameInternal": "dungeons/textures/doodads/lionstatue.blp",
+			"fileNameExternal": "..\\..\\..\\..\\..\\dungeons\\textures\\doodads\\lionstatue.png",
+			"mtlName": "mat_lionstatue",
+			"flags": 0,
+			"fileDataID": 127513
+		},
+		{
+			"fileNameInternal": "world/azeroth/elwynn/passivedoodads/statue/lionarchesbasetop.blp",
+			"fileNameExternal": "lionarchesbasetop.png",
+			"mtlName": "mat_lionarchesbasetop",
+			"flags": 3,
+			"fileDataID": 189907
+		},
+		{
+			"fileNameInternal": "world/azeroth/elwynn/buildings/humanguardtower/stonewallbrian03.blp",
+			"fileNameExternal": "..\\..\\buildings\\humanguardtower\\stonewallbrian03.png",
+			"mtlName": "mat_stonewallbrian03",
+			"flags": 3,
+			"fileDataID": 189630
+		}
+	],
+	"textureTypes": [
+		0,
+		0,
+		0
+	],
+	"materials": [
+		{
+			"flags": 0,
+			"blendingMode": 0
+		},
+		{
+			"flags": 0,
+			"blendingMode": 0
+		},
+		{
+			"flags": 0,
+			"blendingMode": 0
+		}
+	],
+	"textureCombos": [
+		0,
+		1,
+		2
+	],
+	"colors": [],
+	"textureWeights": [
+		{
+			"globalSeq": 65535,
+			"interpolation": 0,
+			"timestamps": [
+				[
+					0
+				]
+			],
+			"values": [
+				[
+					32767
+				]
+			],
+			"timestampOffsets": null,
+			"valueOffsets": null
+		}
+	],
+	"transparencyLookup": [
+		0
+	],
+	"textureTransforms": [],
+	"textureTransformsLookup": [
+		65535
+	],
+	"boundingBox": {
+		"min": [
+			-4.30380916595459,
+			-5.194985389709473,
+			-1.0001190900802612
+		],
+		"max": [
+			4.289939880371094,
+			4.961263656616211,
+			12.124714851379395
+		]
+	},
+	"boundingSphereRadius": 9.344291687011719,
+	"collisionBox": {
+		"min": [
+			-4.30380916595459,
+			-5.194985389709473,
+			-0.9538090825080872
+		],
+		"max": [
+			4.289939880371094,
+			4.961263179779053,
+			12.109654426574707
+		]
+	},
+	"collisionSphereRadius": 9.322768211364746,
+	"skin": {
+		"subMeshes": [
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 0,
+				"vertexCount": 181,
+				"triangleStart": 0,
+				"triangleCount": 882,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					-0.012970483861863613,
+					0.28199344873428345,
+					5.635700225830078
+				],
+				"sortCenterPosition": [
+					-0.012970447540283203,
+					0.09585976600646973,
+					7.4986572265625
+				],
+				"sortRadius": 5.934423446655273
+			},
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 181,
+				"vertexCount": 4,
+				"triangleStart": 882,
+				"triangleCount": 6,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					-0.006934642791748047,
+					-0.11686110496520996,
+					2.853032350540161
+				],
+				"sortCenterPosition": [
+					-0.006934642791748047,
+					-0.11686110496520996,
+					2.853032350540161
+				],
+				"sortRadius": 5.9129815101623535
+			},
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 185,
+				"vertexCount": 20,
+				"triangleStart": 888,
+				"triangleCount": 30,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					-0.006934654898941517,
+					-0.11686086654663086,
+					0.5411414504051208
+				],
+				"sortCenterPosition": [
+					-0.006934654898941517,
+					-0.11686086654663086,
+					0.5411414504051208
+				],
+				"sortRadius": 6.8283209800720215
+			}
+		],
+		"textureUnits": [
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 0,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 0,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 0,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			},
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 1,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 1,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 1,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			},
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 2,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 2,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 2,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			}
+		],
+		"fileName": "world/azeroth/elwynn/passivedoodads/statue/lionstatue00.skin",
+		"fileDataID": 494571
+	}
+}

@@ -1,0 +1,178 @@
+{
+	"fileType": "m2",
+	"fileDataID": 197405,
+	"fileName": "world/generic/dwarf/passive doodads/gunracks/gunrack02d.m2",
+	"internalName": "GunRack02D",
+	"textures": [
+		{
+			"fileNameInternal": "world/generic/dwarf/passive doodads/gunracks/dwarventargetrangeboard.blp",
+			"fileNameExternal": "dwarventargetrangeboard.png",
+			"mtlName": "mat_dwarventargetrangeboard",
+			"flags": 1,
+			"fileDataID": 197397
+		},
+		{
+			"fileNameInternal": "world/generic/dwarf/passive doodads/gunracks/dwarvenrifle01.blp",
+			"fileNameExternal": "dwarvenrifle01.png",
+			"mtlName": "mat_dwarvenrifle01",
+			"flags": 0,
+			"fileDataID": 197396
+		}
+	],
+	"textureTypes": [
+		0,
+		0
+	],
+	"materials": [
+		{
+			"flags": 0,
+			"blendingMode": 0
+		},
+		{
+			"flags": 0,
+			"blendingMode": 0
+		}
+	],
+	"textureCombos": [
+		0,
+		1
+	],
+	"colors": [],
+	"textureWeights": [
+		{
+			"globalSeq": 65535,
+			"interpolation": 0,
+			"timestamps": [
+				[
+					0
+				]
+			],
+			"values": [
+				[
+					32767
+				]
+			],
+			"timestampOffsets": null,
+			"valueOffsets": null
+		}
+	],
+	"transparencyLookup": [
+		0
+	],
+	"textureTransforms": [],
+	"textureTransformsLookup": [
+		65535
+	],
+	"boundingBox": {
+		"min": [
+			-0.2919240891933441,
+			-0.6376046538352966,
+			0
+		],
+		"max": [
+			0.19263778626918793,
+			0.652341365814209,
+			1.8255808353424072
+		]
+	},
+	"boundingSphereRadius": 1.0862396955490112,
+	"collisionBox": {
+		"min": [
+			-0.27787914872169495,
+			-0.6309568881988525,
+			0.003944715019315481
+		],
+		"max": [
+			0.0630536898970604,
+			0.6186402440071106,
+			1.5317225456237793
+		]
+	},
+	"collisionSphereRadius": 1.0014780759811401,
+	"skin": {
+		"subMeshes": [
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 0,
+				"vertexCount": 120,
+				"triangleStart": 0,
+				"triangleCount": 180,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					-0.16292576491832733,
+					0.008916745893657207,
+					0.9652937054634094
+				],
+				"sortCenterPosition": [
+					-0.08336792886257172,
+					0.007368355989456177,
+					0.7989627718925476
+				],
+				"sortRadius": 1.0177230834960938
+			},
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 120,
+				"vertexCount": 351,
+				"triangleStart": 180,
+				"triangleCount": 1260,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					-0.1259286254644394,
+					-0.006654748693108559,
+					0.9106717109680176
+				],
+				"sortCenterPosition": [
+					-0.049643151462078094,
+					0.016017913818359375,
+					1.0049614906311035
+				],
+				"sortRadius": 0.9991288185119629
+			}
+		],
+		"textureUnits": [
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 0,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 0,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 0,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			},
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 1,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 1,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 1,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			}
+		],
+		"fileName": "world/generic/dwarf/passive doodads/gunracks/gunrack02d00.skin",
+		"fileDataID": 503392
+	}
+}

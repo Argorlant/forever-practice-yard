@@ -1,0 +1,126 @@
+{
+	"fileType": "m2",
+	"fileDataID": 198741,
+	"fileName": "world/generic/nightelf/passive doodads/bowls/nightelfbowl.m2",
+	"internalName": "NightelfBowl",
+	"textures": [
+		{
+			"fileNameInternal": "world/generic/nightelf/passive doodads/bowls/horn.blp",
+			"fileNameExternal": "horn.png",
+			"mtlName": "mat_horn",
+			"flags": 0,
+			"fileDataID": 198740
+		}
+	],
+	"textureTypes": [
+		0
+	],
+	"materials": [
+		{
+			"flags": 4,
+			"blendingMode": 1
+		}
+	],
+	"textureCombos": [
+		0
+	],
+	"colors": [],
+	"textureWeights": [
+		{
+			"globalSeq": 65535,
+			"interpolation": 0,
+			"timestamps": [
+				[
+					0
+				]
+			],
+			"values": [
+				[
+					32767
+				]
+			],
+			"timestampOffsets": null,
+			"valueOffsets": null
+		}
+	],
+	"transparencyLookup": [
+		0
+	],
+	"textureTransforms": [],
+	"textureTransformsLookup": [
+		65535
+	],
+	"boundingBox": {
+		"min": [
+			-2.71877121925354,
+			-1.9931331872940063,
+			-0.21536412835121155
+		],
+		"max": [
+			2.721806049346924,
+			2.128516674041748,
+			2.7617111206054688
+		]
+	},
+	"boundingSphereRadius": 2.777923107147217,
+	"collisionBox": {
+		"min": [
+			-2.5722782611846924,
+			-2.0277607440948486,
+			0
+		],
+		"max": [
+			2.604708433151245,
+			2.3887956142425537,
+			2.5072810649871826
+		]
+	},
+	"collisionSphereRadius": 3.626072883605957,
+	"skin": {
+		"subMeshes": [
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 0,
+				"vertexCount": 120,
+				"triangleStart": 0,
+				"triangleCount": 492,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					-0.03481064736843109,
+					0.11090198904275894,
+					1.506553292274475
+				],
+				"sortCenterPosition": [
+					-0.03481064736843109,
+					0.11090198904275894,
+					1.506553292274475
+				],
+				"sortRadius": 2.776581287384033
+			}
+		],
+		"textureUnits": [
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 16,
+				"skinSectionIndex": 0,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 0,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 0,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			}
+		],
+		"fileName": "world/generic/nightelf/passive doodads/bowls/nightelfbowl00.skin",
+		"fileDataID": 504850
+	}
+}

@@ -5,7 +5,7 @@ import { defineConfig, type Plugin } from 'vite';
 
 /**
  * `npm run dev` only: your own wow.export folder, for this computer. ~/wow.export/yard-models.json says which file
- * each model slot draws (src/own-model.ts). Never part of a build: the site does not host game files.
+ * each model slot draws (src/own-model.ts). Builds use the separately prepared public/wow selection.
  */
 const localWowExport = (): Plugin => ({
   name: 'local-wow-export',

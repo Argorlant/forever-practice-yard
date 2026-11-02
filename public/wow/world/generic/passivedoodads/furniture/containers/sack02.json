@@ -1,0 +1,126 @@
+{
+	"fileType": "m2",
+	"fileDataID": 199746,
+	"fileName": "world/generic/passivedoodads/furniture/containers/sack02.m2",
+	"internalName": "Sack02",
+	"textures": [
+		{
+			"fileNameInternal": "world/generic/orc/passive doodads/kodowagon/flowersack02_128.blp",
+			"fileNameExternal": "..\\..\\..\\orc\\passivedoodads\\kodowagon\\flowersack02_128.png",
+			"mtlName": "mat_flowersack02_128",
+			"flags": 3,
+			"fileDataID": 199194
+		}
+	],
+	"textureTypes": [
+		0
+	],
+	"materials": [
+		{
+			"flags": 0,
+			"blendingMode": 0
+		}
+	],
+	"textureCombos": [
+		0
+	],
+	"colors": [],
+	"textureWeights": [
+		{
+			"globalSeq": 65535,
+			"interpolation": 0,
+			"timestamps": [
+				[
+					0
+				]
+			],
+			"values": [
+				[
+					32767
+				]
+			],
+			"timestampOffsets": null,
+			"valueOffsets": null
+		}
+	],
+	"transparencyLookup": [
+		0
+	],
+	"textureTransforms": [],
+	"textureTransformsLookup": [
+		65535
+	],
+	"boundingBox": {
+		"min": [
+			-0.28028178215026855,
+			-0.28303951025009155,
+			-0.04297371581196785
+		],
+		"max": [
+			0.2806839942932129,
+			0.4491444230079651,
+			0.4934013783931732
+		]
+	},
+	"boundingSphereRadius": 0.45923149585723877,
+	"collisionBox": {
+		"min": [
+			-0.2803264260292053,
+			-0.2827160656452179,
+			-0.04032545164227486
+		],
+		"max": [
+			0.2747783064842224,
+			0.4529940187931061,
+			0.5005629062652588
+		]
+	},
+	"collisionSphereRadius": 0.4600944519042969,
+	"skin": {
+		"subMeshes": [
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 0,
+				"vertexCount": 26,
+				"triangleStart": 0,
+				"triangleCount": 144,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					-0.017557132989168167,
+					0.06002732366323471,
+					0.22520950436592102
+				],
+				"sortCenterPosition": [
+					-0.017557132989168167,
+					0.06002732366323471,
+					0.22520950436592102
+				],
+				"sortRadius": 0.4386119246482849
+			}
+		],
+		"textureUnits": [
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 0,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 0,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 0,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			}
+		],
+		"fileName": "world/generic/passivedoodads/furniture/containers/sack0200.skin",
+		"fileDataID": 505658
+	}
+}

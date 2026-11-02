@@ -1,0 +1,178 @@
+{
+	"fileType": "m2",
+	"fileDataID": 198086,
+	"fileName": "world/generic/human/passive doodads/cargonetboxes/deadminecargonetboxes.m2",
+	"internalName": "DeadMineCargoNetBoxes",
+	"textures": [
+		{
+			"fileNameInternal": "world/generic/tauren/passive doodads/taurentravois/deadminenetswood.blp",
+			"fileNameExternal": "..\\..\\..\\tauren\\passivedoodads\\taurentravois\\deadminenetswood.png",
+			"mtlName": "mat_deadminenetswood",
+			"flags": 3,
+			"fileDataID": 200543
+		},
+		{
+			"fileNameInternal": "world/generic/tauren/passive doodads/taurentravois/deadminefloornets4.blp",
+			"fileNameExternal": "..\\..\\..\\tauren\\passivedoodads\\taurentravois\\deadminefloornets4.png",
+			"mtlName": "mat_deadminefloornets4",
+			"flags": 3,
+			"fileDataID": 200542
+		}
+	],
+	"textureTypes": [
+		0,
+		0
+	],
+	"materials": [
+		{
+			"flags": 4,
+			"blendingMode": 0
+		},
+		{
+			"flags": 4,
+			"blendingMode": 1
+		}
+	],
+	"textureCombos": [
+		0,
+		1
+	],
+	"colors": [],
+	"textureWeights": [
+		{
+			"globalSeq": 65535,
+			"interpolation": 0,
+			"timestamps": [
+				[
+					0
+				]
+			],
+			"values": [
+				[
+					32767
+				]
+			],
+			"timestampOffsets": null,
+			"valueOffsets": null
+		}
+	],
+	"transparencyLookup": [
+		0
+	],
+	"textureTransforms": [],
+	"textureTransformsLookup": [
+		65535
+	],
+	"boundingBox": {
+		"min": [
+			-1.821891188621521,
+			-1.9938308000564575,
+			-0.2567335367202759
+		],
+		"max": [
+			1.9194978475570679,
+			2.028559446334839,
+			1.4811420440673828
+		]
+	},
+	"boundingSphereRadius": 2.6448090076446533,
+	"collisionBox": {
+		"min": [
+			-1.113257884979248,
+			-1.178394079208374,
+			-0.002707754261791706
+		],
+		"max": [
+			1.012245535850525,
+			1.1432439088821411,
+			1.5024994611740112
+		]
+	},
+	"collisionSphereRadius": 1.7445212602615356,
+	"skin": {
+		"subMeshes": [
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 0,
+				"vertexCount": 256,
+				"triangleStart": 0,
+				"triangleCount": 360,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					-0.04096071422100067,
+					-0.010725977830588818,
+					0.53919917345047
+				],
+				"sortCenterPosition": [
+					-0.04096071422100067,
+					-0.010725977830588818,
+					0.53919917345047
+				],
+				"sortRadius": 2.6044976711273193
+			},
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 256,
+				"vertexCount": 26,
+				"triangleStart": 360,
+				"triangleCount": 42,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					-0.12942472100257874,
+					0.05004911124706268,
+					0.8426845669746399
+				],
+				"sortCenterPosition": [
+					-0.12942472100257874,
+					0.05004911124706268,
+					0.8426845669746399
+				],
+				"sortRadius": 2.5411829948425293
+			}
+		],
+		"textureUnits": [
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 0,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 0,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 0,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			},
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 16,
+				"skinSectionIndex": 1,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 1,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 1,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			}
+		],
+		"fileName": "world/generic/human/passive doodads/cargonetboxes/deadminecargonetboxes00.skin",
+		"fileDataID": 504291
+	}
+}

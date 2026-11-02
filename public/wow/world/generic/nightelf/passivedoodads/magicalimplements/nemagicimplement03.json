@@ -1,0 +1,126 @@
+{
+	"fileType": "m2",
+	"fileDataID": 198787,
+	"fileName": "world/generic/nightelf/passive doodads/magicalimplements/nemagicimplement03.m2",
+	"internalName": "NEMagicImplement03",
+	"textures": [
+		{
+			"fileNameInternal": "world/generic/nightelf/passive doodads/magicalimplements/darnassusmagicalimplements02.blp",
+			"fileNameExternal": "darnassusmagicalimplements02.png",
+			"mtlName": "mat_darnassusmagicalimplements02",
+			"flags": 3,
+			"fileDataID": 198783
+		}
+	],
+	"textureTypes": [
+		0
+	],
+	"materials": [
+		{
+			"flags": 0,
+			"blendingMode": 0
+		}
+	],
+	"textureCombos": [
+		0
+	],
+	"colors": [],
+	"textureWeights": [
+		{
+			"globalSeq": 65535,
+			"interpolation": 0,
+			"timestamps": [
+				[
+					0
+				]
+			],
+			"values": [
+				[
+					32767
+				]
+			],
+			"timestampOffsets": null,
+			"valueOffsets": null
+		}
+	],
+	"transparencyLookup": [
+		0
+	],
+	"textureTransforms": [],
+	"textureTransformsLookup": [
+		65535
+	],
+	"boundingBox": {
+		"min": [
+			-0.4775550663471222,
+			-0.578384518623352,
+			-0.0007458197069354355
+		],
+		"max": [
+			0.49795156717300415,
+			0.41577374935150146,
+			1.1644136905670166
+		]
+	},
+	"boundingSphereRadius": 0.7824877500534058,
+	"collisionBox": {
+		"min": [
+			-0.4953395128250122,
+			-0.5958132147789001,
+			0
+		],
+		"max": [
+			0.5038073062896729,
+			0.4865063726902008,
+			1.160791039466858
+		]
+	},
+	"collisionSphereRadius": 0.7935795187950134,
+	"skin": {
+		"subMeshes": [
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 0,
+				"vertexCount": 171,
+				"triangleStart": 0,
+				"triangleCount": 492,
+				"boneCount": 2,
+				"boneStart": 0,
+				"boneInfluences": 1,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					-0.0028660225216299295,
+					-0.0870281234383583,
+					0.6527513861656189
+				],
+				"sortCenterPosition": [
+					0.010198250412940979,
+					-0.08938662707805634,
+					0.5751622319221497
+				],
+				"sortRadius": 0.7795925736427307
+			}
+		],
+		"textureUnits": [
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 0,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 0,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 0,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			}
+		],
+		"fileName": "world/generic/nightelf/passive doodads/magicalimplements/nemagicimplement0300.skin",
+		"fileDataID": 504883
+	}
+}

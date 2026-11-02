@@ -1,0 +1,126 @@
+{
+	"fileType": "m2",
+	"fileDataID": 198360,
+	"fileName": "world/generic/human/passive doodads/mugs/mug01.m2",
+	"internalName": "Mug01",
+	"textures": [
+		{
+			"fileNameInternal": "world/generic/human/passive doodads/mugs/mug_002.blp",
+			"fileNameExternal": "mug_002.png",
+			"mtlName": "mat_mug_002",
+			"flags": 3,
+			"fileDataID": 198362
+		}
+	],
+	"textureTypes": [
+		0
+	],
+	"materials": [
+		{
+			"flags": 0,
+			"blendingMode": 0
+		}
+	],
+	"textureCombos": [
+		0
+	],
+	"colors": [],
+	"textureWeights": [
+		{
+			"globalSeq": 65535,
+			"interpolation": 0,
+			"timestamps": [
+				[
+					0
+				]
+			],
+			"values": [
+				[
+					32767
+				]
+			],
+			"timestampOffsets": null,
+			"valueOffsets": null
+		}
+	],
+	"transparencyLookup": [
+		0
+	],
+	"textureTransforms": [],
+	"textureTransformsLookup": [
+		65535
+	],
+	"boundingBox": {
+		"min": [
+			-0.16846099495887756,
+			-0.1867389976978302,
+			-0.01050109975039959
+		],
+		"max": [
+			0.07700580358505249,
+			0.1387850046157837,
+			0.272040992975235
+		]
+	},
+	"boundingSphereRadius": 0.2155199944972992,
+	"collisionBox": {
+		"min": [
+			10000000,
+			10000000,
+			10000000
+		],
+		"max": [
+			-10000000,
+			-10000000,
+			-10000000
+		]
+	},
+	"collisionSphereRadius": 0,
+	"skin": {
+		"subMeshes": [
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 0,
+				"vertexCount": 93,
+				"triangleStart": 0,
+				"triangleCount": 138,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					-0.04563147947192192,
+					-0.05267305672168732,
+					0.16068586707115173
+				],
+				"sortCenterPosition": [
+					-0.04572759568691254,
+					-0.023976996541023254,
+					0.13076995313167572
+				],
+				"sortRadius": 0.2155202478170395
+			}
+		],
+		"textureUnits": [
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 0,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 0,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 0,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			}
+		],
+		"fileName": "world/generic/human/passive doodads/mugs/mug0100.skin",
+		"fileDataID": 504512
+	}
+}

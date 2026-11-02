@@ -1,0 +1,9 @@
+newmtl mat_elfgate_stone01
+illum 1
+map_Kd ..\fountains\elfgate_stone01.png
+newmtl mat_flamelicksmallblue
+illum 1
+map_Kd ..\..\..\..\azeroth\karazahn\passivedoodads\bonfire\flamelicksmallblue.png
+newmtl mat_glow
+illum 1
+map_Kd ..\magicalimplements\glow.png

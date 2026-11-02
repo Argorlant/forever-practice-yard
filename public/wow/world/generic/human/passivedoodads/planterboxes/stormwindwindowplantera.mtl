@@ -1,0 +1,15 @@
+newmtl mat_planterbox
+illum 1
+map_Kd planterbox.png
+newmtl mat_elwynndirtbase
+illum 1
+map_Kd ..\..\..\..\..\tileset\elwynn\elwynndirtbase.png
+newmtl mat_elwynnflowerleaf01
+illum 1
+map_Kd ..\..\..\..\azeroth\elwynn\passivedoodads\detail\elwynnflowerleaf01.png
+newmtl mat_elwynnflowertop01a
+illum 1
+map_Kd elwynnflowertop01a.png
+newmtl mat_elwynnflower03a
+illum 1
+map_Kd elwynnflower03a.png

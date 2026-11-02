@@ -1,0 +1,185 @@
+{
+	"fileType": "m2",
+	"fileDataID": 197295,
+	"fileName": "world/generic/dwarf/passive doodads/braziers/stormwinddwarfbrazier.m2",
+	"internalName": "StormwindDwarfBrazier",
+	"textures": [
+		{
+			"fileNameInternal": "world/generic/orc/passive doodads/lampposts/orcbraziertex01.blp",
+			"fileNameExternal": "..\\..\\..\\orc\\passivedoodads\\lampposts\\orcbraziertex01.png",
+			"mtlName": "mat_orcbraziertex01",
+			"flags": 3,
+			"fileDataID": 199199
+		},
+		{
+			"fileNameInternal": "spells/toonsmoke16.blp",
+			"fileNameExternal": "..\\..\\..\\..\\..\\spells\\toonsmoke16.png",
+			"mtlName": "mat_toonsmoke16",
+			"flags": 0,
+			"fileDataID": 167127
+		},
+		{
+			"fileNameInternal": "spells/lavalump2.blp",
+			"fileNameExternal": "..\\..\\..\\..\\..\\spells\\lavalump2.png",
+			"mtlName": "mat_lavalump2",
+			"flags": 0,
+			"fileDataID": 166449
+		}
+	],
+	"textureTypes": [
+		0,
+		0,
+		0
+	],
+	"materials": [
+		{
+			"flags": 0,
+			"blendingMode": 0
+		},
+		{
+			"flags": 1,
+			"blendingMode": 0
+		}
+	],
+	"textureCombos": [
+		0
+	],
+	"colors": [],
+	"textureWeights": [
+		{
+			"globalSeq": 65535,
+			"interpolation": 0,
+			"timestamps": [
+				[
+					0
+				]
+			],
+			"values": [
+				[
+					32767
+				]
+			],
+			"timestampOffsets": null,
+			"valueOffsets": null
+		}
+	],
+	"transparencyLookup": [
+		0
+	],
+	"textureTransforms": [],
+	"textureTransformsLookup": [
+		65535
+	],
+	"boundingBox": {
+		"min": [
+			-1.884703516960144,
+			-1.6946969032287598,
+			-3.58425999991141e-8
+		],
+		"max": [
+			1.5856980085372925,
+			1.7757046222686768,
+			6.502740859985352
+		]
+	},
+	"boundingSphereRadius": 3.7815089225769043,
+	"collisionBox": {
+		"min": [
+			-1.1511324644088745,
+			-1.145472764968872,
+			-9.601881068022067e-9
+		],
+		"max": [
+			1.1341025829315186,
+			1.1397624015808105,
+			1.310300588607788
+		]
+	},
+	"collisionSphereRadius": 1.3294916152954102,
+	"skin": {
+		"subMeshes": [
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 0,
+				"vertexCount": 423,
+				"triangleStart": 0,
+				"triangleCount": 696,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					-0.0011092436034232378,
+					0.005549265071749687,
+					0.8445523977279663
+				],
+				"sortCenterPosition": [
+					-1.1920928955078125e-7,
+					0,
+					0.7546480298042297
+				],
+				"sortRadius": 1.3915079832077026
+			},
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 423,
+				"vertexCount": 17,
+				"triangleStart": 696,
+				"triangleCount": 72,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					-0.0024653286673128605,
+					0.01601571775972843,
+					0.8551866412162781
+				],
+				"sortCenterPosition": [
+					-0.0024653286673128605,
+					0.01601571775972843,
+					0.8551866412162781
+				],
+				"sortRadius": 0.8500441908836365
+			}
+		],
+		"textureUnits": [
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 0,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 0,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 0,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			},
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 1,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 1,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 0,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			}
+		],
+		"fileName": "world/generic/dwarf/passive doodads/braziers/stormwinddwarfbrazier00.skin",
+		"fileDataID": 503312
+	}
+}

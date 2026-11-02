@@ -1,0 +1,126 @@
+{
+	"fileType": "m2",
+	"fileDataID": 190895,
+	"fileName": "world/dungeon/goldshireinn/innpillow/innpillow.m2",
+	"internalName": "InnPillow",
+	"textures": [
+		{
+			"fileNameInternal": "world/dungeon/goldshireinn/innpillow/mm_pillow_opt.blp",
+			"fileNameExternal": "mm_pillow_opt.png",
+			"mtlName": "mat_mm_pillow_opt",
+			"flags": 0,
+			"fileDataID": 190896
+		}
+	],
+	"textureTypes": [
+		0
+	],
+	"materials": [
+		{
+			"flags": 0,
+			"blendingMode": 0
+		}
+	],
+	"textureCombos": [
+		0
+	],
+	"colors": [],
+	"textureWeights": [
+		{
+			"globalSeq": 65535,
+			"interpolation": 0,
+			"timestamps": [
+				[
+					0
+				]
+			],
+			"values": [
+				[
+					32767
+				]
+			],
+			"timestampOffsets": null,
+			"valueOffsets": null
+		}
+	],
+	"transparencyLookup": [
+		0
+	],
+	"textureTransforms": [],
+	"textureTransformsLookup": [
+		65535
+	],
+	"boundingBox": {
+		"min": [
+			-0.6086919903755188,
+			-1.1011899709701538,
+			0
+		],
+		"max": [
+			0.6086940169334412,
+			1.1011899709701538,
+			0.7556170225143433
+		]
+	},
+	"boundingSphereRadius": 1.1011899709701538,
+	"collisionBox": {
+		"min": [
+			10000000,
+			10000000,
+			10000000
+		],
+		"max": [
+			-10000000,
+			-10000000,
+			-10000000
+		]
+	},
+	"collisionSphereRadius": 0,
+	"skin": {
+		"subMeshes": [
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 0,
+				"vertexCount": 32,
+				"triangleStart": 0,
+				"triangleCount": 144,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					4.3585896492004395e-7,
+					1.862645149230957e-9,
+					0.37780821323394775
+				],
+				"sortCenterPosition": [
+					0.0000010132789611816406,
+					0,
+					0.37780851125717163
+				],
+				"sortRadius": 1.1011899709701538
+			}
+		],
+		"textureUnits": [
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 0,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 0,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 0,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			}
+		],
+		"fileName": "world/dungeon/goldshireinn/innpillow/innpillow00.skin",
+		"fileDataID": 495211
+	}
+}

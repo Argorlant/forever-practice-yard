@@ -1,0 +1,3 @@
+newmtl mat_duskwooddirt
+illum 1
+map_Kd ..\..\..\..\..\tileset\duskwood\duskwooddirt.png

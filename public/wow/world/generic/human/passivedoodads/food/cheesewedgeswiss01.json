@@ -1,0 +1,126 @@
+{
+	"fileType": "m2",
+	"fileDataID": 198220,
+	"fileName": "world/generic/human/passive doodads/food/cheesewedgeswiss01.m2",
+	"internalName": "CheeseWedgeSwiss01",
+	"textures": [
+		{
+			"fileNameInternal": "world/generic/human/passive doodads/food/breadandcheese.blp",
+			"fileNameExternal": "breadandcheese.png",
+			"mtlName": "mat_breadandcheese",
+			"flags": 3,
+			"fileDataID": 198213
+		}
+	],
+	"textureTypes": [
+		0
+	],
+	"materials": [
+		{
+			"flags": 0,
+			"blendingMode": 1
+		}
+	],
+	"textureCombos": [
+		0
+	],
+	"colors": [],
+	"textureWeights": [
+		{
+			"globalSeq": 65535,
+			"interpolation": 0,
+			"timestamps": [
+				[
+					0
+				]
+			],
+			"values": [
+				[
+					32767
+				]
+			],
+			"timestampOffsets": null,
+			"valueOffsets": null
+		}
+	],
+	"transparencyLookup": [
+		0
+	],
+	"textureTransforms": [],
+	"textureTransformsLookup": [
+		65535
+	],
+	"boundingBox": {
+		"min": [
+			-0.03889309987425804,
+			-0.02245499938726425,
+			0
+		],
+		"max": [
+			0.02896060049533844,
+			0.02245499938726425,
+			0.032848600298166275
+		]
+	},
+	"boundingSphereRadius": 0.04387500137090683,
+	"collisionBox": {
+		"min": [
+			10000000,
+			10000000,
+			10000000
+		],
+		"max": [
+			-10000000,
+			-10000000,
+			-10000000
+		]
+	},
+	"collisionSphereRadius": 0,
+	"skin": {
+		"subMeshes": [
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 0,
+				"vertexCount": 18,
+				"triangleStart": 0,
+				"triangleCount": 24,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					-0.016275200992822647,
+					0,
+					0.016424300149083138
+				],
+				"sortCenterPosition": [
+					-0.004966249689459801,
+					0,
+					0.016424300149083138
+				],
+				"sortRadius": 0.04387500137090683
+			}
+		],
+		"textureUnits": [
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 16,
+				"skinSectionIndex": 0,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 0,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 0,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			}
+		],
+		"fileName": "world/generic/human/passive doodads/food/cheesewedgeswiss0100.skin",
+		"fileDataID": 504420
+	}
+}

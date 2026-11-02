@@ -1,0 +1,334 @@
+{
+	"fileType": "m2",
+	"fileDataID": 197394,
+	"fileName": "world/generic/dwarf/passive doodads/excavationwaterwagon/excavationwaterwagon.m2",
+	"internalName": "ExcavationWaterWagon",
+	"textures": [
+		{
+			"fileNameInternal": "world/generic/goblin/passivedoodads/goblinrocketcarts/westfallwagonwood copy.blp",
+			"fileNameExternal": "..\\..\\..\\goblin\\passivedoodads\\goblinrocketcarts\\westfallwagonwoodcopy.png",
+			"mtlName": "mat_westfallwagonwoodcopy",
+			"flags": 3,
+			"fileDataID": 197788
+		},
+		{
+			"fileNameInternal": "world/azeroth/westfall/passivedoodads/rakecart/westfallwagonwheel01.blp",
+			"fileNameExternal": "..\\..\\..\\..\\azeroth\\westfall\\passivedoodads\\rakecart\\westfallwagonwheel01.png",
+			"mtlName": "mat_westfallwagonwheel01",
+			"flags": 3,
+			"fileDataID": 190621
+		},
+		{
+			"fileNameInternal": "world/generic/dwarf/passive doodads/excavationwaterwagon/barrel01.blp",
+			"fileNameExternal": "barrel01.png",
+			"mtlName": "mat_barrel01",
+			"flags": 3,
+			"fileDataID": 197393
+		},
+		{
+			"fileNameInternal": "world/generic/dwarf/passive doodads/excavationropestake/stake.blp",
+			"fileNameExternal": "..\\excavationropestake\\stake.png",
+			"mtlName": "mat_stake",
+			"flags": 0,
+			"fileDataID": 197381
+		},
+		{
+			"fileNameInternal": "world/generic/dwarf/passive doodads/excavationropestake/rope01.blp",
+			"fileNameExternal": "..\\excavationropestake\\rope01.png",
+			"mtlName": "mat_rope01",
+			"flags": 3,
+			"fileDataID": 197380
+		}
+	],
+	"textureTypes": [
+		0,
+		0,
+		0,
+		0,
+		0
+	],
+	"materials": [
+		{
+			"flags": 0,
+			"blendingMode": 0
+		},
+		{
+			"flags": 0,
+			"blendingMode": 0
+		},
+		{
+			"flags": 0,
+			"blendingMode": 0
+		},
+		{
+			"flags": 0,
+			"blendingMode": 0
+		},
+		{
+			"flags": 0,
+			"blendingMode": 0
+		}
+	],
+	"textureCombos": [
+		0,
+		1,
+		2,
+		3,
+		4
+	],
+	"colors": [],
+	"textureWeights": [
+		{
+			"globalSeq": 65535,
+			"interpolation": 0,
+			"timestamps": [
+				[
+					0
+				]
+			],
+			"values": [
+				[
+					32767
+				]
+			],
+			"timestampOffsets": null,
+			"valueOffsets": null
+		}
+	],
+	"transparencyLookup": [
+		0
+	],
+	"textureTransforms": [],
+	"textureTransformsLookup": [
+		65535
+	],
+	"boundingBox": {
+		"min": [
+			-2.0621702671051025,
+			-2.346208333969116,
+			-0.10419020801782608
+		],
+		"max": [
+			5.349002838134766,
+			1.9050161838531494,
+			3.876279592514038
+		]
+	},
+	"boundingSphereRadius": 4.339776992797852,
+	"collisionBox": {
+		"min": [
+			-1.8714171648025513,
+			-2.378181219100952,
+			-0.0030566321220248938
+		],
+		"max": [
+			5.408636093139648,
+			1.822584629058838,
+			3.834388017654419
+		]
+	},
+	"collisionSphereRadius": 4.618568420410156,
+	"skin": {
+		"subMeshes": [
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 0,
+				"vertexCount": 113,
+				"triangleStart": 0,
+				"triangleCount": 270,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					1.6819171905517578,
+					-0.25651854276657104,
+					1.1855816841125488
+				],
+				"sortCenterPosition": [
+					1.888262152671814,
+					-0.3832983374595642,
+					0.9644222259521484
+				],
+				"sortRadius": 3.925508975982666
+			},
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 113,
+				"vertexCount": 88,
+				"triangleStart": 270,
+				"triangleCount": 432,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					0.20474065840244293,
+					-0.19282257556915283,
+					0.6755852699279785
+				],
+				"sortCenterPosition": [
+					0.11061966419219971,
+					-0.18921363353729248,
+					0.7725244760513306
+				],
+				"sortRadius": 2.8435394763946533
+			},
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 201,
+				"vertexCount": 104,
+				"triangleStart": 702,
+				"triangleCount": 336,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					-0.4850488007068634,
+					-0.235181987285614,
+					2.1522228717803955
+				],
+				"sortCenterPosition": [
+					-0.07619953155517578,
+					-0.23465394973754883,
+					2.40860915184021
+				],
+				"sortRadius": 2.3510282039642334
+			},
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 305,
+				"vertexCount": 48,
+				"triangleStart": 1038,
+				"triangleCount": 120,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					0.4726841151714325,
+					-0.24199864268302917,
+					1.6411865949630737
+				],
+				"sortCenterPosition": [
+					0.47331103682518005,
+					-0.24199849367141724,
+					1.649216890335083
+				],
+				"sortRadius": 2.2911901473999023
+			},
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 353,
+				"vertexCount": 74,
+				"triangleStart": 1158,
+				"triangleCount": 144,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					0.077895887196064,
+					-0.23578670620918274,
+					2.8356711864471436
+				],
+				"sortCenterPosition": [
+					0.33404380083084106,
+					-0.2381700873374939,
+					2.747081995010376
+				],
+				"sortRadius": 2.4159746170043945
+			}
+		],
+		"textureUnits": [
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 0,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 0,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 0,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			},
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 1,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 1,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 1,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			},
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 2,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 2,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 2,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			},
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 3,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 3,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 3,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			},
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 4,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 4,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 4,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			}
+		],
+		"fileName": "world/generic/dwarf/passive doodads/excavationwaterwagon/excavationwaterwagon00.skin",
+		"fileDataID": 503389
+	}
+}

@@ -1,0 +1,6 @@
+newmtl mat_streetlamp
+illum 1
+map_Kd streetlamp.png
+newmtl mat_stormwindlampglass
+illum 1
+map_Kd ..\..\..\..\..\dungeons\textures\doodads\stormwindlampglass.png

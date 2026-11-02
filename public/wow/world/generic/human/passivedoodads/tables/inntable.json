@@ -1,0 +1,126 @@
+{
+	"fileType": "m2",
+	"fileDataID": 198603,
+	"fileName": "world/generic/human/passive doodads/tables/inntable.m2",
+	"internalName": "InnTable",
+	"textures": [
+		{
+			"fileNameInternal": "dungeons/textures/decoration/mm_strmwnd_int_furniture_01.blp",
+			"fileNameExternal": "..\\..\\..\\..\\..\\dungeons\\textures\\decoration\\mm_strmwnd_int_furniture_01.png",
+			"mtlName": "mat_mm_strmwnd_int_furniture_01",
+			"flags": 0,
+			"fileDataID": 127441
+		}
+	],
+	"textureTypes": [
+		0
+	],
+	"materials": [
+		{
+			"flags": 0,
+			"blendingMode": 0
+		}
+	],
+	"textureCombos": [
+		0
+	],
+	"colors": [],
+	"textureWeights": [
+		{
+			"globalSeq": 65535,
+			"interpolation": 0,
+			"timestamps": [
+				[
+					0
+				]
+			],
+			"values": [
+				[
+					32767
+				]
+			],
+			"timestampOffsets": null,
+			"valueOffsets": null
+		}
+	],
+	"transparencyLookup": [
+		0
+	],
+	"textureTransforms": [],
+	"textureTransformsLookup": [
+		65535
+	],
+	"boundingBox": {
+		"min": [
+			-1.432252049446106,
+			-1.9918711185455322,
+			-0.0006219016504473984
+		],
+		"max": [
+			1.432251214981079,
+			1.9918713569641113,
+			1.031076192855835
+		]
+	},
+	"boundingSphereRadius": 2.506988048553467,
+	"collisionBox": {
+		"min": [
+			-1.424325942993164,
+			-1.9918713569641113,
+			0.0010537041816860437
+		],
+		"max": [
+			1.4322487115859985,
+			1.9918713569641113,
+			1.0275977849960327
+		]
+	},
+	"collisionSphereRadius": 2.504197359085083,
+	"skin": {
+		"subMeshes": [
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 0,
+				"vertexCount": 94,
+				"triangleStart": 0,
+				"triangleCount": 144,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					0.08164119720458984,
+					0.055921681225299835,
+					0.4888206124305725
+				],
+				"sortCenterPosition": [
+					0.08164119720458984,
+					0.055921681225299835,
+					0.4888206124305725
+				],
+				"sortRadius": 2.5034358501434326
+			}
+		],
+		"textureUnits": [
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 0,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 0,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 0,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			}
+		],
+		"fileName": "world/generic/human/passive doodads/tables/inntable00.skin",
+		"fileDataID": 504745
+	}
+}

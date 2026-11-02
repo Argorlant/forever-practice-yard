@@ -166,7 +166,7 @@ function drawMinion(want: NonNullable<ReturnType<NonNullable<typeof spec.minion>
 }
 // Shaman totems, drawn where they were dropped.
 const totems = new Totems(world.scene);
-if (import.meta.env.DEV && spec.className === 'Shaman') {
+if (spec.className === 'Shaman') {
   for (const id of ['searingTotem', 'magmaTotem', 'strengthOfEarthTotem', 'stoneskinTotem', 'graceOfAirTotem', 'windfuryTotem', 'manaSpringTotem']) {
     void localSource(`totem:${id}`).then((source) => { if (source) totems.useModel(id, source); });
   }
@@ -495,13 +495,13 @@ const hud = new Hud(app, combat, prefs.bar, {
     persist();
   },
 });
-// `npm run dev`: the race and sex of your local models, among those the class has in Forever (~/wow.export/yard-models.json).
-if (import.meta.env.DEV) {
+// Race and sex from the published selection (or wow.export during development).
+{
   void localRaces(classKey(spec.className)).then(async (races) => {
     if (!races) return;
     const sel = document.createElement('select');
     sel.className = 'fight-select';
-    sel.title = "Your character's race and sex (your local models)";
+    sel.title = "Your character's race and sex";
     const label = (who: string) => {
       const [race, sex] = who.split('-');
       return `${race === 'nightelf' ? 'Night Elf' : race[0].toUpperCase() + race.slice(1)} ${sex === 'm' ? 'male' : 'female'}`;

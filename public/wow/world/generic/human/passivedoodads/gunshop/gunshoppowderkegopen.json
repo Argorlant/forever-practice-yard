@@ -1,0 +1,126 @@
+{
+	"fileType": "m2",
+	"fileDataID": 198280,
+	"fileName": "world/generic/human/passive doodads/gunshop/gunshoppowderkegopen.m2",
+	"internalName": "GunShopPowderKegOpen",
+	"textures": [
+		{
+			"fileNameInternal": "world/goober/gunshop.blp",
+			"fileNameExternal": "..\\..\\..\\..\\goober\\gunshop.png",
+			"mtlName": "mat_gunshop",
+			"flags": 0,
+			"fileDataID": 201151
+		}
+	],
+	"textureTypes": [
+		0
+	],
+	"materials": [
+		{
+			"flags": 4,
+			"blendingMode": 1
+		}
+	],
+	"textureCombos": [
+		0
+	],
+	"colors": [],
+	"textureWeights": [
+		{
+			"globalSeq": 65535,
+			"interpolation": 0,
+			"timestamps": [
+				[
+					0
+				]
+			],
+			"values": [
+				[
+					32767
+				]
+			],
+			"timestampOffsets": null,
+			"valueOffsets": null
+		}
+	],
+	"transparencyLookup": [
+		0
+	],
+	"textureTransforms": [],
+	"textureTransformsLookup": [
+		65535
+	],
+	"boundingBox": {
+		"min": [
+			-0.35589319467544556,
+			-0.34772416949272156,
+			-0.0003886499034706503
+		],
+		"max": [
+			0.3553851842880249,
+			0.369838148355484,
+			1.0910500288009644
+		]
+	},
+	"boundingSphereRadius": 0.6210721135139465,
+	"collisionBox": {
+		"min": [
+			-0.3352459669113159,
+			-0.35952436923980713,
+			-0.0003886222839355469
+		],
+		"max": [
+			0.3341396450996399,
+			0.32362326979637146,
+			0.647607147693634
+		]
+	},
+	"collisionSphereRadius": 0.5475753545761108,
+	"skin": {
+		"subMeshes": [
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 0,
+				"vertexCount": 89,
+				"triangleStart": 0,
+				"triangleCount": 210,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					0.015986919403076172,
+					0.0292658731341362,
+					0.5202413201332092
+				],
+				"sortCenterPosition": [
+					-0.00025400519371032715,
+					0.011056989431381226,
+					0.5453307032585144
+				],
+				"sortRadius": 0.6210721135139465
+			}
+		],
+		"textureUnits": [
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 16,
+				"skinSectionIndex": 0,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 0,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 0,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			}
+		],
+		"fileName": "world/generic/human/passive doodads/gunshop/gunshoppowderkegopen00.skin",
+		"fileDataID": 504439
+	}
+}

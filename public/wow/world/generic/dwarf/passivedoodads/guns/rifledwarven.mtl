@@ -1,0 +1,3 @@
+newmtl mat_dwarvenrifle01
+illum 1
+map_Kd ..\gunracks\dwarvenrifle01.png

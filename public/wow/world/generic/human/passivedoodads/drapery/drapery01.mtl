@@ -1,0 +1,6 @@
+newmtl mat_mm_knob
+illum 1
+map_Kd mm_knob.png
+newmtl mat_mm_canopy_side_01
+illum 1
+map_Kd mm_canopy_side_01.png

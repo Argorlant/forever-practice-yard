@@ -1,0 +1,9 @@
+newmtl mat_darnassusmagicalimplements01
+illum 1
+map_Kd darnassusmagicalimplements01.png
+newmtl mat_glow
+illum 1
+map_Kd glow.png
+newmtl mat_star7b
+illum 1
+map_Kd ..\..\..\..\..\spells\star7b.png

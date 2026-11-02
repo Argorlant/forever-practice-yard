@@ -1,0 +1,538 @@
+{
+	"fileType": "m2",
+	"fileDataID": 197020,
+	"fileName": "world/generic/activedoodads/mageportals/stormwindmageportal01.m2",
+	"internalName": "StormwindMagePortal01",
+	"textures": [
+		{
+			"fileNameInternal": "world/generic/activedoodads/worldtreeportals/gatestone06.blp",
+			"fileNameExternal": "..\\worldtreeportals\\gatestone06.png",
+			"mtlName": "mat_gatestone06",
+			"flags": 3,
+			"fileDataID": 197064
+		},
+		{
+			"fileNameInternal": "creature/fireelemental/glowball.blp",
+			"fileNameExternal": "..\\..\\..\\..\\creature\\fireelemental\\glowball.png",
+			"mtlName": "mat_glowball",
+			"flags": 0,
+			"fileDataID": 123938
+		},
+		{
+			"fileNameInternal": "interface/glues/models/ui_mainmenu/energy1.blp",
+			"fileNameExternal": "..\\..\\..\\..\\interface\\glues\\models\\ui_mainmenu\\energy1.png",
+			"mtlName": "mat_energy1",
+			"flags": 0,
+			"fileDataID": 131960
+		},
+		{
+			"fileNameInternal": "world/generic/activedoodads/worldtreeportals/twistednether2.blp",
+			"fileNameExternal": "..\\worldtreeportals\\twistednether2.png",
+			"mtlName": "mat_twistednether2",
+			"flags": 0,
+			"fileDataID": 197065
+		},
+		{
+			"fileNameInternal": "world/generic/activedoodads/worldtreeportals/twistednether8.blp",
+			"fileNameExternal": "..\\worldtreeportals\\twistednether8.png",
+			"mtlName": "mat_twistednether8",
+			"flags": 3,
+			"fileDataID": 197067
+		},
+		{
+			"fileNameInternal": "world/generic/activedoodads/worldtreeportals/twistednether4.blp",
+			"fileNameExternal": "..\\worldtreeportals\\twistednether4.png",
+			"mtlName": "mat_twistednether4",
+			"flags": 0,
+			"fileDataID": 197066
+		}
+	],
+	"textureTypes": [
+		0,
+		0,
+		0,
+		0,
+		0,
+		0
+	],
+	"materials": [
+		{
+			"flags": 1,
+			"blendingMode": 0
+		},
+		{
+			"flags": 16,
+			"blendingMode": 2
+		},
+		{
+			"flags": 21,
+			"blendingMode": 2
+		},
+		{
+			"flags": 21,
+			"blendingMode": 2
+		},
+		{
+			"flags": 21,
+			"blendingMode": 2
+		}
+	],
+	"textureCombos": [
+		3,
+		4,
+		5,
+		0
+	],
+	"colors": [],
+	"textureWeights": [
+		{
+			"globalSeq": 65535,
+			"interpolation": 1,
+			"timestamps": [
+				[
+					0,
+					533,
+					1233,
+					2000,
+					3067,
+					3367,
+					4133,
+					4767,
+					5467,
+					6233,
+					7300,
+					7600,
+					8367,
+					8933,
+					9633,
+					10400,
+					11467,
+					11767,
+					12533,
+					13100,
+					13800,
+					14567,
+					15633,
+					15933,
+					16667
+				],
+				[
+					0
+				],
+				[
+					0,
+					2000
+				],
+				[
+					0,
+					2000
+				]
+			],
+			"values": [
+				[
+					17759,
+					15199,
+					6140,
+					2525,
+					9472,
+					13431,
+					17759,
+					15199,
+					6140,
+					2525,
+					9472,
+					13431,
+					17759,
+					15199,
+					6140,
+					2525,
+					9472,
+					13431,
+					17759,
+					15199,
+					6140,
+					2525,
+					9472,
+					13431,
+					17759
+				],
+				[
+					0
+				],
+				[
+					0,
+					17759
+				],
+				[
+					17759,
+					0
+				]
+			],
+			"timestampOffsets": null,
+			"valueOffsets": null
+		},
+		{
+			"globalSeq": 65535,
+			"interpolation": 1,
+			"timestamps": [
+				[
+					0,
+					633,
+					1000,
+					1567,
+					2100,
+					2933,
+					3333,
+					4067,
+					4433,
+					5000,
+					5533,
+					6367,
+					6767,
+					7467,
+					7833,
+					8400,
+					8933,
+					9767,
+					10167,
+					10733,
+					11100,
+					11667,
+					12200,
+					13033,
+					13433,
+					13967,
+					14333,
+					14900,
+					15433,
+					16267,
+					16667
+				],
+				[
+					0
+				],
+				[
+					0,
+					2000
+				],
+				[
+					0,
+					2000
+				]
+			],
+			"values": [
+				[
+					3277,
+					11851,
+					26181,
+					31139,
+					26634,
+					4759,
+					3277,
+					11851,
+					26181,
+					31139,
+					26634,
+					4759,
+					3277,
+					11851,
+					26181,
+					31139,
+					26634,
+					4759,
+					3277,
+					11851,
+					26181,
+					31139,
+					26634,
+					4759,
+					3277,
+					11851,
+					26181,
+					31139,
+					26634,
+					4759,
+					3277
+				],
+				[
+					0
+				],
+				[
+					0,
+					3277
+				],
+				[
+					3277,
+					0
+				]
+			],
+			"timestampOffsets": null,
+			"valueOffsets": null
+		},
+		{
+			"globalSeq": 65535,
+			"interpolation": 1,
+			"timestamps": [
+				[],
+				[
+					0
+				],
+				[
+					0,
+					2000
+				],
+				[
+					0,
+					2000
+				]
+			],
+			"values": [
+				[],
+				[
+					0
+				],
+				[
+					0,
+					32767
+				],
+				[
+					32767,
+					0
+				]
+			],
+			"timestampOffsets": null,
+			"valueOffsets": null
+		},
+		{
+			"globalSeq": 65535,
+			"interpolation": 0,
+			"timestamps": [
+				[
+					0
+				]
+			],
+			"values": [
+				[
+					32767
+				]
+			],
+			"timestampOffsets": null,
+			"valueOffsets": null
+		}
+	],
+	"transparencyLookup": [
+		0,
+		1,
+		2,
+		3
+	],
+	"textureTransforms": [],
+	"textureTransformsLookup": [
+		65535
+	],
+	"boundingBox": {
+		"min": [
+			-4.22825288772583,
+			-23.14967155456543,
+			-10.14841365814209
+		],
+		"max": [
+			24.491947174072266,
+			24.506427764892578,
+			34.82771301269531
+		]
+	},
+	"boundingSphereRadius": 36.49873352050781,
+	"collisionBox": {
+		"min": [
+			-3.977909564971924,
+			-18.22893714904785,
+			-2.4098384380340576
+		],
+		"max": [
+			4.138731002807617,
+			18.118637084960938,
+			29.304473876953125
+		]
+	},
+	"collisionSphereRadius": 19.600421905517578,
+	"skin": {
+		"subMeshes": [
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 0,
+				"vertexCount": 113,
+				"triangleStart": 0,
+				"triangleCount": 576,
+				"boneCount": 10,
+				"boneStart": 0,
+				"boneInfluences": 2,
+				"centerBoneIndex": 3,
+				"centerPosition": [
+					0.009530439972877502,
+					-0.042191848158836365,
+					12.503867149353027
+				],
+				"sortCenterPosition": [
+					0.009530439041554928,
+					-0.042191505432128906,
+					12.50386905670166
+				],
+				"sortRadius": 15.680471420288086
+			},
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 113,
+				"vertexCount": 113,
+				"triangleStart": 576,
+				"triangleCount": 576,
+				"boneCount": 10,
+				"boneStart": 0,
+				"boneInfluences": 2,
+				"centerBoneIndex": 6,
+				"centerPosition": [
+					0.5776025056838989,
+					-0.042191848158836365,
+					12.503867149353027
+				],
+				"sortCenterPosition": [
+					0.5776025056838989,
+					-0.042191505432128906,
+					12.50386905670166
+				],
+				"sortRadius": 15.680471420288086
+			},
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 226,
+				"vertexCount": 113,
+				"triangleStart": 1152,
+				"triangleCount": 576,
+				"boneCount": 10,
+				"boneStart": 0,
+				"boneInfluences": 2,
+				"centerBoneIndex": 9,
+				"centerPosition": [
+					-0.4109770953655243,
+					-0.042191848158836365,
+					12.503867149353027
+				],
+				"sortCenterPosition": [
+					-0.4109768867492676,
+					-0.042191505432128906,
+					12.50386905670166
+				],
+				"sortRadius": 15.680471420288086
+			},
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 339,
+				"vertexCount": 108,
+				"triangleStart": 1728,
+				"triangleCount": 600,
+				"boneCount": 10,
+				"boneStart": 0,
+				"boneInfluences": 1,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					0.04531526938080788,
+					-0.023015905171632767,
+					11.449607849121094
+				],
+				"sortCenterPosition": [
+					0.04531526938080788,
+					-0.023015905171632767,
+					11.449607849121094
+				],
+				"sortRadius": 18.8037109375
+			}
+		],
+		"textureUnits": [
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 3,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 0,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 3,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 3,
+				"textureTransformComboIndex": 0
+			},
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 16,
+				"skinSectionIndex": 3,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 1,
+				"materialLayer": 1,
+				"textureCount": 1,
+				"textureComboIndex": 3,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 3,
+				"textureTransformComboIndex": 0
+			},
+			{
+				"flags": 0,
+				"priority": 0,
+				"shaderID": 16,
+				"skinSectionIndex": 0,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 2,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 0,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			},
+			{
+				"flags": 0,
+				"priority": 0,
+				"shaderID": 16,
+				"skinSectionIndex": 1,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 3,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 1,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 1,
+				"textureTransformComboIndex": 0
+			},
+			{
+				"flags": 0,
+				"priority": 0,
+				"shaderID": 16,
+				"skinSectionIndex": 2,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 4,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 2,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 2,
+				"textureTransformComboIndex": 0
+			}
+		],
+		"fileName": "world/generic/activedoodads/mageportals/stormwindmageportal0100.skin",
+		"fileDataID": 503111
+	}
+}

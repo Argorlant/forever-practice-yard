@@ -1,0 +1,178 @@
+{
+	"fileType": "m2",
+	"fileDataID": 198561,
+	"fileName": "world/generic/human/passive doodads/statues/statuekhadgar.m2",
+	"internalName": "StatueKhadgar",
+	"textures": [
+		{
+			"fileNameInternal": "world/generic/human/passive doodads/statues/khadgar01.blp",
+			"fileNameExternal": "khadgar01.png",
+			"mtlName": "mat_khadgar01",
+			"flags": 0,
+			"fileDataID": 198554
+		},
+		{
+			"fileNameInternal": "world/generic/human/passive doodads/statues/khadgarbeard.blp",
+			"fileNameExternal": "khadgarbeard.png",
+			"mtlName": "mat_khadgarbeard",
+			"flags": 0,
+			"fileDataID": 198555
+		}
+	],
+	"textureTypes": [
+		0,
+		0
+	],
+	"materials": [
+		{
+			"flags": 0,
+			"blendingMode": 0
+		},
+		{
+			"flags": 0,
+			"blendingMode": 0
+		}
+	],
+	"textureCombos": [
+		0,
+		1
+	],
+	"colors": [],
+	"textureWeights": [
+		{
+			"globalSeq": 65535,
+			"interpolation": 0,
+			"timestamps": [
+				[
+					0
+				]
+			],
+			"values": [
+				[
+					32767
+				]
+			],
+			"timestampOffsets": null,
+			"valueOffsets": null
+		}
+	],
+	"transparencyLookup": [
+		0
+	],
+	"textureTransforms": [],
+	"textureTransformsLookup": [
+		65535
+	],
+	"boundingBox": {
+		"min": [
+			-7.51443338394165,
+			-6.347858905792236,
+			-0.045016396790742874
+		],
+		"max": [
+			8.462882041931152,
+			7.271799564361572,
+			28.572967529296875
+		]
+	},
+	"boundingSphereRadius": 16.909940719604492,
+	"collisionBox": {
+		"min": [
+			-7.514432430267334,
+			-4.596960544586182,
+			-0.009149214252829552
+		],
+		"max": [
+			1.2835952043533325,
+			4.255415439605713,
+			15.12287425994873
+		]
+	},
+	"collisionSphereRadius": 9.406725883483887,
+	"skin": {
+		"subMeshes": [
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 0,
+				"vertexCount": 418,
+				"triangleStart": 0,
+				"triangleCount": 1668,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					-1.4260650873184204,
+					-0.7739564776420593,
+					13.022111892700195
+				],
+				"sortCenterPosition": [
+					0.474224328994751,
+					0.46197032928466797,
+					14.263975143432617
+				],
+				"sortRadius": 16.909940719604492
+			},
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 418,
+				"vertexCount": 36,
+				"triangleStart": 1668,
+				"triangleCount": 135,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					-1.6385138034820557,
+					-2.0580556392669678,
+					16.46743392944336
+				],
+				"sortCenterPosition": [
+					-1.442646861076355,
+					-2.222156524658203,
+					13.499197006225586
+				],
+				"sortRadius": 4.975656986236572
+			}
+		],
+		"textureUnits": [
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 0,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 0,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 0,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			},
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 1,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 1,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 1,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			}
+		],
+		"fileName": "world/generic/human/passive doodads/statues/statuekhadgar00.skin",
+		"fileDataID": 504642
+	}
+}

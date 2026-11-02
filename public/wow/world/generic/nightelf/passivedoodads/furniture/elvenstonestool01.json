@@ -1,0 +1,126 @@
+{
+	"fileType": "m2",
+	"fileDataID": 198755,
+	"fileName": "world/generic/nightelf/passive doodads/furniture/elvenstonestool01.m2",
+	"internalName": "ElvenStoneStool01",
+	"textures": [
+		{
+			"fileNameInternal": "dungeons/textures/walls/mm_drnss_wall_04.blp",
+			"fileNameExternal": "..\\..\\..\\..\\..\\dungeons\\textures\\walls\\mm_drnss_wall_04.png",
+			"mtlName": "mat_mm_drnss_wall_04",
+			"flags": 3,
+			"fileDataID": 129906
+		}
+	],
+	"textureTypes": [
+		0
+	],
+	"materials": [
+		{
+			"flags": 0,
+			"blendingMode": 1
+		}
+	],
+	"textureCombos": [
+		0
+	],
+	"colors": [],
+	"textureWeights": [
+		{
+			"globalSeq": 65535,
+			"interpolation": 0,
+			"timestamps": [
+				[
+					0
+				]
+			],
+			"values": [
+				[
+					32767
+				]
+			],
+			"timestampOffsets": null,
+			"valueOffsets": null
+		}
+	],
+	"transparencyLookup": [
+		0
+	],
+	"textureTransforms": [],
+	"textureTransformsLookup": [
+		65535
+	],
+	"boundingBox": {
+		"min": [
+			-1.0082899332046509,
+			-0.7656911015510559,
+			-0.013402974233031273
+		],
+		"max": [
+			0.5963566899299622,
+			0.8259488344192505,
+			0.7437035441398621
+		]
+	},
+	"boundingSphereRadius": 0.8871757388114929,
+	"collisionBox": {
+		"min": [
+			-0.9983160495758057,
+			-0.7613240480422974,
+			-0.007529532071202993
+		],
+		"max": [
+			0.5954585671424866,
+			0.8324505686759949,
+			0.758879542350769
+		]
+	},
+	"collisionSphereRadius": 0.8842369914054871,
+	"skin": {
+		"subMeshes": [
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 0,
+				"vertexCount": 146,
+				"triangleStart": 0,
+				"triangleCount": 312,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					-0.1935640126466751,
+					0.02993215247988701,
+					0.3675591051578522
+				],
+				"sortCenterPosition": [
+					-0.20596662163734436,
+					0.03012886643409729,
+					0.3651502728462219
+				],
+				"sortRadius": 0.8871757984161377
+			}
+		],
+		"textureUnits": [
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 16,
+				"skinSectionIndex": 0,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 0,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 0,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			}
+		],
+		"fileName": "world/generic/nightelf/passive doodads/furniture/elvenstonestool0100.skin",
+		"fileDataID": 504859
+	}
+}

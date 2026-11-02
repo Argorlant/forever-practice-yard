@@ -1,0 +1,126 @@
+{
+	"fileType": "m2",
+	"fileDataID": 197849,
+	"fileName": "world/generic/human/passive doodads/archerytargets/stormwindarcherytarget01.m2",
+	"internalName": "StormWindArcheryTarget01",
+	"textures": [
+		{
+			"fileNameInternal": "creature/object/archerytarget01.blp",
+			"fileNameExternal": "..\\..\\..\\..\\..\\creature\\object\\archerytarget01.png",
+			"mtlName": "mat_archerytarget01",
+			"flags": 0,
+			"fileDataID": 125255
+		}
+	],
+	"textureTypes": [
+		0
+	],
+	"materials": [
+		{
+			"flags": 0,
+			"blendingMode": 0
+		}
+	],
+	"textureCombos": [
+		0
+	],
+	"colors": [],
+	"textureWeights": [
+		{
+			"globalSeq": 65535,
+			"interpolation": 0,
+			"timestamps": [
+				[
+					0
+				]
+			],
+			"values": [
+				[
+					32767
+				]
+			],
+			"timestampOffsets": null,
+			"valueOffsets": null
+		}
+	],
+	"transparencyLookup": [
+		0
+	],
+	"textureTransforms": [],
+	"textureTransformsLookup": [
+		65535
+	],
+	"boundingBox": {
+		"min": [
+			-2.0838398933410645,
+			-1.2042399644851685,
+			-0.13255399465560913
+		],
+		"max": [
+			0.8572689890861511,
+			1.3080999851226807,
+			4.583270072937012
+		]
+	},
+	"boundingSphereRadius": 2.739959955215454,
+	"collisionBox": {
+		"min": [
+			-2.0942299365997314,
+			-1.1547199487686157,
+			-0.07285749912261963
+		],
+		"max": [
+			0.6625639796257019,
+			1.2777400016784668,
+			4.603769779205322
+		]
+	},
+	"collisionSphereRadius": 2.974374532699585,
+	"skin": {
+		"subMeshes": [
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 0,
+				"vertexCount": 286,
+				"triangleStart": 0,
+				"triangleCount": 576,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					-0.3787156641483307,
+					0.036790378391742706,
+					2.2407164573669434
+				],
+				"sortCenterPosition": [
+					-0.6132854223251343,
+					0.051930010318756104,
+					2.225358009338379
+				],
+				"sortRadius": 2.739964008331299
+			}
+		],
+		"textureUnits": [
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 0,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 0,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 0,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			}
+		],
+		"fileName": "world/generic/human/passive doodads/archerytargets/stormwindarcherytarget0100.skin",
+		"fileDataID": 504090
+	}
+}

@@ -1,0 +1,126 @@
+{
+	"fileType": "m2",
+	"fileDataID": 198006,
+	"fileName": "world/generic/human/passive doodads/beerkegs/beerkeg02.m2",
+	"internalName": "BeerKeg02",
+	"textures": [
+		{
+			"fileNameInternal": "world/generic/human/passive doodads/beerkegs/beerkegcombo.blp",
+			"fileNameExternal": "beerkegcombo.png",
+			"mtlName": "mat_beerkegcombo",
+			"flags": 3,
+			"fileDataID": 198007
+		}
+	],
+	"textureTypes": [
+		0
+	],
+	"materials": [
+		{
+			"flags": 0,
+			"blendingMode": 0
+		}
+	],
+	"textureCombos": [
+		0
+	],
+	"colors": [],
+	"textureWeights": [
+		{
+			"globalSeq": 65535,
+			"interpolation": 0,
+			"timestamps": [
+				[
+					0
+				]
+			],
+			"values": [
+				[
+					32767
+				]
+			],
+			"timestampOffsets": null,
+			"valueOffsets": null
+		}
+	],
+	"transparencyLookup": [
+		0
+	],
+	"textureTransforms": [],
+	"textureTransformsLookup": [
+		65535
+	],
+	"boundingBox": {
+		"min": [
+			-0.667047917842865,
+			-0.6196256279945374,
+			0.010506153106689453
+		],
+		"max": [
+			0.6868569254875183,
+			0.6478534936904907,
+			1.2779852151870728
+		]
+	},
+	"boundingSphereRadius": 0.8569141626358032,
+	"collisionBox": {
+		"min": [
+			-0.6642699837684631,
+			-0.6437576413154602,
+			-0.01362593937665224
+		],
+		"max": [
+			0.682136058807373,
+			0.6719855666160583,
+			1.3021172285079956
+		]
+	},
+	"collisionSphereRadius": 0.8561540246009827,
+	"skin": {
+		"subMeshes": [
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 0,
+				"vertexCount": 351,
+				"triangleStart": 0,
+				"triangleCount": 828,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					0.0776430144906044,
+					0.013854900375008583,
+					0.6078009605407715
+				],
+				"sortCenterPosition": [
+					0.00990450382232666,
+					0.014113932847976685,
+					0.6442456841468811
+				],
+				"sortRadius": 0.8569141626358032
+			}
+		],
+		"textureUnits": [
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 0,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 0,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 0,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			}
+		],
+		"fileName": "world/generic/human/passive doodads/beerkegs/beerkeg0200.skin",
+		"fileDataID": 504202
+	}
+}

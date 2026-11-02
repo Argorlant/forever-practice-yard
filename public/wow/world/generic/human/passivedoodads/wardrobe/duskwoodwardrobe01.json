@@ -1,0 +1,126 @@
+{
+	"fileType": "m2",
+	"fileDataID": 198633,
+	"fileName": "world/generic/human/passive doodads/wardrobe/duskwoodwardrobe01.m2",
+	"internalName": "DuskwoodWardrobe01",
+	"textures": [
+		{
+			"fileNameInternal": "world/generic/human/passive doodads/tables/duskwoodfurniture01.blp",
+			"fileNameExternal": "..\\tables\\duskwoodfurniture01.png",
+			"mtlName": "mat_duskwoodfurniture01",
+			"flags": 0,
+			"fileDataID": 198601
+		}
+	],
+	"textureTypes": [
+		0
+	],
+	"materials": [
+		{
+			"flags": 0,
+			"blendingMode": 0
+		}
+	],
+	"textureCombos": [
+		0
+	],
+	"colors": [],
+	"textureWeights": [
+		{
+			"globalSeq": 65535,
+			"interpolation": 0,
+			"timestamps": [
+				[
+					0
+				]
+			],
+			"values": [
+				[
+					32767
+				]
+			],
+			"timestampOffsets": null,
+			"valueOffsets": null
+		}
+	],
+	"transparencyLookup": [
+		0
+	],
+	"textureTransforms": [],
+	"textureTransformsLookup": [
+		65535
+	],
+	"boundingBox": {
+		"min": [
+			-0.31981009244918823,
+			-1.0355249643325806,
+			-0.003654533065855503
+		],
+		"max": [
+			1.001534104347229,
+			1.0619391202926636,
+			3.4173362255096436
+		]
+	},
+	"boundingSphereRadius": 2.1123733520507812,
+	"collisionBox": {
+		"min": [
+			-0.319153368473053,
+			-1.0355249643325806,
+			-0.004656791687011719
+		],
+		"max": [
+			1.0015339851379395,
+			1.046373963356018,
+			3.4210519790649414
+		]
+	},
+	"collisionSphereRadius": 2.1103317737579346,
+	"skin": {
+		"subMeshes": [
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 0,
+				"vertexCount": 154,
+				"triangleStart": 0,
+				"triangleCount": 234,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					0.2997733950614929,
+					0.007867642678320408,
+					0.9501135945320129
+				],
+				"sortCenterPosition": [
+					0.3408620059490204,
+					0.013207077980041504,
+					1.7068408727645874
+				],
+				"sortRadius": 2.1123733520507812
+			}
+		],
+		"textureUnits": [
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 0,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 0,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 0,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			}
+		],
+		"fileName": "world/generic/human/passive doodads/wardrobe/duskwoodwardrobe0100.skin",
+		"fileDataID": 504773
+	}
+}

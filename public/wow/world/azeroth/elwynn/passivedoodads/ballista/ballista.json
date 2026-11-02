@@ -1,0 +1,665 @@
+{
+	"fileType": "m2",
+	"fileDataID": 189652,
+	"fileName": "world/azeroth/elwynn/passivedoodads/ballista/ballista.m2",
+	"internalName": "Ballista",
+	"textures": [
+		{
+			"fileNameInternal": "world/azeroth/elwynn/passivedoodads/ballista/balistametal02.blp",
+			"fileNameExternal": "balistametal02.png",
+			"mtlName": "mat_balistametal02",
+			"flags": 3,
+			"fileDataID": 189644
+		},
+		{
+			"fileNameInternal": "world/azeroth/elwynn/passivedoodads/ballista/balistawood03.blp",
+			"fileNameExternal": "balistawood03.png",
+			"mtlName": "mat_balistawood03",
+			"flags": 3,
+			"fileDataID": 189651
+		},
+		{
+			"fileNameInternal": "world/azeroth/elwynn/passivedoodads/ballista/balistawood01.blp",
+			"fileNameExternal": "balistawood01.png",
+			"mtlName": "mat_balistawood01",
+			"flags": 3,
+			"fileDataID": 189649
+		},
+		{
+			"fileNameInternal": "world/azeroth/elwynn/passivedoodads/ballista/balistawood02.blp",
+			"fileNameExternal": "balistawood02.png",
+			"mtlName": "mat_balistawood02",
+			"flags": 0,
+			"fileDataID": 189650
+		},
+		{
+			"fileNameInternal": "world/azeroth/duskwood/buildings/gypsywagon/balistarope01.blp",
+			"fileNameExternal": "..\\..\\..\\duskwood\\buildings\\gypsywagon\\balistarope01.png",
+			"mtlName": "mat_balistarope01",
+			"flags": 3,
+			"fileDataID": 189363
+		},
+		{
+			"fileNameInternal": "world/azeroth/elwynn/passivedoodads/ballista/balistawheel01.blp",
+			"fileNameExternal": "balistawheel01.png",
+			"mtlName": "mat_balistawheel01",
+			"flags": 3,
+			"fileDataID": 189647
+		},
+		{
+			"fileNameInternal": "world/azeroth/elwynn/passivedoodads/ballista/balistawheel02.blp",
+			"fileNameExternal": "balistawheel02.png",
+			"mtlName": "mat_balistawheel02",
+			"flags": 0,
+			"fileDataID": 189648
+		},
+		{
+			"fileNameInternal": "world/azeroth/elwynn/passivedoodads/ballista/balistaarrow.blp",
+			"fileNameExternal": "balistaarrow.png",
+			"mtlName": "mat_balistaarrow",
+			"flags": 3,
+			"fileDataID": 189643
+		},
+		{
+			"fileNameInternal": "item/objectcomponents/weapon/armorreflect3.blp",
+			"fileNameExternal": "..\\..\\..\\..\\..\\item\\objectcomponents\\weapon\\armorreflect3.png",
+			"mtlName": "mat_armorreflect3",
+			"flags": 3,
+			"fileDataID": 144328
+		},
+		{
+			"fileNameInternal": "world/azeroth/elwynn/passivedoodads/ballista/balistametal03.blp",
+			"fileNameExternal": "balistametal03.png",
+			"mtlName": "mat_balistametal03",
+			"flags": 0,
+			"fileDataID": 189645
+		},
+		{
+			"fileNameInternal": "dungeons/textures/metal/battlegladechain01.blp",
+			"fileNameExternal": "..\\..\\..\\..\\..\\dungeons\\textures\\metal\\battlegladechain01.png",
+			"mtlName": "mat_battlegladechain01",
+			"flags": 0,
+			"fileDataID": 128120
+		},
+		{
+			"fileNameInternal": "world/azeroth/elwynn/passivedoodads/ballista/balistashield01.blp",
+			"fileNameExternal": "balistashield01.png",
+			"mtlName": "mat_balistashield01",
+			"flags": 0,
+			"fileDataID": 189646
+		}
+	],
+	"textureTypes": [
+		0,
+		0,
+		0,
+		0,
+		0,
+		0,
+		0,
+		0,
+		0,
+		0,
+		0,
+		0
+	],
+	"materials": [
+		{
+			"flags": 0,
+			"blendingMode": 0
+		},
+		{
+			"flags": 0,
+			"blendingMode": 0
+		},
+		{
+			"flags": 0,
+			"blendingMode": 0
+		},
+		{
+			"flags": 4,
+			"blendingMode": 0
+		},
+		{
+			"flags": 0,
+			"blendingMode": 0
+		},
+		{
+			"flags": 0,
+			"blendingMode": 0
+		},
+		{
+			"flags": 0,
+			"blendingMode": 0
+		},
+		{
+			"flags": 0,
+			"blendingMode": 0
+		},
+		{
+			"flags": 16,
+			"blendingMode": 4
+		},
+		{
+			"flags": 0,
+			"blendingMode": 0
+		},
+		{
+			"flags": 4,
+			"blendingMode": 1
+		},
+		{
+			"flags": 0,
+			"blendingMode": 0
+		},
+		{
+			"flags": 16,
+			"blendingMode": 4
+		}
+	],
+	"textureCombos": [
+		0,
+		1,
+		2,
+		3,
+		4,
+		5,
+		6,
+		7,
+		8,
+		9,
+		10,
+		11,
+		8
+	],
+	"colors": [],
+	"textureWeights": [
+		{
+			"globalSeq": 65535,
+			"interpolation": 0,
+			"timestamps": [
+				[
+					0
+				]
+			],
+			"values": [
+				[
+					32767
+				]
+			],
+			"timestampOffsets": null,
+			"valueOffsets": null
+		}
+	],
+	"transparencyLookup": [
+		0
+	],
+	"textureTransforms": [],
+	"textureTransformsLookup": [
+		65535,
+		65535
+	],
+	"boundingBox": {
+		"min": [
+			-4.0590057373046875,
+			-6.656129837036133,
+			-0.011045360006392002
+		],
+		"max": [
+			8.26736068725586,
+			6.75681734085083,
+			4.669585704803467
+		]
+	},
+	"boundingSphereRadius": 7.063944339752197,
+	"collisionBox": {
+		"min": [
+			-4.059004783630371,
+			-6.656129837036133,
+			-0.011045529507100582
+		],
+		"max": [
+			8.26736068725586,
+			6.75681734085083,
+			4.669585704803467
+		]
+	},
+	"collisionSphereRadius": 7.063945293426514,
+	"skin": {
+		"subMeshes": [
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 0,
+				"vertexCount": 79,
+				"triangleStart": 0,
+				"triangleCount": 132,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					0.961699903011322,
+					0.21218816936016083,
+					2.4558255672454834
+				],
+				"sortCenterPosition": [
+					0.9931987524032593,
+					0.10625141859054565,
+					2.596479654312134
+				],
+				"sortRadius": 4.7447309494018555
+			},
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 79,
+				"vertexCount": 122,
+				"triangleStart": 132,
+				"triangleCount": 204,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					2.724825859069824,
+					0.12077397853136063,
+					2.9203317165374756
+				],
+				"sortCenterPosition": [
+					1.169849157333374,
+					0.05034375190734863,
+					3.003124952316284
+				],
+				"sortRadius": 6.721499919891357
+			},
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 201,
+				"vertexCount": 85,
+				"triangleStart": 336,
+				"triangleCount": 150,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					2.3469784259796143,
+					0.10753761976957321,
+					1.906153678894043
+				],
+				"sortCenterPosition": [
+					1.1017781496047974,
+					0.10325753688812256,
+					2.1502747535705566
+				],
+				"sortRadius": 5.517574787139893
+			},
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 286,
+				"vertexCount": 45,
+				"triangleStart": 486,
+				"triangleCount": 114,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					0.1579352617263794,
+					0.10801540315151215,
+					1.6718415021896362
+				],
+				"sortCenterPosition": [
+					1.165360689163208,
+					0.10325753688812256,
+					1.7550785541534424
+				],
+				"sortRadius": 5.406444549560547
+			},
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 331,
+				"vertexCount": 32,
+				"triangleStart": 600,
+				"triangleCount": 48,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					-1.8447340726852417,
+					0.08643118292093277,
+					2.623422622680664
+				],
+				"sortCenterPosition": [
+					-1.2368745803833008,
+					0.03504204750061035,
+					2.663757801055908
+				],
+				"sortRadius": 5.965909004211426
+			},
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 363,
+				"vertexCount": 136,
+				"triangleStart": 648,
+				"triangleCount": 216,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					0.9036692976951599,
+					0.11364784091711044,
+					1.2543820142745972
+				],
+				"sortCenterPosition": [
+					0.7733821868896484,
+					0.10613274574279785,
+					1.3255577087402344
+				],
+				"sortRadius": 5.882453441619873
+			},
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 499,
+				"vertexCount": 118,
+				"triangleStart": 864,
+				"triangleCount": 216,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					0.9327178597450256,
+					0.08098720014095306,
+					1.1828439235687256
+				],
+				"sortCenterPosition": [
+					0.7733824253082275,
+					0.10613250732421875,
+					1.3255577087402344
+				],
+				"sortRadius": 5.8824543952941895
+			},
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 617,
+				"vertexCount": 32,
+				"triangleStart": 1080,
+				"triangleCount": 72,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					6.356640815734863,
+					0.11300019919872284,
+					3.7272181510925293
+				],
+				"sortCenterPosition": [
+					6.688966751098633,
+					0.12172064185142517,
+					3.678954601287842
+				],
+				"sortRadius": 1.6050442457199097
+			},
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 649,
+				"vertexCount": 39,
+				"triangleStart": 1152,
+				"triangleCount": 72,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					4.712030410766602,
+					0.12011772394180298,
+					2.6197516918182373
+				],
+				"sortCenterPosition": [
+					4.5461745262146,
+					0.10625141859054565,
+					2.7260046005249023
+				],
+				"sortRadius": 2.2790732383728027
+			},
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 688,
+				"vertexCount": 32,
+				"triangleStart": 1224,
+				"triangleCount": 48,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					5.821491241455078,
+					0.1416625678539276,
+					3.288177251815796
+				],
+				"sortCenterPosition": [
+					5.821491241455078,
+					0.1416625678539276,
+					3.288177251815796
+				],
+				"sortRadius": 2.119675636291504
+			},
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 720,
+				"vertexCount": 88,
+				"triangleStart": 1272,
+				"triangleCount": 216,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					6.327335357666016,
+					0.14166249334812164,
+					1.9561793804168701
+				],
+				"sortCenterPosition": [
+					6.327335357666016,
+					0.14166249334812164,
+					1.9561793804168701
+				],
+				"sortRadius": 2.646674394607544
+			}
+		],
+		"textureUnits": [
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 0,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 0,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 0,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			},
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 1,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 1,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 1,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			},
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 2,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 2,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 2,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			},
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 3,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 3,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 3,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			},
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 4,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 4,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 4,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			},
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 5,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 5,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 5,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			},
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 6,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 6,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 6,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			},
+			{
+				"flags": 144,
+				"priority": 0,
+				"shaderID": 32769,
+				"skinSectionIndex": 7,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 7,
+				"materialLayer": 0,
+				"textureCount": 2,
+				"textureComboIndex": 7,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			},
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 8,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 9,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 9,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			},
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 16,
+				"skinSectionIndex": 9,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 10,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 10,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			},
+			{
+				"flags": 144,
+				"priority": 0,
+				"shaderID": 32769,
+				"skinSectionIndex": 10,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 11,
+				"materialLayer": 0,
+				"textureCount": 2,
+				"textureComboIndex": 11,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			}
+		],
+		"fileName": "world/azeroth/elwynn/passivedoodads/ballista/ballista00.skin",
+		"fileDataID": 494452
+	}
+}

@@ -1,0 +1,446 @@
+{
+	"fileType": "m2",
+	"fileDataID": 198630,
+	"fileName": "world/generic/human/passive doodads/vials/vialsbottles.m2",
+	"internalName": "VialsBottles",
+	"textures": [
+		{
+			"fileNameInternal": "world/generic/human/passive doodads/vials/iron04.blp",
+			"fileNameExternal": "iron04.png",
+			"mtlName": "mat_iron04",
+			"flags": 3,
+			"fileDataID": 198624
+		},
+		{
+			"fileNameInternal": "world/generic/human/passive doodads/vials/vial04.blp",
+			"fileNameExternal": "vial04.png",
+			"mtlName": "mat_vial04",
+			"flags": 3,
+			"fileDataID": 198629
+		},
+		{
+			"fileNameInternal": "world/generic/human/passive doodads/vials/glassbottle04.blp",
+			"fileNameExternal": "glassbottle04.png",
+			"mtlName": "mat_glassbottle04",
+			"flags": 3,
+			"fileDataID": 198623
+		},
+		{
+			"fileNameInternal": "world/generic/human/passive doodads/vials/ringalpha02.blp",
+			"fileNameExternal": "ringalpha02.png",
+			"mtlName": "mat_ringalpha02",
+			"flags": 3,
+			"fileDataID": 198625
+		},
+		{
+			"fileNameInternal": "world/generic/human/passive doodads/vials/tube02.blp",
+			"fileNameExternal": "tube02.png",
+			"mtlName": "mat_tube02",
+			"flags": 3,
+			"fileDataID": 198627
+		},
+		{
+			"fileNameInternal": "world/generic/human/passive doodads/vials/vial03.blp",
+			"fileNameExternal": "vial03.png",
+			"mtlName": "mat_vial03",
+			"flags": 3,
+			"fileDataID": 198628
+		},
+		{
+			"fileNameInternal": "world/generic/human/passive doodads/cauldrons/waterfallsteam.blp",
+			"fileNameExternal": "..\\cauldrons\\waterfallsteam.png",
+			"mtlName": "mat_waterfallsteam",
+			"flags": 0,
+			"fileDataID": 198103
+		},
+		{
+			"fileNameInternal": "world/generic/human/passive doodads/vials/glass2bottle04.blp",
+			"fileNameExternal": "glass2bottle04.png",
+			"mtlName": "mat_glass2bottle04",
+			"flags": 3,
+			"fileDataID": 198622
+		}
+	],
+	"textureTypes": [
+		0,
+		0,
+		0,
+		0,
+		0,
+		0,
+		0,
+		0
+	],
+	"materials": [
+		{
+			"flags": 4,
+			"blendingMode": 0
+		},
+		{
+			"flags": 4,
+			"blendingMode": 0
+		},
+		{
+			"flags": 4,
+			"blendingMode": 0
+		},
+		{
+			"flags": 4,
+			"blendingMode": 1
+		},
+		{
+			"flags": 0,
+			"blendingMode": 0
+		},
+		{
+			"flags": 4,
+			"blendingMode": 0
+		},
+		{
+			"flags": 4,
+			"blendingMode": 0
+		}
+	],
+	"textureCombos": [
+		0,
+		1,
+		2,
+		3,
+		4,
+		5,
+		7
+	],
+	"colors": [],
+	"textureWeights": [
+		{
+			"globalSeq": 65535,
+			"interpolation": 0,
+			"timestamps": [
+				[
+					0
+				]
+			],
+			"values": [
+				[
+					32767
+				]
+			],
+			"timestampOffsets": null,
+			"valueOffsets": null
+		}
+	],
+	"transparencyLookup": [
+		0
+	],
+	"textureTransforms": [],
+	"textureTransformsLookup": [
+		65535
+	],
+	"boundingBox": {
+		"min": [
+			-1.5998289585113525,
+			-1.220367193222046,
+			-0.3298527002334595
+		],
+		"max": [
+			1.5945727825164795,
+			1.9740345478057861,
+			2.864549160003662
+		]
+	},
+	"boundingSphereRadius": 2.0456619262695312,
+	"collisionBox": {
+		"min": [
+			-0.2323625385761261,
+			-1.1766986846923828,
+			0
+		],
+		"max": [
+			0.19876708090305328,
+			0.9406269788742065,
+			1.2742276191711426
+		]
+	},
+	"collisionSphereRadius": 1.2542524337768555,
+	"skin": {
+		"subMeshes": [
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 0,
+				"vertexCount": 192,
+				"triangleStart": 0,
+				"triangleCount": 378,
+				"boneCount": 2,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					-0.002823947463184595,
+					-0.06342582404613495,
+					0.7232534885406494
+				],
+				"sortCenterPosition": [
+					-0.0027322769165039062,
+					-0.1069968044757843,
+					0.629680871963501
+				],
+				"sortRadius": 1.2481523752212524
+			},
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 192,
+				"vertexCount": 17,
+				"triangleStart": 378,
+				"triangleCount": 30,
+				"boneCount": 2,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					-0.02392556145787239,
+					0.37746724486351013,
+					0.9286172389984131
+				],
+				"sortCenterPosition": [
+					-0.011623241007328033,
+					0.3859650194644928,
+					0.9622790813446045
+				],
+				"sortRadius": 0.20244035124778748
+			},
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 209,
+				"vertexCount": 56,
+				"triangleStart": 408,
+				"triangleCount": 150,
+				"boneCount": 2,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					-0.00973146129399538,
+					-0.5607361793518066,
+					0.6580668687820435
+				],
+				"sortCenterPosition": [
+					-0.013716816902160645,
+					-0.5739502906799316,
+					0.6953771710395813
+				],
+				"sortRadius": 0.4726355969905853
+			},
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 265,
+				"vertexCount": 20,
+				"triangleStart": 558,
+				"triangleCount": 30,
+				"boneCount": 2,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					0.007120333146303892,
+					0.09665098041296005,
+					0.8253836631774902
+				],
+				"sortCenterPosition": [
+					0.019952237606048584,
+					-0.0020280778408050537,
+					0.6395459175109863
+				],
+				"sortRadius": 0.8347112536430359
+			},
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 285,
+				"vertexCount": 57,
+				"triangleStart": 588,
+				"triangleCount": 162,
+				"boneCount": 2,
+				"boneStart": 0,
+				"boneInfluences": 1,
+				"centerBoneIndex": 1,
+				"centerPosition": [
+					-0.019468627870082855,
+					-0.1790054440498352,
+					1.0370885133743286
+				],
+				"sortCenterPosition": [
+					0.00032845884561538696,
+					-0.23666031658649445,
+					0.904136061668396
+				],
+				"sortRadius": 0.4722979962825775
+			},
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 342,
+				"vertexCount": 17,
+				"triangleStart": 750,
+				"triangleCount": 30,
+				"boneCount": 2,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					-0.02749638631939888,
+					0.5876366496086121,
+					0.9655202031135559
+				],
+				"sortCenterPosition": [
+					-0.016332661733031273,
+					0.5961344838142395,
+					0.9991751909255981
+				],
+				"sortRadius": 0.20284445583820343
+			},
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 359,
+				"vertexCount": 58,
+				"triangleStart": 780,
+				"triangleCount": 138,
+				"boneCount": 2,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					0.002951894188299775,
+					0.1577479988336563,
+					0.4712083637714386
+				],
+				"sortCenterPosition": [
+					0.009692862629890442,
+					0.1822204291820526,
+					0.6106501817703247
+				],
+				"sortRadius": 0.4576666057109833
+			}
+		],
+		"textureUnits": [
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 0,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 0,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 0,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			},
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 1,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 1,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 1,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			},
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 2,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 2,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 2,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			},
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 16,
+				"skinSectionIndex": 3,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 3,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 3,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			},
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 4,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 4,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 4,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			},
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 5,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 5,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 5,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			},
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 6,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 6,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 6,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			}
+		],
+		"fileName": "world/generic/human/passive doodads/vials/vialsbottles00.skin",
+		"fileDataID": 504770
+	}
+}

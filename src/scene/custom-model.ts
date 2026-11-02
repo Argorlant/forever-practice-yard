@@ -1,7 +1,7 @@
 // A player's own model, drawn instead of the yard's: a glTF exported from
 // their own WoW install (wow.export or a similar tool), with its animations.
-// Nothing here ships with the site; the files come from the player and stay in
-// their browser (src/ui/model-store.ts). WoW's animation names (AnimationData)
+// Files can come from the hosted selection or a personal browser import
+// (src/ui/model-store.ts). WoW's animation names (AnimationData)
 // are matched to the yard's states, and the yard's own names work too.
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
@@ -87,7 +87,11 @@ export async function loadModelSource(files: ModelFile[]): Promise<ModelSource> 
   const main = files.find((f) => /\.glb$/i.test(f.name)) ?? files.find((f) => /\.gltf$/i.test(f.name));
   if (!main) throw new Error('Choose a .glb file, or a .gltf with its .bin and textures.');
   const urls = new Map<string, string>();
-  for (const f of files) urls.set(f.name.toLowerCase(), URL.createObjectURL(f.data));
+  for (const f of files) {
+    const url = URL.createObjectURL(f.data);
+    urls.set(f.name.toLowerCase(), url);
+    urls.set(fileName(f.name).toLowerCase(), url);
+  }
   const manager = new THREE.LoadingManager();
   // Files the model refers to (its .bin, its textures) by name, whatever folder the export put them in.
   manager.setURLModifier((url) => (url.startsWith('data:') ? url : urls.get(fileName(url).toLowerCase()) ?? url));

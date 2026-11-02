@@ -1,0 +1,126 @@
+{
+	"fileType": "m2",
+	"fileDataID": 203480,
+	"fileName": "world/khazmodan/wetlands/passivedoodads/bushes/wetlandgrass02.m2",
+	"internalName": "WetlandGrass02",
+	"textures": [
+		{
+			"fileNameInternal": "world/khazmodan/wetlands/passivedoodads/bushes/grass1.blp",
+			"fileNameExternal": "grass1.png",
+			"mtlName": "mat_grass1",
+			"flags": 1,
+			"fileDataID": 203474
+		}
+	],
+	"textureTypes": [
+		0
+	],
+	"materials": [
+		{
+			"flags": 4,
+			"blendingMode": 1
+		}
+	],
+	"textureCombos": [
+		0
+	],
+	"colors": [],
+	"textureWeights": [
+		{
+			"globalSeq": 65535,
+			"interpolation": 0,
+			"timestamps": [
+				[
+					0
+				]
+			],
+			"values": [
+				[
+					32767
+				]
+			],
+			"timestampOffsets": null,
+			"valueOffsets": null
+		}
+	],
+	"transparencyLookup": [
+		0
+	],
+	"textureTransforms": [],
+	"textureTransformsLookup": [
+		65535
+	],
+	"boundingBox": {
+		"min": [
+			-0.42872384190559387,
+			-0.35014429688453674,
+			0
+		],
+		"max": [
+			0.46810638904571533,
+			0.5027920603752136,
+			0.9323737025260925
+		]
+	},
+	"boundingSphereRadius": 0.5745837092399597,
+	"collisionBox": {
+		"min": [
+			10000000,
+			10000000,
+			10000000
+		],
+		"max": [
+			-10000000,
+			-10000000,
+			-10000000
+		]
+	},
+	"collisionSphereRadius": 0,
+	"skin": {
+		"subMeshes": [
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 0,
+				"vertexCount": 24,
+				"triangleStart": 0,
+				"triangleCount": 60,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					-0.02570054493844509,
+					0.04604915902018547,
+					0.3649272620677948
+				],
+				"sortCenterPosition": [
+					0.01969127357006073,
+					0.07632388174533844,
+					0.46618685126304626
+				],
+				"sortRadius": 0.5745837092399597
+			}
+		],
+		"textureUnits": [
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 16,
+				"skinSectionIndex": 0,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 0,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 0,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			}
+		],
+		"fileName": "world/khazmodan/wetlands/passivedoodads/bushes/wetlandgrass0200.skin",
+		"fileDataID": 508431
+	}
+}

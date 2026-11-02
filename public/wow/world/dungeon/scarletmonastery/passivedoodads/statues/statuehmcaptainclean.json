@@ -1,0 +1,126 @@
+{
+	"fileType": "m2",
+	"fileDataID": 190923,
+	"fileName": "world/dungeon/scarletmonastery/passivedoodads/statues/statuehmcaptainclean.m2",
+	"internalName": "statueHMcaptainClean",
+	"textures": [
+		{
+			"fileNameInternal": "world/dungeon/scarletmonastery/passivedoodads/statues/captain01.blp",
+			"fileNameExternal": "captain01.png",
+			"mtlName": "mat_captain01",
+			"flags": 0,
+			"fileDataID": 190901
+		}
+	],
+	"textureTypes": [
+		0
+	],
+	"materials": [
+		{
+			"flags": 0,
+			"blendingMode": 0
+		}
+	],
+	"textureCombos": [
+		0
+	],
+	"colors": [],
+	"textureWeights": [
+		{
+			"globalSeq": 65535,
+			"interpolation": 0,
+			"timestamps": [
+				[
+					0
+				]
+			],
+			"values": [
+				[
+					32767
+				]
+			],
+			"timestampOffsets": null,
+			"valueOffsets": null
+		}
+	],
+	"transparencyLookup": [
+		0
+	],
+	"textureTransforms": [],
+	"textureTransformsLookup": [
+		65535
+	],
+	"boundingBox": {
+		"min": [
+			-0.5653667449951172,
+			-0.5266697406768799,
+			-0.0005449451273307204
+		],
+		"max": [
+			0.355939656496048,
+			0.748277485370636,
+			2.0743372440338135
+		]
+	},
+	"boundingSphereRadius": 1.2572895288467407,
+	"collisionBox": {
+		"min": [
+			-0.47527939081192017,
+			-0.6947283148765564,
+			0
+		],
+		"max": [
+			0.42023664712905884,
+			0.7825983762741089,
+			2.0628340244293213
+		]
+	},
+	"collisionSphereRadius": 1.2695283889770508,
+	"skin": {
+		"subMeshes": [
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 0,
+				"vertexCount": 576,
+				"triangleStart": 0,
+				"triangleCount": 1479,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					0.025919344276189804,
+					0.1328011304140091,
+					1.1750013828277588
+				],
+				"sortCenterPosition": [
+					-0.1047135442495346,
+					0.11080387234687805,
+					1.0368961095809937
+				],
+				"sortRadius": 1.2572895288467407
+			}
+		],
+		"textureUnits": [
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 0,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 0,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 0,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			}
+		],
+		"fileName": "world/dungeon/scarletmonastery/passivedoodads/statues/statuehmcaptainclean00.skin",
+		"fileDataID": 495228
+	}
+}

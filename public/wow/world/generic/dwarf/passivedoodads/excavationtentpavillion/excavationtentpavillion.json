@@ -1,0 +1,230 @@
+{
+	"fileType": "m2",
+	"fileDataID": 197383,
+	"fileName": "world/generic/dwarf/passive doodads/excavationtentpavillion/excavationtentpavillion.m2",
+	"internalName": "ExcavationTentPavillion",
+	"textures": [
+		{
+			"fileNameInternal": "world/generic/dwarf/passive doodads/excavationtents/excavationtentsruined.blp",
+			"fileNameExternal": "..\\excavationtents\\excavationtentsruined.png",
+			"mtlName": "mat_excavationtentsruined",
+			"flags": 3,
+			"fileDataID": 197392
+		},
+		{
+			"fileNameInternal": "world/generic/dwarf/passive doodads/excavationtentpavillionruined/excavationwood.blp",
+			"fileNameExternal": "..\\excavationtentpavillionruined\\excavationwood.png",
+			"mtlName": "mat_excavationwood",
+			"flags": 3,
+			"fileDataID": 197387
+		},
+		{
+			"fileNameInternal": "dungeons/textures/brian/excavation/excavationtentroll.blp",
+			"fileNameExternal": "..\\..\\..\\..\\..\\dungeons\\textures\\brian\\excavation\\excavationtentroll.png",
+			"mtlName": "mat_excavationtentroll",
+			"flags": 0,
+			"fileDataID": 127040
+		}
+	],
+	"textureTypes": [
+		0,
+		0,
+		0
+	],
+	"materials": [
+		{
+			"flags": 4,
+			"blendingMode": 1
+		},
+		{
+			"flags": 0,
+			"blendingMode": 0
+		},
+		{
+			"flags": 4,
+			"blendingMode": 0
+		}
+	],
+	"textureCombos": [
+		0,
+		1,
+		2
+	],
+	"colors": [],
+	"textureWeights": [
+		{
+			"globalSeq": 65535,
+			"interpolation": 0,
+			"timestamps": [
+				[
+					0
+				]
+			],
+			"values": [
+				[
+					32767
+				]
+			],
+			"timestampOffsets": null,
+			"valueOffsets": null
+		}
+	],
+	"transparencyLookup": [
+		0
+	],
+	"textureTransforms": [],
+	"textureTransformsLookup": [
+		65535
+	],
+	"boundingBox": {
+		"min": [
+			-4.34895133972168,
+			-4.318131923675537,
+			-0.20037011802196503
+		],
+		"max": [
+			4.400783538818359,
+			4.3456645011901855,
+			5.227437496185303
+		]
+	},
+	"boundingSphereRadius": 6.382247447967529,
+	"collisionBox": {
+		"min": [
+			-4.1526384353637695,
+			-4.168708801269531,
+			-0.25009578466415405
+		],
+		"max": [
+			4.317613124847412,
+			4.201548099517822,
+			5.229694843292236
+		]
+	},
+	"collisionSphereRadius": 6.333105087280273,
+	"skin": {
+		"subMeshes": [
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 0,
+				"vertexCount": 21,
+				"triangleStart": 0,
+				"triangleCount": 60,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					0.050395917147397995,
+					0.019358055666089058,
+					4.2667670249938965
+				],
+				"sortCenterPosition": [
+					0.06890642642974854,
+					0.020981431007385254,
+					4.595137596130371
+				],
+				"sortRadius": 5.592737197875977
+			},
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 21,
+				"vertexCount": 81,
+				"triangleStart": 60,
+				"triangleCount": 204,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					-0.6620674133300781,
+					0.7487647533416748,
+					3.2496297359466553
+				],
+				"sortCenterPosition": [
+					0.06888532638549805,
+					0.021077871322631836,
+					2.4976370334625244
+				],
+				"sortRadius": 6.353908061981201
+			},
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 102,
+				"vertexCount": 148,
+				"triangleStart": 264,
+				"triangleCount": 600,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					0.03840577229857445,
+					0.008091126568615437,
+					3.844045400619507
+				],
+				"sortCenterPosition": [
+					0.03840577229857445,
+					0.008091126568615437,
+					3.844045400619507
+				],
+				"sortRadius": 5.8508429527282715
+			}
+		],
+		"textureUnits": [
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 16,
+				"skinSectionIndex": 0,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 0,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 0,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			},
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 1,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 1,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 1,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			},
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 2,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 2,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 2,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			}
+		],
+		"fileName": "world/generic/dwarf/passive doodads/excavationtentpavillion/excavationtentpavillion00.skin",
+		"fileDataID": 503383
+	}
+}

@@ -1,0 +1,230 @@
+{
+	"fileType": "m2",
+	"fileDataID": 198291,
+	"fileName": "world/generic/human/passive doodads/hanginglanterns/generalhanginglantern01.m2",
+	"internalName": "GeneralHangingLantern01",
+	"textures": [
+		{
+			"fileNameInternal": "world/generic/dwarf/passive doodads/lanterns/hanginglantern01.blp",
+			"fileNameExternal": "..\\..\\..\\dwarf\\passivedoodads\\lanterns\\hanginglantern01.png",
+			"mtlName": "mat_hanginglantern01",
+			"flags": 0,
+			"fileDataID": 197428
+		},
+		{
+			"fileNameInternal": "world/generic/human/passive doodads/hanginglanterns/lightglass02.blp",
+			"fileNameExternal": "lightglass02.png",
+			"mtlName": "mat_lightglass02",
+			"flags": 3,
+			"fileDataID": 198293
+		},
+		{
+			"fileNameInternal": "world/azeroth/elwynn/passivedoodads/lamppost/glow32.blp",
+			"fileNameExternal": "..\\..\\..\\..\\azeroth\\elwynn\\passivedoodads\\lamppost\\glow32.png",
+			"mtlName": "mat_glow32",
+			"flags": 0,
+			"fileDataID": 189824
+		}
+	],
+	"textureTypes": [
+		0,
+		0,
+		0
+	],
+	"materials": [
+		{
+			"flags": 0,
+			"blendingMode": 1
+		},
+		{
+			"flags": 5,
+			"blendingMode": 0
+		},
+		{
+			"flags": 17,
+			"blendingMode": 2
+		}
+	],
+	"textureCombos": [
+		0,
+		1,
+		2
+	],
+	"colors": [],
+	"textureWeights": [
+		{
+			"globalSeq": 65535,
+			"interpolation": 0,
+			"timestamps": [
+				[
+					0
+				]
+			],
+			"values": [
+				[
+					32767
+				]
+			],
+			"timestampOffsets": null,
+			"valueOffsets": null
+		}
+	],
+	"transparencyLookup": [
+		0
+	],
+	"textureTransforms": [],
+	"textureTransformsLookup": [
+		65535
+	],
+	"boundingBox": {
+		"min": [
+			-1.0830790996551514,
+			-1.0794771909713745,
+			-0.5505669116973877
+		],
+		"max": [
+			1.085799217224121,
+			1.089401125907898,
+			2.1117684841156006
+		]
+	},
+	"boundingSphereRadius": 1.3548017740249634,
+	"collisionBox": {
+		"min": [
+			-0.35489800572395325,
+			-0.35659196972846985,
+			-5.529115030507628e-16
+		],
+		"max": [
+			0.3548978865146637,
+			0.35659196972846985,
+			2.1019222736358643
+		]
+	},
+	"collisionSphereRadius": 1.1018493175506592,
+	"skin": {
+		"subMeshes": [
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 0,
+				"vertexCount": 137,
+				"triangleStart": 0,
+				"triangleCount": 384,
+				"boneCount": 2,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					0.0001554242189740762,
+					-0.00013877233141101897,
+					0.8884897828102112
+				],
+				"sortCenterPosition": [
+					5.960464477539063e-8,
+					0,
+					0.924468994140625
+				],
+				"sortRadius": 1.212815523147583
+			},
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 137,
+				"vertexCount": 16,
+				"triangleStart": 384,
+				"triangleCount": 24,
+				"boneCount": 2,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					8.288770914077759e-8,
+					-1.1175870895385742e-8,
+					0.5029166340827942
+				],
+				"sortCenterPosition": [
+					2.9802322387695312e-8,
+					0,
+					0.502916693687439
+				],
+				"sortRadius": 0.41917532682418823
+			},
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 153,
+				"vertexCount": 4,
+				"triangleStart": 408,
+				"triangleCount": 6,
+				"boneCount": 2,
+				"boneStart": 0,
+				"boneInfluences": 1,
+				"centerBoneIndex": 1,
+				"centerPosition": [
+					0.0013579735532402992,
+					0.004961937665939331,
+					0.5338723063468933
+				],
+				"sortCenterPosition": [
+					0.001357973669655621,
+					0.004961937665939331,
+					0.5338722467422485
+				],
+				"sortRadius": 1.0844391584396362
+			}
+		],
+		"textureUnits": [
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 16,
+				"skinSectionIndex": 0,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 0,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 0,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			},
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 1,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 1,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 1,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			},
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 16,
+				"skinSectionIndex": 2,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 2,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 2,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			}
+		],
+		"fileName": "world/generic/human/passive doodads/hanginglanterns/generalhanginglantern0100.skin",
+		"fileDataID": 504460
+	}
+}

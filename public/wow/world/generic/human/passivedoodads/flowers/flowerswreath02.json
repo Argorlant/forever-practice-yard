@@ -1,0 +1,126 @@
+{
+	"fileType": "m2",
+	"fileDataID": 198210,
+	"fileName": "world/generic/human/passive doodads/flowers/flowerswreath02.m2",
+	"internalName": "FlowersWreath02",
+	"textures": [
+		{
+			"fileNameInternal": "world/generic/human/passive doodads/flowers/flowerarrangements01.blp",
+			"fileNameExternal": "flowerarrangements01.png",
+			"mtlName": "mat_flowerarrangements01",
+			"flags": 0,
+			"fileDataID": 198201
+		}
+	],
+	"textureTypes": [
+		0
+	],
+	"materials": [
+		{
+			"flags": 4,
+			"blendingMode": 1
+		}
+	],
+	"textureCombos": [
+		0
+	],
+	"colors": [],
+	"textureWeights": [
+		{
+			"globalSeq": 65535,
+			"interpolation": 0,
+			"timestamps": [
+				[
+					0
+				]
+			],
+			"values": [
+				[
+					32767
+				]
+			],
+			"timestampOffsets": null,
+			"valueOffsets": null
+		}
+	],
+	"transparencyLookup": [
+		0
+	],
+	"textureTransforms": [],
+	"textureTransformsLookup": [
+		65535
+	],
+	"boundingBox": {
+		"min": [
+			-0.797639012336731,
+			-0.6910030245780945,
+			0
+		],
+		"max": [
+			0.7687079906463623,
+			0.6940749883651733,
+			0.3060530126094818
+		]
+	},
+	"boundingSphereRadius": 0.7890939712524414,
+	"collisionBox": {
+		"min": [
+			10000000,
+			10000000,
+			10000000
+		],
+		"max": [
+			-10000000,
+			-10000000,
+			-10000000
+		]
+	},
+	"collisionSphereRadius": 0,
+	"skin": {
+		"subMeshes": [
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 0,
+				"vertexCount": 96,
+				"triangleStart": 0,
+				"triangleCount": 294,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					-0.008188934996724129,
+					0.0066396016627550125,
+					0.14214009046554565
+				],
+				"sortCenterPosition": [
+					-0.014465510845184326,
+					0.0015359818935394287,
+					0.1530265063047409
+				],
+				"sortRadius": 0.7890939712524414
+			}
+		],
+		"textureUnits": [
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 16,
+				"skinSectionIndex": 0,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 0,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 0,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			}
+		],
+		"fileName": "world/generic/human/passive doodads/flowers/flowerswreath0200.skin",
+		"fileDataID": 504386
+	}
+}

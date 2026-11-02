@@ -1,0 +1,178 @@
+{
+	"fileType": "m2",
+	"fileDataID": 197995,
+	"fileName": "world/generic/human/passive doodads/banners/stormwindgriffonbanner01.m2",
+	"internalName": "StormwindGriffonBanner01",
+	"textures": [
+		{
+			"fileNameInternal": "world/generic/human/passive doodads/banners/stormwindpost01.blp",
+			"fileNameExternal": "stormwindpost01.png",
+			"mtlName": "mat_stormwindpost01",
+			"flags": 3,
+			"fileDataID": 197998
+		},
+		{
+			"fileNameInternal": "world/generic/human/passive doodads/banners/griffonbanner.blp",
+			"fileNameExternal": "griffonbanner.png",
+			"mtlName": "mat_griffonbanner",
+			"flags": 3,
+			"fileDataID": 197969
+		}
+	],
+	"textureTypes": [
+		0,
+		0
+	],
+	"materials": [
+		{
+			"flags": 0,
+			"blendingMode": 0
+		},
+		{
+			"flags": 4,
+			"blendingMode": 1
+		}
+	],
+	"textureCombos": [
+		0,
+		1
+	],
+	"colors": [],
+	"textureWeights": [
+		{
+			"globalSeq": 65535,
+			"interpolation": 0,
+			"timestamps": [
+				[
+					0
+				]
+			],
+			"values": [
+				[
+					32767
+				]
+			],
+			"timestampOffsets": null,
+			"valueOffsets": null
+		}
+	],
+	"transparencyLookup": [
+		0
+	],
+	"textureTransforms": [],
+	"textureTransformsLookup": [
+		65535
+	],
+	"boundingBox": {
+		"min": [
+			-0.20660027861595154,
+			-2.455719470977783,
+			0
+		],
+		"max": [
+			0.17081999778747559,
+			2.405386209487915,
+			6.455391883850098
+		]
+	},
+	"boundingSphereRadius": 4.043872356414795,
+	"collisionBox": {
+		"min": [
+			10000000,
+			10000000,
+			10000000
+		],
+		"max": [
+			-10000000,
+			-10000000,
+			-10000000
+		]
+	},
+	"collisionSphereRadius": 0,
+	"skin": {
+		"subMeshes": [
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 0,
+				"vertexCount": 14,
+				"triangleStart": 0,
+				"triangleCount": 24,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					-0.09205345809459686,
+					-0.02516661398112774,
+					6.250804424285889
+				],
+				"sortCenterPosition": [
+					-0.017890140414237976,
+					-0.025166630744934082,
+					6.287408828735352
+				],
+				"sortRadius": 2.443648338317871
+			},
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 14,
+				"vertexCount": 15,
+				"triangleStart": 24,
+				"triangleCount": 48,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					-0.1735564023256302,
+					-0.03806918486952782,
+					3.1102259159088135
+				],
+				"sortCenterPosition": [
+					-0.173556387424469,
+					-0.0380709171295166,
+					3.1102256774902344
+				],
+				"sortRadius": 3.7366974353790283
+			}
+		],
+		"textureUnits": [
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 0,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 0,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 0,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			},
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 16,
+				"skinSectionIndex": 1,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 1,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 1,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			}
+		],
+		"fileName": "world/generic/human/passive doodads/banners/stormwindgriffonbanner0100.skin",
+		"fileDataID": 504179
+	}
+}

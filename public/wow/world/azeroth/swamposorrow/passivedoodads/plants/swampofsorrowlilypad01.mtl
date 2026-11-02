@@ -1,0 +1,9 @@
+newmtl mat_lilypadskincopy
+illum 1
+map_Kd lilypadskincopy.png
+newmtl mat_lilypadskingreen
+illum 1
+map_Kd lilypadskingreen.png
+newmtl mat_lilypadskin
+illum 1
+map_Kd lilypadskin.png

@@ -1,0 +1,207 @@
+{
+	"fileType": "m2",
+	"fileDataID": 189956,
+	"fileName": "world/azeroth/elwynn/passivedoodads/waterbasin/waterbasin.m2",
+	"internalName": "WaterBasin",
+	"textures": [
+		{
+			"fileNameInternal": "world/azeroth/elwynn/passivedoodads/waterbasin/wood05.blp",
+			"fileNameExternal": "wood05.png",
+			"mtlName": "mat_wood05",
+			"flags": 3,
+			"fileDataID": 189957
+		},
+		{
+			"fileNameInternal": "world/azeroth/elwynn/passivedoodads/waterbasin/side.blp",
+			"fileNameExternal": "side.png",
+			"mtlName": "mat_side",
+			"flags": 3,
+			"fileDataID": 189954
+		},
+		{
+			"fileNameInternal": "world/azeroth/elwynn/passivedoodads/waterbasin/water.blp",
+			"fileNameExternal": "water.png",
+			"mtlName": "mat_water",
+			"flags": 3,
+			"fileDataID": 189955
+		}
+	],
+	"textureTypes": [
+		0,
+		0,
+		0
+	],
+	"materials": [
+		{
+			"flags": 0,
+			"blendingMode": 0
+		},
+		{
+			"flags": 0,
+			"blendingMode": 0
+		},
+		{
+			"flags": 16,
+			"blendingMode": 2
+		}
+	],
+	"textureCombos": [
+		0,
+		2
+	],
+	"colors": [],
+	"textureWeights": [
+		{
+			"globalSeq": 65535,
+			"interpolation": 0,
+			"timestamps": [
+				[
+					0
+				]
+			],
+			"values": [
+				[
+					32767
+				]
+			],
+			"timestampOffsets": null,
+			"valueOffsets": null
+		},
+		{
+			"globalSeq": 65535,
+			"interpolation": 0,
+			"timestamps": [
+				[
+					0
+				]
+			],
+			"values": [
+				[
+					16384
+				]
+			],
+			"timestampOffsets": null,
+			"valueOffsets": null
+		}
+	],
+	"transparencyLookup": [
+		0,
+		1
+	],
+	"textureTransforms": [],
+	"textureTransformsLookup": [
+		65535
+	],
+	"boundingBox": {
+		"min": [
+			-0.9983670115470886,
+			-0.7171810269355774,
+			0.0010527799604460597
+		],
+		"max": [
+			0.9278249740600586,
+			0.730072021484375,
+			0.9326609969139099
+		]
+	},
+	"boundingSphereRadius": 1.2610299587249756,
+	"collisionBox": {
+		"min": [
+			-1.0008900165557861,
+			-0.7108809947967529,
+			0
+		],
+		"max": [
+			0.9323220252990723,
+			0.7284470200538635,
+			0.9172189831733704
+		]
+	},
+	"collisionSphereRadius": 1.289405345916748,
+	"skin": {
+		"subMeshes": [
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 0,
+				"vertexCount": 98,
+				"triangleStart": 0,
+				"triangleCount": 204,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					-0.03131340071558952,
+					-0.03594431281089783,
+					0.4865172505378723
+				],
+				"sortCenterPosition": [
+					-0.035271018743515015,
+					0.006445497274398804,
+					0.4668568968772888
+				],
+				"sortRadius": 1.2610281705856323
+			},
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 98,
+				"vertexCount": 4,
+				"triangleStart": 204,
+				"triangleCount": 6,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					-0.020325005054473877,
+					-0.006024003028869629,
+					0.5676169991493225
+				],
+				"sortCenterPosition": [
+					-0.020325005054473877,
+					-0.006024003028869629,
+					0.5676169991493225
+				],
+				"sortRadius": 0.8276955485343933
+			}
+		],
+		"textureUnits": [
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 0,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 0,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 0,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			},
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 16,
+				"skinSectionIndex": 1,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 2,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 1,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 1,
+				"textureTransformComboIndex": 0
+			}
+		],
+		"fileName": "world/azeroth/elwynn/passivedoodads/waterbasin/waterbasin00.skin",
+		"fileDataID": 494595
+	}
+}

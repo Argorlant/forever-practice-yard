@@ -1,0 +1,126 @@
+{
+	"fileType": "m2",
+	"fileDataID": 198166,
+	"fileName": "world/generic/human/passive doodads/crates/replacecrate02.m2",
+	"internalName": "ReplaceCrate02",
+	"textures": [
+		{
+			"fileNameInternal": "dungeons/textures/doodads/stormwindcrate01.blp",
+			"fileNameExternal": "..\\..\\..\\..\\..\\dungeons\\textures\\doodads\\stormwindcrate01.png",
+			"mtlName": "mat_stormwindcrate01",
+			"flags": 3,
+			"fileDataID": 127515
+		}
+	],
+	"textureTypes": [
+		0
+	],
+	"materials": [
+		{
+			"flags": 0,
+			"blendingMode": 0
+		}
+	],
+	"textureCombos": [
+		0
+	],
+	"colors": [],
+	"textureWeights": [
+		{
+			"globalSeq": 65535,
+			"interpolation": 0,
+			"timestamps": [
+				[
+					0
+				]
+			],
+			"values": [
+				[
+					32767
+				]
+			],
+			"timestampOffsets": null,
+			"valueOffsets": null
+		}
+	],
+	"transparencyLookup": [
+		0
+	],
+	"textureTransforms": [],
+	"textureTransformsLookup": [
+		65535
+	],
+	"boundingBox": {
+		"min": [
+			-0.26368486881256104,
+			-0.44946131110191345,
+			0
+		],
+		"max": [
+			0.2587752342224121,
+			0.4499635696411133,
+			0.6877955198287964
+		]
+	},
+	"boundingSphereRadius": 0.6234966516494751,
+	"collisionBox": {
+		"min": [
+			-0.2643309235572815,
+			-0.44946131110191345,
+			0
+		],
+		"max": [
+			0.25812917947769165,
+			0.4499635696411133,
+			0.6877955198287964
+		]
+	},
+	"collisionSphereRadius": 0.6234966516494751,
+	"skin": {
+		"subMeshes": [
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 0,
+				"vertexCount": 20,
+				"triangleStart": 0,
+				"triangleCount": 36,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					-0.002454817295074463,
+					0.00025112481671385467,
+					0.3438977897167206
+				],
+				"sortCenterPosition": [
+					-0.002454817295074463,
+					0.00025112926959991455,
+					0.3438977599143982
+				],
+				"sortRadius": 0.6234966516494751
+			}
+		],
+		"textureUnits": [
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 0,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 0,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 0,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			}
+		],
+		"fileName": "world/generic/human/passive doodads/crates/replacecrate0200.skin",
+		"fileDataID": 504354
+	}
+}

@@ -1,0 +1,126 @@
+{
+	"fileType": "m2",
+	"fileDataID": 190925,
+	"fileName": "world/dungeon/scarletmonastery/passivedoodads/statues/statuehmcrusaderclean.m2",
+	"internalName": "statueHMcrusaderClean",
+	"textures": [
+		{
+			"fileNameInternal": "world/dungeon/scarletmonastery/passivedoodads/statues/crusader01.blp",
+			"fileNameExternal": "crusader01.png",
+			"mtlName": "mat_crusader01",
+			"flags": 0,
+			"fileDataID": 190903
+		}
+	],
+	"textureTypes": [
+		0
+	],
+	"materials": [
+		{
+			"flags": 0,
+			"blendingMode": 0
+		}
+	],
+	"textureCombos": [
+		0
+	],
+	"colors": [],
+	"textureWeights": [
+		{
+			"globalSeq": 65535,
+			"interpolation": 0,
+			"timestamps": [
+				[
+					0
+				]
+			],
+			"values": [
+				[
+					32767
+				]
+			],
+			"timestampOffsets": null,
+			"valueOffsets": null
+		}
+	],
+	"transparencyLookup": [
+		0
+	],
+	"textureTransforms": [],
+	"textureTransformsLookup": [
+		65535
+	],
+	"boundingBox": {
+		"min": [
+			-0.323334276676178,
+			-0.5296244621276855,
+			-0.002882895292714238
+		],
+		"max": [
+			0.4777860641479492,
+			0.5296244621276855,
+			1.9660791158676147
+		]
+	},
+	"boundingSphereRadius": 1.1198912858963013,
+	"collisionBox": {
+		"min": [
+			-0.3355654776096344,
+			-0.568127453327179,
+			0
+		],
+		"max": [
+			0.510062038898468,
+			0.5668421983718872,
+			1.9629923105239868
+		]
+	},
+	"collisionSphereRadius": 1.1413893699645996,
+	"skin": {
+		"subMeshes": [
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 0,
+				"vertexCount": 540,
+				"triangleStart": 0,
+				"triangleCount": 1503,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					0.12978415191173553,
+					-0.00620993273332715,
+					1.1852866411209106
+				],
+				"sortCenterPosition": [
+					0.07722589373588562,
+					0,
+					0.9815981388092041
+				],
+				"sortRadius": 1.1198912858963013
+			}
+		],
+		"textureUnits": [
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 0,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 0,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 0,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			}
+		],
+		"fileName": "world/dungeon/scarletmonastery/passivedoodads/statues/statuehmcrusaderclean00.skin",
+		"fileDataID": 495220
+	}
+}

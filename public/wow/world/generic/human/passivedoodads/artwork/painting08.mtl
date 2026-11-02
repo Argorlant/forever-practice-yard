@@ -1,0 +1,3 @@
+newmtl mat_boypainting
+illum 1
+map_Kd boypainting.png

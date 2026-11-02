@@ -1,0 +1,178 @@
+{
+	"fileType": "m2",
+	"fileDataID": 189793,
+	"fileName": "world/azeroth/elwynn/passivedoodads/elwynnfences/elwynnstonefence.m2",
+	"internalName": "ElwynnStoneFence",
+	"textures": [
+		{
+			"fileNameInternal": "world/azeroth/elwynn/passivedoodads/elwynnfences/stonefencepillar.blp",
+			"fileNameExternal": "stonefencepillar.png",
+			"mtlName": "mat_stonefencepillar",
+			"flags": 0,
+			"fileDataID": 189799
+		},
+		{
+			"fileNameInternal": "world/azeroth/elwynn/passivedoodads/elwynnfences/stonefencewall.blp",
+			"fileNameExternal": "stonefencewall.png",
+			"mtlName": "mat_stonefencewall",
+			"flags": 0,
+			"fileDataID": 189800
+		}
+	],
+	"textureTypes": [
+		0,
+		0
+	],
+	"materials": [
+		{
+			"flags": 0,
+			"blendingMode": 0
+		},
+		{
+			"flags": 0,
+			"blendingMode": 0
+		}
+	],
+	"textureCombos": [
+		0,
+		1
+	],
+	"colors": [],
+	"textureWeights": [
+		{
+			"globalSeq": 65535,
+			"interpolation": 0,
+			"timestamps": [
+				[
+					0
+				]
+			],
+			"values": [
+				[
+					32767
+				]
+			],
+			"timestampOffsets": null,
+			"valueOffsets": null
+		}
+	],
+	"transparencyLookup": [
+		0
+	],
+	"textureTransforms": [],
+	"textureTransformsLookup": [
+		65535
+	],
+	"boundingBox": {
+		"min": [
+			-0.2919958233833313,
+			-0.2679044008255005,
+			0
+		],
+		"max": [
+			0.2653311789035797,
+			5.5935959815979,
+			1.3123841285705566
+		]
+	},
+	"boundingSphereRadius": 3.0162124633789062,
+	"collisionBox": {
+		"min": [
+			-0.2655841112136841,
+			-0.2717052102088928,
+			-0.0017100439872592688
+		],
+		"max": [
+			0.21488900482654572,
+			5.5730109214782715,
+			1.2849897146224976
+		]
+	},
+	"collisionSphereRadius": 3.001598358154297,
+	"skin": {
+		"subMeshes": [
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 0,
+				"vertexCount": 32,
+				"triangleStart": 0,
+				"triangleCount": 84,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					-0.013348117470741272,
+					1.4576486349105835,
+					0.9513859748840332
+				],
+				"sortCenterPosition": [
+					-0.013332322239875793,
+					1.457624912261963,
+					0.6561920642852783
+				],
+				"sortRadius": 1.8670011758804321
+			},
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 32,
+				"vertexCount": 36,
+				"triangleStart": 84,
+				"triangleCount": 96,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					-0.04429657384753227,
+					2.9026949405670166,
+					0.7308177351951599
+				],
+				"sortCenterPosition": [
+					-0.015140585601329803,
+					2.9026947021484375,
+					0.6116945147514343
+				],
+				"sortRadius": 2.735905885696411
+			}
+		],
+		"textureUnits": [
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 0,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 0,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 0,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			},
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 1,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 1,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 1,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			}
+		],
+		"fileName": "world/azeroth/elwynn/passivedoodads/elwynnfences/elwynnstonefence00.skin",
+		"fileDataID": 494525
+	}
+}

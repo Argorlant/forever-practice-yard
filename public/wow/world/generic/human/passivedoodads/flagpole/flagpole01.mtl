@@ -1,0 +1,3 @@
+newmtl mat_pole1
+illum 1
+map_Kd pole1.png

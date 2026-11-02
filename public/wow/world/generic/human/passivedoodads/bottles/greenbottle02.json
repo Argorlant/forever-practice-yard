@@ -1,0 +1,178 @@
+{
+	"fileType": "m2",
+	"fileDataID": 198061,
+	"fileName": "world/generic/human/passive doodads/bottles/greenbottle02.m2",
+	"internalName": "GreenBottle02",
+	"textures": [
+		{
+			"fileNameInternal": "world/azeroth/elwynn/buildings/distillery/winebarrel_side.blp",
+			"fileNameExternal": "..\\..\\..\\..\\azeroth\\elwynn\\buildings\\distillery\\winebarrel_side.png",
+			"mtlName": "mat_winebarrel_side",
+			"flags": 3,
+			"fileDataID": 189619
+		},
+		{
+			"fileNameInternal": "world/generic/goblin/passivedoodads/goblinmachinery/bottlegreen.blp",
+			"fileNameExternal": "..\\..\\..\\goblin\\passivedoodads\\goblinmachinery\\bottlegreen.png",
+			"mtlName": "mat_bottlegreen",
+			"flags": 3,
+			"fileDataID": 197762
+		}
+	],
+	"textureTypes": [
+		0,
+		0
+	],
+	"materials": [
+		{
+			"flags": 4,
+			"blendingMode": 1
+		},
+		{
+			"flags": 0,
+			"blendingMode": 0
+		}
+	],
+	"textureCombos": [
+		0,
+		1
+	],
+	"colors": [],
+	"textureWeights": [
+		{
+			"globalSeq": 65535,
+			"interpolation": 0,
+			"timestamps": [
+				[
+					0
+				]
+			],
+			"values": [
+				[
+					32767
+				]
+			],
+			"timestampOffsets": null,
+			"valueOffsets": null
+		}
+	],
+	"transparencyLookup": [
+		0
+	],
+	"textureTransforms": [],
+	"textureTransformsLookup": [
+		65535
+	],
+	"boundingBox": {
+		"min": [
+			-0.08121300488710403,
+			-0.08906599879264832,
+			-0.001313739106990397
+		],
+		"max": [
+			0.07027412205934525,
+			0.06637140363454819,
+			0.5336520671844482
+		]
+	},
+	"boundingSphereRadius": 0.27909624576568604,
+	"collisionBox": {
+		"min": [
+			10000000,
+			10000000,
+			10000000
+		],
+		"max": [
+			-10000000,
+			-10000000,
+			-10000000
+		]
+	},
+	"collisionSphereRadius": 0,
+	"skin": {
+		"subMeshes": [
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 0,
+				"vertexCount": 18,
+				"triangleStart": 0,
+				"triangleCount": 24,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					-0.003470140974968672,
+					-0.013224703259766102,
+					0.4974622130393982
+				],
+				"sortCenterPosition": [
+					-0.0066415537148714066,
+					-0.008530110120773315,
+					0.4619579613208771
+				],
+				"sortRadius": 0.0784720852971077
+			},
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 18,
+				"vertexCount": 38,
+				"triangleStart": 24,
+				"triangleCount": 144,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					-0.005469438154250383,
+					-0.011576097458600998,
+					0.273444265127182
+				],
+				"sortCenterPosition": [
+					-0.0054694414138793945,
+					-0.011347297579050064,
+					0.24870985746383667
+				],
+				"sortRadius": 0.2624107599258423
+			}
+		],
+		"textureUnits": [
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 16,
+				"skinSectionIndex": 0,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 0,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 0,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			},
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 1,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 1,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 1,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			}
+		],
+		"fileName": "world/generic/human/passive doodads/bottles/greenbottle0200.skin",
+		"fileDataID": 504274
+	}
+}

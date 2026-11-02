@@ -1,0 +1,126 @@
+{
+	"fileType": "m2",
+	"fileDataID": 197939,
+	"fileName": "world/generic/human/passive doodads/artwork/stormwindpainting01.m2",
+	"internalName": "StormwindPainting01",
+	"textures": [
+		{
+			"fileNameInternal": "world/generic/human/passive doodads/artwork/thousandneedlespainting.blp",
+			"fileNameExternal": "thousandneedlespainting.png",
+			"mtlName": "mat_thousandneedlespainting",
+			"flags": 0,
+			"fileDataID": 197944
+		}
+	],
+	"textureTypes": [
+		0
+	],
+	"materials": [
+		{
+			"flags": 0,
+			"blendingMode": 0
+		}
+	],
+	"textureCombos": [
+		0
+	],
+	"colors": [],
+	"textureWeights": [
+		{
+			"globalSeq": 65535,
+			"interpolation": 0,
+			"timestamps": [
+				[
+					0
+				]
+			],
+			"values": [
+				[
+					32767
+				]
+			],
+			"timestampOffsets": null,
+			"valueOffsets": null
+		}
+	],
+	"transparencyLookup": [
+		0
+	],
+	"textureTransforms": [],
+	"textureTransformsLookup": [
+		65535
+	],
+	"boundingBox": {
+		"min": [
+			-0.12020699679851532,
+			-2.364569902420044,
+			-1.2699400186538696
+		],
+		"max": [
+			0.0937386006116867,
+			2.3645598888397217,
+			1.174589991569519
+		]
+	},
+	"boundingSphereRadius": 2.6639299392700195,
+	"collisionBox": {
+		"min": [
+			10000000,
+			10000000,
+			10000000
+		],
+		"max": [
+			-10000000,
+			-10000000,
+			-10000000
+		]
+	},
+	"collisionSphereRadius": 0,
+	"skin": {
+		"subMeshes": [
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 0,
+				"vertexCount": 32,
+				"triangleStart": 0,
+				"triangleCount": 54,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					-0.014079960994422436,
+					0.14850185811519623,
+					-0.07699184119701385
+				],
+				"sortCenterPosition": [
+					-0.013234198093414307,
+					-0.0000050067901611328125,
+					-0.04767501354217529
+				],
+				"sortRadius": 2.663933515548706
+			}
+		],
+		"textureUnits": [
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 0,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 0,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 0,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			}
+		],
+		"fileName": "world/generic/human/passive doodads/artwork/stormwindpainting0100.skin",
+		"fileDataID": 504152
+	}
+}

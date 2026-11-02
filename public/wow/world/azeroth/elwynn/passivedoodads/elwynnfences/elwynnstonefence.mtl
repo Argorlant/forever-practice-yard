@@ -1,0 +1,6 @@
+newmtl mat_stonefencepillar
+illum 1
+map_Kd stonefencepillar.png
+newmtl mat_stonefencewall
+illum 1
+map_Kd stonefencewall.png

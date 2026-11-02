@@ -1,0 +1,126 @@
+{
+	"fileType": "m2",
+	"fileDataID": 198238,
+	"fileName": "world/generic/human/passive doodads/footlockers/duskwoodfootlocker01.m2",
+	"internalName": "DuskwoodFootLocker01",
+	"textures": [
+		{
+			"fileNameInternal": "world/generic/human/passive doodads/tables/duskwoodfurniture01.blp",
+			"fileNameExternal": "..\\tables\\duskwoodfurniture01.png",
+			"mtlName": "mat_duskwoodfurniture01",
+			"flags": 0,
+			"fileDataID": 198601
+		}
+	],
+	"textureTypes": [
+		0
+	],
+	"materials": [
+		{
+			"flags": 0,
+			"blendingMode": 0
+		}
+	],
+	"textureCombos": [
+		0
+	],
+	"colors": [],
+	"textureWeights": [
+		{
+			"globalSeq": 65535,
+			"interpolation": 0,
+			"timestamps": [
+				[
+					0
+				]
+			],
+			"values": [
+				[
+					32767
+				]
+			],
+			"timestampOffsets": null,
+			"valueOffsets": null
+		}
+	],
+	"transparencyLookup": [
+		0
+	],
+	"textureTransforms": [],
+	"textureTransformsLookup": [
+		65535
+	],
+	"boundingBox": {
+		"min": [
+			-0.3052422106266022,
+			-0.6988018751144409,
+			-0.005983754526823759
+		],
+		"max": [
+			0.30330759286880493,
+			0.6900870203971863,
+			0.4676404595375061
+		]
+	},
+	"boundingSphereRadius": 0.7922800183296204,
+	"collisionBox": {
+		"min": [
+			-0.30850687623023987,
+			-0.7079890370368958,
+			-0.004871818702667952
+		],
+		"max": [
+			0.3047974109649658,
+			0.6992629170417786,
+			0.47350555658340454
+		]
+	},
+	"collisionSphereRadius": 0.8006002902984619,
+	"skin": {
+		"subMeshes": [
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 0,
+				"vertexCount": 40,
+				"triangleStart": 0,
+				"triangleCount": 60,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					0.011865410953760147,
+					-0.004930317401885986,
+					0.3442035913467407
+				],
+				"sortCenterPosition": [
+					-0.0009673088788986206,
+					-0.004357427358627319,
+					0.23082835972309113
+				],
+				"sortRadius": 0.7922800183296204
+			}
+		],
+		"textureUnits": [
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 0,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 0,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 0,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			}
+		],
+		"fileName": "world/generic/human/passive doodads/footlockers/duskwoodfootlocker0100.skin",
+		"fileDataID": 504424
+	}
+}

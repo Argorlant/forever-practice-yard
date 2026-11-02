@@ -1,0 +1,126 @@
+{
+	"fileType": "m2",
+	"fileDataID": 198115,
+	"fileName": "world/generic/human/passive doodads/chairs/generalchairloend01.m2",
+	"internalName": "GeneralChairLoEnd01",
+	"textures": [
+		{
+			"fileNameInternal": "world/generic/human/passive doodads/chairs/woodchair01.blp",
+			"fileNameExternal": "woodchair01.png",
+			"mtlName": "mat_woodchair01",
+			"flags": 0,
+			"fileDataID": 198121
+		}
+	],
+	"textureTypes": [
+		0
+	],
+	"materials": [
+		{
+			"flags": 0,
+			"blendingMode": 0
+		}
+	],
+	"textureCombos": [
+		0
+	],
+	"colors": [],
+	"textureWeights": [
+		{
+			"globalSeq": 65535,
+			"interpolation": 0,
+			"timestamps": [
+				[
+					0
+				]
+			],
+			"values": [
+				[
+					32767
+				]
+			],
+			"timestampOffsets": null,
+			"valueOffsets": null
+		}
+	],
+	"transparencyLookup": [
+		0
+	],
+	"textureTransforms": [],
+	"textureTransformsLookup": [
+		65535
+	],
+	"boundingBox": {
+		"min": [
+			-0.9985464215278625,
+			-0.5532056093215942,
+			-0.006988673470914364
+		],
+		"max": [
+			0.17892952263355255,
+			0.5532056093215942,
+			1.327818751335144
+		]
+	},
+	"boundingSphereRadius": 1.0476287603378296,
+	"collisionBox": {
+		"min": [
+			-0.9985464215278625,
+			-0.5532056093215942,
+			-0.006576008163392544
+		],
+		"max": [
+			0.17892953753471375,
+			0.5532056093215942,
+			1.2456855773925781
+		]
+	},
+	"collisionSphereRadius": 1.0220999717712402,
+	"skin": {
+		"subMeshes": [
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 0,
+				"vertexCount": 91,
+				"triangleStart": 0,
+				"triangleCount": 198,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					-0.5107277631759644,
+					0.005597895011305809,
+					0.31890544295310974
+				],
+				"sortCenterPosition": [
+					-0.4098084568977356,
+					0,
+					0.6604150533676147
+				],
+				"sortRadius": 1.04762864112854
+			}
+		],
+		"textureUnits": [
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 0,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 0,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 0,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			}
+		],
+		"fileName": "world/generic/human/passive doodads/chairs/generalchairloend0100.skin",
+		"fileDataID": 504310
+	}
+}

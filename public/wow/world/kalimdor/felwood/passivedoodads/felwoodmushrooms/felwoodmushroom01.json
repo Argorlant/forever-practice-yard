@@ -1,0 +1,230 @@
+{
+	"fileType": "m2",
+	"fileDataID": 201859,
+	"fileName": "world/kalimdor/felwood/passivedoodads/felwoodmushrooms/felwoodmushroom01.m2",
+	"internalName": "FelwoodMushroom01",
+	"textures": [
+		{
+			"fileNameInternal": "world/kalimdor/felwood/passivedoodads/felwoodmushrooms/felwoodmushroom_tiny.blp",
+			"fileNameExternal": "felwoodmushroom_tiny.png",
+			"mtlName": "mat_felwoodmushroom_tiny",
+			"flags": 0,
+			"fileDataID": 201862
+		},
+		{
+			"fileNameInternal": "world/kalimdor/felwood/passivedoodads/felwoodmushrooms/felwoodmushroom_white.blp",
+			"fileNameExternal": "felwoodmushroom_white.png",
+			"mtlName": "mat_felwoodmushroom_white",
+			"flags": 3,
+			"fileDataID": 201863
+		},
+		{
+			"fileNameInternal": "world/kalimdor/felwood/passivedoodads/felwoodmushrooms/felwoodmushroom01.blp",
+			"fileNameExternal": "felwoodmushroom01.png",
+			"mtlName": "mat_felwoodmushroom01",
+			"flags": 0,
+			"fileDataID": 201858
+		}
+	],
+	"textureTypes": [
+		0,
+		0,
+		0
+	],
+	"materials": [
+		{
+			"flags": 4,
+			"blendingMode": 1
+		},
+		{
+			"flags": 0,
+			"blendingMode": 0
+		},
+		{
+			"flags": 4,
+			"blendingMode": 1
+		}
+	],
+	"textureCombos": [
+		0,
+		1,
+		2
+	],
+	"colors": [],
+	"textureWeights": [
+		{
+			"globalSeq": 65535,
+			"interpolation": 0,
+			"timestamps": [
+				[
+					0
+				]
+			],
+			"values": [
+				[
+					32767
+				]
+			],
+			"timestampOffsets": null,
+			"valueOffsets": null
+		}
+	],
+	"transparencyLookup": [
+		0
+	],
+	"textureTransforms": [],
+	"textureTransformsLookup": [
+		65535
+	],
+	"boundingBox": {
+		"min": [
+			-1.127940058708191,
+			-1.9163000583648682,
+			-0.11536099761724472
+		],
+		"max": [
+			1.3692100048065186,
+			1.6648199558258057,
+			2.7172000408172607
+		]
+	},
+	"boundingSphereRadius": 1.9620000123977661,
+	"collisionBox": {
+		"min": [
+			10000000,
+			10000000,
+			10000000
+		],
+		"max": [
+			-10000000,
+			-10000000,
+			-10000000
+		]
+	},
+	"collisionSphereRadius": 0,
+	"skin": {
+		"subMeshes": [
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 0,
+				"vertexCount": 8,
+				"triangleStart": 0,
+				"triangleCount": 12,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					0.14452360570430756,
+					0.9727126955986023,
+					2.3058338165283203
+				],
+				"sortCenterPosition": [
+					0.20719501376152039,
+					0.9875369668006897,
+					2.3320651054382324
+				],
+				"sortRadius": 0.5020373463630676
+			},
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 8,
+				"vertexCount": 55,
+				"triangleStart": 12,
+				"triangleCount": 288,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					0.04043161869049072,
+					-0.125953808426857,
+					0.9626789689064026
+				],
+				"sortCenterPosition": [
+					0.04043161869049072,
+					-0.125953808426857,
+					0.9626789689064026
+				],
+				"sortRadius": 1.8471314907073975
+			},
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 63,
+				"vertexCount": 8,
+				"triangleStart": 300,
+				"triangleCount": 12,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					0.049840718507766724,
+					0.38582977652549744,
+					0.8951840996742249
+				],
+				"sortCenterPosition": [
+					0.012485980987548828,
+					0.4365115165710449,
+					0.8251540064811707
+				],
+				"sortRadius": 1.3547297716140747
+			}
+		],
+		"textureUnits": [
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 16,
+				"skinSectionIndex": 0,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 0,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 0,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			},
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 1,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 1,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 1,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			},
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 16,
+				"skinSectionIndex": 2,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 2,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 2,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			}
+		],
+		"fileName": "world/kalimdor/felwood/passivedoodads/felwoodmushrooms/felwoodmushroom0100.skin",
+		"fileDataID": 507210
+	}
+}

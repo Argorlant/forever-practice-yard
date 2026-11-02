@@ -1,0 +1,126 @@
+{
+	"fileType": "m2",
+	"fileDataID": 189794,
+	"fileName": "world/azeroth/elwynn/passivedoodads/elwynnfences/elwynnstonefencepost.m2",
+	"internalName": "ElwynnStoneFencePost",
+	"textures": [
+		{
+			"fileNameInternal": "world/azeroth/elwynn/passivedoodads/elwynnfences/stonefencepillar.blp",
+			"fileNameExternal": "stonefencepillar.png",
+			"mtlName": "mat_stonefencepillar",
+			"flags": 0,
+			"fileDataID": 189799
+		}
+	],
+	"textureTypes": [
+		0
+	],
+	"materials": [
+		{
+			"flags": 0,
+			"blendingMode": 0
+		}
+	],
+	"textureCombos": [
+		0
+	],
+	"colors": [],
+	"textureWeights": [
+		{
+			"globalSeq": 65535,
+			"interpolation": 0,
+			"timestamps": [
+				[
+					0
+				]
+			],
+			"values": [
+				[
+					32767
+				]
+			],
+			"timestampOffsets": null,
+			"valueOffsets": null
+		}
+	],
+	"transparencyLookup": [
+		0
+	],
+	"textureTransforms": [],
+	"textureTransformsLookup": [
+		65535
+	],
+	"boundingBox": {
+		"min": [
+			-0.2919958233833313,
+			-0.2679044008255005,
+			0
+		],
+		"max": [
+			0.2653311789035797,
+			0.2894226610660553,
+			1.3178714513778687
+		]
+	},
+	"boundingSphereRadius": 0.7677909731864929,
+	"collisionBox": {
+		"min": [
+			-0.2917186915874481,
+			-0.2661116421222687,
+			0
+		],
+		"max": [
+			0.2638368606567383,
+			0.2894439101219177,
+			1.2848976850509644
+		]
+	},
+	"collisionSphereRadius": 0.7530348896980286,
+	"skin": {
+		"subMeshes": [
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 0,
+				"vertexCount": 16,
+				"triangleStart": 0,
+				"triangleCount": 42,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					-0.013356038369238377,
+					0.010782845318317413,
+					0.9527578353881836
+				],
+				"sortCenterPosition": [
+					-0.013332322239875793,
+					0.010759130120277405,
+					0.6589357256889343
+				],
+				"sortRadius": 0.7677909731864929
+			}
+		],
+		"textureUnits": [
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 0,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 0,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 0,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			}
+		],
+		"fileName": "world/azeroth/elwynn/passivedoodads/elwynnfences/elwynnstonefencepost00.skin",
+		"fileDataID": 494531
+	}
+}

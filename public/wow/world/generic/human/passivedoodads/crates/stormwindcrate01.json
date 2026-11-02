@@ -1,0 +1,126 @@
+{
+	"fileType": "m2",
+	"fileDataID": 198168,
+	"fileName": "world/generic/human/passive doodads/crates/stormwindcrate01.m2",
+	"internalName": "StormwindCrate01",
+	"textures": [
+		{
+			"fileNameInternal": "dungeons/textures/doodads/stormwindcrate01.blp",
+			"fileNameExternal": "..\\..\\..\\..\\..\\dungeons\\textures\\doodads\\stormwindcrate01.png",
+			"mtlName": "mat_stormwindcrate01",
+			"flags": 0,
+			"fileDataID": 127515
+		}
+	],
+	"textureTypes": [
+		0
+	],
+	"materials": [
+		{
+			"flags": 0,
+			"blendingMode": 0
+		}
+	],
+	"textureCombos": [
+		0
+	],
+	"colors": [],
+	"textureWeights": [
+		{
+			"globalSeq": 65535,
+			"interpolation": 0,
+			"timestamps": [
+				[
+					0
+				]
+			],
+			"values": [
+				[
+					32767
+				]
+			],
+			"timestampOffsets": null,
+			"valueOffsets": null
+		}
+	],
+	"transparencyLookup": [
+		0
+	],
+	"textureTransforms": [],
+	"textureTransformsLookup": [
+		65535
+	],
+	"boundingBox": {
+		"min": [
+			-0.6157037019729614,
+			-0.6619537472724915,
+			0
+		],
+		"max": [
+			0.6157037019729614,
+			0.6619537472724915,
+			1.2429699897766113
+		]
+	},
+	"boundingSphereRadius": 1.0970494747161865,
+	"collisionBox": {
+		"min": [
+			-0.6157037019729614,
+			-0.6619537472724915,
+			0
+		],
+		"max": [
+			0.6157037019729614,
+			0.6619537472724915,
+			1.2429699897766113
+		]
+	},
+	"collisionSphereRadius": 1.0970494747161865,
+	"skin": {
+		"subMeshes": [
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 0,
+				"vertexCount": 20,
+				"triangleStart": 0,
+				"triangleCount": 36,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					0,
+					5.9604645663569045e-9,
+					0.6214849352836609
+				],
+				"sortCenterPosition": [
+					0,
+					0,
+					0.6214849948883057
+				],
+				"sortRadius": 1.0970494747161865
+			}
+		],
+		"textureUnits": [
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 0,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 0,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 0,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			}
+		],
+		"fileName": "world/generic/human/passive doodads/crates/stormwindcrate0100.skin",
+		"fileDataID": 504352
+	}
+}

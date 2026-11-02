@@ -1,0 +1,126 @@
+{
+	"fileType": "m2",
+	"fileDataID": 198660,
+	"fileName": "world/generic/human/passive doodads/weapons&armor/wallshield03.m2",
+	"internalName": "WallShield03",
+	"textures": [
+		{
+			"fileNameInternal": "item/objectcomponents/shield/shield_crest_a_01silver.blp",
+			"fileNameExternal": "..\\..\\..\\..\\..\\item\\objectcomponents\\shield\\shield_crest_a_01silver.png",
+			"mtlName": "mat_shield_crest_a_01silver",
+			"flags": 0,
+			"fileDataID": 142808
+		}
+	],
+	"textureTypes": [
+		0
+	],
+	"materials": [
+		{
+			"flags": 0,
+			"blendingMode": 0
+		}
+	],
+	"textureCombos": [
+		0
+	],
+	"colors": [],
+	"textureWeights": [
+		{
+			"globalSeq": 65535,
+			"interpolation": 0,
+			"timestamps": [
+				[
+					0
+				]
+			],
+			"values": [
+				[
+					32767
+				]
+			],
+			"timestampOffsets": null,
+			"valueOffsets": null
+		}
+	],
+	"transparencyLookup": [
+		0
+	],
+	"textureTransforms": [],
+	"textureTransformsLookup": [
+		65535
+	],
+	"boundingBox": {
+		"min": [
+			-3.444890950277113e-8,
+			-0.36440375447273254,
+			-0.5269310474395752
+		],
+		"max": [
+			0.0953959971666336,
+			0.3644038140773773,
+			0.5269309282302856
+		]
+	},
+	"boundingSphereRadius": 0.6072585582733154,
+	"collisionBox": {
+		"min": [
+			10000000,
+			10000000,
+			10000000
+		],
+		"max": [
+			-10000000,
+			-10000000,
+			-10000000
+		]
+	},
+	"collisionSphereRadius": 0,
+	"skin": {
+		"subMeshes": [
+			{
+				"enabled": true,
+				"submeshID": 0,
+				"level": 0,
+				"vertexStart": 0,
+				"vertexCount": 32,
+				"triangleStart": 0,
+				"triangleCount": 60,
+				"boneCount": 1,
+				"boneStart": 0,
+				"boneInfluences": 0,
+				"centerBoneIndex": 0,
+				"centerPosition": [
+					0.031213974580168724,
+					6.51925802230835e-9,
+					0.09648348391056061
+				],
+				"sortCenterPosition": [
+					0.04769797995686531,
+					2.9802322387695312e-8,
+					-5.960464477539063e-8
+				],
+				"sortRadius": 0.6072585582733154
+			}
+		],
+		"textureUnits": [
+			{
+				"flags": 16,
+				"priority": 0,
+				"shaderID": 0,
+				"skinSectionIndex": 0,
+				"flags2": 0,
+				"colorIndex": 65535,
+				"materialIndex": 0,
+				"materialLayer": 0,
+				"textureCount": 1,
+				"textureComboIndex": 0,
+				"textureCoordComboIndex": 0,
+				"textureWeightComboIndex": 0,
+				"textureTransformComboIndex": 0
+			}
+		],
+		"fileName": "world/generic/human/passive doodads/weapons&armor/wallshield0300.skin",
+		"fileDataID": 504790
+	}
+}
