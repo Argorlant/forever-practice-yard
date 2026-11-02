@@ -14,6 +14,7 @@ import { warlockAffliction, warlockDemonology, warlockDestruction } from '../src
 import { warrior } from '../src/specs/warrior';
 import { SPECS } from '../src/specs';
 import { classKey, decode, pointsPerTree, treesOf } from '../src/ui/talents-data';
+import { addMissing, dropMissing, expandBar, fillExtraRows } from '../src/ui/bars';
 import {
   canAdd, canRemove, decodeOrder, defaultOrder, encode, encodeOrder, isValid, levelFor, parseTalents, pointsOf, repairOrder,
 } from '../src/ui/talent-rules';
@@ -1174,6 +1175,188 @@ console.log(`Talent layouts checked for ${SPECS.reduce((n, s) => n + (s.builds?.
   }
   Math.random = realRandom;
   console.log(`Onyxia: ${idle.f.review.time.toFixed(0)} s idle with the raid, ${idle.f.review.whelpsSpawned} whelps, ${idle.f.review.fears} fears, ${perBreath} Deep Breath hits a breath in the middle; idle with real health: ${wipe.f.review.won ? 'survives' : `dies in phase ${wipe.f.review.phase}`}, bitten ${wipe.f.review.whelpBites} times by ${wipe.f.review.whelpsAtYou} loose whelps`);
+}
+// The whole spellbook: every ability of every spec, pressed alone against a dummy in reach, with resources to spare.
+{
+  const yard = (spec: Spec, race = '', build?: string) => {
+    const b = build ?? spec.builds?.[0]?.id;
+    const c = new Combat(spec, { ...(spec.defaultOptions ?? {}), ...(b ? { build: b } : {}), ...(spec.builds?.find((x) => x.id === b)?.options ?? {}) });
+    if (spec.builds?.length) c.stats = structuredClone(spec.builds.find((x) => x.id === b)!.stats);
+    c.race = race;
+    const dummy = { id: 0, name: 'Dummy', level: 63, health: 1e9, maxHealth: 1e9, armor: 3731, auras: new Map(), x: 0, z: 0, facing: 0, radius: 0.5 } as Unit;
+    c.targets = [dummy];
+    c.target = dummy;
+    c.player.x = 0; c.player.z = -2; c.player.facing = 0;
+    c.reset();
+    return { c, dummy };
+  };
+  const refusals = new Map<string, string[]>();
+  let pressed = 0;
+  for (const spec of SPECS) {
+    const seen = new Set<string>();
+    for (const a of spec.abilities) {
+      if (seen.has(a.id)) failures.push(`${spec.id}: ${a.id} appears twice`);
+      seen.add(a.id);
+      for (const k of ['id', 'name', 'icon'] as const) if (!a[k]) failures.push(`${spec.id}: ${a.id} has no ${k}`);
+      const { c, dummy } = yard(spec, a.race ? `${a.race[0]}-m` : 'human-m');
+      const p = c.player;
+      // At the distance it wants, and out of form for what a form does not allow.
+      const away = a.minRange ? a.minRange + 2 : typeof a.range === 'number' ? Math.min(a.range - 1, 6) : 1;
+      p.z = -away * 0.9144 - dummy.radius;
+      if (a.book && spec.form && !a.id.endsWith('Form')) c.applyAura(p, { id: 'casterForm', name: '', icon: 'dummy', duration: Infinity });
+      p.resource = 1e6; p.mana = 1e6;
+      try {
+        const reason = c.blocker(a, a.target === 'enemy' ? dummy : null);
+        if (reason) refusals.set(reason, [...(refusals.get(reason) ?? []), `${spec.id}:${a.id}`]);
+        const used = c.use(a.id);
+        if (used) pressed++;
+        for (let t = 0; t < 25; t += 0.1) c.update(0.1);
+        if (!Number.isFinite(dummy.health) || !Number.isFinite(p.resource) || !Number.isFinite(p.mana ?? 0)) failures.push(`${spec.id}: ${a.id} left a number broken`);
+        a.description(c);
+      } catch (err) {
+        failures.push(`${spec.id}: ${a.id} threw ${(err as Error).message}`);
+      }
+    }
+  }
+  const allowed = ['Requires', 'Only after', 'No corpse', 'Not enough', 'Must be in', "Can't do that while in combat", 'stealth', 'Stealth', 'No demon', 'pet', 'Pet', 'seal', 'Seal', 'behind', 'Behind', 'combo', 'Combo', 'Too close', 'Execute', 'health', 'Bloodrage', 'stance', 'Stance', 'shield', 'Shield', 'Needs', 'need', 'target', 'dodge', 'Overpower', 'parry', 'block', 'Revenge', 'after', 'Hawk', 'totem', 'Totem', 'Your race', 'too close', 'Energy is full', 'prowling', 'Only against'];
+  for (const [reason, who] of refusals) {
+    if (!allowed.some((w) => reason.includes(w))) failures.push(`Spellbook: refused for "${reason}": ${who.slice(0, 6).join(', ')}`);
+  }
+
+  // None of the book joins a bar by itself.
+  for (const spec of SPECS) {
+    const { c } = yard(spec, 'orc-m');
+    const bar = expandBar(spec.bar);
+    fillExtraRows(bar, c);
+    for (const b of bar) if (b.id && c.ability(b.id)?.book) failures.push(`${spec.id}: ${b.id} joined the bar from the spellbook`);
+    const noRace = yard(spec, 'human-m').c;
+    const human = expandBar(spec.bar);
+    fillExtraRows(human, noRace);
+    if (human.some((b) => b.id === 'bloodFury')) failures.push(`${spec.id}: a human got Blood Fury on the bar`);
+  }
+
+  // Racials: their numbers, for whoever has them.
+  {
+    const orc = yard(warrior, 'orc-m').c;
+    const human = yard(warrior, 'human-m').c;
+    if (human.use('bloodFury')) failures.push('A human used Blood Fury');
+    const ap = orc.attackPower();
+    orc.use('bloodFury');
+    if (Math.abs(orc.attackPower() - 1.1 * ap) > 1) failures.push(`Blood Fury: attack power ${ap} -> ${orc.attackPower()}`);
+    if (orc.cooldownLeft('bloodFury').total !== 120) failures.push('Blood Fury: not a 2 minute cooldown');
+    const troll = yard(warrior, 'troll-m').c;
+    const haste = troll.haste();
+    troll.use('berserking');
+    if (Math.abs(troll.haste() / haste - 1.1) > 0.001) failures.push(`Berserking: haste ${haste} -> ${troll.haste()}`);
+    if (troll.player.gcdEnd > troll.t) failures.push('Berserking takes the global cooldown');
+    const elf = yard(rogue, 'nightelf-m').c;
+    const crit = elf.critChance('melee_mh');
+    elf.use('elunesLight');
+    if (Math.abs(elf.critChance('melee_mh') - crit - 10) > 0.001) failures.push(`Elune's Light: crit ${crit} -> ${elf.critChance('melee_mh')}`);
+    const gnome = yard(mageFire, 'gnome-m').c;
+    const fireball = gnome.ability('fireball')!;
+    const full = gnome.cost(fireball);
+    gnome.use('eureka');
+    if (Math.abs(gnome.cost(fireball) - full / 2) > 1) failures.push(`Eureka!: a mage's Fireball costs ${gnome.cost(fireball)} of ${full}`);
+    gnome.use('fireball');
+    for (let t = 0; t < 5; t += 0.1) gnome.update(0.1);
+    if (gnome.aura(gnome.player, 'eureka')?.stacks !== 2) failures.push('Eureka!: a cast did not spend a charge');
+    const nature = yard(priestShadow, 'human-m').c;
+    if (nature.ability('starshards') && nature.blocker(nature.ability('starshards')!) !== 'Your race does not have that') failures.push('A human priest can cast Starshards');
+  }
+
+  // Groups across what the specs simulate by hand and the book.
+  {
+    const { c } = yard(hunterMm, 'orc-m');
+    c.use('aspectOfTheHawk');
+    for (let t = 0; t < 2; t += 0.1) c.update(0.1);
+    c.use('aspectOfTheCheetah');
+    if (c.aura(c.player, 'aspectOfTheHawk') || !c.aura(c.player, 'aspectOfTheCheetah')) failures.push('Aspect of the Cheetah did not replace the Hawk');
+    if (c.moveSpeed() <= 1) failures.push('Aspect of the Cheetah does not speed you up');
+    for (let t = 0; t < 2; t += 0.1) c.update(0.1);
+    c.use('aspectOfTheHawk');
+    if (c.aura(c.player, 'aspectOfTheCheetah') || !c.aura(c.player, 'aspectOfTheHawk')) failures.push('The Hawk did not replace Aspect of the Cheetah');
+    // Totems of an element, the same way.
+    const s = yard(shamanElemental, 'orc-m').c;
+    s.player.resource = 1e6;
+    s.use('earthbindTotem');
+    for (let t = 0; t < 2; t += 0.1) s.update(0.1);
+    s.use('strengthOfEarthTotem');
+    if (s.aura(s.player, 'earthbindTotem') || !s.aura(s.player, 'strengthOfEarthTotem')) failures.push('Strength of Earth did not replace Earthbind');
+    for (let t = 0; t < 16; t += 0.1) s.update(0.1);
+    s.use('earthbindTotem');
+    if (!s.aura(s.player, 'earthbindTotem') || s.aura(s.player, 'strengthOfEarthTotem')) failures.push('Earthbind did not replace Strength of Earth');
+    s.use('totemicRecall');
+    for (let t = 0; t < 2; t += 0.1) s.update(0.1);
+    s.use('totemicRecall');
+    if (s.aura(s.player, 'earthbindTotem')) failures.push('Totemic Recall left a totem');
+  }
+
+  // Real damage: Arcane Explosion's numbers come from the client (239-258 before spell power).
+  {
+    const { c, dummy } = yard(mageFire, 'human-m');
+    const seen: number[] = [];
+    c.on('damage', (h) => { if (h.source === 'arcaneExplosion' && h.outcome === 'hit') seen.push(h.amount); });
+    for (let i = 0; i < 40; i++) { c.player.resource = 1e6; c.use('arcaneExplosion'); for (let t = 0; t < 1.6; t += 0.1) c.update(0.1); }
+    const low = 239 + 0.143 * c.spellPowerFor('arcane');
+    const high = 258 + 0.143 * c.spellPowerFor('arcane');
+    if (!seen.length || Math.min(...seen) < low - 1 || Math.max(...seen) > high * 1.2) failures.push(`Arcane Explosion hit for ${Math.min(...seen)}-${Math.max(...seen)}, expected about ${low}-${high}`);
+    if (dummy.health >= dummy.maxHealth) failures.push('Arcane Explosion did no damage');
+  }
+
+  // A druid: spells out of form, form abilities in it, and the other form on its own page.
+  {
+    const { c } = yard(druidCat, 'nightelf-f');
+    const p = c.player;
+    p.resource = 100; p.mana = 5000;
+    if (c.blocker(c.ability('rejuvenation')!) !== "Can't do that while shapeshifted") failures.push('A cat casts Rejuvenation');
+    if (druidCat.form!(c) !== 'cat') failures.push('The cat page does not start in Cat Form');
+    c.use('catForm');
+    for (let t = 0; t < 2; t += 0.1) c.update(0.1);
+    if (druidCat.form!(c) !== null) failures.push('Cat Form does not go off');
+    if (!c.blocker(c.ability('shred')!)?.startsWith('Must be in Cat Form')) failures.push('Shred works out of form');
+    const mana = p.mana;
+    if (c.blocker(c.ability('rejuvenation')!)) failures.push(`Rejuvenation out of form: ${c.blocker(c.ability('rejuvenation')!)}`);
+    c.use('rejuvenation');
+    if (p.mana >= mana) failures.push('Rejuvenation did not cost mana on the cat page');
+    for (let t = 0; t < 2; t += 0.1) c.update(0.1);
+    c.use('catForm');
+    if (druidCat.form!(c) !== 'cat') failures.push('Cat Form does not come back');
+    for (let t = 0; t < 2; t += 0.1) c.update(0.1);
+    c.use('travelForm');
+    if (druidCat.form!(c) !== 'travel') failures.push('Travel Form does not show');
+    let went = '';
+    c.on('switchSpec', (id) => { went = id; });
+    for (let t = 0; t < 2; t += 0.1) c.update(0.1);
+    c.use('direBearForm');
+    if (went !== 'druid-bear') failures.push('Dire Bear Form does not lead to the bear page');
+    const balance = yard(druidBalance, 'highorder', 'balance').c;
+    if (druidBalance.form!(balance) !== 'moonkin') failures.push('The Balance build does not start in Moonkin Form');
+    if (balance.blocker(balance.ability('healingTouch')!) !== "Can't do that while shapeshifted") failures.push('A Moonkin casts Healing Touch');
+    if (balance.blocker(balance.ability('hurricane')!) === "Can't do that while shapeshifted") failures.push('A Moonkin cannot cast Hurricane');
+  }
+  // Moonkin Form has a button only where the talent is: on the build's bar, on a saved bar and with talents of your own.
+  for (const b of druidBalance.builds!) {
+    const { c } = yard(druidBalance, 'nightelf-f', b.id);
+    const has = c.ability('moonkinForm')!.usable!(c);
+    if (expandBar(b.bar!).some((s) => s.id === 'moonkinForm') !== has) failures.push(`${b.id}: the Moonkin Form button does not follow the talent`);
+    const saved = expandBar(b.bar!);
+    saved[6].id = 'moonkinForm';
+    dropMissing(saved, c);
+    if ((saved[6].id === 'moonkinForm') !== has) failures.push(`${b.id}: a saved Moonkin Form button does not follow the talent`);
+  }
+  {
+    const talent = druidBalance.builds!.find((b) => b.id === 'balance')!.talentString!;
+    const { c } = yard(druidBalance, 'nightelf-f', 'moonkin');
+    const own = expandBar(druidBalance.bar);
+    c.options.talents = talent;
+    addMissing(own, c);
+    if (!own.some((s) => s.id === 'moonkinForm')) failures.push('Taking the Moonkin Form talent gives no button');
+    c.options.talents = '';
+    dropMissing(own, c);
+    if (own.some((s) => s.id === 'moonkinForm')) failures.push('Dropping the Moonkin Form talent leaves its button');
+  }
+  console.log(`Spellbook: ${SPECS.length} specs, ${pressed} abilities pressed, ${[...refusals.values()].flat().length} refused for their own reasons.`);
 }
 if (failures.length) {
   console.error(`FAILED:\n  ${failures.join('\n  ')}`);

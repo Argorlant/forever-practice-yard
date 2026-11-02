@@ -314,7 +314,18 @@ export class Hud {
     // Rebuilt on opening: what the build can use changes with the talents.
     const c = this.combat;
     this.spellList.innerHTML = '';
-    for (const a of c.spec.abilities) {
+    // The race's own spells only; a group's heading comes before its first spell.
+    const race = c.race.split('-')[0];
+    const heading = (a: (typeof c.spec.abilities)[number]) => (a.group === 'racial' || a.race ? 'Racial' : a.book ? 'More spells' : 'Rotation');
+    const shown = c.spec.abilities.filter((a) => !a.race || a.race.includes(race));
+    const order = ['Rotation', 'Racial', 'More spells'];
+    shown.sort((x, y) => order.indexOf(heading(x)) - order.indexOf(heading(y)));
+    let group = '';
+    for (const a of shown) {
+      if (heading(a) !== group) {
+        group = heading(a);
+        this.spellList.append(h('div', 'spellbook-group', group));
+      }
       const usable = a.usable?.(c) ?? true;
       const entry = h('div', `spell${usable ? '' : ' unusable'}`);
       entry.innerHTML = `<div class="spell-icon">${iconHtml(a.icon)}</div><span>${a.name}</span>`;

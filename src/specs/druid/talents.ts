@@ -61,7 +61,7 @@ const CAT_BAR = bar(['shred', 'claw', 'rake', 'rip', 'ferociousBite', 'shiftingP
   'prowl', 'ravage', 'pounce', 'cower', 'manaPotion', 'thistleTea', 'dash', 'attack']);
 const BEAR_BAR = bar(['primalBite', 'lacerate', 'maul', 'swipe', 'demoralizingRoar', 'faerieFire', 'druidEnrage', null,
   'attack', 'frenziedRegeneration', 'barkskin', 'bash', 'feralCharge', 'growl', 'ragePotion', null]);
-const BALANCE_BAR = bar(['wrath', 'starfire', 'moonfire', 'insectSwarm', 'faerieFire', 'innervate', 'moonkinForm', 'barkskin',
+const balanceBar = (form: string | null) => bar(['wrath', 'starfire', 'moonfire', 'insectSwarm', 'faerieFire', 'innervate', form, 'barkskin',
   'manaPotion', null, null, null, null, null, null, null]);
 
 const GS = 'gunba/wow-forever-sim';
@@ -74,8 +74,8 @@ export const BUILDS: Build[] = [
   { id: 'cat', spec: 'cat', name: 'Feral Cat', talentString: '05002-55200032023012125001-055', source: RESPENT, stats: CAT_STATS, bar: CAT_BAR },
   { id: 'cat-feral', spec: 'cat', name: 'Feral, deeper (Natural Shapeshifter)', talentString: '-55220132023012125011-05503', source: RESPENT, stats: CAT_STATS, bar: CAT_BAR },
   { id: 'bear', spec: 'bear', name: 'Bear tank', talentString: '01-5502233212310212551-05', source: RESPENT, stats: BEAR_STATS, bar: BEAR_BAR, tank: true },
-  { id: 'moonkin', spec: 'balance', name: 'Moonkin', talentString: '533222011550135--5053', source: REENCODED, stats: BALANCE_STATS, bar: BALANCE_BAR },
-  { id: 'balance', spec: 'balance', name: 'Balance', talentString: '5532220115001351--505203', source: REENCODED, stats: BALANCE_STATS, bar: BALANCE_BAR },
+  { id: 'moonkin', spec: 'balance', name: 'Moonkin', talentString: '533222011550135--5053', source: REENCODED, stats: BALANCE_STATS, bar: balanceBar(null) },
+  { id: 'balance', spec: 'balance', name: 'Balance', talentString: '5532220115001351--505203', source: REENCODED, stats: BALANCE_STATS, bar: balanceBar('moonkinForm') },
 ];
 
 export const buildsFor = (spec: DruidSpec) => BUILDS.filter((b) => b.spec === spec);

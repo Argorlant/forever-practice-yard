@@ -6,12 +6,14 @@ export const FORM_NAMES: Record<DruidForm, string> = {
   travel: 'Travel Form', aquatic: 'Aquatic Form', tree: 'Tree Form',
 };
 
-/** Classic races use SD; Skyborne keeps HD until its own SD models exist. */
+const isSkyborne = (race: string | undefined) => /^(highorder|windshaper)(?:-|$)/.test(race ?? '');
+
+/** Classic races use SD; Skyborne keeps HD until its own SD models exist, except for the Moonkin, which is the Night Elf's. */
 export function formDefinition(race: string | undefined, form: DruidForm): 'sd' | 'hd' {
-  return /^(highorder|windshaper)(?:-|$)/.test(race ?? '') && form !== 'aquatic' && form !== 'tree' ? 'hd' : 'sd';
+  return isSkyborne(race) && form !== 'aquatic' && form !== 'tree' && form !== 'moonkin' ? 'hd' : 'sd';
 }
 
 export function druidFormKeys(race: string | undefined, form: DruidForm): string[] {
-  const who = race?.split('-')[0] || 'nightelf';
+  const who = (form === 'moonkin' && isSkyborne(race) ? 'nightelf' : race?.split('-')[0]) || 'nightelf';
   return who === 'nightelf' ? [`form-${form}@nightelf`, `form-${form}`] : [`form-${form}@${who}`];
 }

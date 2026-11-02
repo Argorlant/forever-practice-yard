@@ -33,6 +33,7 @@ export const UI = {
   needsFront: 'The target must be facing you',
   tooClose: 'Target too close',
   cantWhileMoving: "Can't do that while moving",
+  wrongRace: 'Your race does not have that',
   fleeing: "Can't do that while fleeing",
   glancing: 'glancing',
   rotation: 'Rotation',

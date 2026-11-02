@@ -3,7 +3,7 @@
 // 4 above the main two, shown when Settings asks for them), then the stance
 // bar. Rows 3 and 4 start with the build's abilities that have no button yet.
 import type { Combat } from '../engine/combat';
-import { ACTION_BAR_SLOTS, type Binding } from '../engine/types';
+import { ACTION_BAR_SLOTS, type Ability, type Binding } from '../engine/types';
 
 export const ROW = 8;
 export const MAX_ROWS = 4;
@@ -16,18 +16,29 @@ export function expandBar(specBar: Binding[]): Binding[] {
   return [...specBar.slice(0, ACTION_BAR_SLOTS).map((b) => ({ ...b })), ...extra, ...specBar.slice(ACTION_BAR_SLOTS).map((b) => ({ ...b }))];
 }
 
+/** What a bar takes by itself: what this character can use, without the rest of the spellbook. */
+const joinsBar = (a: Ability, c: Combat) => !a.book && (a.usable?.(c) ?? true) && (!a.race || a.race.includes(c.race.split('-')[0]));
+
 /** Puts the abilities the build can use and that have no button into rows 3 and 4 (Charge, cooldowns, pet orders…). */
 export function fillExtraRows(bar: Binding[], c: Combat): void {
   for (let i = ACTION_BAR_SLOTS; i < ACTION_SLOTS; i++) bar[i].id = null;
   const used = new Set(bar.map((b) => b.id).filter(Boolean));
-  const rest = c.spec.abilities.filter((a) => !used.has(a.id) && (a.usable?.(c) ?? true)).map((a) => a.id);
+  const rest = c.spec.abilities.filter((a) => !used.has(a.id) && joinsBar(a, c)).map((a) => a.id);
   for (let i = ACTION_BAR_SLOTS; i < ACTION_SLOTS && rest.length; i++) bar[i].id = rest.shift()!;
+}
+
+/** A talent this character does not have: no button for it. */
+export const noButton = (a: Ability | undefined, c: Combat) => !!a?.dropsFromBar && !(a.usable?.(c) ?? true);
+
+/** Takes those buttons off a bar saved or laid out before the talents changed. */
+export function dropMissing(bar: Binding[], c: Combat): void {
+  for (const b of bar) if (b.id && noButton(c.ability(b.id), c)) b.id = null;
 }
 
 /** Abilities you can use but have no button for (a talent just taken) go into empty slots on rows 3 and 4. */
 export function addMissing(bar: Binding[], c: Combat): void {
   const used = new Set(bar.map((b) => b.id).filter(Boolean));
-  const rest = c.spec.abilities.filter((a) => !used.has(a.id) && (a.usable?.(c) ?? true)).map((a) => a.id);
+  const rest = c.spec.abilities.filter((a) => !used.has(a.id) && joinsBar(a, c)).map((a) => a.id);
   for (let i = ACTION_BAR_SLOTS; i < ACTION_SLOTS && rest.length; i++) if (!bar[i].id) bar[i].id = rest.shift()!;
 }
 

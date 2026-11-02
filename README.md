@@ -217,7 +217,11 @@ and your talents. The notes come from the research sheets: `node tools/talent_no
 
 **Action bars and keys.** Up to four rows of 8 buttons (2 to 4 shown, in Settings or the Spellbook). Rows 3 and 4 start with
 the build's abilities that have no other button (Charge and Intercept for a warrior), row 3 on Shift+1-8. The Spellbook lists
-every ability to drag onto a button; dragging a button off the bar clears it. The Keys button turns on key binding: hover a
+the class's whole book to drag onto a button, under Rotation, Racial and More spells; dragging a button off the bar clears it.
+Your race decides your racials, and the combat ones take an empty button by themselves. More spells stay off the bar until you
+drag them there: their damage, heals and shields are real, with the client's level 60 numbers, crowd control says Immune against
+a dummy, and the rest only run their timers (the tooltip says which). Moonkin Form has a button only on a build with its talent.
+The Keys button turns on key binding: hover a
 button and press a key or turn the mouse wheel (Backspace clears it). The wheel binds like in WoW: up and down are two
 keys, Shift, Ctrl and Alt combine with them, and a bound direction no longer zooms the camera. In Settings, × unbinds any key, movement included, and a key does one thing,
 as in WoW: binding it somewhere unbinds it elsewhere (bind A and D to strafe and they stop turning). Holding both mouse
@@ -353,13 +357,16 @@ Then open http://127.0.0.1:5180.
   exported from their .blend files to glTF (the dragon's actions renamed Stand, Walk, AttackUnarmed and Death;
   the weapons normalized: swords grip at the origin and blade along +Y, shields face along +Z, one unit long)
   with `tools/blender_dragon.py` and `tools/blender_weapons.py`.
-- Ability icons © Blizzard Entertainment, used so the buttons look as they do in the game.
+- Ability icons © Blizzard Entertainment, used so the buttons look as they do in the game. Spellbook icons that are not in
+  `public/icons` load in your browser from Wowhead's image server (wow.zamimg.com).
 - Published wow.export character, creature and environment assets © Blizzard Entertainment; these game assets are not covered by the code's MIT license.
 - Dummy portrait: [game-icons.net](https://game-icons.net) by Lorc (CC BY 3.0).
 - Floors of your own places: [three-mesh-bvh](https://github.com/gkjohnson/three-mesh-bvh) (MIT).
 - Combat formulas follow [WoWSims](https://github.com/wowsims/classic) (MIT) and its WoW Forever
   forks [foreversim](https://github.com/laurencestokes/foreversim) and
   [wow-forever-sim](https://github.com/gunba/wow-forever-sim).
+- The rest of each class's spellbook (`tools/spellbook.mjs`): a roster kept by hand, with its numbers from foreversim's client
+  spell table and its icon names from wow-forever-sim.
 
 ## Support
 

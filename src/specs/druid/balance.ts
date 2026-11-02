@@ -189,6 +189,7 @@ const abilities: Ability[] = [
     cost: (c) => (c.aura(c.player, 'moonkinForm') ? 0 : moonkinMana(c)),
     requirements: (c) => (T(c).moonkinForm ? null : 'Requires the Moonkin Form talent'),
     usable: (c) => T(c).moonkinForm > 0,
+    dropsFromBar: true,
     highlight: (c) => !!c.aura(c.player, 'moonkinForm'),
     description: (c) => `Moonkin Aura: 3% spell crit for the raid (stacks with Leader of the Pack since Oct 15); Omen of Clarity procs twice as often. ${moonkinMana(c)} mana. Press again to leave the form.`,
     use: (c) => {

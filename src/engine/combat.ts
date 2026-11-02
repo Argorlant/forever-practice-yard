@@ -138,6 +138,8 @@ interface EventMap {
   cast: { id: string; done: boolean };
   /** Charge and Intercept: the player rushes to this unit. */
   dash: Unit;
+  /** A form with its own page: leave this one for that spec. */
+  switchSpec: string;
   /** Short text near the player: a resource gain or a proc the player should notice. */
   note: { text: string; kind: 'resource' | 'proc' };
   /** An Auto Shot or a shot leaves the bow. */
@@ -171,6 +173,8 @@ export class Combat {
   stats: Stats;
   rules: AttackRules;
   options: Record<string, number | boolean | string>;
+  /** The character's race and sex (orc-m), for the racials. */
+  race = '';
   mod: Modifiers = freshModifiers();
   player: Player;
   targets: Unit[] = [];
@@ -460,7 +464,20 @@ export class Combat {
   cost(a: Ability): number {
     // Locked mana: a caster's spells are free.
     if (this.manaLocked && this.spec.resource === 'mana') return 0;
-    return a.cost ? Math.max(0, a.cost(this)) : 0;
+    if (!a.cost) return 0;
+    let cost = Math.max(0, a.cost(this));
+    for (const aura of this.player.auras.values()) if (aura.costMult) cost *= aura.costMult;
+    return cost;
+  }
+
+  /** An ability that cost something spends a stack of what made it cheaper (Eureka!). */
+  private spendCostStacks(): void {
+    if (!this.costPaid) return;
+    for (const aura of [...this.player.auras.values()]) {
+      if (!aura.costMult) continue;
+      aura.stacks = (aura.stacks ?? 1) - 1;
+      if (aura.stacks <= 0) this.removeAura(this.player, aura.id);
+    }
   }
 
   cooldownLeft(id: string): { left: number; total: number } {
@@ -581,6 +598,7 @@ export class Combat {
   blocker(a: Ability, u: Unit | null = this.target): string | null {
     if (this.t < this.fearedUntil) return UI.fleeing;
     if (this.cooldownLeft(a.id).left > 0) return UI.notReady;
+    if (a.race && !a.race.includes(this.race.split('-')[0])) return UI.wrongRace;
     if (a.target === 'enemy') {
       if (!u) return UI.noTarget;
       if (u.health <= 0) return UI.targetDead;
@@ -641,6 +659,7 @@ export class Combat {
     p.resource -= this.costPaid;
     if (this.costPaid > 0 && this.spec.resource === 'mana') this.lastSpend = this.t;
     if (a.manaCost && !this.manaLocked) p.mana -= a.manaCost(this);
+    this.spendCostStacks();
     if (a.gcd > 0) { p.gcdStart = this.t; p.gcdEnd = this.t + this.gcdOf(a); }
     const cd = typeof a.cooldown === 'function' ? a.cooldown(this) : a.cooldown;
     if (cd) this.startCooldown(a.id, cd);
@@ -683,6 +702,8 @@ export class Combat {
     this.costPaid = this.cost(a);
     this.player.resource -= this.costPaid;
     if (this.costPaid > 0 && this.spec.resource === 'mana') this.lastSpend = this.t;
+    if (a.manaCost && !this.manaLocked) this.player.mana -= a.manaCost(this);
+    this.spendCostStacks();
     const cd = typeof a.cooldown === 'function' ? a.cooldown(this) : a.cooldown;
     if (cd) this.startCooldown(a.id, cd);
     this.breakStealth();
@@ -1269,7 +1290,9 @@ export class Combat {
 
   /** Spell power for one school: general spell power plus school-only gear. */
   spellPowerFor(school: Hit['school']): number {
-    return (this.stats.spellPower ?? 0) + (this.stats.spellPowerBySchool?.[school] ?? 0);
+    let power = (this.stats.spellPower ?? 0) + (this.stats.spellPowerBySchool?.[school] ?? 0);
+    for (const a of this.player.auras.values()) if (a.spellPower) power += a.spellPower;
+    return power;
   }
 
   /** Flat bonus damage a target takes for a school, scaled by each spell's coefficient (Judgement of the Crusader). */

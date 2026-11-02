@@ -23,7 +23,7 @@ import { createWorld } from './scene/world';
 import { SPECS, specById } from './specs';
 import { UI, fmt } from './strings';
 import { Floaters } from './ui/floaters';
-import { addMissing, expandBar, fillExtraRows, slotShown } from './ui/bars';
+import { addMissing, dropMissing, expandBar, fillExtraRows, noButton, slotShown } from './ui/bars';
 import { Hud } from './ui/hud';
 import { SettingsDialog, claimKey, defaultPrefs, type Prefs } from './ui/settings';
 import { raidPicker } from './ui/raid-picker';
@@ -232,7 +232,8 @@ function localPlayerKeys(race: string | null): string[] {
   const cls = classKey(spec.className);
   const build = spec.builds?.find((b) => b.id === prefs.options.build);
   const tree = build?.talentString ? mainTree(cls, build.talentString)?.name : null;
-  const who = race ? `@${race}` : '';
+  // Skyborne has no character model yet: out of form it stands as a Night Elf, the same one every time.
+  const who = race ? `@${race.includes('-') ? race : 'nightelf-f'}` : '';
   return [`${spec.id}:${tree}${who}`, `${spec.id}${who}`];
 }
 const ownForms: Partial<Record<DruidForm, OwnModel>> = {};
@@ -557,9 +558,24 @@ applyEnemy();
 applyStats();
 combat.reset();
 /** The game update the yard follows: on the first visit after it, abilities it added get a button in an empty slot. */
-const PATCH = '2026-10-15';
+const PATCH = '2026-11-02';
+const newPatch = refillRows || prefs.patch !== PATCH;
+dropMissing(prefs.bar, combat);
 if (refillRows) { fillExtraRows(prefs.bar, combat); prefs.patch = PATCH; persist(); }
 else if (prefs.patch !== PATCH) { addMissing(prefs.bar, combat); prefs.patch = PATCH; persist(); }
+/** Your race decides your racials: one you no longer have leaves the bar, and yours takes an empty slot. */
+function setRace(race: string | null | undefined, join: boolean): void {
+  combat.race = race ?? '';
+  const mine = combat.race.split('-')[0];
+  for (const b of prefs.bar) {
+    const r = b.id ? combat.ability(b.id)?.race : undefined;
+    if (r && !r.includes(mine)) b.id = null;
+  }
+  if (join) addMissing(prefs.bar, combat);
+  persist();
+  hud.refreshBar();
+}
+void currentRace().then((race) => setRace(race, newPatch));
 syncMinion();
 combat.on('reset', () => { totems.clear(); syncMinion(); });
 
@@ -585,7 +601,12 @@ const hud = new Hud(app, combat, prefs.bar, {
     prefs.bar[b].id = tmp;
     barChanged();
   },
-  place: (slot, id) => { prefs.bar[slot].id = id; barChanged(); },
+  place: (slot, id) => {
+    const a = combat.ability(id);
+    if (noButton(a, combat)) { hud.showError(a?.requirements?.(combat, null) ?? ''); return; }
+    prefs.bar[slot].id = id;
+    barChanged();
+  },
   clear: (slot) => { prefs.bar[slot].id = null; barChanged(); },
   bindKey: (slot, code) => {
     // As in WoW, a movement key bound to a button stops moving you.
@@ -624,6 +645,7 @@ const hud = new Hud(app, combat, prefs.bar, {
     }
     sel.addEventListener('change', async () => {
       save(LOCAL_RACE, sel.value);
+      setRace(sel.value, true);
       sel.blur();
       sel.disabled = true;
       if (formSelect) formSelect.disabled = true;
@@ -698,8 +720,8 @@ const settings = new SettingsDialog(app, spec, prefs, combat, (what) => {
     void ownPlayer.refreshLocal();
   }
   if (what === 'stats' || what === 'options' || what === 'build' || what === 'talents') { applyStats(); combat.reset(); }
-  // Talents of your own: abilities they unlock get a button on rows 3 and 4.
-  if (what === 'talents') addMissing(prefs.bar, combat);
+  // Talents of your own: abilities they unlock get a button on rows 3 and 4, and the ones they lose give theirs up.
+  if (what === 'talents') { dropMissing(prefs.bar, combat); addMissing(prefs.bar, combat); }
   // Rows 3 and 4 take what the new build can use and has no button for.
   if (what === 'build') fillExtraRows(prefs.bar, combat);
   // A tank build tanks Onyxia itself: the fight starts over with or without the simulated tank.
@@ -877,6 +899,19 @@ combat.on('ability', ({ id, animation }) => {
   else if (animation) a.play(animation);
 });
 combat.on('shot', () => avatar().play('shoot'));
+// A form with its own page, a form whose model is not loaded yet, and a demon just summoned.
+combat.on('switchSpec', (id) => {
+  save(CLASS_KEY, id);
+  const url = new URL(location.href);
+  url.searchParams.set('class', id);
+  location.href = url.toString();
+});
+combat.on('ability', () => {
+  const form = spec.form?.(combat);
+  const slot = form ? ownForms[form] : undefined;
+  if (slot && !slot.source) void slot.start().then(() => slot.refreshLocal());
+  syncMinion();
+});
 combat.on('petAttack', ({ kind }) => {
   if (kind === 'lash') companion?.play?.('slash');
   else if (kind === 'cast') companion?.play?.('cast');

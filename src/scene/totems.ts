@@ -30,6 +30,8 @@ const wood = new THREE.MeshStandardMaterial({ color: 0x6a4a2a, roughness: 0.9 })
 const darkWood = new THREE.MeshStandardMaterial({ color: 0x3a2614, roughness: 0.9 });
 const earth = new THREE.MeshStandardMaterial({ color: 0x4a3a24, roughness: 1 });
 
+const ELEMENT: Record<string, string> = { fire: 'searingTotem', earth: 'strengthOfEarthTotem', air: 'graceOfAirTotem', water: 'manaSpringTotem' };
+
 export class Totems {
   private live = new Map<string, Live>();
   private leaving: Live[] = [];
@@ -59,7 +61,8 @@ export class Totems {
       old.dying = 0.001;
       this.leaving.push(old);
     }
-    const style = id ? STYLES[id] : undefined;
+    // A totem without a drawing of its own looks like its element's.
+    const style = id ? STYLES[id] ?? STYLES[ELEMENT[slot]] : undefined;
     if (!style) return;
     const [side, fwd] = SPOTS[slot] ?? [0, 0];
     const sin = Math.sin(facing), cos = Math.cos(facing);

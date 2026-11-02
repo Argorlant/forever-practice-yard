@@ -123,6 +123,10 @@ export interface Aura {
   manaPerSecond?: number;
   /** On the player: Windfury Totem's extra attacks. */
   windfury?: boolean;
+  /** On the player: extra spell power (Blood Fury). */
+  spellPower?: number;
+  /** On the player: cost multiplier; each ability that costs something spends a stack (Eureka!). */
+  costMult?: number;
   /** On the player: extra spell crit in percentage points (Moonkin Aura). */
   spellCrit?: number;
   /** On the player: armor multiplier (a druid's Enrage lowers it). */
@@ -200,11 +204,19 @@ export interface Ability {
   highlight?: (c: Combat) => boolean;
   /** Cannot be pressed right now even with enough resource (e.g. Ambush without stealth). */
   usable?: (c: Combat) => boolean;
+  /** While not `usable` it gets no button: a talent this build does not have. */
+  dropsFromBar?: boolean;
   animation?: string;
   /** Does not break stealth when used. */
   keepsStealth?: boolean;
   /** A pet order (the pet bar): it neither attacks nor starts combat or the auto attack. */
   petCommand?: boolean;
+  /** Only for these races (the race without its sex: orc, nightelf…). */
+  race?: string[];
+  /** The rest of the class's spellbook: it never joins a bar by itself. */
+  book?: boolean;
+  /** Its heading in the Spellbook. */
+  group?: 'racial';
   /** Values not yet confirmed for Forever. */
   provisional?: boolean;
   /**
@@ -273,7 +285,7 @@ export interface Spec {
   /** Draw the combo point pips (rogues). */
   comboPoints?: boolean;
   /** Druid forms: which animal model to show right now (null: the humanoid). */
-  form?: (c: Combat) => 'cat' | 'bear' | 'moonkin' | null;
+  form?: (c: Combat) => 'cat' | 'bear' | 'moonkin' | 'travel' | 'aquatic' | null;
   forms?: { cat?: BeastLookSpec; bear?: BeastLookSpec };
   /** Turn on the attacking dummy by default (tank builds). */
   tank?: boolean;

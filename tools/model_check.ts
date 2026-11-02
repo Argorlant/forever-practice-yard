@@ -68,13 +68,16 @@ const manifest = JSON.parse(fs.readFileSync('public/wow/manifest.json', 'utf8'))
 const checkedForms = new Set<string>();
 for (const race of ['nightelf', 'tauren', 'highorder', 'windshaper']) {
   for (const kind of DRUID_FORMS) {
-    const file = manifest.models[`form-${kind}@${race}`];
+    // The form this race shows: Skyborne's Moonkin is the Night Elf's.
+    const key = druidFormKeys(`${race}-f`, kind)[0];
+    const owner = key.split('@')[1];
+    if (kind === 'moonkin' && ['highorder', 'windshaper'].includes(race)) assert.equal(owner, 'nightelf');
+    const file = manifest.models[key];
     assert(file && manifest.gzip.includes(file), `${race} ${kind} has a published form`);
-    assert.equal(manifest.models[druidFormKeys(`${race}-f`, kind)[0]], file);
     const formJSON = JSON.parse(gunzipSync(fs.readFileSync(`public/wow/${file}.gz`)).toString());
     const meta = formJSON.scenes[0].extras;
     const shared = kind === 'aquatic' || kind === 'tree' || (kind === 'travel' && ['nightelf', 'tauren'].includes(race));
-    assert.equal(meta.race, shared ? 'shared' : ['highorder', 'windshaper'].includes(race) ? 'skyborne' : race);
+    assert.equal(meta.race, shared ? 'shared' : ['highorder', 'windshaper'].includes(owner) ? 'skyborne' : owner);
     assert.equal(meta.form, kind === 'dire-bear' ? 'bear' : kind);
     assert.equal(meta.definition, formDefinition(race, kind), `${race} ${kind} uses the requested SD/HD version`);
     assert(/wow\.export/i.test(formJSON.asset.generator));
