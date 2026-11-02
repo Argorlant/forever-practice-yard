@@ -28,6 +28,8 @@ export class CustomPlace {
     scene.traverse((o) => {
       const m = o as THREE.Mesh;
       if (!m.isMesh) return;
+      // A gray stand-in figure left inside the model of Onyxia's Lair.
+      if (/_lair\d*$/i.test(m.name) && (m.material as THREE.Material).name === 'mat_gray08') { m.visible = false; return; }
       m.castShadow = true;
       m.receiveShadow = true;
       const index = m.geometry.index;
@@ -42,7 +44,8 @@ export class CustomPlace {
       this.floors.push(m);
     });
     this.triangles = Math.round(triangles);
-    this.hasGround = hasGround;
+    // Onyxia's Lair has its own floors: no grass of the yard's through them.
+    this.hasGround = hasGround || !!lairBox(scene);
     // WoW units are yards.
     this.scale = source.fromWowExport ? 0.9144 : 1;
     this.inner.scale.setScalar(this.scale);

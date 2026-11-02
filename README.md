@@ -231,7 +231,7 @@ hands while you cast, the Drain Life and Mind Flay streams, and the auras you we
 Shield, Shadowform). It is all particles (`src/scene/vfx.ts`) driven by the engine's events (`src/combat-vfx.ts`).
 
 **Your own models (optional).** Settings → "Your own models" draws models from your own game files instead of the
-yard's: your character, the druid's Cat and Bear Forms, the training dummy and the yard itself. Export them with
+yard's: your character, the druid's Cat and Bear Forms, the training dummy, the yard itself and Onyxia's lair. Export them with
 [wow.export](https://github.com/Kruithne/wow.export), which reads your own game files (open your WoW folder in it), as
 GLB from the arrow next to its Export button:
 - **Your character:** the Characters tab (Item Sets equips a whole tier set), with Export animations ticked.
@@ -246,6 +246,8 @@ GLB from the arrow next to its Export button:
   a raid room, export a WMO from the Models tab as GLB, such as `stranglegladiatorarena.wmo` (the Gurubashi Arena).
   You walk on the ground and the floors (stairs and ramps too); where a building has none, such as an arena pit that is
   the map's ground, the grass stands in. Walk to a spot and press Put the dummy here to set the dummies there.
+- **Onyxia's lair:** `world/wmo/dungeon/kl_onyxiaslair/kl_onyxiaslair.wmo`, drawn for the Onyxia fight only: the yard
+  stays around the dummies. Without it, the fight happens in your yard.
 
 WoW's animation names (wow.export's "Run (ID 5 variation 0)", Attack1H, SpellCastDirected, AttackBow…, or their
 AnimationData numbers) are matched to what you do; abilities with an animation of their own use it (Claw, Rake, Rip,
@@ -253,6 +255,14 @@ Ravage, Pounce, Maul, Swipe, Bash, Whirlwind, Shield Bash, Kick, the shouts and 
 upper body while you run, wow.export's helmets and shoulder pads (left at the feet in its glTF) go back on their
 attachment bones, models are turned to face forward, and Turn 90° fixes any other export. The files stay in your
 browser (IndexedDB): the site never uploads, hosts or shares them, and the yard's own models stay the default.
+
+**Models on your own computer (`npm run dev` only).** The development server can also read your wow.export folder:
+`~/wow.export/yard-models.json` maps names to files in it. A slot's key draws that slot (`dummy`, `yard`, `onyxia-lair`,
+`onyxia`, `onyxian-whelp`), and a few names cover what has no slot in Settings: a hunter's pet (`pet:hunter-bm`), a
+warlock's demon (`minion:imp`), a totem (`totem:searingTotem`) and the raid at Onyxia (`raid:tank`, `raid:healer`,
+`raid:whelpTank`). Your character goes per spec, talent tree and race (`hunter-bm@nightelf-f`, `warrior:Fury@human-m`), and
+`@races:hunter` with `@default:hunter` fill a menu of races at the top right. A zone is `map:` and the folders holding
+its files (`map:maps,world,tileset`). None of this reaches the built site, which hosts no game files.
 
 **Encounters: Onyxia.** The menu at the top right switches from the training dummies to Onyxia, Classic's three-phase
 fight practiced alone (`src/encounters/onyxia.ts`): a simulated tank holds her (you hold her yourself as a tank spec or
@@ -269,7 +279,7 @@ Pull with PULL or by hitting her. At the end a review says how often each mechan
 damage numbers. The mechanics follow warcraft.wiki.gg's Onyxia (Classic) page; where it gives no number (her health,
 most timers, the whelps), the numbers are ours and the code says so. The lair, Onyxia and her whelps are built in code;
 with your own models (Settings → Your own models: `creature/dragon/dragononyxia.m2`, `creature/dragonwhelp/dragonwhelp.m2`
-and, as the yard, `world/wmo/dungeon/kl_onyxiaslair/kl_onyxiaslair.wmo`) it is her and her real lair, with her own
+and, as Onyxia's lair, `world/wmo/dungeon/kl_onyxiaslair/kl_onyxiaslair.wmo`) it is her and her real lair, with her own
 animations (asleep in her bed, Lift Off, Hover, Fly, DragonTail, EmoteRoar, Death).
 
 The engine is shared, so more specs plug in as data.

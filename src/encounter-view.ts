@@ -9,7 +9,7 @@ import type { CharacterLook, Unit } from './engine/types';
 import { CRACKS, FIRE_LINGERS, ROOM, type OnyxiaFight, type Point, type Review, type Whelp } from './encounters/onyxia';
 import { Character } from './scene/character';
 import type { Controls } from './scene/controls';
-import { ModelSource } from './scene/custom-model';
+import { ModelSource, type CustomModel } from './scene/custom-model';
 import { ModelDragon, ONYXIA_LOOK, ProceduralDragon, WHELP_LOOK, type DragonFigure, type DragonPose } from './scene/dragon';
 import type { EnemyView } from './scene/enemy';
 import { Lair } from './scene/lair';
@@ -33,12 +33,17 @@ export interface ViewDeps {
   /** The whelp tanks' look, at the caves. */
   whelpTankLook: CharacterLook;
   healerLook: CharacterLook;
+  /** `npm run dev`: a model of yours for someone in the raid, else they are dressed in code. */
+  raidModel?(role: 'tank' | 'healer' | 'whelpTank'): Promise<CustomModel | null>;
   playerPos(): THREE.Vector3;
   /** The floor's height at (x, z): flat in the built-in lair, the place's own floors in yours. */
   groundAt(x: number, z: number): number;
   /** The fight is over: show the review. */
   onEnd(review: Review): void;
 }
+
+/** What the view asks of a body in the raid: the character dressed in code, or a model of yours. */
+type RaidBody = Pick<Character, 'root' | 'swing' | 'setLocomotion' | 'update' | 'play'>;
 
 /** Her model is thirty yards long: drawn at this share of it to fit the room (ours). */
 const ONYXIA_SCALE = 0.55;
@@ -52,10 +57,11 @@ export class OnyxiaView {
   readonly lair = new Lair();
   private boss: DragonFigure;
   private whelps = new Map<Whelp, DragonFigure>();
-  private tank: Character | null = null;
+  private tank: RaidBody | null = null;
   /** The whelp tanks at the caves, holding the whelps their groups kill. */
-  private whelpTanks: { body: Character; swing: number; clap: number }[] = [];
-  private healer = new Character();
+  private whelpTanks: { body: RaidBody; swing: number; clap: number }[] = [];
+  private healer: RaidBody = new Character();
+  private gone = false;
   private stripe: THREE.Mesh | null = null;
   private deepBreath: { from: Point; to: Point; start: number; end: number; laid: number } | null = null;
   private breathFire = 0;
@@ -87,28 +93,38 @@ export class OnyxiaView {
       this.dragon = { source: new ModelSource(gltf.scene, gltf.animations, false, []), length: size.z, height: size.y };
       this.rebuild(!this.sources.onyxia, !this.sources.whelp);
     }).catch(() => { /* the dragons built in code stay */ });
-    this.healer.load(d.modelUrl, d.healerLook).then(() => {
-      this.healer.setWeapons('mace', null);
-      d.scene.add(this.healer.root);
-    }).catch(() => { /* the fight goes on without the drawing */ });
+    this.dress('healer', d.healerLook, (c) => c.setWeapons('mace', null), (b) => { this.healer = b; });
     if (d.tankLook) {
-      const tank = new Character();
-      this.tank = tank;
-      tank.load(d.modelUrl, d.tankLook).then(() => {
-        tank.setWeapons('sword', null, { shield: true });
-        d.scene.add(tank.root);
-      }).catch(() => { /* idem */ });
+      this.tank = new Character();
+      this.dress('tank', d.tankLook, (c) => c.setWeapons('sword', null, { shield: true }), (b) => { this.tank = b; });
     }
     for (let i = 0; i < ROOM.holders.length; i++) {
-      const body = new Character();
-      this.whelpTanks.push({ body, swing: i * 0.7, clap: 2 + i * 2.5 });
-      body.load(d.modelUrl, d.whelpTankLook).then(() => {
-        body.setWeapons('axe', null, { shield: true });
-        d.scene.add(body.root);
-      }).catch(() => { /* the fight goes on without the drawing */ });
+      const holder = { body: new Character() as RaidBody, swing: i * 0.7, clap: 2 + i * 2.5 };
+      this.whelpTanks.push(holder);
+      this.dress('whelpTank', d.whelpTankLook, (c) => c.setWeapons('axe', null, { shield: true }), (b) => { holder.body = b; });
     }
     this.listen();
     this.syncEnemies();
+  }
+
+  /** Someone in the raid: a model of yours, else the character dressed in code. The fight goes on without the drawing if neither loads. */
+  private async dress(role: 'tank' | 'healer' | 'whelpTank', look: CharacterLook, arm: (c: Character) => void, use: (b: RaidBody) => void): Promise<void> {
+    try {
+      const model = await this.d.raidModel?.(role);
+      if (this.gone) { model?.dispose(); return; }
+      if (model) {
+        model.root.visible = true;
+        use(model);
+        this.d.scene.add(model.root);
+        return;
+      }
+      const c = new Character();
+      use(c);
+      await c.load(this.d.modelUrl, look);
+      if (this.gone) return;
+      arm(c);
+      this.d.scene.add(c.root);
+    } catch { /* see above */ }
   }
 
   /** Models of the player's own for her and the whelps (null: the yard's dragon). */
@@ -393,6 +409,7 @@ export class OnyxiaView {
   }
 
   dispose(): void {
+    this.gone = true;
     this.reset();
     this.boss.dispose();
     this.lair.dispose();

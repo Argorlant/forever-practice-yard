@@ -3,6 +3,7 @@
 // yard itself (src/scene/custom-model.ts, src/scene/custom-place.ts). All are
 // optional and the yard's own stay the default. The files stay in this browser
 // (src/ui/model-store.ts); the site never sends or hosts them.
+import { AdditiveBlending, type Mesh } from 'three';
 import { loadModelSource, type ModelFile, type ModelSource } from './scene/custom-model';
 import { isMapExport, loadMapSource } from './scene/wow-map';
 import { deleteModel, getModel, putModel, type StoredModel } from './ui/model-store';
@@ -19,6 +20,85 @@ export interface SlotSpec {
   kind: 'figure' | 'place';
   /** For a figure: the moments Settings reports as found or missing. */
   moments?: string[];
+  /** `npm run dev`: the names to look this slot up by in yard-models.json, best first (default: its key). */
+  localKeys?: () => string[];
+}
+
+/** `npm run dev` only: which file of your wow.export folder each slot draws (~/wow.export/yard-models.json; see vite.config.ts). */
+const localMap: Promise<Record<string, string>> = import.meta.env.DEV
+  ? fetch('/@local-wow/yard-models.json').then((r) => (r.ok ? r.json() : {})).catch(() => ({}))
+  : Promise.resolve({});
+
+/** The file for the first key that has one; a key without a race ("warrior:Fury") means the class's default race. */
+async function localFile(keys: string[]): Promise<string | null> {
+  const map = await localMap;
+  for (const k of keys) {
+    const file = map[k] ?? map[`${k}@${map[`@default:${k.split(/[-:@]/)[0]}`]}`];
+    if (file) return file;
+  }
+  return null;
+}
+
+/** `npm run dev`: the races and sexes the class has in yard-models.json ("human-m"), and the one it starts with. */
+export async function localRaces(cls: string): Promise<{ list: string[]; start: string } | null> {
+  if (!import.meta.env.DEV) return null;
+  const map = await localMap;
+  const list = map[`@races:${cls}`]?.split(',');
+  return list ? { list, start: map[`@default:${cls}`] ?? list[0] } : null;
+}
+
+/** `npm run dev`: whether that model has been exported yet. */
+export async function localHas(keys: string[]): Promise<boolean> {
+  if (!import.meta.env.DEV) return false;
+  const file = await localFile(keys);
+  return !!file && (await fetch(`/@local-wow/${file}`, { method: 'HEAD' })).ok;
+}
+
+async function localModel(keys: string[]): Promise<StoredModel | null> {
+  if (!import.meta.env.DEV) return null;
+  const file = await localFile(keys);
+  if (!file) return null;
+  if (file.startsWith('map:')) {
+    const names: string[] = await (await fetch(`/@local-wow/@list?dirs=${file.slice(4)}`)).json();
+    const files: ModelFile[] = new Array(names.length);
+    let next = 0;
+    await Promise.all(Array.from({ length: 12 }, async () => {
+      for (let i = next++; i < names.length; i = next++) {
+        files[i] = { name: names[i], data: await (await fetch(`/@local-wow/${names[i].split('/').map(encodeURIComponent).join('/')}`)).blob() };
+      }
+    }));
+    return { files, label: file, rotation: 0, enabled: true };
+  }
+  const res = await fetch(`/@local-wow/${file}`);
+  if (!res.ok) return null;
+  return { files: [{ name: file.split('/').pop()!, data: await res.blob() }], label: file, rotation: 0, enabled: true };
+}
+
+/** The game adds glows and runes to what is behind them; exported as plain textures, their black backgrounds show as dark squares. */
+function blendGlows(source: ModelSource): ModelSource {
+  source.scene.traverse((o) => {
+    const m = o as Mesh;
+    if (!m.isMesh) return;
+    for (const mat of Array.isArray(m.material) ? m.material : [m.material]) {
+      if (!/glow|rune|flame/i.test(mat.name)) continue;
+      mat.transparent = true;
+      mat.blending = AdditiveBlending;
+      mat.depthWrite = false;
+    }
+  });
+  return source;
+}
+
+const localSources = new Map<string, Promise<ModelSource | null>>();
+/** `npm run dev`: a model yard-models.json names for what has no slot in Settings (a hunter's pet, a demon, a totem, the raid). */
+export function localSource(key: string): Promise<ModelSource | null> {
+  if (!import.meta.env.DEV) return Promise.resolve(null);
+  let source = localSources.get(key);
+  if (!source) {
+    source = localModel([key]).then((m) => (m ? loadModelSource(m.files).then(blendGlows) : null)).catch(() => null);
+    localSources.set(key, source);
+  }
+  return source;
 }
 
 /** A button the yard adds to a slot while its model is on ("Put the dummy here"). */
@@ -34,13 +114,42 @@ export class OwnModel {
   /** The yard redraws what this slot stands for: the model, whether it is on, or its turn changed. */
   onChange: () => void = () => {};
   actions: SlotAction[] = [];
+  private localFile: string | null = null;
 
   constructor(readonly slot: SlotSpec) {
-    getModel(slot.key).then(async (s) => {
-      if (!s) return;
-      this.stored = s;
-      await this.build(s.files, true);
-    }).finally(() => { this.busy = false; this.draw(); this.onChange(); });
+    this.restore().finally(() => { this.busy = false; this.draw(); this.onChange(); });
+  }
+
+  /** What this browser kept; with `npm run dev`, the file yard-models.json names comes first (a place keeps its anchor). */
+  private async restore(): Promise<void> {
+    const kept = await getModel(this.slot.key);
+    const keys = this.slot.localKeys?.() ?? [this.slot.key];
+    const name = import.meta.env.DEV ? await localFile(keys) : null;
+    // Already kept in this browser (with its anchor): a zone's files are not fetched again.
+    const local = name && kept?.label !== name ? await localModel(keys) : null;
+    const s = local ?? kept;
+    if (!s) return;
+    this.localFile = local?.label ?? (name === kept?.label ? name : null);
+    this.stored = s;
+    const built = await this.build(s.files, !local);
+    if (local && this.slot.kind === 'figure' && this.source) local.rotation = this.source.defaultTurns;
+    if (local && this.slot.kind === 'place' && built) {
+      local.files = built.keep;
+      void putModel(this.slot.key, local);
+    }
+  }
+
+  /** `npm run dev`: the build changed, so the file yard-models.json names for this slot may have too. */
+  async refreshLocal(): Promise<void> {
+    if (!import.meta.env.DEV || !this.slot.localKeys) return;
+    const local = await localModel(this.slot.localKeys());
+    if (!local || local.label === this.localFile) return;
+    this.busy = true;
+    this.draw();
+    await this.restore();
+    this.busy = false;
+    this.draw();
+    this.onChange();
   }
 
   /** There is a model and it is switched on. */

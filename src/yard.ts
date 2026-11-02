@@ -12,7 +12,7 @@ import { Dummy } from './scene/dummy';
 import { Totems } from './scene/totems';
 import { Vfx } from './scene/vfx';
 import { wireVfx } from './combat-vfx';
-import { OwnModel, ownModelsSection } from './own-model';
+import { OwnModel, localHas, localRaces, localSource, ownModelsSection } from './own-model';
 import { OnyxiaFight, ROOM } from './encounters/onyxia';
 import { OnyxiaView } from './encounter-view';
 import type { EnemyView } from './scene/enemy';
@@ -27,7 +27,7 @@ import { SettingsDialog, claimKey, defaultPrefs, type Prefs } from './ui/setting
 import { raidPicker } from './ui/raid-picker';
 import { DISCLAIMER_SHORT_HTML } from './ui/disclaimer';
 import { TREE_VERSION, parseTalents } from './ui/talent-rules';
-import { classKey } from './ui/talents-data';
+import { classKey, mainTree } from './ui/talents-data';
 import { bindingFor, load, save, wheelBinding } from './ui/storage';
 
 // The class comes from the URL (?class=warrior), else the last one played; ?build= picks a build.
@@ -120,15 +120,41 @@ for (const kind of ['cat', 'bear'] as const) {
 // A hunter's pet: it waits beside you and runs to the dummy when you attack.
 const pet = spec.pet ? new Beast({ kind: 'cat', ...spec.pet }) : null;
 if (pet) { pet.root.scale.setScalar(0.85); world.scene.add(pet.root); }
+/** `npm run dev`: a copy of a model yard-models.json names, ready to fight beside you. */
+async function localFigure(key: string, scale = 1): Promise<CustomModel | null> {
+  const source = await localSource(key);
+  if (!source) return null;
+  const figure = source.figure(source.defaultTurns, scale);
+  figure.root.visible = true;
+  world.scene.add(figure.root);
+  return figure;
+}
 /** What fights beside you: the hunter's pet, or a warlock's demon drawn with the character model. */
 interface Companion { root: THREE.Object3D; setLocomotion(state: Locomotion, speed?: number): void; update(dt: number): void; swing(): void; play?(name: string): void }
 let companion: Companion | null = pet;
 let minionId: string | null = null;
+if (pet) {
+  void localFigure(`pet:${spec.id}`).then((figure) => {
+    if (!figure) return;
+    pet.root.removeFromParent();
+    companion = figure;
+  });
+}
 /** Loads the demon the build calls for (once per look); it shows while the pet is out. */
 function syncMinion(): void {
   const want = spec.minion?.(combat) ?? null;
   if (!want || want.id === minionId) return;
   minionId = want.id;
+  void localFigure(`minion:${want.id}`, want.scale).then((figure) => {
+    if (minionId !== want.id) { figure?.dispose(); return; }
+    if (figure) {
+      if (companion && companion !== pet) world.scene.remove(companion.root);
+      companion = figure;
+    } else drawMinion(want);
+  });
+}
+/** A demon drawn with the character model. */
+function drawMinion(want: NonNullable<ReturnType<NonNullable<typeof spec.minion>>>): void {
   const ch = new Character();
   ch.root.scale.setScalar(want.scale);
   ch.load(MODEL_URL, want.look).then(() => {
@@ -140,16 +166,31 @@ function syncMinion(): void {
 }
 // Shaman totems, drawn where they were dropped.
 const totems = new Totems(world.scene);
+if (import.meta.env.DEV && spec.className === 'Shaman') {
+  for (const id of ['searingTotem', 'magmaTotem', 'strengthOfEarthTotem', 'stoneskinTotem', 'graceOfAirTotem', 'windfuryTotem', 'manaSpringTotem']) {
+    void localSource(`totem:${id}`).then((source) => { if (source) totems.useModel(id, source); });
+  }
+}
 
 // ------------------------------------------------------ your own models
 // Models from the player's own game files (Settings → Your own models), kept in
 // this browser: the character (per class), the druid's forms, the dummy and the yard.
 const CODE = (s: string) => `<code>${s}</code>`;
+const LOCAL_RACE = `fpy.localRace.${classKey(spec.className)}`;
 const ownPlayer = new OwnModel({
   key: classKey(spec.className), title: 'Your character', kind: 'figure',
   moments: ['stand', 'run', 'run backwards', 'attack', 'cast', 'shoot', 'jump'],
   hint: 'Characters tab: dress your character (Item Sets puts on a whole tier set), tick Export animations, then Export GLB. Helmets and shoulder pads go back on their attachment points.',
+  localKeys: () => localPlayerKeys(load<string>(LOCAL_RACE)),
 });
+/** `npm run dev`: a model per spec, per talent tree for a class with one spec ("warrior:Fury"), and per race ("@human-m"). */
+function localPlayerKeys(race: string | null): string[] {
+  const cls = classKey(spec.className);
+  const build = spec.builds?.find((b) => b.id === prefs.options.build);
+  const tree = build?.talentString ? mainTree(cls, build.talentString)?.name : null;
+  const who = race ? `@${race}` : '';
+  return [`${spec.id}:${tree}${who}`, `${spec.id}${who}`];
+}
 const ownForms: { cat?: OwnModel; bear?: OwnModel } = {};
 for (const kind of ['cat', 'bear'] as const) {
   if (!spec.forms?.[kind]) continue;
@@ -166,15 +207,19 @@ const ownYard = new OwnModel({
   key: 'yard', title: 'The yard', kind: 'place',
   hint: `A zone: Maps tab, Shift+click a map tile (Goldshire is Azeroth 31, 49), Export OBJ, then Load a map folder… here and pick wow.export's export folder (its Settings → Export Directory). Your browser may call this an upload: nothing leaves your computer. Or a building, an arena or a raid room: Models tab, WMO filter, such as ${CODE('stranglegladiatorarena.wmo')} (the Gurubashi Arena), Export GLB. Then walk to where the dummy should stand and press Put the dummy here.`,
 });
+const ownLair = new OwnModel({
+  key: 'onyxia-lair', title: "Onyxia's lair", kind: 'place',
+  hint: `For the Onyxia fight only; the yard above stays around the dummies. Models tab: ${CODE('world/wmo/dungeon/kl_onyxiaslair/kl_onyxiaslair.wmo')}, then Export GLB.`,
+});
 const ownOnyxia = new OwnModel({
   key: 'onyxia', title: 'Onyxia', kind: 'figure', moments: ['stand', 'attack', 'wound'],
-  hint: `For the Onyxia fight. Models tab: ${CODE('creature/dragon/dragononyxia.m2')}, then Export GLB. Her lair, for the yard above: ${CODE('world/wmo/dungeon/kl_onyxiaslair/kl_onyxiaslair.wmo')}.`,
+  hint: `For the Onyxia fight. Models tab: ${CODE('creature/dragon/dragononyxia.m2')}, then Export GLB.`,
 });
 const ownWhelp = new OwnModel({
   key: 'onyxian-whelp', title: 'Onyxian Whelp', kind: 'figure', moments: ['stand', 'attack', 'wound'],
   hint: `For the Onyxia fight. Models tab: ${CODE('creature/dragonwhelp/dragonwhelp.m2')} with its black skin, then Export GLB.`,
 });
-const ownSlots = [ownPlayer, ...Object.values(ownForms), ownDummy, ownYard, ownOnyxia, ownWhelp];
+const ownSlots = [ownPlayer, ...Object.values(ownForms), ownDummy, ownYard, ownLair, ownOnyxia, ownWhelp];
 /** The copies drawn now: yours, else null for the yard's own. */
 let ownCharacter: CustomModel | null = null;
 const ownForm: { cat?: CustomModel | null; bear?: CustomModel | null } = {};
@@ -237,10 +282,12 @@ ownDummy.onChange = () => { for (const d of dummies) if (d.dummy instanceof Dumm
 function applyPlace(): void {
   place?.dispose();
   place = null;
-  if (ownYard.on) {
-    place = new CustomPlace(ownYard.source!, ownYard.anchor, ownYard.turns);
+  // The Onyxia fight in her lair if you have it; the dummies in your yard.
+  const slot = fight && ownLair.on ? ownLair : ownYard;
+  if (slot.on) {
+    place = new CustomPlace(slot.source!, slot.anchor, slot.turns);
     world.scene.add(place.root);
-    if (!ownYard.anchor) ownYard.setAnchor(place.anchor.toArray());
+    if (!slot.anchor) slot.setAnchor(place.anchor.toArray());
   }
   applyScenery();
 }
@@ -261,11 +308,12 @@ function standOnFloors(): void {
   controls.y = groundY(controls.x, controls.z, controls.y);
 }
 ownYard.onChange = applyPlace;
+ownLair.onChange = applyPlace;
 ownYard.actions = [{
   label: 'Put the dummy here',
   title: "The floor where you stand becomes the yard's center, where the dummies stand",
   run: () => {
-    if (!place) return;
+    if (!place || fight) return;
     ownYard.setAnchor(place.centerOn(controls.x, controls.z, controls.y));
     // Back to the start, facing the dummy.
     controls.x = 0;
@@ -356,13 +404,14 @@ function setFight(id: string): void {
     fightView = new OnyxiaView(fight, {
       scene: world.scene, camera: world.camera, vfx, hud, floaters, controls, combat, enemies: dummies, modelUrl: MODEL_URL,
       tankLook: tanking() ? null : specById('warrior').look, whelpTankLook: specById('warrior').look, healerLook: specById('priest-smite').look,
+      raidModel: (role) => localFigure(`raid:${role}`),
       playerPos, groundAt: (x, z) => groundY(x, z, 3), onEnd: (r) => showFightReview(app, r, () => fullReset()),
     });
     dragonSources();
   } else {
     layoutDummies(prefs.targets);
   }
-  applyScenery();
+  applyPlace();
   fullReset();
   if (!fight) {
     // Back in front of the dummy.
@@ -446,6 +495,32 @@ const hud = new Hud(app, combat, prefs.bar, {
     persist();
   },
 });
+// `npm run dev`: the race and sex of your local models, among those the class has in Forever (~/wow.export/yard-models.json).
+if (import.meta.env.DEV) {
+  void localRaces(classKey(spec.className)).then(async (races) => {
+    if (!races) return;
+    const sel = document.createElement('select');
+    sel.className = 'fight-select';
+    sel.title = "Your character's race and sex (your local models)";
+    const label = (who: string) => {
+      const [race, sex] = who.split('-');
+      return `${race === 'nightelf' ? 'Night Elf' : race[0].toUpperCase() + race.slice(1)} ${sex === 'm' ? 'male' : 'female'}`;
+    };
+    const current = load<string>(LOCAL_RACE) ?? races.start;
+    for (const who of races.list) {
+      const option = new Option(label(who), who, false, who === current);
+      // Not exported yet.
+      option.disabled = !(await localHas(localPlayerKeys(who)));
+      sel.append(option);
+    }
+    sel.addEventListener('change', () => {
+      save(LOCAL_RACE, sel.value);
+      void ownPlayer.refreshLocal();
+      sel.blur();
+    });
+    hud.root.querySelector('.hud-right')?.prepend(sel);
+  });
+}
 /** The bar changed on the screen (drag, spellbook, Keys): save it and keep Settings in step. */
 function barChanged(): void {
   persist();
@@ -475,7 +550,10 @@ const settings = new SettingsDialog(app, spec, prefs, combat, (what) => {
     combat.reset();
     fillExtraRows(prefs.bar, combat);
   }
-  if (what === 'build' && applyBuild(String(prefs.options.build))) applyEnemy();
+  if (what === 'build' && applyBuild(String(prefs.options.build))) {
+    applyEnemy();
+    void ownPlayer.refreshLocal();
+  }
   if (what === 'stats' || what === 'options' || what === 'build' || what === 'talents') { applyStats(); combat.reset(); }
   // Talents of your own: abilities they unlock get a button on rows 3 and 4.
   if (what === 'talents') addMissing(prefs.bar, combat);

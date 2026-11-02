@@ -3,6 +3,7 @@
 // for Earth, wings for Air, an orb for Water). They pop up where you dropped
 // them, around your feet, and sink away when they expire or are replaced.
 import * as THREE from 'three';
+import type { CustomModel, ModelSource } from './custom-model';
 
 type Top = 'flame' | 'stone' | 'wings' | 'orb';
 interface Style { band: number; glow: number; top: Top; big?: boolean }
@@ -20,7 +21,7 @@ const STYLES: Record<string, Style> = {
 /** Where each slot stands around your feet: [sideways, forward] in metres, turned with your facing at the drop. */
 const SPOTS: Record<string, [number, number]> = { fire: [1.05, 0.6], earth: [-1.05, 0.6], air: [1.5, -0.2], water: [-1.5, -0.2] };
 
-interface Live { group: THREE.Group; animated: THREE.Object3D[]; top: Top; age: number; dying: number; phase: number }
+interface Live { group: THREE.Group; animated: THREE.Object3D[]; top: Top; age: number; dying: number; phase: number; figure?: CustomModel }
 
 const wood = new THREE.MeshStandardMaterial({ color: 0x6a4a2a, roughness: 0.9 });
 const darkWood = new THREE.MeshStandardMaterial({ color: 0x3a2614, roughness: 0.9 });
@@ -29,8 +30,21 @@ const earth = new THREE.MeshStandardMaterial({ color: 0x4a3a24, roughness: 1 });
 export class Totems {
   private live = new Map<string, Live>();
   private leaving: Live[] = [];
+  /** Models of your own for a totem (`npm run dev`); the others are carved in code. */
+  private models = new Map<string, ModelSource>();
 
   constructor(private scene: THREE.Scene) {}
+
+  useModel(id: string, source: ModelSource): void { this.models.set(id, source); }
+
+  /** A totem drawn with a model of yours. */
+  private buildModel(source: ModelSource, style: Style): Live {
+    const group = new THREE.Group();
+    const figure = source.figure(source.defaultTurns);
+    figure.root.visible = true;
+    group.add(figure.root);
+    return { group, animated: [], top: style.top, age: 0, dying: 0, phase: 0, figure };
+  }
 
   /** Puts a totem in a slot (or empties it with `id` null). */
   set(slot: string, id: string | null, x: number, z: number, facing: number): void {
@@ -44,7 +58,8 @@ export class Totems {
     if (!style) return;
     const [side, fwd] = SPOTS[slot] ?? [0, 0];
     const sin = Math.sin(facing), cos = Math.cos(facing);
-    const t = this.build(style);
+    const model = this.models.get(id!);
+    const t = model ? this.buildModel(model, style) : this.build(style);
     // Forward is (sin f, cos f); sideways is (cos f, -sin f).
     t.group.position.set(x + fwd * sin + side * cos, 0, z + fwd * cos - side * sin);
     t.group.rotation.y = facing;
@@ -72,6 +87,7 @@ export class Totems {
       // Pop up over a quarter second with a small overshoot.
       const k = Math.min(1, t.age / 0.25);
       t.group.scale.setScalar(k < 1 ? 1.1 * Math.sin((k * Math.PI) / 2) : 1);
+      t.figure?.update(dt);
       this.animate(t, elapsed);
     }
     for (let i = this.leaving.length - 1; i >= 0; i--) {
@@ -182,6 +198,10 @@ export class Totems {
 
   private dispose(t: Live): void {
     this.scene.remove(t.group);
+    if (t.figure) {
+      t.figure.dispose();
+      return;
+    }
     t.group.traverse((o) => {
       const m = o as THREE.Mesh;
       if (!m.isMesh) return;
