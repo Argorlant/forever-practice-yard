@@ -16,29 +16,34 @@ export function expandBar(specBar: Binding[]): Binding[] {
   return [...specBar.slice(0, ACTION_BAR_SLOTS).map((b) => ({ ...b })), ...extra, ...specBar.slice(ACTION_BAR_SLOTS).map((b) => ({ ...b }))];
 }
 
+/** A talent this character does not have: no button for it. */
+export const noButton = (a: Ability | undefined, c: Combat) => a?.learned?.(c) === false;
+
 /** What a bar takes by itself: what this character can use, without the rest of the spellbook. */
-const joinsBar = (a: Ability, c: Combat) => !a.book && (a.usable?.(c) ?? true) && (!a.race || a.race.includes(c.race.split('-')[0]));
+const joinsBar = (a: Ability, c: Combat) => !a.book && !noButton(a, c) && (a.waitsOnBar || (a.usable?.(c) ?? true)) && (!a.race || a.race.includes(c.race.split('-')[0]));
+
+/** What has no button yet, those the Helper waits for first: row 4 starts hidden. */
+function withoutButton(bar: Binding[], c: Combat): string[] {
+  const used = new Set(bar.map((b) => b.id).filter(Boolean));
+  const rest = c.spec.abilities.filter((a) => !used.has(a.id) && joinsBar(a, c));
+  return [...rest.filter((a) => a.waitsOnBar), ...rest.filter((a) => !a.waitsOnBar)].map((a) => a.id);
+}
 
 /** Puts the abilities the build can use and that have no button into rows 3 and 4 (Charge, cooldowns, pet orders…). */
 export function fillExtraRows(bar: Binding[], c: Combat): void {
   for (let i = ACTION_BAR_SLOTS; i < ACTION_SLOTS; i++) bar[i].id = null;
-  const used = new Set(bar.map((b) => b.id).filter(Boolean));
-  const rest = c.spec.abilities.filter((a) => !used.has(a.id) && joinsBar(a, c)).map((a) => a.id);
+  const rest = withoutButton(bar, c);
   for (let i = ACTION_BAR_SLOTS; i < ACTION_SLOTS && rest.length; i++) bar[i].id = rest.shift()!;
 }
 
-/** A talent this character does not have: no button for it. */
-export const noButton = (a: Ability | undefined, c: Combat) => !!a?.dropsFromBar && !(a.usable?.(c) ?? true);
-
-/** Takes those buttons off a bar saved or laid out before the talents changed. */
+/** Takes the buttons of talents this character lacks off a bar: a build's own layout, or one saved earlier. */
 export function dropMissing(bar: Binding[], c: Combat): void {
   for (const b of bar) if (b.id && noButton(c.ability(b.id), c)) b.id = null;
 }
 
 /** Abilities you can use but have no button for (a talent just taken) go into empty slots on rows 3 and 4. */
 export function addMissing(bar: Binding[], c: Combat): void {
-  const used = new Set(bar.map((b) => b.id).filter(Boolean));
-  const rest = c.spec.abilities.filter((a) => !used.has(a.id) && joinsBar(a, c)).map((a) => a.id);
+  const rest = withoutButton(bar, c);
   for (let i = ACTION_BAR_SLOTS; i < ACTION_SLOTS && rest.length; i++) if (!bar[i].id) bar[i].id = rest.shift()!;
 }
 

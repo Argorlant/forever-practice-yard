@@ -122,6 +122,7 @@ function inspire(c: Combat): void {
 const talent = (key: keyof Talents, name: string) => ({
   requirements: (c: Combat) => (T(c)[key] ? null : `Requires the ${name} talent`),
   usable: (c: Combat) => T(c)[key] > 0,
+  learned: (c: Combat) => T(c)[key] > 0,
 });
 const spell = (a: Omit<Ability, 'gcd' | 'target' | 'range' | 'hastedGcd' | 'noAutoAttack'> & { range?: number | ((c: Combat) => number) }): Ability => {
   const { range, ...rest } = a;
@@ -317,6 +318,7 @@ export const ABILITIES: Ability[] = [
     }),
     requirements: (c) => (T(c).penance ? null : 'Requires the Penance talent') ?? (shadowform(c) ? 'Not in Shadowform' : null),
     usable: (c) => T(c).penance > 0 && !shadowform(c),
+    learned: (c) => T(c).penance > 0,
     channel: {
       duration: D.penance.duration, ticks: D.penance.bolts, tickAtStart: true,
       onStart: (c) => {

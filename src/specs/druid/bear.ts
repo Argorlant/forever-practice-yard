@@ -32,6 +32,7 @@ const incomingRage = (raw: number) => rageFromDamageTaken(raw);
 const talent = (key: keyof Talents, name: string) => ({
   requirements: (c: Combat) => (T(c)[key] ? null : `Requires the ${name} talent`),
   usable: (c: Combat) => T(c)[key] > 0,
+  learned: (c: Combat) => T(c)[key] > 0,
 });
 const others = (c: Combat, t: Unit, yards = 8) => c.targets.filter((u) => u !== t && u.health > 0 && c.inRange(u, yards));
 
@@ -168,6 +169,7 @@ const abilities: Ability[] = [
     cost: () => D.feralCharge.cost, cooldown: D.feralCharge.cooldown,
     requirements: (c, t) => talent('feralCharge', 'Feral Charge').requirements(c) ?? (t && c.distance(t) < D.feralCharge.minRange * YARD ? 'Target too close' : null),
     usable: (c) => T(c).feralCharge > 0,
+    learned: (c) => T(c).feralCharge > 0,
     description: () => `Charge an enemy from ${D.feralCharge.minRange} to ${D.feralCharge.maxRange} yards away, rooting it and interrupting spells for 4 sec.`,
     use: (c, t) => {
       c.emit('dash', t!);

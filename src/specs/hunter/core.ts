@@ -113,6 +113,7 @@ function aspect(c: Combat, id: 'aspectOfTheHawk' | 'aspectOfTheBeast'): void {
 const talent = (key: keyof Talents, name: string) => ({
   requirements: (c: Combat) => (T(c)[key] ? null : `Requires the ${name} talent`),
   usable: (c: Combat) => T(c)[key] > 0,
+  learned: (c: Combat) => T(c)[key] > 0,
 });
 const needsPet = (c: Combat) => (c.pet.out ? null : 'You have no pet out (Lone Wolf)');
 
@@ -343,6 +344,7 @@ export const ABILITIES: Ability[] = [
     cost: () => D.bestialWrath.mana, cooldown: D.bestialWrath.cooldown,
     requirements: (c) => talent('bestialWrath', 'Bestial Wrath').requirements(c) ?? needsPet(c),
     usable: (c) => T(c).bestialWrath > 0 && c.pet.out,
+    learned: (c) => T(c).bestialWrath > 0,
     description: () => `Your pet deals ${Math.round((D.bestialWrath.damage - 1) * 100)}% more damage for ${D.bestialWrath.duration} sec. Off the global cooldown.`,
     use: (c) => { c.applyAura(c.player, { id: 'bestialWrath', name: 'Bestial Wrath', icon: 'bestialWrath', duration: D.bestialWrath.duration }); },
   },
@@ -351,6 +353,7 @@ export const ABILITIES: Ability[] = [
     cost: () => D.intimidation.mana, cooldown: D.intimidation.cooldown,
     requirements: (c) => talent('intimidation', 'Intimidation').requirements(c) ?? needsPet(c),
     usable: (c) => T(c).intimidation > 0 && c.pet.out,
+    learned: (c) => T(c).intimidation > 0,
     description: () => `Your pet's next attack within ${D.intimidation.window} sec is a critical hit (the stun does not work on bosses).`,
     use: (c) => { c.applyAura(c.player, { id: 'intimidation', name: 'Intimidation', icon: 'intimidation', duration: D.intimidation.window }); },
   },
@@ -388,6 +391,7 @@ export const ABILITIES: Ability[] = [
     cost: meleeCost(D.mongooseBite.mana), cooldown: D.mongooseBite.cooldown,
     requirements: (c) => (c.aura(c.player, 'mongooseReady') ? null : 'Only after the target dodges or after Expose Prey'),
     usable: (c) => !!c.aura(c.player, 'mongooseReady'),
+    waitsOnBar: true,
     highlight: (c) => !!c.aura(c.player, 'mongooseReady'),
     description: (c) => `Normalized weapon damage plus ${D.mongooseBite.bonus}. Usable ${D.mongooseBite.dodgeWindow} sec after the target dodges${T(c).exposePrey ? `, or ${D.mongooseBite.window} sec after Expose Prey (${5 * T(c).exposePrey}% per landed hit on your marked target)` : ''}.${T(c).laceratingStrikes ? ' Lacerating Strikes: it also bleeds for 40% of its damage over 21 sec, plus what the last bleed had left.' : ''}`,
     use: (c, t) => {

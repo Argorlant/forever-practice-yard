@@ -147,7 +147,7 @@ function build(e: Entry, cls: string, spec: Spec, talents: (c: Combat) => Record
     ...(e.ground ? { needsFacing: false } : {}),
     ...(e.shot ? { ranged: true, minRange: 8, animation: 'shoot' } : school === 'physical' ? {} : { animation: 'cast', hastedGcd: true, noAutoAttack: true }),
     ...(e.race ? { race: e.race } : {}),
-    ...(e.talent ? { usable: (c: Combat) => (talents(c)[e.talent!] ?? 0) > 0 } : {}),
+    ...(e.talent ? { usable: (c: Combat) => (talents(c)[e.talent!] ?? 0) > 0, learned: (c: Combat) => (talents(c)[e.talent!] ?? 0) > 0 } : {}),
     ...(!self && e.range && e.range > 5 && school !== 'physical' && !e.ground && e.kind === 'damage' && !e.channel ? { projectile: { color: COLORS[school] ?? 0xffffff } } : {}),
     description: () => describe(e, main || side, side ? 'mana' : spec.resource),
     requirements: (c: Combat) => {

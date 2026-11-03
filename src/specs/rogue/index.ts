@@ -37,6 +37,7 @@ const hasPoints = (c: Combat) => c.comboPointsOn(c.target) > 0;
 const talent = (key: keyof Talents, name: string) => ({
   requirements: (c: Combat) => (T(c)[key] ? null : `Requires the ${name} talent`),
   usable: (c: Combat) => T(c)[key] > 0,
+  learned: (c: Combat) => T(c)[key] > 0,
 });
 
 /** Normalized weapon damage: the roll plus AP at a fixed speed (Forever specials). */
@@ -212,6 +213,7 @@ const abilities: Ability[] = [
     requirements: (c) => talent('mutilate', 'Mutilate').requirements(c)
       ?? (c.stats.mainHand.type !== 'dagger' || c.stats.offHand?.type !== 'dagger' ? 'Requires a dagger in each hand' : null),
     usable: (c) => T(c).mutilate > 0 && c.stats.mainHand.type === 'dagger' && c.stats.offHand?.type === 'dagger',
+    learned: (c) => T(c).mutilate > 0,
     description: () => `Strike with both daggers, each for 75% weapon damage plus ${Math.round(D.mutilate.bonus * D.mutilate.percent)}; 20% more if the target has your Deadly Poison. Awards 2 combo points.`,
     use: (c, t) => {
       const u = t!;
@@ -360,6 +362,7 @@ const abilities: Ability[] = [
     cost: () => D.venom.cost,
     requirements: (c, t) => talent('venom', 'Venom').requirements(c) ?? needsComboPoints(c, t),
     usable: (c) => T(c).venom > 0 && hasPoints(c),
+    learned: (c) => T(c).venom > 0,
     description: () => `Finishing move: your poisons deal ${D.venom.damage * 100}% more damage and have ${D.venom.chance}% more chance to apply. ${D.venom.base + D.venom.perCp} to ${D.venom.base + 5 * D.venom.perCp} sec.`,
     use: (c, t) => {
       keepPremeditation(c);
@@ -427,6 +430,7 @@ const abilities: Ability[] = [
     cooldown: D.premeditation.cooldown,
     requirements: (c) => talent('premeditation', 'Premeditation').requirements(c) ?? needsStealth(c),
     usable: (c) => T(c).premeditation > 0 && c.stealthed(),
+    learned: (c) => T(c).premeditation > 0,
     description: () => `Adds 2 combo points to your target. Must be stealthed. The points are lost after ${D.premeditation.window} sec unless you add to them or spend them.`,
     use: (c, t) => {
       c.addComboPoints(t!, 2);

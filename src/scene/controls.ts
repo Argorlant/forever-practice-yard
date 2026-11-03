@@ -88,7 +88,7 @@ export class Controls {
       this.camDist = THREE.MathUtils.clamp(this.camDist * Math.exp(e.deltaY * 0.0012), 1.6, 22);
     }, { passive: false });
     window.addEventListener('keyup', (e) => this.keys.delete(e.code));
-    window.addEventListener('blur', () => { this.keys.clear(); this.lmb = this.rmb = false; });
+    window.addEventListener('blur', () => { this.keys.clear(); this.lmb = this.rmb = this.pressed = false; });
   }
 
   /** Called by the key dispatcher for every keydown that is not an ability. */
@@ -101,6 +101,9 @@ export class Controls {
   }
   setJoystick(x: number, y: number): void { this.joy.x = x; this.joy.y = y; }
 
+  /** The mouse press began on the scene; one that began on the HUD (a button being dragged) is not the camera's. */
+  private pressed = false;
+
   private down(e: PointerEvent): void {
     this.canvas.setPointerCapture(e.pointerId);
     this.dragged = 0;
@@ -108,6 +111,7 @@ export class Controls {
       this.touchSteer = { id: e.pointerId, x: e.clientX, y: e.clientY };
       return;
     }
+    this.pressed = true;
     this.chord = false;
     this.syncButtons(e);
   }
@@ -141,6 +145,7 @@ export class Controls {
       this.camPitch = THREE.MathUtils.clamp(this.camPitch + dy * k, -0.3, 1.35);
       return;
     }
+    if (!this.pressed) return;
     this.syncButtons(e);
     if (!this.lmb && !this.rmb) return;
     this.dragged += Math.abs(e.movementX) + Math.abs(e.movementY);
@@ -150,8 +155,10 @@ export class Controls {
   }
 
   private up(e: PointerEvent): void {
+    if (e.pointerType !== 'touch' && !this.pressed) return;
     if (this.dragged < 6 && !this.chord) this.onClick(e.clientX, e.clientY, e.pointerType === 'touch' ? 0 : e.button);
     if (e.pointerType === 'touch') { this.touchSteer = null; return; }
+    this.pressed = false;
     this.syncButtons(e);
   }
 

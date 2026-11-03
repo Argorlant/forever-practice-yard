@@ -237,6 +237,7 @@ function spellDot(c: Combat, t: Unit, id: string, name: string, school: School, 
 const talent = (key: keyof Talents, name: string) => ({
   requirements: (c: Combat) => (T(c)[key] ? null : `Requires the ${name} talent`),
   usable: (c: Combat) => T(c)[key] > 0,
+  learned: (c: Combat) => T(c)[key] > 0,
 });
 const spell = (a: Omit<Ability, 'gcd' | 'target' | 'range' | 'hastedGcd' | 'noAutoAttack'> & { range?: number }): Ability => ({
   gcd: D.gcd, target: 'enemy', hastedGcd: true, noAutoAttack: true, animation: 'cast', ...a, range: a.range ?? 30,
@@ -446,6 +447,7 @@ export const ABILITIES: Ability[] = [
     id: 'combustion', name: 'Combustion', icon: 'combustion', gcd: 0, target: 'self',
     requirements: (c) => (T(c).combustion ? null : 'Requires the Combustion talent') ?? (c.aura(c.player, 'combustion') ? 'Already active' : null),
     usable: (c) => T(c).combustion > 0 && !c.aura(c.player, 'combustion'),
+    learned: (c) => T(c).combustion > 0,
     highlight: (c) => !!c.aura(c.player, 'combustion'),
     description: () => `Each Fire spell hit adds ${D.combustion.perHit}% Fire crit until you land ${D.combustion.crits} Fire crits. The 3 min cooldown starts when it ends.`,
     use: (c) => {

@@ -182,6 +182,7 @@ function totemAttack(c: Combat, u: Unit, id: string, base: number, coeff: number
 const talent = (key: keyof Talents, name: string) => ({
   requirements: (c: Combat) => (T(c)[key] ? null : `Requires the ${name} talent`),
   usable: (c: Combat) => T(c)[key] > 0,
+  learned: (c: Combat) => T(c)[key] > 0,
 });
 const spell = (a: Omit<Ability, 'gcd' | 'target' | 'hastedGcd' | 'noAutoAttack'> & { range?: number }): Ability => ({
   gcd: D.gcd, target: 'enemy', hastedGcd: true, noAutoAttack: true, animation: 'cast', ...a, range: a.range ?? 30,

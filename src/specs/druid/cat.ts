@@ -24,6 +24,7 @@ const hasPoints = (c: Combat) => c.comboPointsOn(c.target) > 0;
 const talent = (key: keyof Talents, name: string) => ({
   requirements: (c: Combat) => (T(c)[key] ? null : `Requires the ${name} talent`),
   usable: (c: Combat) => T(c)[key] > 0,
+  learned: (c: Combat) => T(c)[key] > 0,
 });
 
 const shredCost = (c: Combat) => D.shred.cost - 6 * T(c).shreddingAttacks;
@@ -161,6 +162,7 @@ const abilities: Ability[] = [
     cooldown: shiftingPowerCooldown,
     requirements: (c) => talent('shiftingPower', 'Shifting Power').requirements(c) ?? (c.player.resource >= c.player.maxResource ? 'Your Energy is full' : null),
     usable: (c) => T(c).shiftingPower > 0,
+    learned: (c) => T(c).shiftingPower > 0,
     description: (c) => `Gain ${shiftingPowerEnergy(c)} Energy for ${shiftingPowerMana(c)} mana. Not at full Energy. The Forever replacement for powershifting: you stay in Cat Form.`,
     use: (c) => {
       const n = shiftingPowerEnergy(c);

@@ -558,7 +558,7 @@ applyEnemy();
 applyStats();
 combat.reset();
 /** The game update the yard follows: on the first visit after it, abilities it added get a button in an empty slot. */
-const PATCH = '2026-11-02';
+const PATCH = '2026-11-02.2';
 const newPatch = refillRows || prefs.patch !== PATCH;
 dropMissing(prefs.bar, combat);
 if (refillRows) { fillExtraRows(prefs.bar, combat); prefs.patch = PATCH; persist(); }
@@ -602,8 +602,7 @@ const hud = new Hud(app, combat, prefs.bar, {
     barChanged();
   },
   place: (slot, id) => {
-    const a = combat.ability(id);
-    if (noButton(a, combat)) { hud.showError(a?.requirements?.(combat, null) ?? ''); return; }
+    if (noButton(combat.ability(id), combat)) { hud.showError(UI.noTalent); return; }
     prefs.bar[slot].id = id;
     barChanged();
   },
@@ -713,6 +712,7 @@ const settings = new SettingsDialog(app, spec, prefs, combat, (what) => {
     applyStats();
     applyEnemy();
     combat.reset();
+    dropMissing(prefs.bar, combat);
     fillExtraRows(prefs.bar, combat);
   }
   if (what === 'build' && applyBuild(String(prefs.options.build))) {
@@ -720,8 +720,9 @@ const settings = new SettingsDialog(app, spec, prefs, combat, (what) => {
     void ownPlayer.refreshLocal();
   }
   if (what === 'stats' || what === 'options' || what === 'build' || what === 'talents') { applyStats(); combat.reset(); }
-  // Talents of your own: abilities they unlock get a button on rows 3 and 4, and the ones they lose give theirs up.
-  if (what === 'talents') { dropMissing(prefs.bar, combat); addMissing(prefs.bar, combat); }
+  // A build's layout or your own talents: what they lack has no button, and what yours unlock gets one on rows 3 and 4.
+  if (what === 'talents' || what === 'build') dropMissing(prefs.bar, combat);
+  if (what === 'talents') addMissing(prefs.bar, combat);
   // Rows 3 and 4 take what the new build can use and has no button for.
   if (what === 'build') fillExtraRows(prefs.bar, combat);
   // A tank build tanks Onyxia itself: the fight starts over with or without the simulated tank.

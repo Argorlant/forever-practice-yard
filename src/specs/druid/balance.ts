@@ -159,6 +159,7 @@ const abilities: Ability[] = [
     cost: balanceMana(D.insectSwarm.mana),
     requirements: (c) => (T(c).insectSwarm ? null : 'Requires the Insect Swarm talent'),
     usable: (c) => T(c).insectSwarm > 0,
+    learned: (c) => T(c).insectSwarm > 0,
     description: (c) => `${D.insectSwarm.tick} Nature damage plus spell power every ${D.insectSwarm.period} sec for ${(D.insectSwarm.ticks + splendor(c)) * D.insectSwarm.period} sec; the target's hit chance drops by 2%.`,
     use: (c, t) => {
       const u = t!;
@@ -189,7 +190,7 @@ const abilities: Ability[] = [
     cost: (c) => (c.aura(c.player, 'moonkinForm') ? 0 : moonkinMana(c)),
     requirements: (c) => (T(c).moonkinForm ? null : 'Requires the Moonkin Form talent'),
     usable: (c) => T(c).moonkinForm > 0,
-    dropsFromBar: true,
+    learned: (c) => T(c).moonkinForm > 0,
     highlight: (c) => !!c.aura(c.player, 'moonkinForm'),
     description: (c) => `Moonkin Aura: 3% spell crit for the raid (stacks with Leader of the Pack since Oct 15); Omen of Clarity procs twice as often. ${moonkinMana(c)} mana. Press again to leave the form.`,
     use: (c) => {

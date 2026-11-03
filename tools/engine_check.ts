@@ -2,7 +2,7 @@
 // one dummy for 5 minutes, several times, and prints DPS and a breakdown.
 // Usage: npm test
 import { Combat } from '../src/engine/combat';
-import type { Spec, Unit } from '../src/engine/types';
+import type { Binding, Spec, Unit } from '../src/engine/types';
 import { druidBalance, druidBear, druidCat } from '../src/specs/druid';
 import { hunterBm, hunterMm, hunterSv } from '../src/specs/hunter';
 import { mageArcane, mageFire, mageFrost } from '../src/specs/mage';
@@ -14,7 +14,9 @@ import { warlockAffliction, warlockDemonology, warlockDestruction } from '../src
 import { warrior } from '../src/specs/warrior';
 import { SPECS } from '../src/specs';
 import { classKey, decode, pointsPerTree, treesOf } from '../src/ui/talents-data';
-import { addMissing, dropMissing, expandBar, fillExtraRows } from '../src/ui/bars';
+import { addMissing, dropMissing, expandBar, fillExtraRows, slotShown } from '../src/ui/bars';
+import { Controls } from '../src/scene/controls';
+import * as THREE from 'three';
 import {
   canAdd, canRemove, decodeOrder, defaultOrder, encode, encodeOrder, isValid, levelFor, parseTalents, pointsOf, repairOrder,
 } from '../src/ui/talent-rules';
@@ -260,7 +262,7 @@ for (const b of warrior.builds ?? []) {
 
 // ------------------------------------------------------------------ druid
 /** Plays a spec's priority list; tanks stand in front of an attacking dummy, the others behind it. */
-function play(sp: Spec, opts: { build?: string; seconds?: number; seed?: number; raid?: string[]; options?: Record<string, number | boolean | string>; distance?: number } = {}) {
+function play(sp: Spec, opts: { build?: string; seconds?: number; seed?: number; raid?: string[]; options?: Record<string, number | boolean | string>; distance?: number; targets?: number; executeAfter?: number; onSuggest?: (id: string, c: Combat) => void } = {}) {
   let s = opts.seed ?? 4242;
   const b = sp.builds?.find((x) => x.id === opts.build);
   const c = new Combat(sp, { ...(sp.defaultOptions ?? {}), ...(opts.build ? { build: opts.build } : {}), ...(b?.options ?? {}), ...(opts.options ?? {}) });
@@ -269,7 +271,7 @@ function play(sp: Spec, opts: { build?: string; seconds?: number; seed?: number;
   c.raid = new Set(opts.raid ?? sp.defaultRaid ?? []);
   const tank = b?.tank ?? !!sp.tank;
   const dummy: Unit = { id: 0, name: 'Dummy', level: 63, health: 1e9, maxHealth: 1e9, armor: 3731, auras: new Map(), x: 0, z: 0, facing: tank ? Math.PI : 0, radius: 0.5 };
-  c.targets = [dummy];
+  c.targets = [dummy, ...Array.from({ length: (opts.targets ?? 1) - 1 }, (_, i) => ({ ...dummy, id: i + 1, x: i % 2 ? -1.5 : 1.5, auras: new Map() }))];
   c.target = dummy;
   c.player.x = 0; c.player.z = tank ? 2 : opts.distance ? -opts.distance * 0.9144 : sp.startDistance ? -sp.startDistance * 0.9144 : -2; c.player.facing = tank ? Math.PI : 0;
   // As in Settings: specs that show health play with it unlocked.
@@ -281,7 +283,9 @@ function play(sp: Spec, opts: { build?: string; seconds?: number; seed?: number;
   const seconds = opts.seconds ?? 300;
   for (let t = 0; t < seconds; t += 0.05) {
     // A player who presses the glow when the cast ends (pressing during a cast would queue a stale choice).
+    if (opts.executeAfter !== undefined && t >= opts.executeAfter) dummy.health = 0.1 * dummy.maxHealth;
     const id = c.casting ? null : sp.suggest?.(c);
+    if (id) opts.onSuggest?.(id, c);
     if (id) c.use(id);
     c.update(0.05);
   }
@@ -1335,26 +1339,119 @@ console.log(`Talent layouts checked for ${SPECS.reduce((n, s) => n + (s.builds?.
     if (balance.blocker(balance.ability('healingTouch')!) !== "Can't do that while shapeshifted") failures.push('A Moonkin casts Healing Touch');
     if (balance.blocker(balance.ability('hurricane')!) === "Can't do that while shapeshifted") failures.push('A Moonkin cannot cast Hurricane');
   }
-  // Moonkin Form has a button only where the talent is: on the build's bar, on a saved bar and with talents of your own.
-  for (const b of druidBalance.builds!) {
-    const { c } = yard(druidBalance, 'nightelf-f', b.id);
-    const has = c.ability('moonkinForm')!.usable!(c);
-    if (expandBar(b.bar!).some((s) => s.id === 'moonkinForm') !== has) failures.push(`${b.id}: the Moonkin Form button does not follow the talent`);
-    const saved = expandBar(b.bar!);
-    saved[6].id = 'moonkinForm';
-    dropMissing(saved, c);
-    if ((saved[6].id === 'moonkinForm') !== has) failures.push(`${b.id}: a saved Moonkin Form button does not follow the talent`);
+  // A button follows the talents, on every build: none for a talent it lacks, and every other button stays.
+  let dropped = 0;
+  for (const spec of SPECS) {
+    for (const b of spec.builds?.length ? spec.builds : [undefined]) {
+      const { c, dummy } = yard(spec, 'human-m', b?.id);
+      const who = `${spec.id}/${b?.id ?? '-'}`;
+      // Every gate that says "Requires the ... talent" has to say so to the bar as well.
+      for (const a of spec.abilities) {
+        if (/^Requires the .* talent$/.test(a.requirements?.(c, null) ?? '') && !a.learned) failures.push(`${who}: ${a.id} comes from a talent and does not say so`);
+      }
+      const bar = expandBar(b?.bar ?? spec.bar);
+      const before = bar.map((s) => s.id);
+      dropMissing(bar, c);
+      bar.forEach((s, i) => {
+        const id = before[i];
+        if (!id) return;
+        const a = c.ability(id)!;
+        if (s.id && a.learned?.(c) === false) failures.push(`${who}: ${id} kept a button without its talent`);
+        if (!s.id) {
+          dropped++;
+          if (a.learned?.(c) !== false) failures.push(`${who}: ${id} lost its button with the talent`);
+          if (!c.blocker(a, dummy)) failures.push(`${who}: ${id} lost its button but can be pressed`);
+        }
+      });
+      const full = expandBar(b?.bar ?? spec.bar);
+      dropMissing(full, c);
+      fillExtraRows(full, c);
+      for (const s of full) if (s.id && c.ability(s.id)?.learned?.(c) === false) failures.push(`${who}: ${s.id} came back to the rows`);
+    }
   }
+  if (!dropped) failures.push('No build lost a button: the talent check does nothing');
   {
-    const talent = druidBalance.builds!.find((b) => b.id === 'balance')!.talentString!;
-    const { c } = yard(druidBalance, 'nightelf-f', 'moonkin');
-    const own = expandBar(druidBalance.bar);
-    c.options.talents = talent;
-    addMissing(own, c);
-    if (!own.some((s) => s.id === 'moonkinForm')) failures.push('Taking the Moonkin Form talent gives no button');
-    c.options.talents = '';
-    dropMissing(own, c);
-    if (own.some((s) => s.id === 'moonkinForm')) failures.push('Dropping the Moonkin Form talent leaves its button');
+    const has = (build: string) => {
+      const { c } = yard(druidBalance, 'nightelf-f', build);
+      const bar = expandBar(druidBalance.builds!.find((b) => b.id === build)!.bar!);
+      dropMissing(bar, c);
+      return bar[6].id === 'moonkinForm';
+    };
+    if (has('moonkin')) failures.push('The Moonkin build has a Moonkin Form button');
+    if (!has('balance')) failures.push('The Balance build lost its Moonkin Form button');
+    // A moment's refusal is not a missing talent: Combustion while it burns.
+    const { c } = yard(mageFire, 'human-m', 'fire');
+    c.use('combustion');
+    const bar: Binding[] = [{ id: 'combustion', key: '' }];
+    if (c.blocker(c.ability('combustion')!) && (dropMissing(bar, c), !bar[0].id)) failures.push('Combustion lost its button while active');
+    // Talents of your own: taking one gives a button, dropping it takes it away.
+    const own = yard(druidBalance, 'nightelf-f', 'moonkin').c;
+    const mine = expandBar(druidBalance.bar);
+    dropMissing(mine, own);
+    own.options.talents = druidBalance.builds!.find((b) => b.id === 'balance')!.talentString!;
+    addMissing(mine, own);
+    if (!mine.some((s) => s.id === 'moonkinForm')) failures.push('Taking the Moonkin Form talent gives no button');
+    own.options.talents = '';
+    dropMissing(mine, own);
+    if (mine.some((s) => s.id === 'moonkinForm')) failures.push('Dropping the Moonkin Form talent leaves its button');
+  }
+  // The Helper only asks for what you can see, whatever the fight: a talent you have, on a row shown by default.
+  {
+    const noButton = new Set<string>();
+    for (const spec of SPECS) {
+      if (!spec.suggest) continue;
+      for (const b of spec.builds?.length ? spec.builds : [undefined]) {
+        for (const fight of [{}, { distance: 2 }, { targets: 3 }, { executeAfter: 40 }]) {
+          let shown: Set<string | null> | undefined;
+          play(spec, {
+            build: b?.id, seconds: 80, ...fight,
+            onSuggest: (id, c) => {
+              if (!shown) {
+                const bar = expandBar(b?.bar ?? spec.bar);
+                dropMissing(bar, c);
+                fillExtraRows(bar, c);
+                shown = new Set(bar.filter((_, i) => slotShown(i, 3)).map((x) => x.id));
+              }
+              if (!shown.has(id)) noButton.add(`${spec.id}/${b?.id ?? '-'}: ${id}`);
+            },
+          });
+        }
+      }
+    }
+    for (const what of noButton) failures.push(`The Helper asks for a spell with no button: ${what}`);
+  }
+  // The camera is the scene's: a press that began on the HUD neither moves it nor clicks when let go over the scene.
+  {
+    const realWindow = globalThis.window;
+    Object.assign(globalThis, { window: { addEventListener() {} } });
+    const on: Record<string, (e: unknown) => void> = {};
+    const canvas = { addEventListener: (name: string, f: (e: unknown) => void) => { on[name] = f; }, setPointerCapture() {} };
+    const cam = new Controls(canvas as unknown as HTMLCanvasElement, new THREE.PerspectiveCamera());
+    Object.assign(globalThis, { window: realWindow });
+    let clicks = 0;
+    cam.onClick = () => { clicks++; };
+    const mouse = (o: object) => ({ pointerType: 'mouse', pointerId: 1, clientX: 0, clientY: 0, button: 0, buttons: 0, movementX: 0, movementY: 0, ...o });
+    const pitch = cam.camPitch;
+    on.pointermove(mouse({ buttons: 1, movementX: 80, movementY: 40 }));
+    on.pointerup(mouse({}));
+    if (cam.camYaw !== 0 || cam.camPitch !== pitch || clicks) failures.push(`A drag from the HUD moved the camera (yaw ${cam.camYaw}, pitch ${cam.camPitch}) or clicked (${clicks})`);
+    on.pointerdown(mouse({ buttons: 1 }));
+    on.pointerup(mouse({}));
+    if (clicks !== 1) failures.push('A click on the scene does not count');
+    on.pointerdown(mouse({ buttons: 1 }));
+    on.pointermove(mouse({ buttons: 1, movementX: 80, movementY: 40 }));
+    on.pointerup(mouse({}));
+    if (cam.camYaw === 0 || cam.camPitch === pitch || clicks !== 1) failures.push('The left button no longer orbits the camera');
+    const facing = cam.facing;
+    on.pointerdown(mouse({ button: 2, buttons: 2 }));
+    on.pointermove(mouse({ buttons: 2, movementX: 80 }));
+    if (cam.facing === facing) failures.push('The right button no longer steers');
+    on.pointermove(mouse({ buttons: 3, movementX: 1 }));
+    if (cam.update(0.1).moving !== true) failures.push('Both buttons no longer run forward');
+    on.pointerup(mouse({ button: 2 }));
+    const after = cam.facing;
+    on.pointermove(mouse({ buttons: 2, movementX: 80 }));
+    if (cam.facing !== after) failures.push('A press from the HUD steered after a press on the scene ended');
   }
   console.log(`Spellbook: ${SPECS.length} specs, ${pressed} abilities pressed, ${[...refusals.values()].flat().length} refused for their own reasons.`);
 }

@@ -216,11 +216,11 @@ and your talents. The notes come from the research sheets: `node tools/talent_no
 `src/ui/talent-notes.json`.
 
 **Action bars and keys.** Up to four rows of 8 buttons (2 to 4 shown, in Settings or the Spellbook). Rows 3 and 4 start with
-the build's abilities that have no other button (Charge and Intercept for a warrior), row 3 on Shift+1-8. The Spellbook lists
+the build's abilities that have no other button (Charge and Intercept for a warrior, and what the Helper may ask for), row 3 on Shift+1-8. The Spellbook lists
 the class's whole book to drag onto a button, under Rotation, Racial and More spells; dragging a button off the bar clears it.
 Your race decides your racials, and the combat ones take an empty button by themselves. More spells stay off the bar until you
 drag them there: their damage, heals and shields are real, with the client's level 60 numbers, crowd control says Immune against
-a dummy, and the rest only run their timers (the tooltip says which). Moonkin Form has a button only on a build with its talent.
+a dummy, and the rest only run their timers (the tooltip says which). An ability from a talent has a button only on a build with that talent.
 The Keys button turns on key binding: hover a
 button and press a key or turn the mouse wheel (Backspace clears it). The wheel binds like in WoW: up and down are two
 keys, Shift, Ctrl and Alt combine with them, and a bound direction no longer zooms the camera. In Settings, × unbinds any key, movement included, and a key does one thing,

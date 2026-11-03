@@ -94,6 +94,7 @@ const shoutCost = (c: Combat, base: number) => Math.round(base * (1 - 0.05 * T(c
 const talent = (key: keyof Talents, name: string) => ({
   requirements: (c: Combat) => (T(c)[key] ? null : `Requires the ${name} talent`),
   usable: (c: Combat) => T(c)[key] > 0,
+  learned: (c: Combat) => T(c)[key] > 0,
 });
 const note = (c: Combat, text: string, kind: 'proc' | 'resource' = 'proc') => c.emit('note', { text, kind });
 
@@ -240,6 +241,7 @@ const abilities: Ability[] = [
     cost: (c) => D.shieldSlam.cost - focused(c), cooldown: D.shieldSlam.cooldown, cooldownGroup: 'strike6',
     requirements: (c) => talent('shieldSlam', 'Shield Slam').requirements(c) ?? needsShield(c),
     usable: (c) => T(c).shieldSlam > 0 && hasShield(c),
+    learned: (c) => T(c).shieldSlam > 0,
     description: (c) => `Slams the target with your shield for ${D.shieldSlam.min}-${D.shieldSlam.max} plus your block value (${c.stats.tank?.blockValue ?? 0}).`,
     use: (c, t) => {
       const s = D.shieldSlam;
@@ -343,6 +345,7 @@ const abilities: Ability[] = [
     cooldown: D.berserkerRage.cooldown,
     requirements: (c) => needsStance(c, 'berserker'),
     usable: (c) => stanceOf(c) === 'berserker',
+    waitsOnBar: true,
     description: (c) => `Immune to fear for ${D.berserkerRage.duration} sec and gain extra rage when hit.${T(c).improvedBerserkerRage ? ` Gain ${5 * T(c).improvedBerserkerRage} rage now.` : ''}`,
     use: (c) => {
       if (T(c).improvedBerserkerRage) gainRage(c, 5 * T(c).improvedBerserkerRage);
@@ -375,6 +378,7 @@ const abilities: Ability[] = [
     cost: () => D.sweepingStrikes.cost, cooldown: D.sweepingStrikes.cooldown,
     requirements: (c) => talent('sweepingStrikes', 'Sweeping Strikes').requirements(c) ?? needsStance(c, 'battle'),
     usable: (c) => T(c).sweepingStrikes > 0 && stanceOf(c) === 'battle',
+    learned: (c) => T(c).sweepingStrikes > 0,
     description: () => `Your next ${D.sweepingStrikes.charges} melee attacks also hit a second nearby enemy.`,
     use: (c) => {
       const s = D.sweepingStrikes;
@@ -387,6 +391,7 @@ const abilities: Ability[] = [
     cost: () => D.rend.cost,
     requirements: (c) => needsStance(c, 'battle', 'defensive'),
     usable: (c) => stanceOf(c) !== 'berserker',
+    waitsOnBar: true,
     description: (c) => `Wounds the target: ${D.rend.ticks} ticks of ${Math.round(D.rend.tick * (1 + [0, 0.12, 0.23, 0.35][T(c).improvedRend]))} every ${D.rend.period} sec. Ticks can crit; ignores armor.`,
     use: (c, t) => {
       const u = t!;
@@ -496,6 +501,7 @@ const abilities: Ability[] = [
     cost: () => D.spearingStrike.cost, cooldown: D.spearingStrike.cooldown,
     requirements: (c) => talent('spearingStrike', 'Spearing Strike').requirements(c) ?? needsStance(c, 'battle'),
     usable: (c) => T(c).spearingStrike > 0 && stanceOf(c) === 'battle',
+    learned: (c) => T(c).spearingStrike > 0,
     description: () => `${D.spearingStrike.percent * 100}% normalized weapon damage; more against Giants, Dragonkin and mounted enemies.`,
     use: (c, t) => { strike(c, t!, 'spearingStrike', normalized(c) * D.spearingStrike.percent); },
   },

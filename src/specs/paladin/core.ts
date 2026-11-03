@@ -139,6 +139,7 @@ function sealProc(c: Combat, t: Unit, seal: SealId, opts: { stored?: boolean } =
 const talent = (key: keyof Talents, name: string) => ({
   requirements: (c: Combat) => (T(c)[key] ? null : `Requires the ${name} talent`),
   usable: (c: Combat) => T(c)[key] > 0,
+  learned: (c: Combat) => T(c)[key] > 0,
 });
 export const executePhase = (c: Combat) => !!c.target && c.target.health / c.target.maxHealth <= D.hammerOfWrath.threshold;
 export const undeadDummy = (c: Combat) => !!c.options.undeadDummy;
@@ -325,6 +326,7 @@ export const ABILITIES: Ability[] = [
     cost: instant(D.holyShield.mana), cooldown: D.holyShield.cooldown,
     requirements: (c) => talent('holyShield', 'Holy Shield').requirements(c) ?? needsShield(c),
     usable: (c) => T(c).holyShield > 0 && !!c.stats.shield,
+    learned: (c) => T(c).holyShield > 0,
     description: (c) => `+${D.holyShield.block}% block for ${D.holyShield.duration} sec or ${D.holyShield.charges} blocks; each block deals ${Math.round(D.holyShield.damage + D.holyShield.coeff * spellPower(c))} Holy damage with extra threat. Needs a shield.`,
     use: (c) => {
       const h = D.holyShield;
@@ -354,6 +356,7 @@ export const ABILITIES: Ability[] = [
     cooldown: (c) => D.templarsBulwark.cooldown - 30 * T(c).sacredDuty,
     requirements: (c) => talent('templarsBulwark', "Templar's Bulwark").requirements(c) ?? (c.aura(c.player, 'forbearance') ? 'You have Forbearance' : null),
     usable: (c) => T(c).templarsBulwark > 0,
+    learned: (c) => T(c).templarsBulwark > 0,
     description: () => `A shield that absorbs damage equal to your maximum health for ${D.templarsBulwark.duration} sec. Off the global cooldown. Gives Forbearance for 1 min. Unlock your health in Settings to see it work.`,
     use: (c) => {
       const b = D.templarsBulwark;
@@ -367,6 +370,7 @@ export const ABILITIES: Ability[] = [
     cooldown: D.swiftJudgement.cooldown,
     requirements: (c) => talent('swiftJudgement', 'Swift Judgement').requirements(c) ?? (currentSeal(c) ? null : 'You have no seal to judge'),
     usable: (c) => T(c).swiftJudgement > 0 && !!currentSeal(c),
+    learned: (c) => T(c).swiftJudgement > 0,
     description: () => `A second Judgement (Oct 30 hotfix): unleashes your seal like Judgement and leaves it up, with its own ${D.swiftJudgement.cooldown / 60} min cooldown. No mana. Off the global cooldown.`,
     use: (c, t) => {
       judge(c, t!);

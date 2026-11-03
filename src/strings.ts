@@ -34,6 +34,7 @@ export const UI = {
   tooClose: 'Target too close',
   cantWhileMoving: "Can't do that while moving",
   wrongRace: 'Your race does not have that',
+  noTalent: 'Requires a talent you do not have',
   fleeing: "Can't do that while fleeing",
   glancing: 'glancing',
   rotation: 'Rotation',

@@ -148,6 +148,7 @@ export const left = (c: Combat, t: Unit, id: string) => { const a = c.aura(t, id
 const talent = (key: keyof Talents, name: string) => ({
   requirements: (c: Combat) => (T(c)[key] ? null : `Requires the ${name} talent`),
   usable: (c: Combat) => T(c)[key] > 0,
+  learned: (c: Combat) => T(c)[key] > 0,
 });
 const spell = (a: Omit<Ability, 'gcd' | 'target' | 'range' | 'hastedGcd' | 'noAutoAttack'> & { range?: number }): Ability => ({
   gcd: D.gcd, target: 'enemy', hastedGcd: true, noAutoAttack: true, animation: 'cast', ...a, range: a.range ?? 30,
@@ -430,6 +431,7 @@ export const ABILITIES: Ability[] = [
     cost: cost('conflagrate', D.conflagrate.mana), cooldown: D.conflagrate.cooldown,
     requirements: (c, t) => (T(c).conflagrate ? null : 'Requires the Conflagrate talent') ?? (t && !c.aura(t, 'immolate') ? 'Needs your Immolate on the target' : null),
     usable: (c) => T(c).conflagrate > 0 && !!c.target && !!c.aura(c.target, 'immolate'),
+    learned: (c) => T(c).conflagrate > 0,
     description: (c) => `Instant: ${D.conflagrate.min}-${D.conflagrate.max} Fire damage plus spell power. Needs your Immolate${T(c).shadowAndFlame ? `; Shadow and Flame keeps it (${20 * T(c).shadowAndFlame}%) and gives +${2 * T(c).shadowAndFlame}% Shadow damage for 20 sec` : ' and consumes it'}.`,
     use: (c, t) => {
       const u = t!;

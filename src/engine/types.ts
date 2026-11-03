@@ -204,8 +204,10 @@ export interface Ability {
   highlight?: (c: Combat) => boolean;
   /** Cannot be pressed right now even with enough resource (e.g. Ambush without stealth). */
   usable?: (c: Combat) => boolean;
-  /** While not `usable` it gets no button: a talent this build does not have. */
-  dropsFromBar?: boolean;
+  /** Whether this character has it at all (a talent); without it, it gets no button. `usable` also says no for the moment. */
+  learned?: (c: Combat) => boolean;
+  /** Gets a button even while `usable` says no: the Helper asks for it once it can be pressed (a proc, another stance). */
+  waitsOnBar?: boolean;
   animation?: string;
   /** Does not break stealth when used. */
   keepsStealth?: boolean;
