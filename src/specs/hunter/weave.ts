@@ -64,12 +64,14 @@ export function setupWeaving(c: Combat, melee: boolean): void {
 const raptorReady = (c: Combat, within = 0) => c.cooldownLeft('raptorStrike').left <= within
   && c.cost(c.ability('raptorStrike')!) <= c.player.resource && c.queuedSwing !== 'raptorStrike';
 
-/** The melee attack on the global cooldown ready within this many seconds, in gs's weave order (since 27 Oct). */
+/** The melee attack on the global cooldown ready within this many seconds, in WoWSims Forever's weave order. */
 function gcdAttack(c: Combat, within = 0): string | null {
-  for (const id of ['immolationTrap', 'mongooseBite', 'striderKick']) {
+  for (const id of ['striderKick', 'mongooseBite', 'immolationTrap', 'wingClip']) {
     const a = c.ability(id);
     if (!a || a.requirements?.(c, c.target)) continue;
     if (id === 'immolationTrap' && c.target && c.aura(c.target, 'immolationTrap')) continue;
+    // Wing Clip only with no Strider Kick about to come up.
+    if (id === 'wingClip' && (c.ability('striderKick')?.learned?.(c) ?? false) && c.cooldownLeft('striderKick').left <= 1.5) continue;
     if (c.cooldownLeft(id).left <= within && (a.usable?.(c) ?? true) && c.cost(a) <= c.player.resource) return id;
   }
   return null;

@@ -429,6 +429,12 @@ export const ABILITIES: Ability[] = [
     },
   },
   {
+    id: 'coldSnap', name: 'Cold Snap', icon: 'cdn:spell_frost_wizardmark', gcd: 0, target: 'self', cooldown: D.coldSnap.cooldown,
+    ...talent('coldSnap', 'Cold Snap'),
+    description: () => `Finishes the cooldown of your Frost spells. ${D.coldSnap.cooldown / 60} min cooldown.`,
+    use: (c) => { for (const id of ['coneOfCold', 'iceBarrier', 'iceLance', 'frostNova', 'iceBlock']) c.clearCooldown(id); },
+  },
+  {
     id: 'presenceOfMind', name: 'Presence of Mind', icon: 'presenceOfMind', gcd: 0, target: 'self',
     cooldown: D.presenceOfMind.cooldown,
     ...talent('presenceOfMind', 'Presence of Mind'),

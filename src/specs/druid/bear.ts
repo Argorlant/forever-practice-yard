@@ -254,7 +254,7 @@ function prepare(c: Combat): void {
 }
 
 // ------------------------------------------------------------- rotation
-/** gs's ranked bear list (research/druid_forever.md â†’ Bear). */
+/** WoWSims Forever's bear list (research/druid_forever.md â†’ Bear). */
 function suggest(c: Combat): string | null {
   const t = c.target;
   if (!t || t.health <= 0) return null;
@@ -264,21 +264,25 @@ function suggest(c: Combat): string | null {
   const ready = (id: string) => c.cooldownLeft(id).left === 0 && (c.ability(id)?.usable?.(c) ?? true);
   const cost = (id: string) => c.cost(c.ability(id)!);
   if (!p.autoAttacking && c.inRange(t)) return 'attack';
-  if (!c.playerHealthLocked && p.health / p.maxHealth < 0.3 && rage >= 10 && ready('frenziedRegeneration')) return 'frenziedRegeneration';
-  if (c.enemyAttacks.on && ready('barkskin')) return 'barkskin';
-  if (p.inCombat && rage <= 60 && ready('druidEnrage')) return 'druidEnrage';
+  const health = c.playerHealthLocked ? 1 : p.health / p.maxHealth;
+  if (health <= 0.6 && ready('barkskin')) return 'barkskin';
+  if (health < 0.25 && rage >= 10 && ready('frenziedRegeneration')) return 'frenziedRegeneration';
+  const bite = tl.primalBite && ready('primalBite');
+  if (p.inCombat && ready('druidEnrage') && rage < cost(bite ? 'primalBite' : 'lacerate')) return 'druidEnrage';
+  if (faerieFireLeft(c, t) <= 0 && ready('faerieFire')) return 'faerieFire';
+  const lac = c.aura(t, 'lacerate');
+  if (tl.lacerate && lac && (lac.stacks ?? 0) >= 5 && lac.end - c.t <= 3 && rage >= cost('lacerate')) return 'lacerate';
   // Demoralizing Shout from the raid does the same job.
   let demoLeft = 0;
   for (const a of t.auras.values()) if (a.apReduction) demoLeft = Math.max(demoLeft, a.end - c.t);
-  if (c.enemyAttacks.on && demoLeft <= 4 && rage >= cost('demoralizingRoar')) return 'demoralizingRoar';
-  if (faerieFireLeft(c, t) <= 3 && ready('faerieFire')) return 'faerieFire';
-  if (tl.primalBite && ready('primalBite') && rage >= cost('primalBite')) return 'primalBite';
-  if (others(c, t).length >= 1 && rage >= 15) return 'swipe';
-  const lac = c.aura(t, 'lacerate');
-  if (tl.lacerate && (!lac || (lac.stacks ?? 0) < 5 || lac.end - c.t <= 4.5) && rage >= cost('lacerate')) return 'lacerate';
-  if (!c.queuedSwing && rage >= 25) return 'maul';
-  if (tl.lacerate && rage >= cost('lacerate') + 15) return 'lacerate';
-  return null;
+  if (demoLeft <= 0 && rage >= cost('demoralizingRoar')) return 'demoralizingRoar';
+  // Maul is off the global cooldown: it goes in while the rest waits, leaving rage for a Primal Bite about to come up.
+  const maul = !c.queuedSwing && rage >= 20 && (!tl.primalBite || c.cooldownLeft('primalBite').left > 1.5 || rage - cost('maul') >= cost('primalBite'));
+  if (maul && p.gcdEnd > c.t) return 'maul';
+  if (bite && rage >= cost('primalBite')) return 'primalBite';
+  if (others(c, t).length >= 1 && lac && rage >= cost('swipe')) return 'swipe';
+  if (tl.lacerate && rage >= cost('lacerate')) return 'lacerate';
+  return maul ? 'maul' : null;
 }
 
 // ------------------------------------------------------- practice helpers
@@ -364,14 +368,14 @@ export const druidBear: Spec = {
   abilities,
   stats: BEAR_STATS,
   rules: BOSS_RULES,
-  builds: buildsFor('bear').map((b) => ({ id: b.id, label: buildLabel(b), name: b.name, source: 'gunba/wow-forever-sim', talentString: b.talentString, stats: b.stats, bar: b.bar, tank: b.tank, trees: summary(talentsFor(b.id, 'bear')) })),
+  builds: buildsFor('bear').map((b) => ({ id: b.id, label: buildLabel(b), name: b.name, source: b.source, talentString: b.talentString, stats: b.stats, bar: b.bar, tank: b.tank, trees: summary(talentsFor(b.id, 'bear')) })),
   defaultOptions: { build: 'bear', wolfshead: true },
   options: [
     { key: 'wolfshead', name: 'Wolfshead Helm (+5 rage from Enrage)', kind: 'toggle' },
   ],
   sheet: { spellCrit: false, mainHand: 'Weapon (its DPS x 2.5 is your bear swing)' },
   bar: buildById('bear', 'bear').bar,
-  welcome: 'Welcome to Feral Bear practice. The dummy hits back, so rage from damage taken, dodges and Frenzied Regeneration work as in the game. Keep Lacerate at 5 stacks, Primal Bite on cooldown, Demoralizing Roar and Faerie Fire up, and Maul with spare rage.',
+  welcome: 'Welcome to Feral Bear practice. The dummy hits back, so rage from damage taken, dodges and Frenzied Regeneration work as in the game. Primal Bite on cooldown, Lacerate as the filler and before its 5 stacks run out, Demoralizing Roar and Faerie Fire up, and Maul with spare rage.',
   help: `${CONTROLS}
     Bear rage in WoW Forever is normalized: each landed white swing gives 11.25 rage (22.5 on a crit), every 2.5 sec. Misses, dodges, parries and the swing a Maul replaces give none. Hits you take give rage from their damage before armor and Barkskin (Forever's measured rule): about 27 for a normal hit from the default dummy, 55 for a crit, 41 for a crushing blow; a dodge gives none, except Natural Reaction's 5.
     Maul replaces your next swing: press once to queue it; pressing again does not cancel it. Primal Bite has a 6 sec cooldown (Berserk is gone since the Oct 30 hotfix). Lacerate is a Feral talent since Oct 30; it stacks 5 times and its hit grows with the stacks.

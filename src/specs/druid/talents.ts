@@ -1,8 +1,7 @@
-// WoW Forever druid talents and the builds the sims use. Order: Wowhead's
-// Forever calculator after the live hotfix of 30 October (Balance 16, Feral
-// Combat 20, Restoration 16), the same order as WoWSims Forever's. Moonkin is its
-// preset; the rest are older sims' builds, re-spent for these trees and still to be
-// reviewed against it. See research/druid_forever.md → Talents and Builds.
+// WoW Forever druid talents and the builds the sims use. Order: the trees after
+// the live hotfix of 30 October (Balance 16, Feral Combat 20, Restoration 16), the
+// same as WoWSims Forever's, whose presets come first. See
+// research/druid_forever.md → Talents and Builds.
 import type { Binding, Stats } from '../../engine/types';
 import { decodeTalents, talentSplit, talentSummary } from '../common';
 import { BALANCE_STATS, BEAR_STATS, CAT_STATS } from './data';
@@ -66,18 +65,17 @@ const BALANCE_BAR = bar(['wrath', 'starfire', 'moonfire', 'insectSwarm', 'faerie
   'manaPotion', null, null, null, null, null, null, null]);
 
 const WS = 'wowsims/forever';
-const GS = 'gunba/wow-forever-sim';
-// The Oct 30 trees moved Furor to Feral and Heart of the Wild to Restoration and dropped Berserk and Improved
-// Shifting Power; their points went to Feral Swiftness, Predatory Discipline and the row fillers. Balance builds
-// keep their talents (Reflection and Subtlety swapped places).
-const RESPENT = `${GS}, re-spent by us for the Oct 30 trees`;
-const REENCODED = `${GS}, re-encoded to the Oct 30 trees`;
+/** Builds with no equivalent in WoWSims Forever: they stay, for whoever practises them, re-spent for the Oct 30 trees. */
+const COMMUNITY = 'community, from gunba/wow-forever-sim, re-spent for the Oct 30 trees';
 export const BUILDS: Build[] = [
-  { id: 'cat', spec: 'cat', name: 'Feral Cat', talentString: '05002-55200032023012125001-055', source: RESPENT, stats: CAT_STATS, bar: CAT_BAR },
-  { id: 'cat-feral', spec: 'cat', name: 'Feral, deeper (Natural Shapeshifter)', talentString: '-55220132023012125011-05503', source: RESPENT, stats: CAT_STATS, bar: CAT_BAR },
-  { id: 'bear', spec: 'bear', name: 'Bear tank', talentString: '01-5502233212310212551-05', source: RESPENT, stats: BEAR_STATS, bar: BEAR_BAR, tank: true },
+  { id: 'cat', spec: 'cat', name: 'Feral Cat', talentString: '050022-53200032123012124001-055', source: WS, stats: CAT_STATS, bar: CAT_BAR },
+  { id: 'hybrid-cat', spec: 'cat', name: 'Hybrid', talentString: '050022-50230332123110121011-055', source: WS, stats: CAT_STATS, bar: CAT_BAR },
+  { id: 'cat-feral', spec: 'cat', name: 'Feral, deeper (Natural Shapeshifter)', talentString: '-55220132023012125011-05503', source: COMMUNITY, stats: CAT_STATS, bar: CAT_BAR },
+  { id: 'bear', spec: 'bear', name: 'Bear tank', talentString: '050022-2322030212310212501-055', source: WS, stats: BEAR_STATS, bar: BEAR_BAR, tank: true },
+  { id: 'hybrid-bear', spec: 'bear', name: 'Hybrid', talentString: '050022-50230332123110121011-055', source: WS, stats: BEAR_STATS, bar: BEAR_BAR, tank: true },
+  { id: 'bear-deep', spec: 'bear', name: 'Bear tank, deeper', talentString: '01-5502233212310212551-05', source: COMMUNITY, stats: BEAR_STATS, bar: BEAR_BAR, tank: true },
   { id: 'moonkin', spec: 'balance', name: 'Moonkin', talentString: '5232220115501351--5053', source: WS, stats: BALANCE_STATS, bar: BALANCE_BAR },
-  { id: 'balance', spec: 'balance', name: 'Balance', talentString: '5532220115001351--505203', source: REENCODED, stats: BALANCE_STATS, bar: BALANCE_BAR },
+  { id: 'balance', spec: 'balance', name: 'Balance', talentString: '5532220115001351--505203', source: COMMUNITY, stats: BALANCE_STATS, bar: BALANCE_BAR },
 ];
 
 export const buildsFor = (spec: DruidSpec) => BUILDS.filter((b) => b.spec === spec);

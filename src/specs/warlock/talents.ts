@@ -10,7 +10,7 @@ export type WarlockSpec = 'affliction' | 'demonology' | 'destruction';
 /** A demon at your side or given to Demonic Sacrifice (Imp +15% Shadow, Succubus +15% Fire, Voidwalker mana, Felhunter health). */
 export type Demon = 'succubus' | 'imp' | 'voidwalker' | 'felhunter' | 'none';
 /** Which priority list the build plays. */
-export type Rotation = 'affliction' | 'ruin' | 'fire' | 'pact';
+export type Rotation = 'affliction' | 'wrack' | 'ruin' | 'fire' | 'pact' | 'fireBrand';
 
 export interface Build {
   id: string;
@@ -37,17 +37,20 @@ const RUIN_BAR = bar(['shadowBolt', 'corruption', 'immolate', 'baneOfDoom', 'ban
 const PACT_BAR = bar(['shadowBolt', 'searingPain', 'corruption', 'immolate', 'baneOfDoom', 'baneOfAgony', 'curseOfTheElements', 'lifeTap',
   'soulFire', 'manaPotion', 'deathCoil', 'petAttackOrder', 'petFollowOrder', 'petStayOrder']);
 
-const GS = 'gunba/wow-forever-sim';
-const FS = 'foreversim';
-/** foreversim's builds, still on the old tree: Malediction's points moved to Improved Corruption, as gunba moved his. */
-const FS_REENCODED = `${FS}, re-encoded to the Oct 15 tree`;
+const WS = 'wowsims/forever';
+/** Builds with no equivalent in WoWSims Forever: they stay, for whoever practises them. */
+const GS = 'community, from gunba/wow-forever-sim';
+/** foreversim's build, on the old tree: Malediction's points moved to Improved Corruption. */
+const FS_REENCODED = 'community, from foreversim, re-encoded to the Oct 15 tree';
 // Mana: 1093 + 15 x Intellect, x1.15 with Fel Vitality 3/3 (research → Default stats).
 export const BUILDS: Build[] = [
-  { id: 'affliction', spec: 'affliction', name: 'Affliction', talentString: '2550002003520015--0550305003', source: GS, stats: AFFLICTION_STATS, bar: AFFLICTION_BAR, rotation: 'affliction', options: { mana: 4033 } },
-  { id: 'affliction-deep', spec: 'affliction', name: 'Affliction with Wrack', talentString: '25300020135201351--0550005003', source: FS, stats: AFFLICTION_STATS, bar: AFFLICTION_BAR, rotation: 'affliction', options: { mana: 4033 } },
-  // gs since 27 Oct: the Imp sacrificed (+15 % Shadow) before the Succubus comes out; the same talents as foreversim's Shadow Brand.
-  { id: 'pact', spec: 'demonology', name: 'Demonic Pact', talentString: '011-0005003231220301351-0550005003', source: `${GS} and ${FS}`, stats: PACT_STATS, bar: PACT_BAR, rotation: 'pact', options: { mana: 4638, sacrifice: 'imp' } },
-  { id: 'fire', spec: 'destruction', name: 'Shadow and Flame', talentString: '25500000035--055030510310035', source: GS, stats: DESTRUCTION_STATS, bar: FIRE_BAR, rotation: 'fire', options: { mana: 4153 } },
+  { id: 'affliction', spec: 'affliction', name: 'Affliction (Shadow Mastery and Ruin)', talentString: '2550002013520105--0550205003', source: WS, stats: AFFLICTION_STATS, bar: AFFLICTION_BAR, rotation: 'affliction', options: { mana: 4033 } },
+  { id: 'affliction-deep', spec: 'affliction', name: 'Affliction with Wrack', talentString: '25300020135201351--0550005003', source: WS, stats: AFFLICTION_STATS, bar: AFFLICTION_BAR, rotation: 'wrack', options: { mana: 4033 } },
+  // The Imp sacrificed (+15 % Shadow) before the Succubus comes out.
+  { id: 'pact', spec: 'demonology', name: 'Demonic Pact (Shadow Brand)', talentString: '011-0005003231220301351-0550005003', source: WS, stats: PACT_STATS, bar: PACT_BAR, rotation: 'pact', options: { mana: 4638, sacrifice: 'imp' } },
+  // The Succubus sacrificed (+15 % Fire) before the Imp comes out.
+  { id: 'pact-fire', spec: 'demonology', name: 'Demonic Pact (Fire Brand)', talentString: '011-0305003201220301351-0050055003', source: WS, stats: PACT_STATS, bar: PACT_BAR, rotation: 'fireBrand', options: { mana: 4638, sacrifice: 'succubus', demon: 'imp' } },
+  { id: 'fire', spec: 'destruction', name: 'Shadow and Flame', talentString: '2550002013--0050355103101351', source: WS, stats: DESTRUCTION_STATS, bar: FIRE_BAR, rotation: 'fire', options: { mana: 4153 } },
   { id: 'ruin', spec: 'destruction', name: 'DS/Ruin', talentString: '254000001351-0025003001-0550005103', source: GS, stats: RUIN_STATS, bar: RUIN_BAR, rotation: 'ruin', options: { mana: 4638, sacrifice: 'imp' } },
   { id: 'ruin-fs', spec: 'destruction', name: 'DS/Ruin with Pandemic', talentString: '25400010135201-0025003001-05500051', source: FS_REENCODED, stats: RUIN_STATS, bar: RUIN_BAR, rotation: 'ruin', options: { mana: 4638, sacrifice: 'imp' } },
 ];

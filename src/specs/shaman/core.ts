@@ -493,7 +493,7 @@ export function prepare(c: Combat): void {
   c.registerSource('lightningOverload', 'Lightning Overload', 'lightningOverload');
   c.registerSource('lightningShield', 'Lightning Shield', 'lightningShield');
   c.trackedTargetAuras.push('flameShock', 'stormstrike');
-  c.trackedAuras.push('searingTotem', 'flurry', 'elementalDevastation');
+  c.trackedAuras.push('searingTotem', 'magmaTotem', 'flurry', 'elementalDevastation');
 }
 
 // ------------------------------------------------------- practice helpers

@@ -559,7 +559,7 @@ applyEnemy();
 applyStats();
 combat.reset();
 /** The game update the yard follows: on the first visit after it, abilities it added get a button in an empty slot. */
-const PATCH = '2026-11-02.3';
+const PATCH = '2026-11-02.4';
 const newPatch = refillRows || prefs.patch !== PATCH;
 dropMissing(prefs.bar, combat);
 if (refillRows) { fillExtraRows(prefs.bar, combat); prefs.patch = PATCH; persist(); }

@@ -1,6 +1,6 @@
 // WoW Forever priest talents and the damage builds the sims use. Order:
-// gunba's current tree (ui/core/talents/trees/priest.json at 887a3a7, the
-// Oct 15 trees), Discipline 18, Holy 17, Shadow Magic 17.
+// WoWSims Forever's tree (proto/priest.proto), Discipline 18, Holy 17,
+// Shadow Magic 17.
 // See research/priest_forever.md.
 import type { Binding, Stats } from '../../engine/types';
 import { decodeTalents, talentSplit, talentSummary } from '../common';
@@ -62,14 +62,16 @@ const SHADOW_BAR = bar(['mindFlay', 'mindBlast', 'shadowWordPain', 'shadowWordDe
 const SMITE_BAR = bar(['smite', 'holyFire', 'mindBlast', 'penance', 'innerFocus', 'powerInfusion', 'holyNova', 'shadowWordPain',
   'manaPotion', 'shadowWordDeath']);
 
-const GS = 'gunba/wow-forever-sim';
-const FS = 'foreversim';
+const WS = 'wowsims/forever';
+/** Builds with no equivalent in WoWSims Forever: they stay, for whoever practises them. */
+const OLDER = 'community, from the older sims';
+const FS = 'community, from foreversim';
 export const BUILDS: Build[] = [
-  { id: 'shadow', spec: 'shadow', name: 'Shadow', talentString: '50500500102--50542001201302251', source: GS, stats: SHADOW_STATS, bar: SHADOW_BAR },
-  { id: 'shadow-community', spec: 'shadow', name: 'Shadow, community build', talentString: '02530003101--55052201201302251', source: 'all three sims', stats: SHADOW_STATS, bar: SHADOW_BAR },
+  { id: 'shadow', spec: 'shadow', name: 'Shadow', talentString: '00530300103-3-50042201251302051', source: WS, stats: SHADOW_STATS, bar: SHADOW_BAR },
+  { id: 'shadow-community', spec: 'shadow', name: 'Shadow, community build', talentString: '02530003101--55052201201302251', source: OLDER, stats: SHADOW_STATS, bar: SHADOW_BAR },
   { id: 'shadow-fs', spec: 'shadow', name: 'Shadow', talentString: '00530320103--50052201251302051', source: FS, stats: SHADOW_STATS, bar: SHADOW_BAR },
-  { id: 'smite', spec: 'smite', name: 'Smite', talentString: '515035031030001031-00505023002-003', source: GS, stats: SMITE_STATS, bar: SMITE_BAR },
-  { id: 'smite-launch', spec: 'smite', name: 'Smite, launch preset', talentString: '515335031030001001-30505113002', source: 'all three sims', stats: SMITE_STATS, bar: SMITE_BAR },
+  { id: 'smite', spec: 'smite', name: 'Smite', talentString: '525235031030001001-30515100002-3', source: WS, stats: SMITE_STATS, bar: SMITE_BAR },
+  { id: 'smite-launch', spec: 'smite', name: 'Smite, launch preset', talentString: '515335031030001001-30505113002', source: OLDER, stats: SMITE_STATS, bar: SMITE_BAR },
   { id: 'smite-hybrid', spec: 'smite', name: 'Smite with Mind Blast and Pain', talentString: '505030031030001-305051102120003-50002', source: 'our proposal', stats: SMITE_STATS, bar: SMITE_BAR },
 ];
 

@@ -1,5 +1,5 @@
-// WoW Forever warrior talents and the builds the sims use. Order: gunba's
-// current tree (post 1 October), Arms 17, Fury 17, Protection 18. See
+// WoW Forever warrior talents and the builds the sims use. Order: WoWSims
+// Forever's tree (proto/warrior.proto), Arms 17, Fury 17, Protection 18. See
 // research/warrior_forever.md → Talents and Builds.
 import type { Binding, Stats } from '../../engine/types';
 import { decodeTalents, talentSplit, talentSummary } from '../common';
@@ -50,6 +50,7 @@ export interface Build {
   id: string;
   name: string;
   talentString: string;
+  source: string;
   rotation: Rotation;
   stance: Stance;
   stats: Stats;
@@ -72,16 +73,19 @@ const ARMS_BAR = bar(['mortalStrike', 'overpower', 'heroicStrike', 'execute', 'r
 const PROT_BAR = bar(['shieldSlam', 'revenge', 'sunderArmor', 'heroicStrike', 'shieldBlock', 'thunderClap', 'demoralizingShout', 'battleShout',
   'attack', 'shieldBash', 'bloodrage', 'lastStand', 'shieldWall', 'cleave', 'concussionBlow', 'charge']);
 
+const WS = 'wowsims/forever';
+/** Builds with no equivalent in WoWSims Forever: they stay, for whoever practises them. */
+const COMMUNITY = 'community, from gunba/wow-forever-sim';
 export const BUILDS: Build[] = [
-  { id: 'fury-dw', name: 'Fury, dual wield', talentString: '30305213002-25053005112010501-1', rotation: 'fury', stance: 'berserker', stats: FURY_STATS, bar: FURY_BAR },
-  { id: 'fury-sunder', name: 'Fury, keeps Sunder Armor up', talentString: '30305213002-25053005112010501-1', rotation: 'fury', stance: 'berserker', stats: FURY_STATS, bar: FURY_BAR, options: { sunderDuty: true } },
-  { id: 'arms-2h', name: 'Arms, two-hander', talentString: '20305213132515201-3505-2', rotation: 'arms', stance: 'battle', stats: ARMS_STATS, bar: ARMS_BAR },
-  { id: 'fury-2h', name: 'Two-hand Bloodthirst', talentString: '20305203032-45050020152010501', rotation: 'twoHandBloodthirst', stance: 'berserker', stats: ARMS_STATS, bar: FURY_BAR },
-  { id: 'prot', name: 'Protection ("Fury Prot")', talentString: '35-0501-251333120230021351', rotation: 'protection', stance: 'defensive', stats: PROT_STATS, bar: PROT_BAR, tank: true },
-  { id: 'prot-deep', name: 'Protection, deeper', talentString: '31-0501-255333120230021351', rotation: 'protection', stance: 'defensive', stats: PROT_STATS, bar: PROT_BAR, tank: true },
+  { id: 'fury-dw', name: 'Fury, dual wield', talentString: '30305213002-15053105102210501', source: WS, rotation: 'fury', stance: 'berserker', stats: FURY_STATS, bar: FURY_BAR },
+  { id: 'fury-sunder', name: 'Fury, keeps Sunder Armor up', talentString: '30305213002-15053105102210501', source: WS, rotation: 'fury', stance: 'berserker', stats: FURY_STATS, bar: FURY_BAR, options: { sunderDuty: true } },
+  { id: 'arms-2h', name: 'Arms, two-hander', talentString: '30325213132515201-0505-2', source: WS, rotation: 'arms', stance: 'battle', stats: ARMS_STATS, bar: ARMS_BAR },
+  { id: 'fury-2h', name: 'Two-hand Bloodthirst', talentString: '20305203032-45050020152010501', source: COMMUNITY, rotation: 'twoHandBloodthirst', stance: 'berserker', stats: ARMS_STATS, bar: FURY_BAR },
+  { id: 'prot', name: 'Protection', talentString: '35301003002-03-050530120301011351', source: WS, rotation: 'protection', stance: 'defensive', stats: PROT_STATS, bar: PROT_BAR, tank: true },
+  { id: 'prot-deep', name: 'Protection, deeper', talentString: '31-0501-255333120230021351', source: COMMUNITY, rotation: 'protection', stance: 'defensive', stats: PROT_STATS, bar: PROT_BAR, tank: true },
 ];
 
-export const buildLabel = (b: Build) => `${b.name} ${talentSplit(b.talentString)} (gunba/wow-forever-sim)`;
+export const buildLabel = (b: Build) => `${b.name} ${talentSplit(b.talentString)} (${b.source})`;
 
 const cache = new Map<string, Talents>();
 export function buildById(id: unknown): Build {

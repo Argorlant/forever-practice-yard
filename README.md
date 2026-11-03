@@ -8,17 +8,17 @@ played Forever at level 60, a DPS number would only mislead. It works with keybo
 
 **Play it online:** https://argorlant.github.io/forever-practice-yard/
 
-Up to date with the two sims' October 27-28 updates (launch racials, re-searched builds and priority lists, live
-hotfixes through client 1.60.1.70658): spells at the last trainer rank (the Ahn'Qiraj books need raids, which open on
+Builds and priority lists follow [WoWSims Forever](https://www.wowsims.com/forever/) as of 2 November 2026 (commit
+`bac92db`; gear sheets and some numbers still come from the older sims): spells at the last trainer rank (the Ahn'Qiraj books need raids, which open on
 9 December), raid buffs too; a boss without resistances resists no spell partly; the Mage's Frost tree without Piercing
 Ice; Human Ruthless at 1 % and no Orc Savage in the race sheets. The live hotfix of October 30 rebuilt the Druid, Mage
-and Paladin trees (and moved or renamed a Hunter and a Priest talent); the sims have not published it yet, so the site
-reads those trees and their tooltips from Wowhead's WoW Forever calculator (`tools/wowhead_trees.mjs`, data in
-`research/wowhead/`) and re-spends the sims' builds on them. Those builds and the Ret and Shockadin loops are ours,
-**provisional**, until the sims publish theirs.
+and Paladin trees (and moved or renamed a Hunter and a Priest talent); the site's trees and their tooltips were read then
+from Wowhead's WoW Forever calculator (`tools/wowhead_trees.mjs`, data in `research/wowhead/`), and they match WoWSims
+Forever's talent order. Builds marked **community** have no equivalent there: they come from older sims, re-spent where the
+trees changed, and stay for whoever practises them.
 > **Speculative, built on the sims.** This site was made before WoW Forever's launch on 4 November 2026. The talents,
-> builds, rotations and numbers here follow the community sims ([WoWSims Forever](https://www.wowsims.com/forever/), our main source, and, for
-> what we have not reviewed against it yet, [foreversim](https://github.com/laurencestokes/foreversim) and gunba's retired
+> builds, rotations and numbers here follow the community sims ([WoWSims Forever](https://www.wowsims.com/forever/), our main source; the
+> builds marked community and some older numbers come from [foreversim](https://github.com/laurencestokes/foreversim) and gunba's retired
 > [wow-forever-sim](https://github.com/gunba/wow-forever-sim)) and our own reading of the beta, so they
 > may not match the live game, and classes can still change as players reach level 60. Use it as a practice tool: learn a rotation's rhythm and get a feel for how a class might play at max
 > level. That's why it shows no DPS: the damage in the floating combat text is only a rough guide. Spotted something wrong? Feedback is very welcome in the
@@ -30,8 +30,8 @@ can crit, the Forever talent build (Hack and Slash, Flawless Execution) and Fore
 values. Every number and its source is in [`research/rogue_forever.md`](research/rogue_forever.md);
 values marked provisional there are still unconfirmed for Forever.
 
-Pick a talent build from the WoW Forever sims in Settings: Combat Swords (both sims), Combat with
-Improved Expose Armor, Combat Backstab, Mutilate (both sims) and Subtlety Hemorrhage (both sims).
+Pick a talent build from the WoW Forever sims in Settings: Combat Swords,
+Combat Backstab, Mutilate (Assassination and Combat), Subtlety Hemorrhage and Subtlety Backstab from WoWSims Forever, and older community builds.
 Each build brings its talents, weapons, action bar and the sims' priority list for the "next
 ability" glow (the rotation helper: the Helper button turns it off to play from memory). Raid options: keep Expose Armor up (when no warrior applies Sunder Armor) and
 whether to use Thistle Tea.
@@ -82,7 +82,7 @@ baseline Holy Strike roll on the melee table:
   Shield Specialization mana on blocks, Shieldsworn (Holy Strike every 6 s, triggering Holy Shield and Shield
   Specialization), Templar's Bulwark (an absorb shield) and Swift Judgement, a second Judgement since Oct 30.
 - **Shockadin** (`?class=paladin-shock`): a melee paladin with Holy Shock on a 10 s cooldown, Divine Favor and
-  Divine Precision: gunba's 23/0/28 list. Light's Vigil only works on allies since Oct 30, so our Vigil builds are gone.
+  Divine Precision: WoWSims Forever's 23/0/28 list. Light's Vigil only works on allies since Oct 30, so our Vigil builds are gone.
 
 Exorcism needs an Undead or Demon dummy (Settings → Options); Hammer of Wrath works below 20 % health.
 
@@ -94,7 +94,7 @@ By default Auto Shot keeps firing while you cast (Forever's intent); Settings ha
 The hunter carries a bow, gun or crossbow (Settings → Character → Ranged weapon): slung on the back, it comes out to aim and
 fire while Auto Shot is on or a shot is cast, and the melee weapon is put away.
 
-- **Marksmanship** (`?class=hunter-mm`): gunba's petless Lone Wolf build (+20% damage), Aimed Shot (baseline, 2 s
+- **Marksmanship** (`?class=hunter-mm`): WoWSims Forever's petless Lone Wolf build (+20% damage), Aimed Shot (baseline, 2 s
   cast), Sniper Shot, Arcane Shot and Serpent Sting with ranged AP scaling, Mortal Shots. You start 12 yards back.
 - **Beast Mastery** (`?class=hunter-bm`): a cat pet with its own swing timer and Focus (Bite on cooldown, Claw with
   spare Focus), up to two hawks from Summon Hawk, Bestial Wrath, Intimidation and Frenzy.
@@ -105,12 +105,12 @@ fire while Auto Shot is on or a shot is cast, and the melee weapon is put away.
 melee swing of your two-handed glaive run on separate timers, and the distance decides which one fires. It is really
 ranged weaving: use your ranged cooldowns at range, step in, press what you can, step back out. Rings on the ground mark
 melee range and Auto Shot's minimum range on all of them. The weaving helper in Settings (off by default, on in the weave builds) adds a cue above the bar that says when to step in, which melee attack to press
-(Raptor Strike first, off the global cooldown, then Immolation Trap, Mongoose Bite and Strider Kick) and when to step out; weaving drops Aimed Shot for Arcane
+(Raptor Strike first, off the global cooldown, then Strider Kick, Mongoose Bite, Immolation Trap and Wing Clip) and when to step out; weaving drops Aimed Shot for Arcane
 Shot and Multi-Shot at range. A
 third setting picks what a melee swing does to Auto Shot: Classic keeps the two timers separate (the default, assumed until it can be checked in the live game), the Forever
 beta restarted Auto Shot (reported as a bug), Wrath links them both ways. The review counts weaves, the Auto Shot time they cost and
-the net damage. Since Oct 21 gunba's sim weaves: its SV Weave (its top build) and MM Weave builds, in Settings, shoot from
-12 yards and step to 5 while the next Auto Shot is more than 1.5 s away, with no pet. SV Weave carries a two-hander for this;
+the net damage. WoWSims Forever's SV Weave and MM Weave builds, in Settings, shoot from
+12 yards and step to 5 while the next Auto Shot is more than 1.5 s away, with no pet; BM Weave keeps its pet. SV Weave carries a two-hander for this;
 melee Survival prefers two weapons for its white swings.
 
 The **Priest** comes as two damage specs (sources in [`research/priest_forever.md`](research/priest_forever.md)); pure healers are out of scope:
@@ -195,7 +195,7 @@ plays. Pick them on the welcome screen or later in Settings:
 
 The first screen picks the class (WoW's class icons) and then a build, grouped by spec, with its three talent trees drawn
 like the game's talent frame (hover a talent for what it does). `?class=warrior` opens a class directly; Settings shows the
-current build's trees and links back to the first screen. `npm run talents` rebuilds the tree layouts from gunba's sim
+current build's trees and links back to the first screen. `npm run talents` rebuilds the tree layouts from gunba's retired sim
 (`tools/talent_layout.mjs`); `node tools/wowhead_trees.mjs` then lays the Oct 30 trees from Wowhead over them, and
 `npm run icons` fetches their icons.
 
@@ -364,7 +364,7 @@ Then open http://127.0.0.1:5180.
 - Dummy portrait: [game-icons.net](https://game-icons.net) by Lorc (CC BY 3.0).
 - Floors of your own places: [three-mesh-bvh](https://github.com/gkjohnson/three-mesh-bvh) (MIT).
 - Combat formulas and racials follow [WoWSims Forever](https://www.wowsims.com/forever/)
-  ([source](https://github.com/wowsims/forever), MIT), our main source. Builds not yet reviewed against it come from
+  ([source](https://github.com/wowsims/forever), MIT), our main source. Builds marked community and some older numbers come from
   [foreversim](https://github.com/laurencestokes/foreversim) and the retired
   [wow-forever-sim](https://github.com/gunba/wow-forever-sim), both built on [WoWSims Classic](https://github.com/wowsims/classic) (MIT).
 - The rest of each class's spellbook (`tools/spellbook.mjs`): a roster kept by hand, with its numbers from foreversim's client

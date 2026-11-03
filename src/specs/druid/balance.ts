@@ -231,7 +231,7 @@ function prepare(c: Combat): void {
 }
 
 // ------------------------------------------------------------- rotation
-/** gs's ranked moonkin list (research/druid_forever.md â†’ Balance). */
+/** WoWSims Forever's moonkin list (research/druid_forever.md → Balance). */
 function suggest(c: Combat): string | null {
   const t = c.target;
   if (!t || t.health <= 0) return null;
@@ -240,16 +240,15 @@ function suggest(c: Combat): string | null {
   const ready = (id: string) => c.cooldownLeft(id).left === 0;
   if (tl.moonkinForm && !c.aura(p, 'moonkinForm')) return 'moonkinForm';
   if (!c.manaLocked && p.inCombat) {
-    if (p.resource <= 500 && ready('innervate')) return 'innervate';
+    if (p.resource / p.maxResource < 0.4 && ready('innervate')) return 'innervate';
     if (p.resource <= p.maxResource - D.manaPotion.max && p.resource <= 1500 && ready('manaPotion')) return 'manaPotion';
   }
   // Short on mana: skip what you cannot pay for; Wrath (30 mana) keeps you casting.
   const afford = (id: string) => c.cost(c.ability(id)!) <= p.resource;
-  // gs since 27 Oct: Insect Swarm in its last second, Moonfire when it is down, Starfire on Eclipse (not for a charge
-  // the Starfire being cast already takes), Wrath.
-  const swarmLeft = (c.aura(t, 'insectSwarm')?.end ?? c.t) - c.t;
-  if (tl.insectSwarm && swarmLeft <= 1 && c.casting?.id !== 'insectSwarm' && afford('insectSwarm')) return 'insectSwarm';
+  // WoWSims Forever's list: Moonfire and Insect Swarm when they are down, Starfire on Eclipse (not for a charge the
+  // Starfire being cast already takes), Wrath.
   if (!c.aura(t, 'moonfire') && afford('moonfire')) return 'moonfire';
+  if (tl.insectSwarm && !c.aura(t, 'insectSwarm') && c.casting?.id !== 'insectSwarm' && afford('insectSwarm')) return 'insectSwarm';
   if (eclipseCharges(c) - (c.casting?.id === 'starfire' ? 1 : 0) >= 1 && afford('starfire')) return 'starfire';
   return 'wrath';
 }

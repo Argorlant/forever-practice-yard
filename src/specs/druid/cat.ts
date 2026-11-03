@@ -269,10 +269,7 @@ function prepare(c: Combat): void {
 }
 
 // ------------------------------------------------------------- rotation
-/**
- * gs's ranked cat list, with the practice yard's opener and Faerie Fire
- * (research/druid_forever.md → "Our hint version").
- */
+/** WoWSims Forever's cat list, with the practice yard's opener and Faerie Fire. */
 function suggest(c: Combat): string | null {
   const t = c.target;
   if (!t || t.health <= 0) return null;
@@ -283,23 +280,27 @@ function suggest(c: Combat): string | null {
   const ready = (id: string) => c.cooldownLeft(id).left === 0 && (c.ability(id)?.usable?.(c) ?? true);
   if (c.stealthed()) return 'ravage';
   if (!p.inCombat && ready('prowl')) return 'prowl';
-  if (c.options.thistleTea !== false && p.inCombat && energy <= 10 && ready('thistleTea')) return 'thistleTea';
   if (c.options.faerieFire && faerieFireLeft(c, t) <= 0 && ready('faerieFire')) return 'faerieFire';
-  // gs since 27 Oct: Ferocious Bite at 4 points with Rip up for 5 s, low energy and no Clearcasting; Rake (it scales
-  // with attack power) before Rip; Rip at 4 points, not on Clearcasting; Shifting Power at 50 energy; Shred, pooling
-  // energy at 5 points when Rip is about to fall off.
+  // WoWSims Forever's Cat list. With Predatory Discipline, a bite at 4 points or more with Rip up pools energy first.
   const rip = c.aura(t, 'rip');
   const ripLeft = rip ? rip.end - c.t : 0;
   const cc = clearcasting(c);
-  // Predatory Discipline (Oct 30) keeps the extra Energy, so the bite no longer waits for low Energy (the yard's reading).
-  if (cp >= 4 && ripLeft >= 5 && (energy <= 45 || tl.predatoryDiscipline) && !cc) return 'ferociousBite';
-  if (cp < 5 && !c.aura(t, 'rake') && energy >= c.cost(c.ability('rake')!)) return 'rake';
-  if (cp >= 4 && !rip && !cc) return 'rip';
+  const biteWindow = !!tl.predatoryDiscipline && cp >= 4 && ripLeft >= 2;
+  const bite = biteWindow && (energy >= (cc ? 60 : 85) || (cp >= 5 && energy >= (cc ? 50 : 70)));
+  if (bite) return 'ferociousBite';
   const enoughMana = c.manaLocked || p.mana >= shiftingPowerMana(c);
-  if (tl.shiftingPower && energy <= 50 && ready('shiftingPower') && enoughMana) return 'shiftingPower';
+  if (tl.shiftingPower && energy <= 57 && ready('shiftingPower') && enoughMana) return 'shiftingPower';
+  if (c.options.thistleTea !== false && p.inCombat && energy <= (tl.bloodFrenzy ? 20 : 25) && ready('thistleTea')) return 'thistleTea';
   if (!c.manaLocked && p.inCombat && p.mana < shiftingPowerMana(c) && ready('manaPotion')) return 'manaPotion';
-  if (cp >= 5 && rip && ripLeft < 3 && !cc) return null;
-  return c.behind(t) ? 'shred' : 'claw';
+  const pool = biteWindow && !bite;
+  const builder = c.behind(t) ? 'shred' : 'claw';
+  if (cc && !pool) return builder;
+  // Rip at 4 points, at 5 when one more Shred still pays for it (no Blood Frenzy, or two points of it with Shifting Power).
+  const fifth = !tl.bloodFrenzy || (tl.bloodFrenzy >= 2 && !!tl.shiftingPower);
+  const oneMore = c.behind(t) && energy + 10 >= c.cost(c.ability('shred')!) + c.cost(c.ability('rip')!);
+  if (!rip && cp >= 4 && (!fifth || cp >= 5 || !oneMore)) return 'rip';
+  if (!c.aura(t, 'rake')) return 'rake';
+  return pool ? null : builder;
 }
 
 // ------------------------------------------------------- practice helpers
@@ -376,7 +377,7 @@ export const druidCat: Spec = {
   abilities,
   stats: CAT_STATS,
   rules: BOSS_RULES,
-  builds: buildsFor('cat').map((b) => ({ id: b.id, label: buildLabel(b), name: b.name, source: 'gunba/wow-forever-sim', talentString: b.talentString, stats: b.stats, bar: b.bar, trees: summary(talentsFor(b.id, 'cat')) })),
+  builds: buildsFor('cat').map((b) => ({ id: b.id, label: buildLabel(b), name: b.name, source: b.source, talentString: b.talentString, stats: b.stats, bar: b.bar, trees: summary(talentsFor(b.id, 'cat')) })),
   defaultOptions: {
     build: 'cat', mana: 3000, manaRegen: 8, lockMana: false,
     wolfshead: true, howlingIdol: true, idolOfTheDream: false, thistleTea: true, faerieFire: true,
@@ -395,7 +396,7 @@ export const druidCat: Spec = {
   ],
   sheet: { spellCrit: false, mainHand: 'Weapon (its DPS is your cat swing)' },
   bar: buildById('cat', 'cat').bar,
-  welcome: 'Welcome to Feral Cat practice. Energy flows smoothly, Shifting Power is the Forever powershift (paid in mana) and Omen of Clarity is baseline. Open with Prowl and Ravage from behind, keep Rip up, bite at 5 points and Shred everything else.',
+  welcome: 'Welcome to Feral Cat practice. Energy flows smoothly, Shifting Power is the Forever powershift (paid in mana) and Omen of Clarity is baseline. Open with Prowl and Ravage from behind, keep Rip and Rake up, bite with energy to spare once Rip is safe, and Shred everything else.',
   help: `${CONTROLS}
     Energy regenerates smoothly at 10 per second. The global cooldown is 1.0 sec for every cat attack. A cat swings every 1.0 sec for your weapon's DPS plus AP/14; Shred and Claw use the same weapon damage.
     Shifting Power gives 40 Energy (45 with Wolfshead Helm) for 684 mana, every 8 sec (Oct 30 hotfix; Improved Shifting Power is gone), and cannot be used at full Energy. Mana is the second bar: Judgement of Wisdom on the dummy gives mana back on your hits, Blessing of Wisdom and Mana Spring Totem add 8 and 5 per second (all three are on by default under Raid buffs and debuffs), Major Mana Potions do the rest; you can also lock it.

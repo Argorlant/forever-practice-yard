@@ -26,53 +26,63 @@ function ctx(c: Combat) {
   return { p, t, ready, afford, due };
 }
 
-/**
- * gs's opening of every list: Life Tap when low (health allowing), a potion, Curse of the Elements, the DoTs a list puts
- * first (`before`: Corruption, and Immolate for Destruction, since 27 Oct), one Bane (Doom on cooldown).
- */
-function common(c: Combat, before: string[] = []): string | null {
-  const { p, t, ready, afford, due } = ctx(c);
-  if (!c.manaLocked) {
-    const mana = p.resource / p.maxResource;
-    const tap = lifeTapAmount(c);
-    // Healers keep up with you: tap whenever it does not kill you.
-    const healthy = c.playerHealthLocked || p.health > tap;
-    if (p.inCombat && p.resource <= p.maxResource - D.manaPotion.max && mana < 0.5 && ready('manaPotion')) return 'manaPotion';
-    if ((mana < 0.15 || !afford('shadowBolt')) && healthy && p.resource + tap <= p.maxResource + 100) return 'lifeTap';
-  }
-  if (!c.raid.has('curseOfElements') && !c.aura(t, 'curseOfElements') && afford('curseOfTheElements')) return 'curseOfTheElements';
-  for (const id of before) if (due(id)) return id;
-  if (ready('baneOfDoom') && afford('baneOfDoom') && !c.aura(t, 'baneOfDoom')) return 'baneOfDoom';
-  if (!baneOn(c, t) && due('baneOfAgony')) return 'baneOfAgony';
-  return null;
-}
-
+/** WoWSims Forever's lists: the curse, Bane of Doom on cooldown, the DoTs in each list's order, and a filler. */
 function rotationSuggest(c: Combat): string | null {
   const t = c.target;
   if (!t || t.health <= 0) return null;
   const tl = T(c);
-  const { ready, afford, due } = ctx(c);
+  const { p, ready, afford, due } = ctx(c);
   if (c.channeling) return null;
-  // gs's lists since 27 Oct: Corruption ahead of the Banes, Destruction's Immolate too; Shadowburn before Conflagrate;
-  // the Demonic Pact list no longer casts Soul Fire on Decimation.
   const rotation = build(c).rotation;
-  const first = common(c, rotation === 'fire' ? ['immolate', 'corruption'] : ['corruption']);
-  if (first) return first;
-  switch (rotation) {
-    case 'affliction':
-    case 'ruin':
-      if (tl.siphonLife && due('siphonLife')) return 'siphonLife';
-      if (due('immolate')) return 'immolate';
-      return 'shadowBolt';
-    case 'fire':
-      if (tl.shadowburn && ready('shadowburn') && afford('shadowburn')) return 'shadowburn';
-      if (tl.conflagrate && ready('conflagrate') && afford('conflagrate') && c.aura(t, 'immolate')) return 'conflagrate';
-      return tl.incinerate ? 'incinerate' : 'shadowBolt';
-    case 'pact':
-      if (tl.demonicBrand && c.pet.out && !c.aura(t, 'demonicBrand') && c.casting?.id !== 'searingPain' && afford('searingPain')) return 'searingPain';
-      if (due('immolate')) return 'immolate';
-      return 'shadowBolt';
+  const mana = p.resource / p.maxResource;
+  if (!c.manaLocked && p.inCombat && p.resource <= p.maxResource - D.manaPotion.max && mana < 0.5 && ready('manaPotion')) return 'manaPotion';
+  if (!c.raid.has('curseOfElements') && !c.aura(t, 'curseOfElements') && afford('curseOfTheElements')) return 'curseOfTheElements';
+  // Bane of Agony with Amplify Curse first, for the list that keeps it and for the others while Doom waits.
+  const agony = () => (tl.amplifyCurse && !c.aura(p, 'amplifyCurse') && ready('amplifyCurse') ? 'amplifyCurse' : due('baneOfAgony') ? 'baneOfAgony' : null);
+  // Life Tap under 30% mana, or with no mana for the filler, health allowing (healers keep up with you).
+  const filler = (id: string) => {
+    const tap = lifeTapAmount(c);
+    const healthy = c.playerHealthLocked || p.health > tap;
+    if (!c.manaLocked && (mana < 0.3 || !afford(id)) && healthy && p.resource + tap <= p.maxResource + 100) return 'lifeTap';
+    return id;
+  };
+
+  if (rotation === 'wrack') {
+    const bane = !baneOn(c, t) ? agony() : null;
+    if (bane) return bane;
+    for (const id of ['corruption', 'siphonLife', 'immolate']) if ((id !== 'siphonLife' || tl.siphonLife) && due(id)) return id;
+    if (tl.improvedShadowBolt && !c.aura(t, 'improvedShadowBolt') && c.casting?.id !== 'shadowBolt') return filler('shadowBolt');
+    if (c.aura(p, 'shadowTrance')) return 'shadowBolt';
+    const floor = Math.min(left(c, t, 'corruption'), left(c, t, 'baneOfAgony'));
+    if (tl.wrack && ready('wrack') && afford('wrack') && floor >= 4) return 'wrack';
+    return filler('shadowBolt');
   }
+
+  const doom = ready('baneOfDoom') && afford('baneOfDoom') && !c.aura(t, 'baneOfDoom');
+  if (doom) return 'baneOfDoom';
+  if (rotation === 'pact' || rotation === 'fireBrand') {
+    const brand = c.aura(t, 'demonicBrand');
+    if (tl.demonicBrand && c.pet.out && (!brand || brand.end - c.t < 2.5) && c.casting?.id !== 'searingPain' && afford('searingPain')) return 'searingPain';
+    if (!baneOn(c, t) && due('baneOfAgony')) return 'baneOfAgony';
+    for (const id of ['corruption', 'immolate']) if (due(id)) return id;
+    if (rotation === 'pact') return filler('shadowBolt');
+    if (c.aura(p, 'decimation') && c.casting?.id !== 'soulFire' && ready('soulFire') && afford('soulFire')) return 'soulFire';
+    return filler('searingPain');
+  }
+  if (rotation === 'fire') {
+    const bane = !baneOn(c, t) ? agony() : null;
+    if (bane) return bane;
+    for (const id of ['immolate', 'corruption']) if (due(id)) return id;
+    if (tl.conflagrate && ready('conflagrate') && afford('conflagrate') && c.aura(t, 'immolate')) return 'conflagrate';
+    if (tl.shadowburn && ready('shadowburn') && afford('shadowburn')) return 'shadowburn';
+    return filler(tl.incinerate ? 'incinerate' : 'shadowBolt');
+  }
+  // Affliction with Shadow Mastery and Ruin; the older DS/Ruin builds play it too.
+  if (c.aura(p, 'shadowTrance')) return 'shadowBolt';
+  const bane = !baneOn(c, t) ? agony() : null;
+  if (bane) return bane;
+  for (const id of ['corruption', 'siphonLife', 'immolate']) if ((id !== 'siphonLife' || tl.siphonLife) && due(id)) return id;
+  return filler('shadowBolt');
 }
 
 function review(c: Combat): Row[] {
@@ -87,7 +97,7 @@ function review(c: Combat): Row[] {
     { label: 'Immolate uptime', value: pctOf(uptime('immolate')), good: uptime('immolate') >= (rot === 'fire' ? 0.85 : 0.75) },
     { label: 'Bane uptime (Doom or Agony)', value: pctOf(Math.min(1, uptime('baneOfDoom') + uptime('baneOfAgony'))), good: uptime('baneOfDoom') + uptime('baneOfAgony') >= 0.9 },
   ];
-  if (tl.siphonLife && rot === 'affliction') rows.push({ label: 'Siphon Life uptime', value: pctOf(uptime('siphonLife')), good: uptime('siphonLife') >= 0.85 });
+  if (tl.siphonLife && (rot === 'affliction' || rot === 'wrack')) rows.push({ label: 'Siphon Life uptime', value: pctOf(uptime('siphonLife')), good: uptime('siphonLife') >= 0.85 });
   if (tl.improvedShadowBolt && rot !== 'fire') rows.push({ label: 'Your Improved Shadow Bolt uptime', value: pctOf(uptime('improvedShadowBolt')) });
   if (tl.nightfall) rows.push({ label: 'Shadow Trance procs / used', value: `${k.shadowTrance ?? 0} / ${k.tranceUsed ?? 0}`, good: (k.tranceUsed ?? 0) >= (k.shadowTrance ?? 0) - 1 });
   if (rot === 'fire') {
@@ -95,7 +105,7 @@ function review(c: Combat): Row[] {
     rows.push({ label: 'Conflagrates / Shadowburns', value: `${casts('conflagrate')} / ${casts('shadowburn')}` });
     rows.push({ label: 'Shadow and Flame: Shadow / Flame uptime', value: `${pctOf((k['uptime:shadowFlameShadow'] ?? 0) / time)} / ${pctOf((k['uptime:shadowFlameFire'] ?? 0) / time)}` });
   }
-  if (rot === 'pact' && tl.demonicBrand) {
+  if ((rot === 'pact' || rot === 'fireBrand') && tl.demonicBrand) {
     const brand = c.meter.rows.get('demonicBrand');
     rows.push({ label: 'Demonic Brand hits', value: String(brand?.hits ?? 0) });
   }
@@ -177,7 +187,7 @@ export const warlockAffliction: Spec = specFor('affliction', {
   specName: 'Affliction',
   stats: AFFLICTION_STATS,
   defaultOptions: opts('affliction', 4033),
-  welcome: 'Welcome to Affliction practice. Curse of the Elements, Bane of Doom on cooldown, then keep Corruption, Siphon Life and Immolate ticking and fill with Shadow Bolt. Shadow Trance (Nightfall) makes the next one instant. Life Tap turns health into mana; raid healing gives it back.',
+  welcome: 'Welcome to Affliction practice. Curse of the Elements, Bane of Doom on cooldown (the Wrack build keeps Bane of Agony instead), then keep Corruption, Siphon Life and Immolate ticking and fill with Shadow Bolt. Shadow Trance (Nightfall) makes the next one instant. Life Tap turns health into mana; raid healing gives it back.',
   help: `${CONTROLS}
     ${PET_HELP}
     ${HELP_COMMON}
@@ -192,8 +202,8 @@ export const warlockDemonology: Spec = specFor('demonology', {
   prefsRevision: 2,
   specName: 'Demonology',
   stats: PACT_STATS,
-  defaultOptions: opts('pact', 4638, 'voidwalker'),
-  welcome: 'Welcome to Demonology practice (Demonic Pact). Your Succubus fights with you; Searing Pain brands the target so her next attacks add Shadow damage. Keep the Brand up, Bane of Doom on cooldown, Corruption and Immolate ticking, and fill with Shadow Bolt. Below 35% health, Decimation makes Soul Fire fast.',
+  defaultOptions: opts('pact', 4638),
+  welcome: 'Welcome to Demonology practice (Demonic Pact). Your Succubus fights with you; Searing Pain brands the target so her next attacks add Shadow damage. Keep the Brand up, Bane of Doom on cooldown, Corruption and Immolate ticking, and fill with Shadow Bolt. Below 35% health, Decimation makes Soul Fire fast. The Fire Brand build fights with the Imp, fills with Searing Pain and casts Soul Fire on Decimation.',
   help: `${CONTROLS}
     ${PET_HELP}
     ${HELP_COMMON}
@@ -209,7 +219,7 @@ export const warlockDestruction: Spec = specFor('destruction', {
   specName: 'Destruction',
   stats: DESTRUCTION_STATS,
   defaultOptions: opts('fire', 4153),
-  welcome: 'Welcome to Destruction practice (Shadow and Flame). Immolate, then Conflagrate and Shadowburn on cooldown: each keeps a +10% buff up for the other school, and Shadow and Flame keeps your Immolate burning. Corruption and Bane of Doom tick on the side; Incinerate is the filler. The DS/Ruin build plays Shadow Bolts instead.',
+  welcome: 'Welcome to Destruction practice (Shadow and Flame). Immolate, Corruption, then Conflagrate and Shadowburn on cooldown: each keeps a +10% buff up for the other school, and Shadow and Flame keeps your Immolate burning. Corruption and Bane of Doom tick on the side; Incinerate is the filler. The DS/Ruin build plays Shadow Bolts instead.',
   help: `${CONTROLS}
     ${PET_HELP}
     ${HELP_COMMON}

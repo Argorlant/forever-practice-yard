@@ -31,30 +31,26 @@ const FIRE_BAR = bar(['scorch', 'fireball', 'fireBlast', 'pyroblast', 'combustio
 const FROST_BAR = bar(['frostbolt', 'iceLance', 'arcaneMissiles', 'coneOfCold', 'fireBlast', 'presenceOfMind', 'evocation', 'manaRuby',
   'manaPotion', 'frostfireBolt', 'arcaneBlast', 'iceBarrier']);
 
+const WS = 'wowsims/forever';
 const GS = 'gunba/wow-forever-sim';
 const FS = 'foreversim';
 const MS = 'MythicSim / Kami Labs';
-/**
- * MythicSim publishes no strings for the current trees: its builds by name, re-spent the way gunba re-spent his
- * (Oct 21 Frost hotfix: Piercing Ice gone and Elemental Precision 3 ranks, the freed points to Improved Frostbolt).
- */
-const MS_REENCODED = `${MS}, re-encoded to the Oct 30 trees`;
-/** The live hotfix of 30 October rebuilt the Arcane and Fire trees; the sims have no builds for them yet, so theirs are re-spent here. */
-const RESPENT = (sim: string) => `${sim}, re-spent by us for the Oct 30 trees`;
+/** Builds with no equivalent in WoWSims Forever stay, for whoever practises them, re-spent for the 30 October trees. */
+const COMMUNITY = (sim: string) => `community, from ${sim}, re-spent for the Oct 30 trees`;
 export const BUILDS: Build[] = [
-  { id: 'arcane', spec: 'arcane', name: 'Arcane', talentString: '023205203100311531-3-05350003', source: RESPENT(GS), stats: ARCANE_STATS, bar: ARCANE_BAR },
-  { id: 'arcane-fire', spec: 'arcane', name: 'Arcane/Fire', talentString: '023015203100311531-5050032000203', source: RESPENT(GS), stats: ARCANE_STATS, bar: ARCANE_BAR },
-  { id: 'arcane-ms', spec: 'arcane', name: 'Arcane', talentString: '033205203100311531-505000012-023', source: MS_REENCODED, stats: ARCANE_STATS, bar: ARCANE_BAR },
-  { id: 'arcane-fs', spec: 'arcane', name: 'Arcane/Frost', talentString: '253205203100311531-3-0533', source: RESPENT(FS), stats: ARCANE_STATS, bar: ARCANE_BAR },
-  { id: 'fire', spec: 'fire', name: 'Fire', talentString: '0230052021003-54500001230133031-002', source: RESPENT(GS), stats: FIRE_STATS, bar: FIRE_BAR },
-  { id: 'fire-fs', spec: 'fire', name: 'Fire', talentString: '0232052001001-55500001230133031-003', source: RESPENT(FS), stats: FIRE_STATS, bar: FIRE_BAR },
-  { id: 'fire-ms', spec: 'fire', name: 'Fire', talentString: '023205103-55500001130133031-013', source: MS_REENCODED, stats: FIRE_STATS, bar: FIRE_BAR },
-  { id: 'fire-frost', spec: 'fire', name: 'Fire/Frost (Frostfire Bolt)', talentString: '-55520201030133131-05350003', source: RESPENT(GS), stats: FIRE_STATS, bar: FIRE_BAR, options: { fireFiller: 'frostfire' } },
-  { id: 'frostfire', spec: 'fire', name: 'Frostfire', talentString: '-4551000103013303-2035010311013002', source: RESPENT(GS), stats: FIRE_STATS, bar: FIRE_BAR, options: { fireFiller: 'frostfire' } },
-  { id: 'frost', spec: 'frost', name: 'Frost', talentString: '023205-3-253520330100301251', source: RESPENT(GS), stats: FROST_STATS, bar: FROST_BAR },
-  { id: 'arcane-frost', spec: 'frost', name: 'Arcane-Frost', talentString: '02320520310030053--0535000301003002', source: RESPENT(GS), stats: FROST_STATS, bar: FROST_BAR },
-  { id: 'frost-ms', spec: 'frost', name: 'Frost with Missile Barrage', talentString: '023205103-3-053520030101301251', source: MS_REENCODED, stats: FROST_STATS, bar: FROST_BAR },
-  { id: 'frost-p1', spec: 'frost', name: 'Frost, first raid tier', talentString: '0232050030003--25353023010030024', source: RESPENT(GS), stats: FROST_STATS, bar: FROST_BAR },
+  { id: 'arcane', spec: 'arcane', name: 'Arcane', talentString: '050205223101311531-5500003-003', source: WS, stats: ARCANE_STATS, bar: ARCANE_BAR },
+  { id: 'arcane-fire', spec: 'arcane', name: 'Arcane/Fire', talentString: '050205203100311531-525000012001-003', source: WS, stats: ARCANE_STATS, bar: ARCANE_BAR },
+  { id: 'arcane-ms', spec: 'arcane', name: 'Arcane', talentString: '033205203100311531-505000012-023', source: COMMUNITY(MS), stats: ARCANE_STATS, bar: ARCANE_BAR },
+  { id: 'arcane-fs', spec: 'arcane', name: 'Arcane/Frost', talentString: '253205203100311531-3-0533', source: COMMUNITY(FS), stats: ARCANE_STATS, bar: ARCANE_BAR },
+  { id: 'fire', spec: 'fire', name: 'Fire', talentString: '0502052001001-55500001230133031-003', source: WS, stats: FIRE_STATS, bar: FIRE_BAR },
+  { id: 'fire-fs', spec: 'fire', name: 'Fire', talentString: '0232052001001-55500001230133031-003', source: COMMUNITY(FS), stats: FIRE_STATS, bar: FIRE_BAR },
+  { id: 'fire-ms', spec: 'fire', name: 'Fire', talentString: '023205103-55500001130133031-013', source: COMMUNITY(MS), stats: FIRE_STATS, bar: FIRE_BAR },
+  { id: 'fire-frost', spec: 'fire', name: 'Fire/Frost (Frostfire Bolt)', talentString: '-55520201030133131-05350003', source: COMMUNITY(GS), stats: FIRE_STATS, bar: FIRE_BAR, options: { fireFiller: 'frostfire' } },
+  { id: 'frostfire', spec: 'fire', name: 'Frostfire', talentString: '-5550000123011303-2035010311013002', source: WS, stats: FIRE_STATS, bar: FIRE_BAR, options: { fireFiller: 'frostfire' } },
+  { id: 'frost', spec: 'frost', name: 'Frost (Incineration)', talentString: '203205-5-053500011121331251', source: WS, stats: FROST_STATS, bar: FROST_BAR },
+  { id: 'arcane-frost', spec: 'frost', name: 'Arcane-Frost', talentString: '02320520310030053--0535000301003002', source: COMMUNITY(GS), stats: FROST_STATS, bar: FROST_BAR },
+  { id: 'frost-ms', spec: 'frost', name: 'Frost with Missile Barrage', talentString: '023205103-3-053520030101301251', source: COMMUNITY(MS), stats: FROST_STATS, bar: FROST_BAR },
+  { id: 'frost-p1', spec: 'frost', name: 'Frost (Arcane Meditation)', talentString: '2032250100003--053500001121331251', source: WS, stats: FROST_STATS, bar: FROST_BAR },
 ];
 
 export const buildsFor = (spec: MageSpec) => BUILDS.filter((b) => b.spec === spec);

@@ -55,32 +55,23 @@ function specFor(spec: PriestSpec, base: Omit<Spec, 'className' | 'resource' | '
 }
 
 // ------------------------------------------------------------------ Shadow
-/**
- * gs's ranked Shadow list since 27 Oct: Shadow Word: Death, Inner Focus with Mind Blast, Mind Blast, Shadow Word: Pain
- * refreshed in its last 3 s, Devouring Plague in its last 5 s, Mind Flay channelled in full (Improved Mind Flay makes
- * the last tick strongest).
- */
+/** WoWSims Forever's Shadow list: Shadowform, Shadow Word: Pain, Devouring Plague, Mind Blast, Shadow Word: Death, Inner Focus with Mind Flay. */
 function shadowSuggest(c: Combat): string | null {
   const t = c.target;
   if (!t || t.health <= 0) return null;
   const tl = T(c);
   const { p, ready, afford, potion } = ctx(c);
   if (tl.shadowform && !shadowform(c)) return 'shadowform';
+  // WoWSims Forever's Shadow list. Let Mind Flay finish: its last tick is the strongest.
+  if (c.channeling?.id === 'mindFlay') return null;
+  if (!c.aura(t, 'shadowWordPain') && c.casting?.id !== 'shadowWordPain' && afford('shadowWordPain')) return 'shadowWordPain';
+  if (!c.aura(t, 'devouringPlague') && ready('devouringPlague') && afford('devouringPlague')) return 'devouringPlague';
+  if (ready('mindBlast') && afford('mindBlast')) return 'mindBlast';
   // Shadow Word: Death's backlash takes 30 % of your health (Oct 30): keep a margin above it.
   const healthy = c.playerHealthLocked || p.health / p.maxHealth > D.shadowWordDeath.backlash + 0.1;
-  const deathReady = ready('shadowWordDeath') && afford('shadowWordDeath') && healthy;
-  const left = (id: string) => (c.aura(t, id)?.end ?? c.t) - c.t;
-  const plagueDue = left('devouringPlague') <= 5 && ready('devouringPlague') && afford('devouringPlague');
-  const painDue = left('shadowWordPain') <= 3 && c.casting?.id !== 'shadowWordPain' && afford('shadowWordPain');
-  const blastReady = ready('mindBlast') && afford('mindBlast');
-  // Let Mind Flay finish: its last tick is the strongest.
-  if (c.channeling?.id === 'mindFlay') return null;
-  if (deathReady) return 'shadowWordDeath';
-  if (tl.innerFocus && ready('innerFocus') && blastReady && p.inCombat) return 'innerFocus';
-  if (blastReady) return 'mindBlast';
-  if (painDue) return 'shadowWordPain';
-  if (plagueDue) return 'devouringPlague';
+  if (ready('shadowWordDeath') && afford('shadowWordDeath') && healthy) return 'shadowWordDeath';
   if (potion) return 'manaPotion';
+  if (tl.innerFocus && ready('innerFocus') && p.inCombat) return 'innerFocus';
   if (tl.mindFlay && afford('mindFlay')) return 'mindFlay';
   return null;
 }
@@ -125,7 +116,7 @@ export const priestShadow: Spec = specFor('shadow', {
 });
 
 // ------------------------------------------------------------------- Smite
-/** gs's ranked Smite list after Oct 15 (Holy Fire, Shadow Word: Pain when missing, Inner Focus, Smite) plus Mind Blast above 30 % mana (MythicSim engine's variant). */
+/** WoWSims Forever's Smite list: Holy Fire, Holy Nova on Holy Purpose against three, Shadow Word: Pain, Penance, Smite. */
 function smiteSuggest(c: Combat): string | null {
   const t = c.target;
   if (!t || t.health <= 0) return null;
@@ -133,15 +124,13 @@ function smiteSuggest(c: Combat): string | null {
   const { p, ready, afford, mana, potion } = ctx(c);
   // Let Penance fire all three bolts.
   if (c.channeling?.id === 'penance') return null;
-  const hf = c.aura(t, 'holyFire');
-  if ((!hf || hf.end - c.t < 3) && afford('holyFire') && c.casting?.id !== 'holyFire') return 'holyFire';
+  // WoWSims Forever's Smite list; Mind Blast only for the build made around it.
   if (tl.powerInfusion && p.inCombat && ready('powerInfusion')) return 'powerInfusion';
-  // Shadow Word: Pain also powers Power in Light since Oct 15 (not while Inner Focus waits for Smite).
-  if (!c.aura(t, 'shadowWordPain') && !c.aura(p, 'innerFocus') && afford('shadowWordPain')) return 'shadowWordPain';
-  if (tl.innerFocus && p.inCombat && ready('innerFocus')) return 'innerFocus';
-  if (ready('mindBlast') && afford('mindBlast') && mana > 0.3) return 'mindBlast';
-  if (c.aura(p, 'holyPurpose') && tl.holyNova && c.inRange(t, D.holyNova.range)) return 'holyNova';
-  if (tl.penance && ready('penance') && mana > 0.6) return 'penance';
+  if (!c.aura(t, 'holyFire') && afford('holyFire') && c.casting?.id !== 'holyFire') return 'holyFire';
+  if (c.aura(p, 'holyPurpose') && tl.holyNova && c.targets.length >= 3 && c.inRange(t, D.holyNova.range)) return 'holyNova';
+  if (!c.aura(t, 'shadowWordPain') && afford('shadowWordPain')) return 'shadowWordPain';
+  if (c.options.build === 'smite-hybrid' && ready('mindBlast') && afford('mindBlast') && mana > 0.3) return 'mindBlast';
+  if (tl.penance && ready('penance') && afford('penance')) return 'penance';
   if (potion) return 'manaPotion';
   return 'smite';
 }
@@ -171,7 +160,7 @@ export const priestSmite: Spec = specFor('smite', {
   options: OPTIONS,
   sheet: { attackPower: false, crit: false, spellCrit: 'Spell crit (gear + Intellect)', spellPower: 'Spell power (every school)', mainHand: false, offHand: false },
   lowMana: (c) => c.cost(c.ability('smite')!),
-  welcome: 'Welcome to Smite practice, an experimental WoW Forever build: keep your Holy Fire and Shadow Word: Pain up for Power in Light, Smite as the filler, Mind Blast while you have mana, Power Infusion and Inner Focus together. Judgement of the Crusader from a raid paladin is on by default.',
+  welcome: 'Welcome to Smite practice, an experimental WoW Forever build: keep your Holy Fire and Shadow Word: Pain up for Power in Light, Penance on cooldown, Smite as the filler, Power Infusion when you can. Judgement of the Crusader from a raid paladin is on by default.',
   help: `${CONTROLS}
     ${HELP_COMMON}
     Smite in WoW Forever: Smite and Holy Fire were halved, then built back by Power in Light (+10% to Smite and Penance while your Holy Fire or Shadow Word: Pain is on the target), Searing Light (+5% Holy, and Holy Fire ticks can give a free Holy Nova), Holy Precision (+18% Holy hit) and Holy Specialization (+5% crit). Penance fires three bolts at 0, 1 and 2 sec; the sims only use it with mana to spare. Mind Blast does about 1.8x Smite's damage per second of casting.

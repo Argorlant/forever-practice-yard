@@ -1,7 +1,6 @@
-// WoW Forever paladin talents and the builds the sims use. Order: Wowhead's
-// Forever calculator after the live hotfix of 30 October (Holy 17,
-// Protection 17, Retribution 17); the sims' builds are re-spent for it until
-// they publish theirs. See research/paladin_forever.md → Talents and Builds.
+// WoW Forever paladin talents and the builds the sims use. Order: WoWSims
+// Forever's tree after the live hotfix of 30 October (Holy 17, Protection 17,
+// Retribution 17). See research/paladin_forever.md → Talents and Builds.
 import type { Binding, Stats } from '../../engine/types';
 import { decodeTalents, talentSplit, talentSummary } from '../common';
 import { PROT_STATS, RET_STATS, SHOCK_STATS } from './data';
@@ -66,15 +65,14 @@ const PROT_BAR = bar(['holyStrike', 'judgement', 'holyShield', 'consecration', '
 const SHOCK_BAR = bar(['holyShock', 'holyStrike', 'judgement', 'sealOfRighteousness', 'divineFavor', 'consecration', 'exorcism', 'hammerOfWrath',
   'attack', 'sealOfCommand', 'manaPotion', 'layOnHands']);
 
-const GS = 'gunba/wow-forever-sim';
-// The Oct 30 trees rebuilt the paladin: Twist of Light, Instrument of Law, One-Handed Weapon Specialization,
-// Improved Seal of Fury and Voice of Truth are gone, Unsealed Wrath and Shieldsworn are the new 31-point talents,
-// and several talents moved trees or changed ranks. The yard re-spent gs's three lists on them.
-const RESPENT = `${GS}, re-spent by us for the Oct 30 trees`;
+const WS = 'wowsims/forever';
+/** A build with no equivalent in WoWSims Forever: it stays, for whoever practises it. */
+const COMMUNITY = 'community, from gunba/wow-forever-sim, re-spent for the Oct 30 trees';
 export const BUILDS: Build[] = [
-  { id: 'ret', spec: 'ret', name: 'Retribution (Unsealed Wrath)', talentString: '050250002-501-05233301001301351', source: RESPENT, stats: RET_STATS, bar: RET_BAR },
-  { id: 'prot', spec: 'prot', name: 'Protection (Shieldsworn)', talentString: '-55302102513501531-0522', source: RESPENT, stats: PROT_STATS, bar: PROT_BAR, tank: true },
-  { id: 'shockadin', spec: 'shock', name: 'Shockadin', talentString: '05025210221021--0523330100130133', source: RESPENT, stats: SHOCK_STATS, bar: SHOCK_BAR },
+  { id: 'ret', spec: 'ret', name: 'Retribution (Unsealed Wrath)', talentString: '050250002-501-05233011201301351', source: WS, stats: RET_STATS, bar: RET_BAR },
+  { id: 'prot', spec: 'prot', name: 'Protection', talentString: '050050002-05302102213301531-502', source: WS, stats: PROT_STATS, bar: PROT_BAR, tank: true },
+  { id: 'prot-shieldsworn', spec: 'prot', name: 'Protection (Shieldsworn), deeper', talentString: '-55302102513501531-0522', source: COMMUNITY, stats: PROT_STATS, bar: PROT_BAR, tank: true },
+  { id: 'shockadin', spec: 'shock', name: 'Shockadin', talentString: '05025210221021--0523330110130033', source: WS, stats: SHOCK_STATS, bar: SHOCK_BAR },
 ];
 
 export const buildsFor = (spec: PaladinSpec) => BUILDS.filter((b) => b.spec === spec);

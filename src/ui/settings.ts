@@ -323,7 +323,7 @@ export class SettingsDialog {
       Ability icons © Blizzard Entertainment, used in this fan tool so the buttons look as they do in the game.
       Dummy portrait: <a href="https://game-icons.net" target="_blank" rel="noopener">game-icons.net</a> by ${ICON_AUTHORS.join(', ')} (CC BY 3.0).
       Combat formulas and racials follow <a href="https://www.wowsims.com/forever/" target="_blank" rel="noopener">WoWSims Forever</a>
-      (<a href="https://github.com/wowsims/forever" target="_blank" rel="noopener">source</a>, MIT), our main source. Builds not yet reviewed against it come from:
+      (<a href="https://github.com/wowsims/forever" target="_blank" rel="noopener">source</a>, MIT), our main source. Builds marked community and some older numbers come from:
       ${this.spec.sources.map((s) => `<a href="${s.url}" target="_blank" rel="noopener">${s.label}</a>`).join(', ')}.<br><br>
       Fan-made practice tool. Not affiliated with or endorsed by Blizzard Entertainment.
       World of Warcraft is a trademark of Blizzard Entertainment, Inc.`));

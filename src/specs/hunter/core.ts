@@ -262,6 +262,7 @@ export const ABILITIES: Ability[] = [
     description: (c) => `An instant shot for ${D.arcaneShot.damage} Arcane damage plus ${D.arcaneShot.rap * 100}% of ranged attack power (${Math.round(D.arcaneShot.damage + D.arcaneShot.rap * c.rangedAttackPower())}). Ignores armor; you can fire it while moving. Shares its cooldown with Summon Hawk.`,
     use: (c, t) => {
       const u = t!;
+      c.counters.hawksInARow = 0;
       const outcome = c.rollRanged(u, 'arcaneShot');
       if (!landed(outcome)) c.refund(D.refund);
       const amount = magicAmount(c, 'arcaneShot', D.arcaneShot.damage + D.arcaneShot.rap * c.rangedAttackPower(u), outcome);
@@ -366,6 +367,7 @@ export const ABILITIES: Ability[] = [
     use: (c, t) => {
       const u = t!;
       const h = D.summonHawk;
+      c.count('hawksInARow');
       hawkHit(c, u, h.dive + h.diveRap * c.rangedAttackPower(u), 'hawkDive');
       // Two at most: a third replaces the oldest.
       let slot = ['hawkA', 'hawkB'].find((id) => !c.aura(c.player, id));

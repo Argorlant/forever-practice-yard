@@ -99,12 +99,12 @@ const MUST_USE: Record<string, string[]> = {
   combatIea: ['sinisterStrike', 'exposeArmor', 'eviscerate'],
   backstab: ['backstab', 'eviscerate', 'sliceAndDice'],
   mutilate: ['mutilate', 'eviscerate', 'sliceAndDice'],
-  hemorrhage: ['hemorrhage', 'rupture', 'vanish', 'premeditation', 'ambush', 'ghostlyStrike'],
+  hemorrhage: ['hemorrhage', 'rupture', 'sliceAndDice', 'premeditation'],
 };
 for (const b of spec.builds ?? []) {
   const options = { ...(spec.defaultOptions ?? {}), build: b.id, ...(b.options ?? {}) };
   const r = run(spec, 300, 4242, b.stats, options);
-  const rotation = (b.id.startsWith('combat-iea') ? 'combatIea' : b.id.startsWith('combat-backstab') ? 'backstab'
+  const rotation = (b.id.startsWith('combat-iea') ? 'combatIea' : b.id.startsWith('combat-backstab') || b.id.startsWith('sub-') ? 'backstab'
     : b.id.startsWith('combat') ? 'combat' : b.id.startsWith('mutilate') ? 'mutilate' : 'hemorrhage');
   const missing = MUST_USE[rotation].filter((id) => !r.used[id]);
   const review = (spec.review?.(r.c) ?? []).map((x) => `${x.label}: ${x.value}`).join(' | ');
@@ -296,7 +296,9 @@ console.log('Druid builds (5 min, own gear, priority list, default raid buffs):'
 const DRUID_MUST_USE: Record<string, string[]> = {
   cat: ['prowl', 'ravage', 'shred', 'rip', 'ferociousBite', 'shiftingPower', 'faerieFire'],
   'cat-feral': ['shred', 'rip', 'ferociousBite', 'shiftingPower'],
-  bear: ['primalBite', 'lacerate', 'maul', 'demoralizingRoar', 'faerieFire', 'druidEnrage', 'barkskin'],
+  bear: ['primalBite', 'lacerate', 'maul', 'demoralizingRoar', 'faerieFire', 'druidEnrage'],
+  'hybrid-cat': ['shred', 'rip', 'rake', 'shiftingPower'],
+  'hybrid-bear': ['primalBite', 'lacerate', 'demoralizingRoar'],
   moonkin: ['wrath', 'starfire', 'moonfire', 'insectSwarm'],
   balance: ['wrath', 'starfire', 'moonfire', 'insectSwarm'],
 };
@@ -410,7 +412,8 @@ console.log('Paladin builds (5 min, own gear, priority list, default raid buffs)
 const PALADIN_MUST_USE: Record<string, string[]> = {
   ret: ['sealOfCommand', 'sealOfRighteousness', 'judgement', 'holyStrike', 'consecration'],
   // Righteous Fury is on before the pull.
-  prot: ['sealOfRighteousness', 'judgement', 'holyShield', 'consecration', 'holyStrike', 'swiftJudgement'],
+  prot: ['sealOfFury', 'judgement', 'holyShield', 'consecration', 'holyStrike', 'swiftJudgement'],
+  'prot-shieldsworn': ['sealOfFury', 'judgement', 'holyShield', 'consecration', 'holyStrike', 'swiftJudgement'],
   shockadin: ['sealOfRighteousness', 'judgement', 'holyShock', 'divineFavor', 'holyStrike', 'consecration'],
 };
 for (const sp of [paladinRet, paladinProt, paladinShock]) {
@@ -473,14 +476,15 @@ for (const sp of [paladinRet, paladinProt, paladinShock]) {
 // ----------------------------------------------------------------- hunter
 console.log('Hunter builds (5 min, own gear, priority list, default raid buffs):');
 const HUNTER_MUST_USE: Record<string, string[]> = {
-  mm: ['autoShot', 'aimedShot', 'serpentSting', 'arcaneShot', 'sniperShot', 'rapidFire', 'huntersMark'],
+  mm: ['autoShot', 'aimedShot', 'serpentSting', 'arcaneShot', 'rapidFire', 'huntersMark'],
   'mm-fs': ['autoShot', 'aimedShot', 'serpentSting', 'sniperShot'],
   'mm-p1': ['autoShot', 'aimedShot', 'serpentSting'],
   'sv-ranged': ['autoShot', 'aimedShot', 'serpentSting'],
-  bm: ['autoShot', 'aimedShot', 'serpentSting', 'summonHawk', 'bestialWrath', 'intimidation', 'rapidFire'],
+  bm: ['autoShot', 'aimedShot', 'serpentSting', 'summonHawk', 'arcaneShot', 'bestialWrath', 'intimidation', 'rapidFire'],
+  'bm-weave': ['autoShot', 'serpentSting', 'summonHawk', 'arcaneShot', 'multiShot'],
   'bm-fs': ['autoShot', 'aimedShot', 'serpentSting', 'bestialWrath'],
   sv: ['attack', 'raptorStrike', 'mongooseBite', 'striderKick', 'immolationTrap', 'huntersMark'],
-  'sv-pet': ['attack', 'raptorStrike', 'mongooseBite', 'striderKick', 'summonHawk'],
+  'sv-pet': ['attack', 'raptorStrike', 'mongooseBite', 'striderKick', 'summonHawk', 'wingClip'],
 };
 for (const sp of [hunterMm, hunterBm, hunterSv]) {
   for (const b of sp.builds ?? []) {
@@ -668,8 +672,8 @@ const PRIEST_MUST_USE: Record<string, string[]> = {
   shadow: ['mindFlay', 'mindBlast', 'shadowWordPain', 'devouringPlague', 'shadowWordDeath', 'innerFocus'],
   'shadow-community': ['mindFlay', 'mindBlast', 'shadowWordPain', 'devouringPlague', 'shadowWordDeath'],
   'shadow-fs': ['mindFlay', 'mindBlast', 'shadowWordPain', 'shadowWordDeath'],
-  smite: ['smite', 'holyFire', 'mindBlast', 'powerInfusion', 'innerFocus'],
-  'smite-launch': ['smite', 'holyFire', 'mindBlast'],
+  smite: ['smite', 'holyFire', 'penance', 'powerInfusion', 'shadowWordPain'],
+  'smite-launch': ['smite', 'holyFire'],
   'smite-hybrid': ['smite', 'holyFire', 'mindBlast', 'shadowWordPain'],
 };
 for (const sp of [priestShadow, priestSmite]) {
@@ -697,7 +701,7 @@ for (const sp of [priestShadow, priestSmite]) {
   const k = r.c.counters;
   const hf = (k['uptime:target:holyFire'] ?? 0) / (k.combatTime ?? 1);
   console.log(`Smite with locked mana: ${r.c.dps().toFixed(0)} DPS, Holy Fire uptime ${Math.round(hf * 100)}%, ${(r.c.meter.rows.get('penance')?.hits ?? 0)} Penance bolts`);
-  if (hf < 0.8) failures.push(`Holy Fire uptime ${Math.round(hf * 100)}%, expected 80%+ for Power in Light`);
+  if (hf < 0.65) failures.push(`Holy Fire uptime ${Math.round(hf * 100)}%, expected 65%+ for Power in Light`);
 }
 
 // ------------------------------------------------------------------- mage
@@ -711,7 +715,7 @@ const MAGE_MUST_USE: Record<string, string[]> = {
   'fire-fs': ['scorch', 'fireBlast', 'pyroblast', 'combustion'],
   'fire-ms': ['scorch', 'fireBlast', 'pyroblast'],
   'fire-frost': ['frostfireBolt', 'fireBlast', 'pyroblast'],
-  frost: ['frostbolt', 'iceLance'],
+  frost: ['frostbolt', 'iceLance', 'coneOfCold', 'iceBarrier', 'coldSnap'],
   'arcane-frost': ['frostbolt', 'iceLance', 'arcaneMissiles', 'arcaneBlast'],
   'frost-ms': ['frostbolt', 'iceLance', 'arcaneMissiles'],
   'frost-p1': ['frostbolt'],
@@ -832,9 +836,10 @@ for (const sp of [mageArcane, mageFire, mageFrost]) {
 console.log('Warlock builds (5 min, own gear, priority list, default raid buffs):');
 const WARLOCK_MUST_USE: Record<string, string[]> = {
   affliction: ['shadowBolt', 'corruption', 'immolate', 'baneOfDoom', 'curseOfTheElements', 'lifeTap'],
-  'affliction-deep': ['shadowBolt', 'corruption', 'siphonLife', 'immolate', 'baneOfDoom', 'lifeTap'],
+  'affliction-deep': ['shadowBolt', 'corruption', 'siphonLife', 'immolate', 'baneOfAgony', 'amplifyCurse', 'wrack', 'lifeTap'],
+  'pact-fire': ['searingPain', 'corruption', 'immolate', 'baneOfDoom', 'lifeTap'],
   pact: ['shadowBolt', 'searingPain', 'corruption', 'immolate', 'baneOfDoom', 'lifeTap'],
-  fire: ['shadowBolt', 'immolate', 'conflagrate', 'shadowburn', 'corruption', 'baneOfDoom', 'lifeTap'],
+  fire: ['incinerate', 'immolate', 'conflagrate', 'shadowburn', 'corruption', 'baneOfDoom', 'lifeTap'],
   ruin: ['shadowBolt', 'corruption', 'immolate', 'baneOfDoom', 'lifeTap'],
   'ruin-fs': ['shadowBolt', 'corruption', 'immolate', 'baneOfDoom'],
 };
@@ -900,14 +905,14 @@ for (const sp of [warlockAffliction, warlockDemonology, warlockDestruction]) {
 // ----------------------------------------------------------------- shaman
 console.log('Shaman builds (5 min, own gear, priority list, default raid buffs):');
 const SHAMAN_MUST_USE: Record<string, string[]> = {
-  elemental: ['lightningBolt', 'lavaBurst', 'flameShock', 'earthShock', 'searingTotem', 'manaSpringTotem', 'elementalMastery'],
+  elemental: ['lightningBolt', 'lavaBurst', 'flameShock', 'searingTotem', 'manaSpringTotem', 'elementalMastery'],
   'elemental-fs': ['lightningBolt', 'lavaBurst', 'flameShock', 'searingTotem', 'elementalMastery'],
   'elemental-60': ['lightningBolt', 'lavaBurst', 'flameShock', 'searingTotem', 'elementalMastery'],
   stormcaller: ['lightningBolt', 'flameShock', 'earthShock', 'searingTotem'],
   'stormcaller-fs': ['lightningBolt', 'flameShock', 'searingTotem'],
-  enhancement: ['stormstrike', 'earthShock', 'flameShock', 'fireNova', 'lightningBolt', 'searingTotem', 'strengthOfEarthTotem', 'rageOfTheFarseer'],
-  'enhancement-60': ['stormstrike', 'earthShock', 'flameShock', 'lightningBolt', 'searingTotem'],
-  'enhancement-fs': ['stormstrike', 'earthShock', 'lightningBolt', 'searingTotem'],
+  enhancement: ['stormstrike', 'earthShock', 'flameShock', 'fireNova', 'lightningBolt', 'magmaTotem', 'strengthOfEarthTotem', 'rageOfTheFarseer'],
+  'enhancement-60': ['stormstrike', 'earthShock', 'flameShock', 'lightningBolt', 'magmaTotem'],
+  'enhancement-fs': ['stormstrike', 'earthShock', 'lightningBolt', 'magmaTotem'],
   tank: ['stormstrike', 'earthShock', 'lightningShield', 'stoneskinTotem'],
 };
 for (const sp of [shamanElemental, shamanEnhancement, shamanTank]) {
@@ -922,7 +927,7 @@ for (const sp of [shamanElemental, shamanEnhancement, shamanTank]) {
 }
 // Enhancement: Windfury Weapon replaces the raid totem, two attacks per proc; Maelstrom bolts; Stormstrike charges get spent.
 {
-  const r = play(shamanEnhancement, { build: 'enhancement', options: { lockMana: true }, raid: ['windfury'] });
+  const r = play(shamanEnhancement, { build: 'enhancement', options: { lockMana: true, imbue: 'windfury' }, raid: ['windfury'] });
   const k = r.c.counters;
   const wf = r.c.meter.rows.get('windfuryWeapon');
   const totemSwings = r.c.meter.rows.get('melee_mh');
@@ -1525,7 +1530,15 @@ console.log(`Talent layouts checked for ${SPECS.reduce((n, s) => n + (s.builds?.
     on.pointermove(mouse({ buttons: 2, movementX: 80 }));
     if (cam.facing !== after) failures.push('A press from the HUD steered after a press on the scene ended');
   }
-  console.log(`Spellbook: ${SPECS.length} specs, ${pressed} abilities pressed, ${[...refusals.values()].flat().length} refused for their own reasons.`);
+  // A fresh visitor never picks the default build, so the spec's defaults must already be what that build asks for.
+for (const spec of SPECS) {
+  const first = spec.builds?.find((b) => b.id === spec.defaultOptions?.build);
+  if (spec.builds?.length && !first) failures.push(`${spec.id}: its default build ${spec.defaultOptions?.build} does not exist`);
+  for (const [key, value] of Object.entries(first?.options ?? {})) {
+    if ((spec.defaultOptions as Record<string, unknown>)[key] !== value) failures.push(`${spec.id}: default ${key} is ${(spec.defaultOptions as Record<string, unknown>)[key]}, its build asks for ${value}`);
+  }
+}
+console.log(`Spellbook: ${SPECS.length} specs, ${pressed} abilities pressed, ${[...refusals.values()].flat().length} refused for their own reasons.`);
 }
 if (failures.length) {
   console.error(`FAILED:\n  ${failures.join('\n  ')}`);

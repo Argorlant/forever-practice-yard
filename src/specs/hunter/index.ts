@@ -6,7 +6,7 @@ import type { Combat } from '../../engine/combat';
 import type { Spec } from '../../engine/types';
 import { BOSS_RULES, CONTROLS } from '../common';
 import { PET_HELP, PET_MODE } from '../pet';
-import { ABILITIES, D, SOURCES, T, chances, hawkCount, oldestHawkLeft, onCooldown, prepare, regen } from './core';
+import { ABILITIES, D, SOURCES, T, chances, onCooldown, prepare, regen } from './core';
 import { MELEE_STATS, RANGED_STATS } from './data';
 import { buildLabel, buildsFor, summary, talentsFor, type HunterSpec } from './talents';
 import { WEAVE_OPTIONS, weaveAdvised, weaveCue, weaveRings, weaveRows, weaveSuggest } from './weave';
@@ -85,7 +85,7 @@ function specFor(spec: HunterSpec, base: Omit<Spec, 'className' | 'resource' | '
 }
 
 // --------------------------------------------------------- Marksmanship
-/** gs's ranked Marksmanship list with the practice yard's pre-pull. */
+/** WoWSims Forever's turret and weave lists, with the practice yard's pre-pull. */
 function mmSuggest(c: Combat): string | null {
   const t = c.target;
   if (!t || t.health <= 0) return null;
@@ -96,20 +96,14 @@ function mmSuggest(c: Combat): string | null {
   if (!c.aura(t, 'huntersMark')) return 'huntersMark';
   if (!c.autoShooting && c.inRangedRange(t)) return 'autoShot';
   if (p.inCombat && ready('rapidFire')) return 'rapidFire';
-  const sting = (c.aura(t, 'serpentSting')?.end ?? c.t) - c.t;
-  // Weaving (gs since 27 Oct): no casts at range, they would keep you out of melee: Multi-Shot, Serpent Sting in its last 3 s, Arcane Shot.
+  if (!c.aura(t, 'serpentSting') && afford('serpentSting')) return 'serpentSting';
+  if (ready('arcaneShot') && afford('arcaneShot')) return 'arcaneShot';
+  // Weaving: no casts at range, they would keep you out of melee.
   if (weaveAdvised(c)) {
     if (ready('multiShot') && afford('multiShot')) return 'multiShot';
-    if (sting <= 3 && afford('serpentSting')) return 'serpentSting';
-    if (ready('arcaneShot') && afford('arcaneShot')) return 'arcaneShot';
     return potion ? 'manaPotion' : null;
   }
-  // gs's ranged Marksmanship (28 Oct): Aimed Shot, Multi-Shot when Aimed Shot cannot, Serpent Sting in its last 0.5 s,
-  // Arcane Shot, Sniper Shot, with no mana gates.
   if (ready('aimedShot') && afford('aimedShot') && castFits(c, 'aimedShot')) return 'aimedShot';
-  if (ready('multiShot') && afford('multiShot') && !castFits(c, 'aimedShot')) return 'multiShot';
-  if (sting <= 0.5 && afford('serpentSting')) return 'serpentSting';
-  if (ready('arcaneShot') && afford('arcaneShot')) return 'arcaneShot';
   if (tl.sniperShot && ready('sniperShot') && afford('sniperShot') && castFits(c, 'sniperShot')) return 'sniperShot';
   if (potion) return 'manaPotion';
   return null;
@@ -142,7 +136,7 @@ export const hunterMm: Spec = specFor('mm', {
   options: [...OPTIONS, PET_OPTION, PET_MODE, ...WEAVE_OPTIONS],
   sheet: { attackPower: 'Melee attack power', spellCrit: false, offHand: false },
   lowMana: (c) => c.cost(c.ability('aimedShot')!),
-  welcome: 'Welcome to Marksmanship practice. You start 12 yards from the dummy: keep Auto Shot firing (stand still during its windup), Serpent Sting up, Aimed Shot on cooldown, Sniper Shot when Aimed is far, Arcane Shot with spare mana. The gunba build is Lone Wolf: no pet, +20% damage.',
+  welcome: 'Welcome to Marksmanship practice. You start 12 yards from the dummy: keep Auto Shot firing (stand still during its windup), Serpent Sting up, then Arcane Shot, Aimed Shot and Sniper Shot, in that order. The build is Lone Wolf: no pet, +20% damage.',
   help: `${CONTROLS}
     ${PET_HELP}
     ${HELP_COMMON}
@@ -158,7 +152,7 @@ export const hunterMm: Spec = specFor('mm', {
 });
 
 // --------------------------------------------------------- Beast Mastery
-/** gs's ranked Beast Mastery list. */
+/** WoWSims Forever's Beast Mastery lists: hawk, hawk, Arcane Shot on their shared cooldown. */
 function bmSuggest(c: Combat): string | null {
   const t = c.target;
   if (!t || t.health <= 0) return null;
@@ -170,10 +164,13 @@ function bmSuggest(c: Combat): string | null {
   if (p.inCombat && tl.bestialWrath && ready('bestialWrath')) return 'bestialWrath';
   if (p.inCombat && ready('rapidFire')) return 'rapidFire';
   if (p.inCombat && tl.intimidation && ready('intimidation') && mana > 0.5) return 'intimidation';
-  if (tl.summonHawk && ready('summonHawk') && afford('summonHawk') && (hawkCount(c) < 2 || oldestHawkLeft(c) < 1)) return 'summonHawk';
   if (!c.aura(t, 'serpentSting') && afford('serpentSting')) return 'serpentSting';
-  if (ready('aimedShot') && afford('aimedShot') && castFits(c, 'aimedShot')) return 'aimedShot';
-  if (ready('arcaneShot') && mana >= 0.15 && (!tl.summonHawk || hawkCount(c) >= 2)) return 'arcaneShot';
+  const hawkNext = tl.summonHawk && (c.counters.hawksInARow ?? 0) < 2;
+  if (hawkNext && ready('summonHawk') && afford('summonHawk')) return 'summonHawk';
+  if (!hawkNext && ready('arcaneShot') && afford('arcaneShot')) return 'arcaneShot';
+  if (weaveAdvised(c)) {
+    if (ready('multiShot') && afford('multiShot')) return 'multiShot';
+  } else if (ready('aimedShot') && afford('aimedShot') && castFits(c, 'aimedShot')) return 'aimedShot';
   if (potion) return 'manaPotion';
   return null;
 }
@@ -203,7 +200,7 @@ export const hunterBm: Spec = specFor('bm', {
   options: [...OPTIONS, PET_OPTION, PET_MODE, ...WEAVE_OPTIONS],
   sheet: { attackPower: 'Melee attack power', spellCrit: false, offHand: false },
   lowMana: (c) => c.cost(c.ability('aimedShot')!),
-  welcome: 'Welcome to Beast Mastery practice. Your cat fights at the dummy while you shoot from 12 yards: keep two hawks out, Bestial Wrath and Rapid Fire together, Serpent Sting up and Aimed Shot on cooldown.',
+  welcome: 'Welcome to Beast Mastery practice. Your cat fights at the dummy while you shoot from 12 yards: Serpent Sting up, then hawk, hawk, Arcane Shot on their shared cooldown, Bestial Wrath and Rapid Fire together, and Aimed Shot when that waits.',
   help: `${CONTROLS}
     ${PET_HELP}
     ${HELP_COMMON}
@@ -218,24 +215,28 @@ export const hunterBm: Spec = specFor('bm', {
 });
 
 // -------------------------------------------------------------- Survival
-/** gs's melee Survival list (Pet/Melee adds Summon Hawk after Mongoose). */
+/** WoWSims Forever's melee Survival list, with Serpent Sting and shots on the way in. */
 function svSuggest(c: Combat): string | null {
   const t = c.target;
   if (!t || t.health <= 0) return null;
   const tl = T(c);
   const { p, ready, afford, potion } = ctx(c);
   if (!c.aura(p, 'aspectOfTheBeast')) return 'aspectOfTheBeast';
-  const mark = c.aura(t, 'huntersMark');
-  if (!mark || mark.end - c.t <= 5) return 'huntersMark';
-  if (!p.autoAttacking && c.inRange(t)) return 'attack';
-  // gs's Survival list since 27 Oct (its Auto Shots between melee are left out here): Mongoose Bite, Immolation Trap
-  // when its burn is down, Strider Kick, Raptor Strike; no Wing Clip.
+  if (!c.aura(t, 'huntersMark')) return 'huntersMark';
+  if (!c.inRange(t)) {
+    if (!c.inRangedRange(t)) return null;
+    if (!c.aura(t, 'serpentSting') && afford('serpentSting')) return 'serpentSting';
+    if (ready('arcaneShot') && afford('arcaneShot')) return 'arcaneShot';
+    return ready('multiShot') && afford('multiShot') ? 'multiShot' : null;
+  }
+  if (!p.autoAttacking) return 'attack';
   if (p.inCombat && ready('rapidFire')) return 'rapidFire';
-  if (ready('mongooseBite') && afford('mongooseBite')) return 'mongooseBite';
-  if (!c.aura(t, 'immolationTrap') && ready('immolationTrap') && afford('immolationTrap')) return 'immolationTrap';
-  if (tl.striderKick && ready('striderKick') && afford('striderKick')) return 'striderKick';
   if (ready('raptorStrike') && c.queuedSwing !== 'raptorStrike' && afford('raptorStrike')) return 'raptorStrike';
-  if (tl.summonHawk && ready('summonHawk') && afford('summonHawk') && (hawkCount(c) < 2 || oldestHawkLeft(c) < 1)) return 'summonHawk';
+  if (ready('mongooseBite') && afford('mongooseBite')) return 'mongooseBite';
+  if (tl.striderKick && ready('striderKick') && afford('striderKick')) return 'striderKick';
+  if (!c.aura(t, 'immolationTrap') && ready('immolationTrap') && afford('immolationTrap')) return 'immolationTrap';
+  if (tl.summonHawk && ready('summonHawk') && afford('summonHawk')) return 'summonHawk';
+  if (ready('wingClip') && afford('wingClip')) return 'wingClip';
   if (potion) return 'manaPotion';
   return null;
 }
@@ -264,11 +265,11 @@ export const hunterSv: Spec = specFor('sv', {
   prefsRevision: 2,
   specName: 'Survival',
   stats: MELEE_STATS,
-  defaultOptions: { build: 'sv', mana: 3500, spirit: D.spirit, lockMana: false, classicAutoShot: false, trackable: true, petSpeed: '1.2', petMode: 'assist' },
+  defaultOptions: { build: 'sv-pet', mana: 3500, spirit: D.spirit, lockMana: false, classicAutoShot: false, trackable: true, petSpeed: '1.2', petMode: 'assist' },
   options: [...OPTIONS.filter((o) => o.key !== 'classicAutoShot'), PET_OPTION, PET_MODE],
   sheet: { attackPower: 'Melee attack power', spellCrit: false },
   lowMana: (c) => c.cost(c.ability('raptorStrike')!),
-  welcome: 'Welcome to Survival practice. In WoW Forever Survival is a melee spec: dual wield, Aspect of the Beast, Raptor Strike on cooldown, Strider Kick, Mongoose Bite when Expose Prey lights it on your marked target, and Immolation Trap at your feet.',
+  welcome: 'Welcome to Survival practice. In WoW Forever Survival is a melee spec: dual wield, Aspect of the Beast, Raptor Strike on cooldown, Mongoose Bite when Expose Prey lights it on your marked target, Strider Kick, and Immolation Trap at your feet.',
   help: `${CONTROLS}
     ${PET_HELP}
     Survival fights in melee: two one-handers (Predator's Edge makes the off hand hit harder), Aspect of the Beast for melee attack power. Raptor Strike replaces your next swing (off the global cooldown); Strider Kick is a weapon kick on an 8 sec cooldown; Mongoose Bite lights up after a dodge or, with Expose Prey, after landed hits on the target you marked yourself; Lacerating Strikes makes it bleed.

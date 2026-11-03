@@ -63,9 +63,9 @@ const MANA_OPTIONS = [
 
 // ----------------------------------------------------------- Retribution
 /**
- * gs's Basic Ret list (27 Oct) with the yard's Unsealed Wrath twist for the Oct 30 trees: Seal of Command for three
- * swings (three stored copies), Seal of Righteousness for the swing that releases them, then Seal of Command again,
- * whose first swing releases the stored Righteousness. Provisional until the sims publish a twist for it.
+ * WoWSims Forever's Retribution list with its Unsealed Wrath twist: Seal of Command for three swings (three stored
+ * copies), Seal of Righteousness for the swing that releases them, then Seal of Command again, whose first swing
+ * releases the stored Righteousness.
  */
 function retSuggest(c: Combat): string | null {
   const t = c.target;
@@ -78,17 +78,19 @@ function retSuggest(c: Combat): string | null {
   if (!p.autoAttacking && c.inRange(t)) return 'attack';
   const twist = !!tl.unsealedWrath && !!tl.sealOfCommand;
   const kept = storedSeal(c);
-  if (executePhase(c) && ready('hammerOfWrath')) return 'hammerOfWrath';
   if (ready('judgement') && c.inRange(t, D.judgement.range)) return 'judgement';
+  if (executePhase(c) && ready('hammerOfWrath')) return 'hammerOfWrath';
   if (ready('holyStrike') && afford('holyStrike')) return 'holyStrike';
-  if (sealLeft(c) <= 1) return seal;
-  if (twist && mana >= 0.15) {
+  if (twist) {
     if (seal === 'sealOfCommand' && kept?.seal === 'sealOfCommand' && kept.stacks >= D.unsealedWrath.stacks) return 'sealOfRighteousness';
     if (seal === 'sealOfRighteousness' && kept?.seal === 'sealOfRighteousness') return 'sealOfCommand';
   }
-  if (undeadDummy(c) && ready('exorcism') && mana >= 0.3) return 'exorcism';
+  const swing = c.swingLeft('main').left;
+  if (sealLeft(c) <= Math.max(1, swing)) return seal;
   if (potion) return 'manaPotion';
-  if (ready('consecration') && mana >= 0.1) return 'consecration';
+  // With the next swing far enough off, and mana to spare.
+  if (swing > 1.5 && mana >= 0.1 && ready('consecration')) return 'consecration';
+  if (swing > 1.5 && mana >= 0.1 && undeadDummy(c) && ready('exorcism')) return 'exorcism';
   if (seal !== primary && !(twist && kept?.seal === 'sealOfCommand')) return primary;
   return null;
 }
@@ -134,28 +136,26 @@ export const paladinRet: Spec = specFor('ret', {
 });
 
 // ------------------------------------------------------------ Protection
-/** gs's "Forever Protection" list, plus Lay on Hands under 10 % health. */
+/** WoWSims Forever's Protection list, plus the yard's Lay on Hands and Templar's Bulwark when you run low. */
 function protSuggest(c: Combat): string | null {
   const t = c.target;
   if (!t || t.health <= 0) return null;
   const tl = T(c);
-  const { p, ready, mana } = ctx(c);
+  const { p, ready, afford } = ctx(c);
   const seal = currentSeal(c);
   if (!c.aura(p, 'righteousFury')) return 'righteousFury';
-  if (!seal) return 'sealOfRighteousness';
+  if (!seal) return 'sealOfFury';
   if (!p.autoAttacking && c.inRange(t)) return 'attack';
   const health = p.health / p.maxHealth;
   if (!c.playerHealthLocked && health < 0.1 && ready('layOnHands')) return 'layOnHands';
   if (ready('judgement') && c.inRange(t, D.judgement.range)) return 'judgement';
   if (tl.swiftJudgement && ready('swiftJudgement') && c.inRange(t, D.judgement.range)) return 'swiftJudgement';
   if (!c.playerHealthLocked && health < 0.3 && tl.templarsBulwark && ready('templarsBulwark')) return 'templarsBulwark';
-  const hs = c.aura(p, 'holyShield');
-  if (tl.holyShield && c.enemyAttacks.on && (!hs || hs.end - c.t <= 2) && ready('holyShield')) return 'holyShield';
-  if (sealLeft(c) <= 2) return seal;
-  if (ready('consecration') && mana >= 0.3) return 'consecration';
-  if (executePhase(c) && ready('hammerOfWrath')) return 'hammerOfWrath';
-  if (ready('holyStrike')) return 'holyStrike';
-  if (tl.holyShield && ready('holyShield')) return 'holyShield';
+  if (sealLeft(c) <= Math.max(1, c.swingLeft('main').left)) return seal;
+  if (ready('consecration') && afford('consecration')) return 'consecration';
+  if (tl.holyShield && ready('holyShield') && afford('holyShield')) return 'holyShield';
+  if (ready('holyStrike') && afford('holyStrike')) return 'holyStrike';
+  if (undeadDummy(c) && ready('exorcism') && afford('exorcism')) return 'exorcism';
   return null;
 }
 
@@ -192,7 +192,7 @@ export const paladinProt: Spec = specFor('prot', {
   options: MANA_OPTIONS,
   sheet: { spellCrit: 'Spell crit (gear + Intellect)', spellPower: 'Spell power (Holy)' },
   lowMana: (c) => c.cost(c.ability('holyShield')!),
-  welcome: 'Welcome to Protection practice. The dummy hits back: keep Righteous Fury, a seal and Holy Shield up, Judgement on cooldown, Consecration with spare mana and Holy Strike. Blocks give you Holy Shield damage, Reckoning charges and mana.',
+  welcome: 'Welcome to Protection practice. The dummy hits back: keep Righteous Fury and Seal of Fury up, Judgement and Swift Judgement on cooldown, then Consecration, Holy Shield and Holy Strike. Blocks give you Holy Shield damage, Reckoning charges and mana.',
   help: `${CONTROLS}
     ${HELP_COMMON}
     The dummy attacks you and rolls miss, dodge, parry, block, crit and crushing blows against your sheet. Holy Shield adds 30% block for 10 sec or 4 blocks and deals Holy damage on each block; Redoubt raises your block after hits taken; Shield Specialization gives back 4% of your mana on a block; Reckoning: a block (at most once per 1.5 sec) or a crit taken stores a charge, up to 4, and your next swing fires them all as extra attacks without resetting your swing timer.
@@ -205,25 +205,28 @@ export const paladinProt: Spec = specFor('prot', {
 
 // -------------------------------------------------------------- Shockadin
 /**
- * gunba's Shockadin (since 27 Oct): Seal of Righteousness kept up, Consecration with mana to spare, then Judgement,
- * Hammer of Wrath, Holy Strike and Holy Shock; the yard spends Divine Favor on a Holy Shock.
+ * WoWSims Forever's Holy Shock list: Judgement, Consecration, Seal of Righteousness kept up, Holy Strike, then
+ * Divine Favor on a Holy Shock, Hammer of Wrath and Exorcism.
  */
 function shockSuggest(c: Combat): string | null {
   const t = c.target;
   if (!t || t.health <= 0) return null;
   const tl = T(c);
-  const { p, ready, afford, mana, potion } = ctx(c);
+  const { p, ready, afford, potion } = ctx(c);
   const seal = currentSeal(c);
   if (!seal) return 'sealOfRighteousness';
   if (!p.autoAttacking && c.inRange(t)) return 'attack';
   if (sealLeft(c) <= 1) return seal;
-  if (ready('consecration') && mana >= 0.2) return 'consecration';
   if (ready('judgement') && c.inRange(t, D.judgement.range)) return 'judgement';
-  if (executePhase(c) && ready('hammerOfWrath')) return 'hammerOfWrath';
+  if (ready('consecration') && afford('consecration')) return 'consecration';
+  const busy = (id: string) => c.cooldownLeft(id).left >= D.gcd;
+  if (sealLeft(c) <= 10 && busy('consecration') && busy('holyShock') && busy('holyStrike')) return seal;
   if (ready('holyStrike') && afford('holyStrike')) return 'holyStrike';
   const shock = ready('holyShock') && afford('holyShock') && c.inRange(t, D.holyShock.range);
   if (shock && tl.divineFavor && ready('divineFavor')) return 'divineFavor';
   if (shock) return 'holyShock';
+  if (executePhase(c) && ready('hammerOfWrath')) return 'hammerOfWrath';
+  if (undeadDummy(c) && ready('exorcism') && afford('exorcism')) return 'exorcism';
   if (potion) return 'manaPotion';
   return null;
 }
@@ -252,11 +255,11 @@ export const paladinShock: Spec = specFor('shock', {
   options: MANA_OPTIONS,
   sheet: { spellCrit: 'Spell crit (gear + Intellect)', spellPower: 'Spell power (Holy)' },
   lowMana: (c) => c.cost(c.ability('holyShock')!),
-  welcome: 'Welcome to Shockadin practice: a melee paladin with Holy Shock on a 10 sec cooldown. gunba\'s Shockadin (23/0/28, re-spent for the Oct 30 trees): keep Seal of Righteousness up, Judgement, Consecration with mana to spare, then Holy Strike and Holy Shock on cooldown.',
+  welcome: 'Welcome to Shockadin practice: a melee paladin with Holy Shock on a 10 sec cooldown. Keep Seal of Righteousness up, Judgement and Consecration on cooldown, then Holy Strike and Holy Shock.',
   help: `${CONTROLS}
     ${HELP_COMMON}
     Holy Shock is a 21-point Holy talent with a 10 sec cooldown in WoW Forever (30 in Classic). Divine Precision gives it 8% hit, and Divine Favor makes the next one crit. Since the live hotfix of Oct 30 Holy Power only raises healing crits and Light's Vigil only works on allies, so our Light's Vigil builds are gone. It costs a lot of mana: practice it as a burst on top of your melee.
-    gunba's Shockadin keeps Seal of Righteousness up, judges, lays Consecration with mana to spare (Consecrated Ground: your Holy spells +10% on its targets), then Holy Strike and Holy Shock. We re-spent it for the Oct 30 trees (Champion of the Light 3/5 is 36% of your Intellect) and spends Divine Favor on a Holy Shock.
+    WoWSims Forever's Shockadin keeps Seal of Righteousness up, judges, lays Consecration (Consecrated Ground: your Holy spells +10% on its targets), then Holy Strike and Holy Shock, with Divine Favor on a Holy Shock. Champion of the Light 3/5 is 36% of your Intellect.
     This is a practice tool: hit, crit and proc chances follow WoW Forever; damage numbers are an approximation.`,
   look: { clothColor: 0xe8e0c8, leatherColor: 0xb8902e, hood: false, plate: true },
   suggest: shockSuggest,

@@ -24,7 +24,13 @@ function ctx(c: Combat) {
 /** Let a channel finish: Arcane Missiles and Evocation are worth more than what would clip them. */
 const channelingNow = (c: Combat) => c.channeling?.id === 'arcaneMissiles' || c.channeling?.id === 'evocation';
 
-/** Mana tools in the sims' order: Evocation when low, the Ruby below 80 %, a potion below 40 %. */
+/** Mana tools: Evocation when low, the Ruby below 80 %, a potion below 40 %. */
+/** A spell's cast time right now. */
+function castOf(c: Combat, id: string): number {
+  const cast = c.ability(id)!.castTime;
+  return typeof cast === 'function' ? cast(c) : cast ?? 0;
+}
+
 function manaTool(c: Combat, evocationAt: number): string | null {
   const { p, ready, mana } = ctx(c);
   if (c.manaLocked || !p.inCombat) return null;
@@ -70,28 +76,34 @@ function specFor(spec: MageSpec, base: Omit<Spec, 'className' | 'resource' | 'ab
 }
 
 // ------------------------------------------------------------------ Arcane
-/**
- * gs's Arcane list since 27 Oct: cooldowns, Arcane Wrath on Presence of Mind, Missiles on Barrage, Arcane Blast on
- * Clearcasting, to 3 stacks above 40 % mana and 2 below, Arcane Wrath, Frostbolt as the filler; no Evocation.
- */
+/** WoWSims Forever's Arcane and Arcane Fire lists; the older Arcane builds play them too. */
 function arcaneSuggest(c: Combat): string | null {
   const t = c.target;
   if (!t || t.health <= 0) return null;
   const tl = T(c);
   const { p, ready, mana } = ctx(c);
   if (channelingNow(c)) return null;
-  if (p.inCombat && tl.arcanePower && ready('arcanePower') && mana >= 0.6) return 'arcanePower';
-  if (p.inCombat && tl.presenceOfMind && ready('presenceOfMind')) return 'presenceOfMind';
-  const tool = manaTool(c, 0);
+  // WoWSims Forever's Arcane and Arcane Fire lists.
+  const heat = stacksOf(c, p, 'heatingUp');
+  const fireBlast = !c.blocker(c.ability('fireBlast')!, t);
+  if (tl.pyroblast && heat >= 3 && c.casting?.id !== 'pyroblast') return 'pyroblast';
+  if (tl.pyroblast && fireBlast) return 'fireBlast';
+  const tool = manaTool(c, 0.1);
   if (tool) return tool;
   const wrath = tl.arcaneWrath && ready('arcaneWrath') && c.casting?.id !== 'arcaneWrath';
-  if (wrath && c.aura(p, 'presenceOfMind')) return 'arcaneWrath';
-  if (c.aura(p, 'missileBarrage')) return 'arcaneMissiles';
-  // The Arcane Blast being cast counts: what glows in the spell queue window comes after it.
-  const stacks = Math.min(4, abStacks(c) + (c.casting?.id === 'arcaneBlast' ? 1 : 0));
-  if (tl.arcaneBlast && (c.aura(p, 'clearcasting') || (stacks < 3 && mana > 0.4) || stacks < 2)) return 'arcaneBlast';
+  const barrage = !!c.aura(p, 'missileBarrage');
+  if (p.inCombat && tl.arcanePower && ready('arcanePower') && (barrage || wrath)) return 'arcanePower';
+  if (barrage) return 'arcaneMissiles';
+  if (wrath && tl.presenceOfMind && ready('presenceOfMind') && !c.aura(p, 'presenceOfMind')) return 'presenceOfMind';
+  if (tl.pyroblast) {
+    const blast = c.aura(p, 'arcaneBlast');
+    if (tl.arcaneBlast && (abStacks(c) < 3 || (blast ? blast.end - c.t : 0) < castOf(c, 'arcaneBlast'))) return 'arcaneBlast';
+    if (wrath) return 'arcaneWrath';
+    return tl.arcaneBlast && mana >= 0.6 ? 'arcaneBlast' : 'scorch';
+  }
   if (wrath) return 'arcaneWrath';
-  return 'frostbolt';
+  if (fireBlast) return 'fireBlast';
+  return tl.arcaneBlast ? 'arcaneBlast' : 'frostbolt';
 }
 
 function arcaneReview(c: Combat): Row[] {
@@ -120,7 +132,7 @@ export const mageArcane: Spec = specFor('arcane', {
   defaultOptions: { build: 'arcane', mana: 4530, spirit: D.spirit, mp5: D.mp5, lockMana: false },
   options: OPTIONS,
   lowMana: (c) => c.cost(c.ability('arcaneBlast')!),
-  welcome: 'Welcome to Arcane practice (WoW Forever after the Oct 15 patch). Build four Arcane Blasts: each one costs more and gives you spell damage for 15 sec. Then Arcane Wrath on cooldown and Arcane Missiles as the filler, Missiles at once when Missile Barrage lights them; Arcane Power and Presence of Mind together.',
+  welcome: 'Welcome to Arcane practice (WoW Forever after the Oct 15 patch). Each Arcane Blast costs more and gives you spell damage for 15 sec. Arcane Missiles at once when Missile Barrage lights them, Arcane Wrath on cooldown with Presence of Mind, Fire Blast, and Arcane Blast as the filler; Arcane Power with Barrage or Wrath.',
   help: `${CONTROLS}
     ${HELP_COMMON}
     Arcane in WoW Forever since Oct 15: Arcane Blast is a 1.5 sec cast; each one adds a stack (max 4) worth 12% of your Intellect as spell damage for every spell, and +100% to Blast's own cost (Oct 30 hotfix; it was 15% and +175%). The stacks last 18 sec from the first and nothing spends them, so the loop is four Blasts, then Arcane Wrath (16 points: a 3.5 sec cast with 5% of your maximum mana as extra spell damage, 6 sec cooldown) and Missiles until they fall off. Missile Barrage (2 points: per point 20% from Arcane Blast, 10% from Arcane Wrath or Frostbolt) makes the next Arcane Missiles free and twice as fast; each missile rolls its own hit and crit, and since Oct 21 missiles proc neither Missile Barrage nor Clearcasting. Clearcasting makes the next spell free: best on a 3- or 4-stack Arcane Blast. Arcane Mind makes Arcane crits 2.0x.
@@ -131,41 +143,43 @@ export const mageArcane: Spec = specFor('arcane', {
 });
 
 // -------------------------------------------------------------------- Fire
-/**
- * Fire. gs's Fire (27 Oct): Combustion, Fire Blast up to 2 Heating Up, Pyroblast at 3, Fireball on Clearcasting, Arcane
- * Blast with no stacks, Missiles on Barrage, Scorch. gs's Frostfire: Pyroblast at 3 Heating Up once its burn is nearly
- * gone, Scorch for Fire Vulnerability, Fire Blast at 1 Heating Up without Fingers of Frost, Frostfire Bolt. Other
- * builds: gs's earlier list with your filler.
- */
+/** WoWSims Forever's Fire and Frostfire lists; the older Fire builds keep theirs, with your filler. */
 function fireSuggest(c: Combat): string | null {
   const t = c.target;
   if (!t || t.health <= 0) return null;
   const tl = T(c);
-  const { p, ready, mana } = ctx(c);
+  const { p, ready } = ctx(c);
   if (channelingNow(c)) return null;
   const heat = stacksOf(c, p, 'heatingUp');
   const fv = c.aura(t, 'fireVulnerability');
+  const fvStacks = fv?.stacks ?? 0;
+  const scorchDue = (fvStacks < 5 || fv!.end - c.t < 5) && (fvStacks < 4 || c.casting?.id !== 'scorch');
+  const pyroDue = tl.pyroblast && heat >= 3 && c.casting?.id !== 'pyroblast';
+  const combustion = p.inCombat && tl.combustion && ready('combustion') && fvStacks === 5;
+  const evocation = () => (p.resource < c.cost(c.ability('pyroblast')!) ? manaTool(c, 1) : manaTool(c, 0));
+  // WoWSims Forever's Fire and Frostfire lists.
   if (c.options.build === 'fire') {
-    const tool = manaTool(c, 0.05);
+    const tool = evocation();
     if (tool) return tool;
-    if (p.inCombat && tl.combustion && ready('combustion')) return 'combustion';
-    if (heat <= 2 && ready('fireBlast')) return 'fireBlast';
-    if (tl.pyroblast && heat >= 3) return 'pyroblast';
-    if (c.aura(p, 'clearcasting')) return 'fireball';
-    if (tl.arcaneBlast && abStacks(c) === 0 && c.casting?.id !== 'arcaneBlast' && mana >= 0.3) return 'arcaneBlast';
+    if (pyroDue) return 'pyroblast';
+    if (ready('fireBlast')) return 'fireBlast';
+    if (scorchDue) return 'scorch';
+    if (combustion) return 'combustion';
+    const blast = c.aura(p, 'arcaneBlast');
+    if (tl.arcaneBlast && (blast ? blast.end - c.t : 0) < castOf(c, 'arcaneBlast') && c.casting?.id !== 'arcaneBlast') return 'arcaneBlast';
     if (c.aura(p, 'missileBarrage')) return 'arcaneMissiles';
-    return 'scorch';
+    return c.cooldownLeft('fireBlast').left >= castOf(c, 'fireball') ? 'fireball' : 'scorch';
   }
   if (c.options.build === 'frostfire') {
-    const tool = manaTool(c, 0.35);
+    const tool = evocation();
     if (tool) return tool;
-    const burn = (c.aura(t, 'pyroblastDot')?.end ?? c.t) - c.t;
-    if (tl.pyroblast && heat >= 3 && burn <= 2.5) return 'pyroblast';
-    if (p.inCombat && tl.combustion && ready('combustion')) return 'combustion';
-    if (!fv || (fv.stacks ?? 0) < 5 || fv.end - c.t <= 6) return 'scorch';
-    if (!c.aura(p, 'fingersOfFrost') && heat === 1 && ready('fireBlast')) return 'fireBlast';
+    if (scorchDue) return 'scorch';
+    if (combustion) return 'combustion';
+    if (pyroDue) return 'pyroblast';
+    if (stacksOf(c, p, 'fingersOfFrost') < 2 && ready('fireBlast')) return 'fireBlast';
     return 'frostfireBolt';
   }
+  // Not in WoWSims Forever: the older builds' list.
   const tool = manaTool(c, 0.2);
   if (tool) return tool;
   if (p.inCombat && tl.combustion && ready('combustion')) return 'combustion';
@@ -213,21 +227,22 @@ export const mageFire: Spec = specFor('fire', {
 });
 
 // ------------------------------------------------------------------- Frost
-/**
- * gs's Frost lists after Oct 15: Ice Lance on Fingers of Frost, Cone of Cold at 5 Winter's Chill within
- * 10 yards (Frost), Missiles on Barrage and Arcane Blast to 4 stacks (Arcane-Frost), Frostbolt.
- */
+/** WoWSims Forever's Frost list: Cold Snap for Cone of Cold, Cone of Cold at 5 Winter's Chill within reach, Ice Lance on the last charge, Frigid Power up, Frostbolt. */
 function frostSuggest(c: Combat): string | null {
   const t = c.target;
   if (!t || t.health <= 0) return null;
   const tl = T(c);
   const { p, ready, mana } = ctx(c);
   if (channelingNow(c)) return null;
-  const tool = manaTool(c, 0.15);
+  // WoWSims Forever's Frost list. Missile Barrage and Arcane Blast only for the builds of your own that have them.
+  const tool = manaTool(c, 0.05);
   if (tool) return tool;
-  if (tl.iceBarrier && !c.aura(p, 'iceBarrier') && ready('iceBarrier')) return 'iceBarrier';
-  if (tl.iceLance && c.aura(p, 'fingersOfFrost') && !c.casting && ready('iceLance')) return 'iceLance';
+  if (tl.coldSnap && ready('coldSnap') && c.cooldownLeft('coneOfCold').left >= 7) return 'coldSnap';
   if (tl.wintersChill && stacksOf(c, t, 'wintersChill') >= tl.wintersChill && ready('coneOfCold') && c.inRange(t, D.coneOfCold.range)) return 'coneOfCold';
+  // Frostbolt spends the first Fingers of Frost charge, Ice Lance the second.
+  if (tl.iceLance && stacksOf(c, p, 'fingersOfFrost') === 1 && !c.casting && ready('iceLance')) return 'iceLance';
+  const frigid = c.aura(p, 'frigidPower');
+  if (tl.iceBarrier && (!frigid || frigid.end - c.t <= 3) && ready('iceBarrier')) return 'iceBarrier';
   if (tl.missileBarrage && c.aura(p, 'missileBarrage')) return 'arcaneMissiles';
   const stacks = Math.min(4, abStacks(c) + (c.casting?.id === 'arcaneBlast' ? 1 : 0));
   if (tl.arcaneBlast && stacks < 4 && mana > 0.2) return 'arcaneBlast';

@@ -676,7 +676,7 @@ function deadlyPoison(c: Combat, t: Unit): void {
 
 // ------------------------------------------------------------- rotations
 /** Combo points the build's priority list waits for before Eviscerate. */
-const evisceratePoints = (c: Combat) => (buildById(c.options.build).rotation === 'mutilate' ? 3 : 5);
+const evisceratePoints = (c: Combat) => (T(c).mutilate ? 4 : 5);
 
 /**
  * The sims' priority lists, one per build (research/rogue_forever.md →
@@ -693,75 +693,45 @@ function suggest(c: Combat): string | null {
   const sndLeft = snd ? snd.end - c.t : 0;
   const ready = (id: string) => c.cooldownLeft(id).left === 0;
   const canAmbush = mhDagger(c) && c.behind(t);
-  const tea = c.options.thistleTea !== false && p.resource <= 10 && ready('thistleTea');
-  // The rogue on Expose Armor duty keeps it up at 5 points (no warrior Sunder in the raid).
-  const ea = c.aura(t, 'exposeArmor');
-  // Refresh early: building 5 points again takes about 15 seconds.
-  // About to drop with 4 points: a slightly weaker Expose Armor beats a gap.
-  const eaLeft = ea ? ea.end - c.t : 0;
-  const exposeArmor = !!c.options.exposeArmorDuty && ((cp === 5 && eaLeft < 15) || (cp === 4 && eaLeft < 2));
-
+  // WoWSims Forever's list, the same for every rogue: the build only decides what makes the points.
   const energy = p.resource;
-  if (rotation === 'hemorrhage') {
-    // gs's Subtlety list since 27 Oct: Garrote from stealth, Slice and Dice only once it falls off, Eviscerate and Hemorrhage at 60 energy.
-    if (cp >= 1 && !snd) return 'sliceAndDice';
-    if (!c.stealthed() && p.inCombat && energy >= 60 && cp <= 1 && snd && ready('vanish')) return 'vanish';
-    if (c.stealthed()) {
-      if (cp <= 2 && tl.premeditation && ready('premeditation')) return 'premeditation';
-      if (!c.aura(t, 'garrote')) return 'garrote';
-      return canAmbush ? 'ambush' : 'cheapShot';
-    }
-    if (tea) return 'thistleTea';
-    if (exposeArmor) return 'exposeArmor';
-    const rupture = c.aura(t, 'rupture');
-    if (!c.aura(t, 'hemorrhage') && cp >= 2 && !rupture) return 'hemorrhage';
-    if (cp >= 3 && !rupture) return 'rupture';
-    if (cp >= 5 && energy >= 60) return 'eviscerate';
-    if (cp <= 3 && tl.ghostlyStrike && ready('ghostlyStrike')) return 'ghostlyStrike';
-    if (energy >= 60) return 'hemorrhage';
-    if (tl.preparation && ready('preparation') && c.cooldownLeft('vanish').left > 30) return 'preparation';
-    return null;
-  }
+  const inCombat = p.inCombat;
+  const ea = c.aura(t, 'exposeArmor');
+  const exposeLow = !!c.options.exposeArmorDuty && (!ea || ea.end - c.t <= 16);
+  const falling = sndLeft <= 2;
+  const rupture = c.aura(t, 'rupture');
+  const ruptureLeft = rupture ? rupture.end - c.t : 0;
+  const hemorrhage = c.aura(t, 'hemorrhage');
+  const cutthroat = c.aura(p, 'cutthroat');
 
-  if (rotation === 'mutilate') {
-    // gs's Mutilate list since 27 Oct: a Garrote opener, Eviscerate at 3 points with 50 energy, Mutilate under 3 points at 70.
-    if (c.stealthed()) return 'garrote';
+  if (!inCombat && !c.stealthed() && ready('stealth')) return 'stealth';
+  if (exposeLow && cp === 5) return 'exposeArmor';
+  if (cp < 5 && cutthroat && canAmbush) return 'ambush';
+  if (c.stealthed() && cp <= 3 && tl.premeditation && ready('premeditation')) return 'premeditation';
+  if (c.stealthed() && cp < 5 && !c.aura(t, 'garrote')) return 'garrote';
+  if (inCombat && !c.aura(t, 'garrote') && energy >= D.garrote.cost && cp < 5 && !falling && ready('vanish')) return 'vanish';
+  if (tl.preparation && ready('preparation') && !ready('vanish')) return 'preparation';
+  if (inCombat && tl.adrenalineRush && energy <= 50 && snd && ready('adrenalineRush')) return 'adrenalineRush';
+  if (inCombat && c.options.thistleTea !== false && energy <= 15 && (cp < 3 || exposeLow) && ready('thistleTea')) return 'thistleTea';
+  if (tl.bladeFlurry && !falling && energy >= D.bladeFlurry.cost && ready('bladeFlurry')) return 'bladeFlurry';
+  if (!exposeLow) {
     if (cp >= 1 && !snd) return 'sliceAndDice';
-    if (p.inCombat && tea) return 'thistleTea';
-    if (exposeArmor) return 'exposeArmor';
-    if (cp >= 4 && snd && tl.coldBlood && ready('coldBlood') && !c.aura(p, 'coldBlood')) return 'coldBlood';
-    if (cp >= 3 && energy >= 50) return 'eviscerate';
-    if (cp < 3 && energy >= 70) return 'mutilate';
-    return null;
+    if (tl.venom && cp >= 3 && !c.aura(p, 'venom')) return 'venom';
+    if (cp >= 3 && !rupture && (tl.thousandCuts || hemorrhage)) return 'rupture';
+    const eviscerate = c.cost(c.ability('eviscerate')!);
+    if (cp === 5 && !falling && energy >= eviscerate && tl.coldBlood && ready('coldBlood') && !c.aura(p, 'coldBlood') && !c.aura(p, 'elunesLight')) return 'coldBlood';
+    const points = cp >= 5 || (cp === 4 && tl.mutilate) || (cp >= 4 && sndLeft <= 6 && !falling);
+    if (points && (!tl.thousandCuts || ruptureLeft >= 4 || energy >= 75)) return 'eviscerate';
   }
-
-  if (rotation === 'backstab') {
-    if (c.stealthed()) return canAmbush ? 'ambush' : 'cheapShot';
-    if (cp >= 1 && !snd) return 'sliceAndDice';
-    if (cp === 5 && sndLeft < 3) return 'sliceAndDice';
-    if (p.inCombat && tea) return 'thistleTea';
-    if (exposeArmor) return 'exposeArmor';
-    if (tl.adrenalineRush && p.inCombat && energy < 59 && ready('adrenalineRush')) return 'adrenalineRush';
-    if (tl.bladeFlurry && snd && ready('bladeFlurry') && energy >= D.bladeFlurry.cost) return 'bladeFlurry';
-    if (cp === 5 && snd && tl.coldBlood && ready('coldBlood') && !c.aura(p, 'coldBlood')) return 'coldBlood';
-    if (cp === 5 && (snd || energy >= 79)) return 'eviscerate';
-    return 'backstab';
-  }
-
-  // Combat Swords, gs's list since 27 Oct: a Vanish and Garrote loop, Slice and Dice once it falls off, 5-point
-  // finishers, and Sinister Strike right after a main-hand swing (or at 90 energy).
-  if (c.stealthed()) return 'garrote';
-  if (p.inCombat && energy >= 50 && cp <= 3 && ready('vanish')) return 'vanish';
-  if (p.inCombat && tea) return 'thistleTea';
-  if (cp >= 1 && !snd) return 'sliceAndDice';
-  if (exposeArmor) return 'exposeArmor';
-  if (tl.adrenalineRush && p.inCombat && energy <= 30 && ready('adrenalineRush')) return 'adrenalineRush';
-  if (tl.bladeFlurry && snd && ready('bladeFlurry') && energy >= D.bladeFlurry.cost) return 'bladeFlurry';
-  if (cp >= 5 && tl.coldBlood && ready('coldBlood') && !c.aura(p, 'coldBlood')) return 'coldBlood';
-  if (cp >= 5) return 'eviscerate';
-  const swing = c.swingLeft('main');
-  if (swing.left > swing.total - 0.15 || energy >= 90) return 'sinisterStrike';
-  return null;
+  if (cp >= 5) return null;
+  if (tl.ghostlyStrike && ready('ghostlyStrike')) return 'ghostlyStrike';
+  const backstab = rotation === 'backstab' && mhDagger(c);
+  if (backstab && tl.hemorrhage && !hemorrhage) return 'hemorrhage';
+  // With Slice and Dice about to fall and points to spend, wait for it.
+  if (falling && cp >= 1 && energy < 75 && !exposeLow) return null;
+  if (backstab) return cutthroat ? null : 'backstab';
+  if (tl.mutilate) return 'mutilate';
+  return tl.hemorrhage ? 'hemorrhage' : 'sinisterStrike';
 }
 
 // ------------------------------------------------------- practice helpers

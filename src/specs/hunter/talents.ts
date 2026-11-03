@@ -1,6 +1,6 @@
-// WoW Forever hunter talents and the builds the sims use. Order: gunba's
-// current tree (ui/core/talents/trees/hunter.json, same as fs), Beast
-// Mastery 16, Marksmanship 16, Survival 18. See research/hunter_forever.md.
+// WoW Forever hunter talents and the builds the sims use. Order: WoWSims
+// Forever's tree (proto/hunter.proto), Beast Mastery 16, Marksmanship 16,
+// Survival 18. See research/hunter_forever.md.
 import type { Binding, Stats } from '../../engine/types';
 import { decodeTalents, talentSplit, talentSummary } from '../common';
 import { MELEE_STATS, RANGED_STATS } from './data';
@@ -66,25 +66,30 @@ const MM_BAR = bar(['autoShot', 'aimedShot', 'arcaneShot', 'serpentSting', 'snip
   'aspectOfTheHawk', 'trueshotAura', 'manaPotion', 'petAttackOrder', 'petFollowOrder', 'petStayOrder', 'raptorStrike']);
 const BM_BAR = bar(['autoShot', 'aimedShot', 'arcaneShot', 'serpentSting', 'summonHawk', 'bestialWrath', 'intimidation', 'rapidFire',
   'aspectOfTheHawk', 'huntersMark', 'multiShot', 'manaPotion', 'petAttackOrder', 'petFollowOrder', 'petStayOrder', 'raptorStrike']);
+const LONE_BAR = bar(['autoShot', 'aimedShot', 'arcaneShot', 'serpentSting', 'sniperShot', 'multiShot', 'rapidFire', 'huntersMark',
+  'aspectOfTheHawk', 'trueshotAura', 'manaPotion', 'raptorStrike']);
 const WEAVE_BAR = bar(['autoShot', 'arcaneShot', 'serpentSting', 'multiShot', 'raptorStrike', 'mongooseBite', 'striderKick', 'immolationTrap',
   'aspectOfTheHawk', 'huntersMark', 'rapidFire', 'manaPotion', 'aimedShot', 'trueshotAura']);
 const SV_BAR = bar(['raptorStrike', 'mongooseBite', 'striderKick', 'immolationTrap', 'wingClip', 'huntersMark', 'rapidFire', 'aspectOfTheBeast',
   'attack', 'summonHawk', 'serpentSting', 'manaPotion', 'petAttackOrder', 'petFollowOrder', 'petStayOrder']);
 
-const GS = 'gunba/wow-forever-sim';
-const FS = 'foreversim';
+const WS = 'wowsims/forever';
+/** Builds with no equivalent in WoWSims Forever: they stay, for whoever practises them. */
+const GS = 'community, from gunba/wow-forever-sim';
+const FS = 'community, from foreversim';
 export const BUILDS: Build[] = [
-  { id: 'mm', spec: 'mm', name: 'Marksmanship (ranged), with a pet', talentString: '502-0053552001523051-50002', source: GS, stats: RANGED_STATS, bar: MM_BAR, pet: true, options: { meleeWeaving: false } },
-  // gs since Oct 21: Auto Shot from 12 yards, a step to 5 for the melee attacks while the next shot is over 1.5 s away, no pet.
-  { id: 'sv-weave', spec: 'mm', name: 'SV Weave', talentString: '-00530510105-530200230050122141', source: GS, stats: RANGED_STATS, bar: WEAVE_BAR, pet: false, options: { meleeWeaving: true } },
-  { id: 'mm-weave', spec: 'mm', name: 'MM Weave', talentString: '-005305031050302-5302002300501201', source: GS, stats: RANGED_STATS, bar: WEAVE_BAR, pet: false, options: { meleeWeaving: true } },
+  { id: 'mm', spec: 'mm', name: 'Marksmanship', talentString: '5-0053452511522051-5', source: WS, stats: RANGED_STATS, bar: LONE_BAR, pet: false, options: { meleeWeaving: false } },
+  // Auto Shot from 12 yards, a step to 5 for the melee attacks while the next shot is over 1.5 s away, no pet.
+  { id: 'sv-weave', spec: 'mm', name: 'SV Weave', talentString: '-00530501114-550200030050220151', source: WS, stats: RANGED_STATS, bar: WEAVE_BAR, pet: false, options: { meleeWeaving: true } },
+  { id: 'mm-weave', spec: 'mm', name: 'MM Weave', talentString: '-205305031150001-5502000300502201', source: WS, stats: RANGED_STATS, bar: WEAVE_BAR, pet: false, options: { meleeWeaving: true } },
   { id: 'mm-fs', spec: 'mm', name: 'Marksmanship with a pet', talentString: '-3050552301503151-50024001', source: FS, stats: RANGED_STATS, bar: MM_BAR, pet: true, options: { meleeWeaving: false } },
   { id: 'mm-p1', spec: 'mm', name: 'Marksmanship, Beast Mastery dip', talentString: '5023000501-0050550501503051', source: FS, stats: RANGED_STATS, bar: MM_BAR, pet: true, options: { meleeWeaving: false } },
-  { id: 'sv-ranged', spec: 'mm', name: 'Survival talents, ranged rotation', talentString: '-005055-550230031051220151', source: FS, stats: RANGED_STATS, bar: MM_BAR, pet: true, options: { meleeWeaving: false } },
-  { id: 'bm', spec: 'bm', name: 'Beast Mastery', talentString: '5320001505101251-00532500005', source: GS, stats: RANGED_STATS, bar: BM_BAR, pet: true },
-  { id: 'bm-fs', spec: 'bm', name: 'Beast Mastery', talentString: '5520001505121251-0050551', source: FS, stats: RANGED_STATS, bar: BM_BAR, pet: true },
+  { id: 'sv-ranged', spec: 'mm', name: 'Survival talents, ranged rotation', talentString: '1-00531500114-52225303000021005', source: WS, stats: RANGED_STATS, bar: LONE_BAR, pet: false, options: { meleeWeaving: false } },
+  { id: 'bm', spec: 'bm', name: 'Beast Mastery', talentString: '5320001505101251-0053250001-4', source: WS, stats: RANGED_STATS, bar: BM_BAR, pet: true, options: { meleeWeaving: false } },
+  { id: 'bm-weave', spec: 'bm', name: 'BM Weave', talentString: '5320001505101251-0053250001-4', source: WS, stats: RANGED_STATS, bar: BM_BAR, pet: true, options: { meleeWeaving: true } },
+  { id: 'bm-fs', spec: 'bm', name: 'Beast Mastery', talentString: '5520001505121251-0050551', source: FS, stats: RANGED_STATS, bar: BM_BAR, pet: true, options: { meleeWeaving: false } },
+  { id: 'sv-pet', spec: 'sv', name: 'SV Melee', talentString: '53200005021-005003-5502000300500221', source: WS, stats: MELEE_STATS, bar: SV_BAR, pet: true, melee: true },
   { id: 'sv', spec: 'sv', name: 'Survival, melee', talentString: '502-005205-500230230050122151', source: GS, stats: MELEE_STATS, bar: SV_BAR, pet: true, melee: true },
-  { id: 'sv-pet', spec: 'sv', name: 'Pet/Melee', talentString: '53200005001-0050051-5302002300501201', source: GS, stats: MELEE_STATS, bar: SV_BAR, pet: true, melee: true },
 ];
 
 export const buildsFor = (spec: HunterSpec) => BUILDS.filter((b) => b.spec === spec);

@@ -681,82 +681,82 @@ function suggest(c: Combat): string | null {
   const stance = stanceOf(c);
   const hsQueued = !!c.queuedSwing;
   const sunder = c.aura(t, 'sunderArmor');
-  const sunderSafe = !!sunder && (sunder.stacks ?? 0) >= 5 && sunder.end - c.t > 8;
   const cost = (id: string) => c.cost(c.ability(id)!);
 
   if (!p.inCombat && c.cooldownLeft('charge').left === 0 && c.distance(t) > 8 * 0.9144 && c.distance(t) < 25 * 0.9144 && stance === 'battle') return 'charge';
   // A fight starts with the auto attack: rage comes from landed swings.
   if (!p.autoAttacking && c.inRange(t)) return 'attack';
 
-  if (b.rotation === 'protection') {
-    if (stance !== 'defensive') return 'defensiveStance';
-    const bs = c.aura(p, 'battleShout');
-    if ((!bs || bs.end - c.t < 3) && rage >= 10) return 'battleShout';
-    if (!c.playerHealthLocked && p.health / p.maxHealth < 0.35 && ready('shieldWall')) return 'shieldWall';
-    if (!c.playerHealthLocked && p.health / p.maxHealth < 0.3 && tl.lastStand && ready('lastStand')) return 'lastStand';
-    const sb = c.aura(p, 'shieldBlock');
-    if (c.enemyAttacks.on && rage >= 15 && (!sb || sb.end - c.t < 1) && ready('shieldBlock')) return 'shieldBlock';
-    if (rage < 35 && ready('bloodrage')) return 'bloodrage';
-    if (sunder && (sunder.stacks ?? 0) >= 5 && sunder.end - c.t <= 8 && rage >= cost('sunderArmor')) return 'sunderArmor';
-    const tc = c.aura(t, 'thunderClap');
-    if ((!tc || tc.end - c.t <= 3) && ready('thunderClap') && rage >= cost('thunderClap')) return 'thunderClap';
-    const demo = c.aura(t, 'demoralizingShout');
-    if ((!demo || demo.end - c.t <= 4) && rage >= cost('demoralizingShout')) return 'demoralizingShout';
-    if ((!sunder || (sunder.stacks ?? 0) < 5) && rage >= cost('sunderArmor')) return 'sunderArmor';
-    const reserve = (id: string) => sunderSafe || rage >= cost(id) + cost('sunderArmor') + cost('shieldBlock');
-    if (ready('revenge') && reserve('revenge')) return 'revenge';
-    if (ready('shieldSlam') && reserve('shieldSlam')) return 'shieldSlam';
-    if (!hsQueued && rage >= 20 && reserve('heroicStrike')) return 'heroicStrike';
-    if (rage >= 45) return 'sunderArmor';
-    return null;
-  }
-
   const can = (id: string) => ready(id) && rage >= cost(id);
+  const targets = c.targets.length;
+  const bs = c.aura(p, 'battleShout');
   const rend = c.aura(t, 'rend');
   const rendLeft = rend ? rend.end - c.t : 0;
+  if (!bs && rage >= 10) return b.rotation === 'protection' && stance !== 'defensive' ? 'defensiveStance' : 'battleShout';
+
+  if (b.rotation === 'protection') {
+    // WoWSims Forever's Protection list.
+    if (stance !== 'defensive') return 'defensiveStance';
+    const hp = c.playerHealthLocked || c.aura(p, 'lastStand') || c.aura(p, 'shieldWall') ? 1 : p.health / p.maxHealth;
+    if (hp <= 0.4 && tl.lastStand && ready('lastStand')) return 'lastStand';
+    if (hp <= 0.35 && ready('shieldWall')) return 'shieldWall';
+    if (c.enemyAttacks.on && can('shieldBlock') && (rage >= 40 || (!c.aura(p, 'revengeReady') && c.cooldownLeft('revenge').left <= 1.5))) return 'shieldBlock';
+    if (targets > 2 && can('thunderClap')) return 'thunderClap';
+    if (can('shieldSlam')) return 'shieldSlam';
+    if (can('revenge')) return 'revenge';
+    if (targets > 1 && can('thunderClap')) return 'thunderClap';
+    const demo = c.aura(t, 'demoralizingShout');
+    if ((!demo || demo.end - c.t <= 6) && can('demoralizingShout')) return 'demoralizingShout';
+    const tc = c.aura(t, 'thunderClap');
+    if ((!tc || tc.end - c.t <= 6) && can('thunderClap')) return 'thunderClap';
+    if (bs && bs.end - c.t <= 10 && rage >= 10) return 'battleShout';
+    const slamSoon = c.cooldownLeft('shieldSlam').left < 1.5;
+    if (!rend && !slamSoon && can('rend')) return 'rend';
+    if ((!sunder || (sunder.stacks ?? 0) < 5 || (!slamSoon && sunder.end - c.t <= 10)) && can('sunderArmor')) return 'sunderArmor';
+    if (!hsQueued && rage >= 40) return targets > 1 ? 'cleave' : 'heroicStrike';
+    if (rage < 90 && ready('bloodrage')) return 'bloodrage';
+    return null;
+  }
+
   const opWindow = !!c.aura(p, 'overpowerReady');
   const opIn = (s: number) => c.cooldownLeft('overpower').left <= s;
-  /** The cooldowns the sims leave to Autocast: Death Wish, Bloodrage, Berserker Rage. */
-  const cooldowns = (): string | null => {
-    if (!p.inCombat) return null;
-    if (tl.deathWish && can('deathWish')) return 'deathWish';
-    if (ready('bloodrage')) return 'bloodrage';
-    if (stance === 'berserker' && ready('berserkerRage')) return 'berserkerRage';
-    return null;
-  };
-  const bs = c.aura(p, 'battleShout');
-  if (!bs && rage >= 10) return 'battleShout';
+  const windfury = c.raid.has('windfury');
+  const sunderDue = !!c.options.sunderDuty && (!sunder || (sunder.stacks ?? 0) < 5 || sunder.end - c.t < 8);
 
   if (b.rotation === 'arms') {
-    // gs's Arms list since 27 Oct: Battle Stance for Rend and Overpower, Berserker Stance (Recklessness, Whirlwind) in between.
-    if (c.options.sunderDuty && (!sunder || (sunder.stacks ?? 0) < 5 || sunder.end - c.t < 8) && rage >= cost('sunderArmor')) return 'sunderArmor';
-    const cd = cooldowns();
-    if (cd) return cd;
-    if (c.targets.length > 1 && tl.sweepingStrikes && can('sweepingStrikes')) return 'sweepingStrikes';
-    if (stance !== 'battle' && (rendLeft <= 1.5 || (opWindow && opIn(1.5) && rage <= 45)) && ready('battleStance')) return 'battleStance';
-    if (stance !== 'berserker' && rendLeft > 6 && !opWindow && rage <= 26 && ready('berserkerStance')) return 'berserkerStance';
-    if (p.inCombat && stance === 'berserker' && ready('recklessness')) return 'recklessness';
-    if (!hsQueued && !exec && rage >= 85) return 'heroicStrike';
+    // WoWSims Forever's Arms list: Battle Stance throughout, and Berserker Stance only for Whirlwind on three or more targets.
+    if (sunderDue && can('sunderArmor')) return 'sunderArmor';
+    if (p.inCombat && tl.deathWish && can('deathWish')) return 'deathWish';
+    if (targets >= 3 && can('whirlwind')) return 'whirlwind';
+    if (stance !== 'battle' && ready('battleStance')) return 'battleStance';
+    if (targets > 1 && can('sweepingStrikes')) return 'sweepingStrikes';
     if (can('overpower')) return 'overpower';
+    if (targets >= 3 && rage >= 25 && stance === 'battle' && c.cooldownLeft('whirlwind').left === 0 && ready('berserkerStance')) return 'berserkerStance';
     if (can('mortalStrike')) return 'mortalStrike';
-    if (tl.spearingStrike && can('spearingStrike')) return 'spearingStrike';
-    if (can('slam')) return 'slam';
-    if (rendLeft <= 3 && can('rend')) return 'rend';
-    if (can('whirlwind')) return 'whirlwind';
+    const slam = (c.ability('slam')!.castTime as (cc: Combat) => number)(c);
+    if (!exec && slam < D.gcd && can('slam')) return 'slam';
+    if (!exec && rendLeft <= D.gcd && can('rend')) return 'rend';
+    const swing = c.swingLeft('main');
+    if (!exec && slam >= D.gcd && swing.total - swing.left <= 0.4 && can('slam')) return 'slam';
+    if (!exec && can('spearingStrike')) return 'spearingStrike';
+    if (windfury && !exec && can('hamstring')) return 'hamstring';
     if (exec && can('execute')) return 'execute';
-    // Hamstring with rage to spare; not when Mortal Strike is about to come up (our sheets have less rage than the sims').
-    if (rage >= 20 && c.cooldownLeft('mortalStrike').left >= 1.5 && can('hamstring')) return 'hamstring';
+    if (!hsQueued && targets > 1 && rage >= 40) return 'cleave';
+    if (!hsQueued && !exec && rage >= 90 && !tl.improvedSlam) return 'heroicStrike';
+    if (p.inCombat && rage < 90 && ready('bloodrage')) return 'bloodrage';
+    if (bs && bs.end - c.t <= 10 && rage >= 10 && c.cooldownLeft('mortalStrike').left >= D.gcd) return 'battleShout';
     return null;
   }
 
-  // Fury and two-hand Bloodthirst: gs's priority lists since 28 Oct.
-  if (c.options.sunderDuty && (!sunder || (sunder.stacks ?? 0) < 5 || sunder.end - c.t < 8)) {
-    return rage >= cost('sunderArmor') ? 'sunderArmor' : null;
-  }
-  if (p.inCombat && stance === 'berserker' && ready('recklessness')) return 'recklessness';
   if (b.rotation === 'twoHandBloodthirst') {
-    const cd = cooldowns();
-    if (cd) return cd;
+    // Not in WoWSims Forever: gunba's list of 28 Oct.
+    if (sunderDue) return rage >= cost('sunderArmor') ? 'sunderArmor' : null;
+    if (p.inCombat && stance === 'berserker' && ready('recklessness')) return 'recklessness';
+    if (p.inCombat) {
+      if (tl.deathWish && can('deathWish')) return 'deathWish';
+      if (ready('bloodrage')) return 'bloodrage';
+      if (stance === 'berserker' && ready('berserkerRage')) return 'berserkerRage';
+    }
     if (can('bloodthirst')) return 'bloodthirst';
     if (stance === 'battle' && !rend && !exec && can('rend')) return 'rend';
     if (can('overpower')) return 'overpower';
@@ -766,27 +766,33 @@ function suggest(c: Combat): string | null {
     if (exec && can('execute')) return 'execute';
     if (stance !== 'battle' && opWindow && rage <= 80 && ready('battleStance')) return 'battleStance';
     if (rage >= 50 && c.swingLeft('main').left >= 2.25 && can('slam')) return 'slam';
-    if (c.raid.has('windfury') && !exec && c.swingLeft('main').left >= 1 && can('hamstring')) return 'hamstring';
+    if (windfury && !exec && c.swingLeft('main').left >= 1 && can('hamstring')) return 'hamstring';
     if (!hsQueued && !exec && rage >= 95) return 'heroicStrike';
     return null;
   }
-  if (!hsQueued && !exec && rage >= 42) return 'heroicStrike';
-  if (can('bloodthirst')) return 'bloodthirst';
-  if (can('overpower')) return 'overpower';
-  // Back to Berserker Stance unless an Overpower window is open or Rend is down (up to 75 rage) outside the execute phase.
-  if (stance !== 'berserker' && !(opWindow || (!rend && !exec && rage <= 75)) && ready('berserkerStance')) return 'berserkerStance';
+
+  // Fury: WoWSims Forever's list, with its Overpower, Rend and Hamstring weaves.
+  if (sunderDue) return rage >= cost('sunderArmor') ? 'sunderArmor' : null;
+  if (p.inCombat && tl.deathWish && can('deathWish')) return 'deathWish';
+  if (targets > 1 && can('sweepingStrikes')) return 'sweepingStrikes';
+  if (targets > 1 && can('whirlwind')) return 'whirlwind';
+  const overpowerDue = opWindow && opIn(0) && rage >= 5 && rage <= 73;
+  if (overpowerDue && stance === 'battle') return 'overpower';
+  if (overpowerDue && ready('battleStance')) return 'battleStance';
   if (exec && can('execute')) return 'execute';
   if (can('whirlwind')) return 'whirlwind';
-  // Dance to Battle Stance for Rend (up to 30 rage) and for an Overpower window (up to 35 rage, Overpower ready within 1 s).
-  if (stance !== 'battle' && !rend && !exec && rage <= 30 && ready('battleStance')) return 'battleStance';
-  if (stance !== 'battle' && opWindow && rage <= 35 && opIn(1) && ready('battleStance')) return 'battleStance';
-  if (stance === 'battle' && !rend && !exec && can('rend')) return 'rend';
-  const cd = cooldowns();
-  if (cd) return cd;
-  if (!rend && can('rend')) return 'rend';
-  // With a Windfury Totem every landed special rolls Windfury: Hamstring fills the gaps between Bloodthirst and Whirlwind.
-  if (c.raid.has('windfury') && !exec && c.cooldownLeft('bloodthirst').left >= 1 && c.cooldownLeft('whirlwind').left >= 1
-    && c.swingLeft('main').left >= 0.7 && can('hamstring')) return 'hamstring';
+  if (can('bloodthirst')) return 'bloodthirst';
+  const spare = c.cooldownLeft('bloodthirst').left >= D.gcd && c.cooldownLeft('whirlwind').left >= D.gcd;
+  if (!hsQueued && ((targets === 1 && !exec && rage >= 40) || (spare && rage > 60))) return 'heroicStrike';
+  if (!hsQueued && targets > 1 && rage >= 40) return 'cleave';
+  const rendDue = !exec && !rend && rage >= 10;
+  if (rendDue && stance === 'battle') return 'rend';
+  if (rendDue && ready('battleStance')) return 'battleStance';
+  if (stance === 'battle' && !overpowerDue && !rendDue && ready('berserkerStance')) return 'berserkerStance';
+  if (windfury && spare && !exec && can('hamstring')) return 'hamstring';
+  if (p.inCombat && rage < 90 && ready('bloodrage')) return 'bloodrage';
+  if (spare && tl.improvedBerserkerRage && stance === 'berserker' && ready('berserkerRage')) return 'berserkerRage';
+  if (spare && bs && bs.end - c.t <= 10 && rage >= 10) return 'battleShout';
   return null;
 }
 
@@ -902,7 +908,7 @@ export const warrior: Spec = {
     { name: 'Arms: two-handed polearm', stats: ARMS_STATS },
     { name: 'Protection: sword and shield', stats: PROT_STATS },
   ],
-  builds: BUILDS.map((b) => ({ id: b.id, label: buildLabel(b), name: b.name, source: 'gunba/wow-forever-sim', talentString: b.talentString, stats: b.stats, bar: b.bar, options: b.options, tank: b.tank, trees: summary(talentsFor(b.id)) })),
+  builds: BUILDS.map((b) => ({ id: b.id, label: buildLabel(b), name: b.name, source: b.source, talentString: b.talentString, stats: b.stats, bar: b.bar, options: b.options, tank: b.tank, trees: summary(talentsFor(b.id)) })),
   defaultOptions: { build: BUILDS[0].id, sunderDuty: false },
   options: [
     { key: 'sunderDuty', name: 'You keep 5 Sunder Armors up', kind: 'toggle' },
