@@ -62,7 +62,7 @@ Sets: Darkmantle Armor (4), Stormshroud Armor (1).
 
 ## hunter-ranged
 
-`hunter/dps/gear_sets/p1.gear.siml`, human. Str 81, Agi 403, Sta 209, Int 134, Spi 138.
+`hunter/dps/gear_sets/p1.gear.siml`, orc. Str 84, Agi 400, Sta 211, Int 131, Spi 129.
 
 Beaststalker's Cap, Maelstrom's Tendril, Beaststalker's Mantle, Shifting Cloak, Beaststalker's Tunic, Beaststalker's Bindings, Beaststalker's Gloves, Beaststalker's Belt, Beaststalker's Pants, Beaststalker's Boots, Cutthroat's Signet, Selenium Loop of Agility, Adaptive Combat Assistant, Rune of the Guard Captain, Legionite Glaive, Fahrad's Reloading Repeater.
 
@@ -70,7 +70,7 @@ Sets: Beaststalker Armor (8).
 
 ## hunter-melee
 
-`hunter/dps/gear_sets/p1_melee.gear.siml`, human. Str 81, Agi 396, Sta 209, Int 134, Spi 138.
+`hunter/dps/gear_sets/p1_melee.gear.siml`, orc. Str 84, Agi 393, Sta 211, Int 131, Spi 129.
 
 Beaststalker's Cap, Maelstrom's Tendril, Beaststalker's Mantle, Shifting Cloak, Beaststalker's Tunic, Beaststalker's Bindings, Beaststalker's Gloves, Beaststalker's Belt, Beaststalker's Pants, Beaststalker's Boots, Cutthroat's Signet, Selenium Loop of Agility, Adaptive Combat Assistant, Rune of the Guard Captain, Annihilator, Heartseeker, Fahrad's Reloading Repeater.
 
@@ -110,7 +110,7 @@ Sets: Dreadmist Raiment (7).
 
 ## priest-shadow
 
-`priest/dps/builds/testing.build.json`, undead. Str 34, Agi 38, Sta 111, Int 163, Spi 156.
+`priest/dps/builds/testing.build.json`, human. Str 35, Agi 40, Sta 110, Int 165, Spi 166.
 
 Master's Hat of Shadow Wrath, Chains of the Lich, Felcloth Shoulders, Fel Cape, Robe of Winter Night, Master's Bracers of Shadow Wrath, Felcloth Gloves, Belt of the Archmage, Master's Leggings of Shadow Wrath, Ghostweave Boots, Blessed Band of Light, Tracker's Signet of Brilliance, Weakness Analyzer, Jewel of the Guard Captain, Verimonde's Last Resort, Master's Rod of Shadow Wrath, Lunar Wand of Shadow Wrath.
 
@@ -146,7 +146,7 @@ Sets: Lieutenant Commander's Vindication (1), Lightforge Armor (1), Soulforge Ar
 
 ## shaman-elemental
 
-`shaman/elemental/builds/testing.build.json`, troll. Str 86, Agi 59, Sta 139, Int 198, Spi 136.
+`shaman/elemental/builds/testing.build.json`, windshaper. Str 84, Agi 58, Sta 137, Int 203, Spi 135.
 
 Blue Dragonscale Helm, Chains of the Lich, Mantle of the Timbermaw, Cloak of Earth and Sky, High Councillor's Robe of Magic, Master's Bracers of Magic, Gloves of the Greatfather, Highlander's Cloth Girdle, Ironfeather Leggings, Ghostweave Boots, Blessed Band of Light, Ring of Spell Power, Weakness Analyzer, Jewel of the Guard Captain, Verimonde's Last Resort, Elunarian Sphere, Totem of the Storm.
 
@@ -154,7 +154,7 @@ Sets: The Highlander's Intent (1).
 
 ## shaman-enhancement
 
-`shaman/enhancement/builds/testing.build.json`, orc. Str 127, Agi 55, Sta 199, Int 251, Spi 160.
+`shaman/enhancement/builds/testing.build.json`, windshaper. Str 123, Agi 59, Sta 196, Int 255, Spi 157.
 
 Blue Dragonscale Helm, Beads of Ogre Mojo, Mantle of the Timbermaw, Cloak of Earth and Sky, Vest of The Five Thunders, Bindings of The Five Thunders, Storm Gauntlets, Belt of the Archmage, Ironfeather Leggings, Boots of The Five Thunders, Tracker's Signet of Ferocity, Channeler's Ring, Weakness Analyzer, Frozen Heart of the Mountain, Stormcarver, Totem of the Storm.
 

@@ -168,9 +168,9 @@
  "hunter-ranged": {
   "stats": {
    "attackPower": 692,
-   "crit": 8.6,
+   "crit": 7.6,
    "hit": 3.7,
-   "spellCrit": 6.8,
+   "spellCrit": 5.8,
    "expertise": 2,
    "mainHand": {
     "name": "Legionite Glaive",
@@ -181,7 +181,7 @@
     "speed": 3.2
    },
    "offHand": null,
-   "rangedAttackPower": 970,
+   "rangedAttackPower": 964,
    "ranged": {
     "name": "Fahrad's Reloading Repeater",
     "type": "crossbow",
@@ -193,17 +193,17 @@
    "rangedHaste": 1.15
   },
   "options": {
-   "mana": 3450,
-   "spirit": 138,
+   "mana": 3405,
+   "spirit": 129,
    "mp5": 8
   }
  },
  "hunter-melee": {
   "stats": {
    "attackPower": 645,
-   "crit": 9.5,
+   "crit": 8.4,
    "hit": 2.7,
-   "spellCrit": 7.8,
+   "spellCrit": 6.8,
    "expertise": 2,
    "mainHand": {
     "name": "Annihilator",
@@ -219,7 +219,7 @@
     "max": 102,
     "speed": 1.9
    },
-   "rangedAttackPower": 956,
+   "rangedAttackPower": 950,
    "ranged": {
     "name": "Fahrad's Reloading Repeater",
     "type": "crossbow",
@@ -231,8 +231,8 @@
    "rangedHaste": 1.15
   },
   "options": {
-   "mana": 3450,
-   "spirit": 138,
+   "mana": 3405,
+   "spirit": 129,
    "mp5": 8
   }
  },
@@ -330,10 +330,10 @@
  },
  "priest-shadow": {
   "stats": {
-   "attackPower": 24,
-   "crit": 8.4,
+   "attackPower": 25,
+   "crit": 9.5,
    "hit": 1,
-   "spellCrit": 7,
+   "spellCrit": 8.1,
    "spellPower": 206,
    "spellPowerBySchool": {
     "frost": 40,
@@ -347,11 +347,11 @@
     "speed": 1.4
    },
    "offHand": null,
-   "health": 2327
+   "health": 2317
   },
   "options": {
-   "mana": 3541,
-   "spirit": 156,
+   "mana": 3571,
+   "spirit": 166,
    "mp5": 0
   }
  },
@@ -471,10 +471,10 @@
  },
  "shaman-elemental": {
   "stats": {
-   "attackPower": 272,
-   "crit": 8.2,
+   "attackPower": 268,
+   "crit": 8.1,
    "hit": 2,
-   "spellCrit": 9.1,
+   "spellCrit": 9.2,
    "spellPower": 365,
    "spellPowerBySchool": {
     "arcane": 15,
@@ -489,20 +489,20 @@
     "speed": 1.4
    },
    "offHand": null,
-   "health": 2490
+   "health": 2470
   },
   "options": {
-   "mana": 4210,
-   "spirit": 136,
+   "mana": 4285,
+   "spirit": 135,
    "mp5": 0
   }
  },
  "shaman-enhancement": {
   "stats": {
-   "attackPower": 378,
-   "crit": 8.5,
+   "attackPower": 370,
+   "crit": 8.7,
    "hit": 4.9,
-   "spellCrit": 10.5,
+   "spellCrit": 10.6,
    "spellPower": 286,
    "spellPowerBySchool": {
     "arcane": 15,
@@ -518,11 +518,11 @@
     "speed": 3.6
    },
    "offHand": null,
-   "health": 3090
+   "health": 3060
   },
   "options": {
-   "mana": 5005,
-   "spirit": 160,
+   "mana": 5065,
+   "spirit": 157,
    "mp5": 12
   }
  },

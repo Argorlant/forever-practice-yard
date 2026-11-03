@@ -36,6 +36,7 @@ const RACES = {
   undead: { agi: -2, str: -1, int: -2, spi: 5, sta: 1 },
   tauren: { agi: -5, str: 5, int: -5, spi: 2, sta: 2, healthMult: 1.05 },
   troll: { agi: 2, str: 1, int: -4, spi: 1, sta: 1 },
+  windshaper: { agi: 1, str: -1, int: 1, sta: -1 },
 };
 // Rogues and hunters get Agility's dodge twice over (sim/core/base_stats.go).
 const dodgePerAgi = (c, cls) => (cls === 'rogue' || cls === 'hunter' ? 2 : 1) * c.agiCrit;
@@ -56,7 +57,8 @@ const SET_BONUS = {
 const WEAPON = { 1: 'axe', 2: 'dagger', 3: 'fist', 4: 'mace', 6: 'polearm', 8: 'staff', 9: 'sword' };
 const RANGED = { 1: 'bow', 2: 'crossbow', 3: 'gun' };
 
-// Each sheet the builds use: WoWSims Forever's own gear for that build, and the race it sets there (Human where it sets none).
+// Each sheet the builds use: WoWSims Forever's own gear for that build, and the race that build sets. Where it sets none,
+// the race of its page; the Rogue and Mage pages set none either, so those sheets assume Human.
 const SHEETS = [
   ['warrior-fury', 'warrior', 'orc', 'warrior/dps/gear_sets/prebis_fury.gear.json'],
   ['warrior-arms', 'warrior', 'orc', 'warrior/dps/gear_sets/prebis_arms.gear.json'],
@@ -65,20 +67,20 @@ const SHEETS = [
   ['rogue-backstab', 'rogue', 'human', 'rogue/dps/gear_sets/p1_bscombat.gear.json'],
   ['rogue-mutilate', 'rogue', 'human', 'rogue/dps/gear_sets/p1_muti.gear.json'],
   ['rogue-sub-backstab', 'rogue', 'human', 'rogue/dps/gear_sets/p1_bssub.gear.json'],
-  ['hunter-ranged', 'hunter', 'human', 'hunter/dps/gear_sets/p1.gear.siml', { hunter: true }],
-  ['hunter-melee', 'hunter', 'human', 'hunter/dps/gear_sets/p1_melee.gear.siml', { hunter: true }],
+  ['hunter-ranged', 'hunter', 'orc', 'hunter/dps/gear_sets/p1.gear.siml', { hunter: true }],
+  ['hunter-melee', 'hunter', 'orc', 'hunter/dps/gear_sets/p1_melee.gear.siml', { hunter: true }],
   ['mage', 'mage', 'human', 'mage/dps/gear_sets/p1Arcane.gear.json', { health: true }],
   ['warlock-affliction', 'warlock', 'human', 'warlock/dps/gear_sets/preraid.gear.json', { health: true }],
   ['warlock-wrack', 'warlock', 'orc', 'warlock/dps/gear_sets/preraid.gear.json', { health: true }],
   ['warlock-destruction', 'warlock', 'human', 'warlock/dps/gear_sets/preraid.gear.json', { health: true }],
-  ['priest-shadow', 'priest', 'undead', 'priest/dps/builds/testing.build.json', { health: true }],
+  ['priest-shadow', 'priest', 'human', 'priest/dps/builds/testing.build.json', { health: true }],
   ['priest-smite', 'priest', 'undead', 'priest/dps/builds/smite_testing.build.json', { health: true }],
   ['paladin-ret', 'paladin', 'human', 'paladin/retribution/gear_sets/default.gear.json'],
   ['paladin-shock', 'paladin', 'human', 'paladin/retribution/gear_sets/holy_shock.gear.json'],
   ['paladin-prot', 'paladin', 'human', 'paladin/protection/gear_sets/default.gear.json', { tank: true }],
-  ['shaman-elemental', 'shaman', 'troll', 'shaman/elemental/builds/testing.build.json', { health: true }],
+  ['shaman-elemental', 'shaman', 'windshaper', 'shaman/elemental/builds/testing.build.json', { health: true }],
   // It opens with a Manual Crowd Pummeler and swaps to this two-hander for the fight.
-  ['shaman-enhancement', 'shaman', 'orc', 'shaman/enhancement/builds/testing.build.json', { health: true, mainHand: 'Stormcarver' }],
+  ['shaman-enhancement', 'shaman', 'windshaper', 'shaman/enhancement/builds/testing.build.json', { health: true, mainHand: 'Stormcarver' }],
   ['druid-balance', 'druid', 'nightelf', 'druid/balance/gear_sets/prebis.gear.json'],
   ['druid-cat', 'druid', 'tauren', 'druid/feralcat/gear_sets/pre_raid.gear.json', { form: 'cat' }],
   ['druid-bear', 'druid', 'tauren', 'druid/feralbear/gear_sets/default.gear.json', { form: 'bear', tank: true }],
