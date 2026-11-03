@@ -3,7 +3,8 @@
 // Retribution 17). See research/paladin_forever.md → Talents and Builds.
 import type { Binding, Stats } from '../../engine/types';
 import { decodeTalents, talentSplit, talentSummary } from '../common';
-import { PROT_STATS, RET_STATS, SHOCK_STATS } from './data';
+import { gearOptions } from '../gear';
+import { GS_PROT_STATS, PROT_STATS, RET_STATS, SHOCK_STATS } from './data';
 
 const TREES = [
   ['spiritualFocus', 'divineStrength', 'healingLight', 'reverence', 'improvedSeals', 'purifyingPower', 'divineFavor', 'illumination',
@@ -52,6 +53,7 @@ export interface Build {
   stats: Stats;
   bar: Binding[];
   tank?: boolean;
+  options?: Record<string, number>;
 }
 
 const KEYS = ['Digit1', 'Digit2', 'Digit3', 'Digit4', 'Digit5', 'Digit6', 'Digit7', 'Digit8',
@@ -69,10 +71,10 @@ const WS = 'wowsims/forever';
 /** A build with no equivalent in WoWSims Forever: it stays, for whoever practises it. */
 const COMMUNITY = 'community, from gunba/wow-forever-sim, re-spent for the Oct 30 trees';
 export const BUILDS: Build[] = [
-  { id: 'ret', spec: 'ret', name: 'Retribution (Unsealed Wrath)', talentString: '050250002-501-05233011201301351', source: WS, stats: RET_STATS, bar: RET_BAR },
-  { id: 'prot', spec: 'prot', name: 'Protection', talentString: '050050002-05302102213301531-502', source: WS, stats: PROT_STATS, bar: PROT_BAR, tank: true },
-  { id: 'prot-shieldsworn', spec: 'prot', name: 'Protection (Shieldsworn), deeper', talentString: '-55302102513501531-0522', source: COMMUNITY, stats: PROT_STATS, bar: PROT_BAR, tank: true },
-  { id: 'shockadin', spec: 'shock', name: 'Shockadin', talentString: '05025210221021--0523330110130033', source: WS, stats: SHOCK_STATS, bar: SHOCK_BAR },
+  { id: 'ret', spec: 'ret', name: 'Retribution (Unsealed Wrath)', talentString: '050250002-501-05233011201301351', source: WS, stats: RET_STATS, bar: RET_BAR, options: { ...gearOptions('paladin-ret') } },
+  { id: 'prot', spec: 'prot', name: 'Protection', talentString: '050050002-05302102213301531-502', source: WS, stats: PROT_STATS, bar: PROT_BAR, tank: true, options: { ...gearOptions('paladin-prot') } },
+  { id: 'prot-shieldsworn', spec: 'prot', name: 'Protection (Shieldsworn), deeper', talentString: '-55302102513501531-0522', source: COMMUNITY, stats: GS_PROT_STATS, bar: PROT_BAR, tank: true, options: { mana: 4000, spirit: 100, mp5: 0 } },
+  { id: 'shockadin', spec: 'shock', name: 'Shockadin', talentString: '05025210221021--0523330110130033', source: WS, stats: SHOCK_STATS, bar: SHOCK_BAR, options: { ...gearOptions('paladin-shock') } },
 ];
 
 export const buildsFor = (spec: PaladinSpec) => BUILDS.filter((b) => b.spec === spec);

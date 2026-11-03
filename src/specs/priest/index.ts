@@ -6,6 +6,7 @@ import type { Combat } from '../../engine/combat';
 import type { Spec } from '../../engine/types';
 import { BOSS_RULES, CONTROLS } from '../common';
 import { ABILITIES, D, SOURCES, T, chances, onCooldown, prepare, regen, shadowform } from './core';
+import { gearOptions } from '../gear';
 import { SHADOW_STATS, SMITE_STATS } from './data';
 import { buildLabel, buildsFor, summary, talentsFor, type PriestSpec } from './talents';
 
@@ -44,7 +45,7 @@ function specFor(spec: PriestSpec, base: Omit<Spec, 'className' | 'resource' | '
     resource: 'mana',
     abilities: ABILITIES,
     rules: BOSS_RULES,
-    builds: buildsFor(spec).map((b) => ({ id: b.id, label: buildLabel(b), name: b.name, source: b.source, talentString: b.talentString, stats: b.stats, bar: b.bar, trees: summary(talentsFor(b.id, spec)) })),
+    builds: buildsFor(spec).map((b) => ({ id: b.id, label: buildLabel(b), name: b.name, source: b.source, talentString: b.talentString, stats: b.stats, bar: b.bar, options: b.options, trees: summary(talentsFor(b.id, spec)) })),
     bar: buildsFor(spec)[0].bar,
     sources: SOURCES,
     prepare,
@@ -99,7 +100,7 @@ export const priestShadow: Spec = specFor('shadow', {
   specName: 'Shadow',
   showHealth: true,
   stats: SHADOW_STATS,
-  defaultOptions: { build: 'shadow', mana: 4212, spirit: D.spirit, mp5: D.mp5, lockMana: false },
+  defaultOptions: { build: 'shadow', ...gearOptions('priest-shadow'), lockMana: false },
   defaultRaid: ['judgementOfWisdom', 'blessingOfWisdom', 'manaSpring'],
   options: OPTIONS,
   sheet: { attackPower: false, crit: false, spellCrit: 'Spell crit (gear + Intellect)', spellPower: 'Spell power (every school)', mainHand: false, offHand: false },
@@ -155,7 +156,7 @@ export const priestSmite: Spec = specFor('smite', {
   id: 'priest-smite',
   specName: 'Smite (experimental)',
   stats: SMITE_STATS,
-  defaultOptions: { build: 'smite', mana: 4495, spirit: D.spirit, mp5: D.mp5, lockMana: false },
+  defaultOptions: { build: 'smite', ...gearOptions('priest-smite'), lockMana: false },
   defaultRaid: ['judgementOfWisdom', 'blessingOfWisdom', 'manaSpring', 'judgementOfTheCrusader'],
   options: OPTIONS,
   sheet: { attackPower: false, crit: false, spellCrit: 'Spell crit (gear + Intellect)', spellPower: 'Spell power (every school)', mainHand: false, offHand: false },

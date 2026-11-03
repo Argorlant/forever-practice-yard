@@ -4,6 +4,11 @@
 //   provisional = a sim choice with no Forever source yet
 //   classic     = Forever says nothing; the sims keep Classic's value
 import type { Stats, Weapon } from '../../engine/types';
+import { sheet } from '../gear';
+
+/** WoWSims Forever's P1 gear: a two-hander to shoot and weave with, and two weapons for melee Survival. */
+export const RANGED_STATS = sheet('hunter-ranged');
+export const MELEE_STATS = sheet('hunter-melee');
 
 const RIFLE: Weapon = { name: 'Core Marksman Rifle', type: 'gun', min: 107, max: 200, speed: 2.5 };
 const GLAIVE: Weapon = { name: 'Legionite Glaive', type: 'polearm', min: 138, max: 207, speed: 3.2, twoHand: true };
@@ -14,7 +19,7 @@ const GLAIVE: Weapon = { name: 'Legionite Glaive', type: 'polearm', min: 138, ma
  * Surefooted go on top. Aspect of the Hawk, Trueshot Aura and Hunter's Mark
  * are auras. Mana is the research's round demo sheet (the real one is 2,355).
  */
-export const RANGED_STATS: Stats = {
+export const GS_RANGED_STATS: Stats = {
   attackPower: 738,
   rangedAttackPower: 1001,
   crit: 10.2,
@@ -28,7 +33,7 @@ export const RANGED_STATS: Stats = {
 };
 
 /** Survival (melee): two Ironwood Blades; Aspect of the Beast adds 110 AP in combat. */
-export const MELEE_STATS: Stats = {
+export const GS_MELEE_STATS: Stats = {
   attackPower: 713,
   rangedAttackPower: 972,
   crit: 10.4,         // Savage Strikes adds 4 % to melee abilities, Lethal Attacks 5 % to everything

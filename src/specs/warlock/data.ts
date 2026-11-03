@@ -4,6 +4,7 @@
 //   provisional = a sim choice with no Forever source yet
 //   classic     = Forever says nothing; the sims keep Classic's value
 import type { Stats } from '../../engine/types';
+import { sheet } from '../gear';
 
 const SAGEBLADE = { name: 'Sageblade', type: 'sword' as const, min: 58, max: 109, speed: 1.8 };
 
@@ -12,21 +13,18 @@ const SAGEBLADE = { name: 'Sageblade', type: 'sword' as const, min: 58, max: 109
  * Spellstone (+21 Shadow: Shadow only since the Oct 21 database, both sims). Hit is gear only (Suppression adds 1 %
  * per point); spell crit is gear and Intellect (Malevolence adds Shadow crit).
  */
-export const AFFLICTION_STATS: Stats = {
+/** WoWSims Forever's pre-raid gear, with Demonic Knowledge's +60 spell power on the Demonic Pact sheets. */
+export const AFFLICTION_STATS = sheet('warlock-affliction');
+export const WRACK_STATS = sheet('warlock-wrack');
+export const DESTRUCTION_STATS = sheet('warlock-destruction');
+export const PACT_STATS: Stats = { ...AFFLICTION_STATS, spellPower: (AFFLICTION_STATS.spellPower ?? 0) + 60 };
+
+/** The older sims' sheet, for the community DS/Ruin builds. */
+export const RUIN_STATS: Stats = {
   attackPower: 100, crit: 5, hit: 7.9, spellCrit: 10.9,      // launch racials (Oct 26): no Orc Savage; Command +5 % demon damage
   spellPower: 189, spellPowerBySchool: { shadow: 36 },
-  mainHand: SAGEBLADE, offHand: null, health: 2484,
+  mainHand: SAGEBLADE, offHand: null, health: 2559,
 };
-/** Shadow and Flame: the Fire pieces and the Firestone (+21 Fire, +2 % crit). */
-export const DESTRUCTION_STATS: Stats = {
-  attackPower: 100, crit: 5, hit: 6.9, spellCrit: 12.1,      // launch racials (Oct 26): no Orc Savage; Command +5 % demon damage
-  spellPower: 192, spellPowerBySchool: { fire: 73 },
-  mainHand: { name: 'Searing Golden Blade', type: 'dagger', min: 58, max: 109, speed: 1.8 }, offHand: null, health: 2334,
-};
-/** DS/Ruin: the Affliction gear with Fel Vitality's extra mana and Demonic Embrace's health. */
-export const RUIN_STATS: Stats = { ...AFFLICTION_STATS, health: 2559 };
-/** Demonic Pact: the Affliction gear; spell power includes Demonic Knowledge's +60. */
-export const PACT_STATS: Stats = { ...AFFLICTION_STATS, spellPower: 249, spellPowerBySchool: { shadow: 36 } };
 
 const BASE_MANA = 1373;
 

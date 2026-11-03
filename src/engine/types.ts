@@ -33,6 +33,8 @@ export interface Stats {
   attackPower: number;
   crit: number;      // melee crit % on the character sheet
   hit: number;       // hit % from gear and talents
+  /** Dodges and parries your attacks avoid, in %, from gear. */
+  expertise?: number;
   spellCrit: number; // spell crit % (poisons for rogues; gear and Intellect for casters)
   /** Spell power from gear (casters). */
   spellPower?: number;

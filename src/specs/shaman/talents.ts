@@ -2,7 +2,8 @@
 // generated from research/shaman_forever.json). See research/shaman_forever.md → Builds.
 import type { Binding, Stats } from '../../engine/types';
 import { decodeTalents, talentSplit, talentSummary } from '../common';
-import { ELEMENTAL_STATS, ENHANCEMENT_STATS, OFFTANK_STATS, STORMCALLER_STATS } from './data';
+import { gearOptions } from '../gear';
+import { DATA, ELEMENTAL_STATS, ENHANCEMENT_STATS, GS_ELEMENTAL_STATS, GS_ENHANCEMENT_STATS, OFFTANK_STATS, STORMCALLER_STATS } from './data';
 import { NAMES, NEW_IN_FOREVER, TREES, TREE_NAMES, type Talents } from './talents.gen';
 
 export type { Talents };
@@ -32,6 +33,8 @@ const TANK_BAR = bar(['stormstrike', 'earthShock', 'flameShock', 'lightningShiel
   'rageOfTheFarseer', 'graceOfAirTotem', 'manaSpringTotem', 'manaPotion', 'fireNova', 'magmaTotem', 'frostShock']);
 
 const WS = 'wowsims/forever';
+const OLD_ELEMENTAL = { spirit: DATA.spirit.elemental, mp5: DATA.mp5.elemental };
+const OLD_ENHANCEMENT = { spirit: DATA.spirit.enhancement, mp5: DATA.mp5.enhancement };
 /** Builds with no equivalent in WoWSims Forever: they stay, for whoever practises them. */
 const GS = 'community, from gunba/wow-forever-sim';
 const FS = 'community, from foreversim';
@@ -40,14 +43,14 @@ const FS_REENCODED = 'community, from foreversim, re-encoded to the Oct 15 tree'
 const OURS = 'our proposal';
 // Mana: 1240 + 15 x Intellect (research → Default stats).
 export const BUILDS: Build[] = [
-  { id: 'elemental-fs', spec: 'elemental', name: 'Elemental', talentString: '5500331023001351-053002001-053', source: WS, stats: ELEMENTAL_STATS, bar: ELEMENTAL_BAR, options: { mana: 4376 } },
-  { id: 'elemental', spec: 'elemental', name: 'Elemental', talentString: '5503331000011351-055000001-05301', source: GS, stats: ELEMENTAL_STATS, bar: ELEMENTAL_BAR, options: { mana: 4376 } },
-  { id: 'elemental-60', spec: 'elemental', name: 'Elemental "Level 60"', talentString: '5505331000001351--553302001', source: FS_REENCODED, stats: ELEMENTAL_STATS, bar: ELEMENTAL_BAR, options: { mana: 4376 } },
-  { id: 'stormcaller', spec: 'elemental', name: 'Stormcaller (caster hybrid)', talentString: '551333100000134-055030021004002', source: GS, stats: STORMCALLER_STATS, bar: ELEMENTAL_BAR, options: { mana: 4556 } },
-  { id: 'stormcaller-fs', spec: 'elemental', name: 'Stormcaller', talentString: '253533100000033-055030030004102', source: FS_REENCODED, stats: STORMCALLER_STATS, bar: ELEMENTAL_BAR, options: { mana: 4556 } },
-  { id: 'enhancement', spec: 'enhancement', name: 'Enhancement', talentString: '053303102-053030031005102251-03', source: WS, stats: ENHANCEMENT_STATS, bar: ENHANCEMENT_BAR, options: { mana: 2623, imbue: 'flametongue' } },
-  { id: 'enhancement-60', spec: 'enhancement', name: 'Enhancement "Level 60"', talentString: '5505031-053030031005112251', source: GS, stats: ENHANCEMENT_STATS, bar: ENHANCEMENT_BAR, options: { mana: 2623, imbue: 'windfury' } },
-  { id: 'enhancement-fs', spec: 'enhancement', name: 'Enhancement', talentString: '053503102-053030031005112251', source: FS, stats: ENHANCEMENT_STATS, bar: ENHANCEMENT_BAR, options: { mana: 2623, imbue: 'windfury' } },
+  { id: 'elemental-fs', spec: 'elemental', name: 'Elemental', talentString: '5500331023001351-053002001-053', source: WS, stats: ELEMENTAL_STATS, bar: ELEMENTAL_BAR, options: { ...gearOptions('shaman-elemental') } },
+  { id: 'elemental', spec: 'elemental', name: 'Elemental', talentString: '5503331000011351-055000001-05301', source: GS, stats: GS_ELEMENTAL_STATS, bar: ELEMENTAL_BAR, options: { ...OLD_ELEMENTAL, mana: 4376 } },
+  { id: 'elemental-60', spec: 'elemental', name: 'Elemental "Level 60"', talentString: '5505331000001351--553302001', source: FS_REENCODED, stats: GS_ELEMENTAL_STATS, bar: ELEMENTAL_BAR, options: { ...OLD_ELEMENTAL, mana: 4376 } },
+  { id: 'stormcaller', spec: 'elemental', name: 'Stormcaller (caster hybrid)', talentString: '551333100000134-055030021004002', source: GS, stats: STORMCALLER_STATS, bar: ELEMENTAL_BAR, options: { ...OLD_ELEMENTAL, mana: 4556 } },
+  { id: 'stormcaller-fs', spec: 'elemental', name: 'Stormcaller', talentString: '253533100000033-055030030004102', source: FS_REENCODED, stats: STORMCALLER_STATS, bar: ELEMENTAL_BAR, options: { ...OLD_ELEMENTAL, mana: 4556 } },
+  { id: 'enhancement', spec: 'enhancement', name: 'Enhancement', talentString: '053303102-053030031005102251-03', source: WS, stats: ENHANCEMENT_STATS, bar: ENHANCEMENT_BAR, options: { ...gearOptions('shaman-enhancement'), imbue: 'flametongue' } },
+  { id: 'enhancement-60', spec: 'enhancement', name: 'Enhancement "Level 60"', talentString: '5505031-053030031005112251', source: GS, stats: GS_ENHANCEMENT_STATS, bar: ENHANCEMENT_BAR, options: { ...OLD_ENHANCEMENT, mana: 2623, imbue: 'windfury' } },
+  { id: 'enhancement-fs', spec: 'enhancement', name: 'Enhancement', talentString: '053503102-053030031005112251', source: FS, stats: GS_ENHANCEMENT_STATS, bar: ENHANCEMENT_BAR, options: { ...OLD_ENHANCEMENT, mana: 2623, imbue: 'windfury' } },
   { id: 'tank', spec: 'tank', name: 'Off-tank (experimental)', talentString: '05350013-050230031355112201', source: OURS, stats: OFFTANK_STATS, bar: TANK_BAR, options: { mana: 2900 }, tank: true },
 ];
 

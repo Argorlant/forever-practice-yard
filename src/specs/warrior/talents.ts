@@ -3,7 +3,7 @@
 // research/warrior_forever.md → Talents and Builds.
 import type { Binding, Stats } from '../../engine/types';
 import { decodeTalents, talentSplit, talentSummary } from '../common';
-import { ARMS_STATS, FURY_STATS, PROT_STATS } from './data';
+import { ARMS_STATS, FURY_STATS, GS_ARMS_STATS, GS_PROT_STATS, PROT_STATS } from './data';
 
 const TREES = [
   ['improvedHeroicStrike', 'deflection', 'improvedRend', 'improvedCharge', 'improvedTacticalMastery', 'improvedOverpower',
@@ -80,9 +80,9 @@ export const BUILDS: Build[] = [
   { id: 'fury-dw', name: 'Fury, dual wield', talentString: '30305213002-15053105102210501', source: WS, rotation: 'fury', stance: 'berserker', stats: FURY_STATS, bar: FURY_BAR },
   { id: 'fury-sunder', name: 'Fury, keeps Sunder Armor up', talentString: '30305213002-15053105102210501', source: WS, rotation: 'fury', stance: 'berserker', stats: FURY_STATS, bar: FURY_BAR, options: { sunderDuty: true } },
   { id: 'arms-2h', name: 'Arms, two-hander', talentString: '30325213132515201-0505-2', source: WS, rotation: 'arms', stance: 'battle', stats: ARMS_STATS, bar: ARMS_BAR },
-  { id: 'fury-2h', name: 'Two-hand Bloodthirst', talentString: '20305203032-45050020152010501', source: COMMUNITY, rotation: 'twoHandBloodthirst', stance: 'berserker', stats: ARMS_STATS, bar: FURY_BAR },
+  { id: 'fury-2h', name: 'Two-hand Bloodthirst', talentString: '20305203032-45050020152010501', source: COMMUNITY, rotation: 'twoHandBloodthirst', stance: 'berserker', stats: GS_ARMS_STATS, bar: FURY_BAR },
   { id: 'prot', name: 'Protection', talentString: '35301003002-03-050530120301011351', source: WS, rotation: 'protection', stance: 'defensive', stats: PROT_STATS, bar: PROT_BAR, tank: true },
-  { id: 'prot-deep', name: 'Protection, deeper', talentString: '31-0501-255333120230021351', source: COMMUNITY, rotation: 'protection', stance: 'defensive', stats: PROT_STATS, bar: PROT_BAR, tank: true },
+  { id: 'prot-deep', name: 'Protection, deeper', talentString: '31-0501-255333120230021351', source: COMMUNITY, rotation: 'protection', stance: 'defensive', stats: GS_PROT_STATS, bar: PROT_BAR, tank: true },
 ];
 
 export const buildLabel = (b: Build) => `${b.name} ${talentSplit(b.talentString)} (${b.source})`;

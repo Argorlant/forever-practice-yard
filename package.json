@@ -14,6 +14,7 @@
     "model": "node tools/build_model.mjs",
     "icons": "node tools/icons.mjs && node tools/wow_icons.mjs",
     "talents": "node tools/talent_layout.mjs",
+    "gear": "node tools/gear_sheets.mjs",
     "test": "esbuild tools/engine_check.ts --bundle --platform=node --format=esm --log-level=warning --outfile=node_modules/.cache/engine_check.mjs && node node_modules/.cache/engine_check.mjs",
     "seo": "esbuild tools/seo_pages.ts --bundle --platform=node --format=esm --log-level=warning --outfile=node_modules/.cache/seo_pages.mjs && node node_modules/.cache/seo_pages.mjs"
   },

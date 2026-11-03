@@ -1,0 +1,606 @@
+{
+ "warrior-fury": {
+  "stats": {
+   "attackPower": 712,
+   "crit": 18.1,
+   "hit": 10.9,
+   "spellCrit": 6,
+   "expertise": 2,
+   "mainHand": {
+    "name": "Persuader",
+    "type": "mace",
+    "min": 89,
+    "max": 167,
+    "speed": 2.8
+   },
+   "offHand": {
+    "name": "Annihilator",
+    "type": "axe",
+    "min": 69,
+    "max": 129,
+    "speed": 2.4
+   }
+  },
+  "options": {}
+ },
+ "warrior-arms": {
+  "stats": {
+   "attackPower": 776,
+   "crit": 18.3,
+   "hit": 7.9,
+   "spellCrit": 6,
+   "expertise": 2,
+   "mainHand": {
+    "name": "Premier High Warlord's Greatsword",
+    "type": "sword",
+    "twoHand": true,
+    "min": 187,
+    "max": 281,
+    "speed": 3.8
+   },
+   "offHand": null
+  },
+  "options": {}
+ },
+ "warrior-prot": {
+  "stats": {
+   "attackPower": 562,
+   "crit": 8.9,
+   "hit": 3.3,
+   "spellCrit": 1,
+   "mainHand": {
+    "name": "Annihilator",
+    "type": "axe",
+    "min": 69,
+    "max": 129,
+    "speed": 2.4
+   },
+   "offHand": null,
+   "shield": true,
+   "tank": {
+    "health": 3449,
+    "armor": 5475,
+    "defense": 414.7,
+    "dodge": 12.5,
+    "parry": 9.6,
+    "block": 9.6,
+    "blockValue": 47
+   }
+  },
+  "options": {}
+ },
+ "rogue-combat": {
+  "stats": {
+   "attackPower": 657,
+   "crit": 19,
+   "hit": 11.7,
+   "spellCrit": 6,
+   "expertise": 2,
+   "mainHand": {
+    "name": "Persuader",
+    "type": "mace",
+    "min": 89,
+    "max": 167,
+    "speed": 2.8
+   },
+   "offHand": {
+    "name": "Dark Iron Destroyer",
+    "type": "axe",
+    "min": 71,
+    "max": 134,
+    "speed": 2.4
+   }
+  },
+  "options": {}
+ },
+ "rogue-backstab": {
+  "stats": {
+   "attackPower": 657,
+   "crit": 18,
+   "hit": 10.7,
+   "spellCrit": 5,
+   "expertise": 2,
+   "mainHand": {
+    "name": "The Lobotomizer",
+    "type": "dagger",
+    "min": 54,
+    "max": 102,
+    "speed": 1.8
+   },
+   "offHand": {
+    "name": "Dark Iron Destroyer",
+    "type": "axe",
+    "min": 71,
+    "max": 134,
+    "speed": 2.4
+   }
+  },
+  "options": {}
+ },
+ "rogue-mutilate": {
+  "stats": {
+   "attackPower": 647,
+   "crit": 18,
+   "hit": 10.7,
+   "spellCrit": 5,
+   "expertise": 2,
+   "mainHand": {
+    "name": "The Lobotomizer",
+    "type": "dagger",
+    "min": 54,
+    "max": 102,
+    "speed": 1.8
+   },
+   "offHand": {
+    "name": "Black Amnesty",
+    "type": "dagger",
+    "min": 53,
+    "max": 100,
+    "speed": 1.6
+   }
+  },
+  "options": {}
+ },
+ "rogue-sub-backstab": {
+  "stats": {
+   "attackPower": 657,
+   "crit": 18,
+   "hit": 10.7,
+   "spellCrit": 5,
+   "expertise": 2,
+   "mainHand": {
+    "name": "The Lobotomizer",
+    "type": "dagger",
+    "min": 54,
+    "max": 102,
+    "speed": 1.8
+   },
+   "offHand": {
+    "name": "Dark Iron Destroyer",
+    "type": "axe",
+    "min": 71,
+    "max": 134,
+    "speed": 2.4
+   }
+  },
+  "options": {}
+ },
+ "hunter-ranged": {
+  "stats": {
+   "attackPower": 692,
+   "crit": 8.6,
+   "hit": 3.7,
+   "spellCrit": 6.8,
+   "expertise": 2,
+   "mainHand": {
+    "name": "Legionite Glaive",
+    "type": "polearm",
+    "twoHand": true,
+    "min": 138,
+    "max": 207,
+    "speed": 3.2
+   },
+   "offHand": null,
+   "rangedAttackPower": 970,
+   "ranged": {
+    "name": "Fahrad's Reloading Repeater",
+    "type": "crossbow",
+    "min": 85,
+    "max": 128,
+    "speed": 3.2
+   },
+   "ammoDps": 17.5,
+   "rangedHaste": 1.15
+  },
+  "options": {
+   "mana": 3450,
+   "spirit": 138,
+   "mp5": 8
+  }
+ },
+ "hunter-melee": {
+  "stats": {
+   "attackPower": 645,
+   "crit": 9.5,
+   "hit": 2.7,
+   "spellCrit": 7.8,
+   "expertise": 2,
+   "mainHand": {
+    "name": "Annihilator",
+    "type": "axe",
+    "min": 69,
+    "max": 129,
+    "speed": 2.4
+   },
+   "offHand": {
+    "name": "Heartseeker",
+    "type": "dagger",
+    "min": 55,
+    "max": 102,
+    "speed": 1.9
+   },
+   "rangedAttackPower": 956,
+   "ranged": {
+    "name": "Fahrad's Reloading Repeater",
+    "type": "crossbow",
+    "min": 85,
+    "max": 128,
+    "speed": 3.2
+   },
+   "ammoDps": 17.5,
+   "rangedHaste": 1.15
+  },
+  "options": {
+   "mana": 3450,
+   "spirit": 138,
+   "mp5": 8
+  }
+ },
+ "mage": {
+  "stats": {
+   "attackPower": 20,
+   "crit": 11,
+   "hit": 2,
+   "spellCrit": 11.7,
+   "spellPower": 342,
+   "mainHand": {
+    "name": "Grand Marshal's Mageblade",
+    "type": "dagger",
+    "min": 55,
+    "max": 103,
+    "speed": 2
+   },
+   "offHand": null,
+   "health": 3210
+  },
+  "options": {
+   "mana": 5883,
+   "spirit": 227,
+   "mp5": 8
+  }
+ },
+ "warlock-affliction": {
+  "stats": {
+   "attackPower": 35,
+   "crit": 6,
+   "hit": 1,
+   "spellCrit": 7.2,
+   "spellPower": 290,
+   "mainHand": {
+    "name": "Shivsprocket's Shiv",
+    "type": "dagger",
+    "min": 29,
+    "max": 56,
+    "speed": 1.5
+   },
+   "offHand": null,
+   "health": 3364
+  },
+  "options": {
+   "mana": 4738,
+   "spirit": 212,
+   "mp5": 16
+  }
+ },
+ "warlock-wrack": {
+  "stats": {
+   "attackPower": 38,
+   "crit": 4.9,
+   "hit": 1,
+   "spellCrit": 6.2,
+   "spellPower": 290,
+   "mainHand": {
+    "name": "Shivsprocket's Shiv",
+    "type": "dagger",
+    "min": 29,
+    "max": 56,
+    "speed": 1.5
+   },
+   "offHand": null,
+   "health": 3384
+  },
+  "options": {
+   "mana": 4693,
+   "spirit": 196,
+   "mp5": 16
+  }
+ },
+ "warlock-destruction": {
+  "stats": {
+   "attackPower": 35,
+   "crit": 6,
+   "hit": 1,
+   "spellCrit": 7.2,
+   "spellPower": 290,
+   "mainHand": {
+    "name": "Shivsprocket's Shiv",
+    "type": "dagger",
+    "min": 29,
+    "max": 56,
+    "speed": 1.5
+   },
+   "offHand": null,
+   "health": 3364
+  },
+  "options": {
+   "mana": 4738,
+   "spirit": 212,
+   "mp5": 16
+  }
+ },
+ "priest-shadow": {
+  "stats": {
+   "attackPower": 24,
+   "crit": 8.4,
+   "hit": 1,
+   "spellCrit": 7,
+   "spellPower": 206,
+   "spellPowerBySchool": {
+    "frost": 40,
+    "shadow": 251
+   },
+   "mainHand": {
+    "name": "Verimonde's Last Resort",
+    "type": "dagger",
+    "min": 28,
+    "max": 53,
+    "speed": 1.4
+   },
+   "offHand": null,
+   "health": 2327
+  },
+  "options": {
+   "mana": 3541,
+   "spirit": 156,
+   "mp5": 0
+  }
+ },
+ "priest-smite": {
+  "stats": {
+   "attackPower": 24,
+   "crit": 6.4,
+   "hit": 0,
+   "spellCrit": 6.1,
+   "spellPower": 243,
+   "spellPowerBySchool": {
+    "holy": 32,
+    "shadow": 23
+   },
+   "mainHand": {
+    "name": "Wisepaw Totem",
+    "type": "staff",
+    "twoHand": true,
+    "min": 94,
+    "max": 142,
+    "speed": 3.2
+   },
+   "offHand": null,
+   "health": 2197
+  },
+  "options": {
+   "mana": 4531,
+   "spirit": 223,
+   "mp5": 18
+  }
+ },
+ "paladin-ret": {
+  "stats": {
+   "attackPower": 718,
+   "crit": 14.5,
+   "hit": 7,
+   "spellCrit": 14.9,
+   "expertise": 2,
+   "spellPower": 100,
+   "spellPowerBySchool": {
+    "shadow": 15
+   },
+   "mainHand": {
+    "name": "Arcanite Reaper",
+    "type": "axe",
+    "twoHand": true,
+    "min": 153,
+    "max": 256,
+    "speed": 3.8
+   },
+   "offHand": null
+  },
+  "options": {
+   "mana": 3392,
+   "spirit": 111,
+   "mp5": 20
+  }
+ },
+ "paladin-shock": {
+  "stats": {
+   "attackPower": 432,
+   "crit": 6.3,
+   "hit": 5.2,
+   "spellCrit": 8.8,
+   "expertise": 2,
+   "spellPower": 236,
+   "spellPowerBySchool": {
+    "holy": 39
+   },
+   "mainHand": {
+    "name": "Shin Blade",
+    "type": "sword",
+    "twoHand": true,
+    "min": 84,
+    "max": 127,
+    "speed": 2.2
+   },
+   "offHand": null
+  },
+  "options": {
+   "mana": 4667,
+   "spirit": 160,
+   "mp5": 0
+  }
+ },
+ "paladin-prot": {
+  "stats": {
+   "attackPower": 598,
+   "crit": 5.2,
+   "hit": 3.3,
+   "spellCrit": 6.1,
+   "spellPower": 92,
+   "mainHand": {
+    "name": "Dark Iron Destroyer",
+    "type": "axe",
+    "min": 71,
+    "max": 134,
+    "speed": 2.4
+   },
+   "offHand": null,
+   "shield": true,
+   "tank": {
+    "health": 3811,
+    "armor": 6918,
+    "defense": 361,
+    "dodge": 7.7,
+    "parry": 7.4,
+    "block": 7.4,
+    "blockValue": 69
+   }
+  },
+  "options": {
+   "mana": 2627,
+   "spirit": 82,
+   "mp5": 4
+  }
+ },
+ "shaman-elemental": {
+  "stats": {
+   "attackPower": 272,
+   "crit": 8.2,
+   "hit": 2,
+   "spellCrit": 9.1,
+   "spellPower": 365,
+   "spellPowerBySchool": {
+    "arcane": 15,
+    "fire": 15,
+    "nature": 45
+   },
+   "mainHand": {
+    "name": "Verimonde's Last Resort",
+    "type": "dagger",
+    "min": 28,
+    "max": 53,
+    "speed": 1.4
+   },
+   "offHand": null,
+   "health": 2490
+  },
+  "options": {
+   "mana": 4210,
+   "spirit": 136,
+   "mp5": 0
+  }
+ },
+ "shaman-enhancement": {
+  "stats": {
+   "attackPower": 378,
+   "crit": 8.5,
+   "hit": 4.9,
+   "spellCrit": 10.5,
+   "spellPower": 286,
+   "spellPowerBySchool": {
+    "arcane": 15,
+    "fire": 15,
+    "nature": 35
+   },
+   "mainHand": {
+    "name": "Stormcarver",
+    "type": "axe",
+    "twoHand": true,
+    "min": 155,
+    "max": 233,
+    "speed": 3.6
+   },
+   "offHand": null,
+   "health": 3090
+  },
+  "options": {
+   "mana": 5005,
+   "spirit": 160,
+   "mp5": 12
+  }
+ },
+ "druid-balance": {
+  "stats": {
+   "attackPower": 104,
+   "crit": 6.2,
+   "hit": 2,
+   "spellCrit": 6.9,
+   "spellPower": 454,
+   "spellPowerBySchool": {
+    "arcane": 20
+   },
+   "mainHand": {
+    "name": "Wisepaw Totem",
+    "type": "staff",
+    "twoHand": true,
+    "min": 94,
+    "max": 142,
+    "speed": 3.2
+   },
+   "offHand": null
+  },
+  "options": {
+   "mana": 3709,
+   "spirit": 139,
+   "mp5": 4
+  }
+ },
+ "druid-cat": {
+  "stats": {
+   "attackPower": 795,
+   "crit": 20.5,
+   "hit": 3.4,
+   "spellCrit": 8.5,
+   "mainHand": {
+    "name": "Cat attack (The Unstoppable Force, 56.6 DPS)",
+    "type": "fist",
+    "min": 45,
+    "max": 68,
+    "speed": 1
+   },
+   "offHand": null
+  },
+  "options": {
+   "mana": 2449,
+   "spirit": 126,
+   "mp5": 0
+  }
+ },
+ "druid-bear": {
+  "stats": {
+   "attackPower": 468,
+   "crit": 18.9,
+   "hit": 2.7,
+   "spellCrit": 7.4,
+   "mainHand": {
+    "name": "Bear attack (Premier Grand Marshal's Battle Hammer, 61.5 DPS)",
+    "type": "mace",
+    "min": 123,
+    "max": 185,
+    "speed": 2.5
+   },
+   "offHand": null,
+   "tank": {
+    "health": 4896,
+    "armor": 6522,
+    "defense": 305,
+    "dodge": 17.2,
+    "parry": 0,
+    "block": 0,
+    "blockValue": 0
+   }
+  },
+  "options": {
+   "mana": 2389,
+   "spirit": 112,
+   "mp5": 0
+  }
+ }
+}

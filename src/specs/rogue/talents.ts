@@ -3,7 +3,7 @@
 // '-'; the order is WoWSims Forever's (proto/rogue.proto).
 // See research/rogue_forever.json → talents and builds.
 import type { Binding, Stats } from '../../engine/types';
-import { DAGGER_STATS, STATS } from './data';
+import { BACKSTAB_STATS, COMBAT_STATS, DAGGER_STATS, MUTILATE_STATS, STATS, SUB_BACKSTAB_STATS } from './data';
 
 const TREES = [
   // Assassination
@@ -100,6 +100,8 @@ const MUTILATE_BAR = bar(['mutilate', 'eviscerate', 'sliceAndDice', 'rupture', '
   'kick', 'kidneyShot', 'gouge', 'feint', 'stealth', 'garrote', 'sprint', 'vanish']);
 const SUB_BACKSTAB_BAR = bar(['backstab', 'eviscerate', 'sliceAndDice', 'rupture', 'hemorrhage', 'premeditation', 'preparation', 'ambush',
   'kick', 'kidneyShot', 'thistleTea', 'feint', 'stealth', 'garrote', 'sprint', 'vanish']);
+const HEMO_SWORDS_BAR = bar(['hemorrhage', 'eviscerate', 'sliceAndDice', 'rupture', 'premeditation', 'preparation', 'thistleTea', 'coldBlood',
+  'kick', 'kidneyShot', 'gouge', 'feint', 'stealth', 'garrote', 'sprint', 'vanish']);
 const HEMO_BAR = bar(['hemorrhage', 'eviscerate', 'sliceAndDice', 'rupture', 'ghostlyStrike', 'premeditation', 'preparation', 'thistleTea',
   'kick', 'kidneyShot', 'garrote', 'feint', 'stealth', 'ambush', 'sprint', 'vanish']);
 
@@ -109,15 +111,15 @@ const GS = 'community, from gunba/wow-forever-sim';
 const FS = 'community, from foreversim';
 
 export const BUILDS: Build[] = [
-  { id: 'combat-gs', name: 'Combat Swords', source: WS, talentString: '005323101012-32030320201515231', rotation: 'combat', stats: STATS, bar: COMBAT_BAR },
+  { id: 'combat-gs', name: 'Combat Sinister Strike', source: WS, talentString: '005323101012-32030320201515231', rotation: 'combat', stats: COMBAT_STATS, bar: COMBAT_BAR },
   { id: 'combat-fs', name: 'Combat Swords', source: FS, talentString: '00530310501-32003311201515231', rotation: 'combat', stats: STATS, bar: COMBAT_BAR },
   { id: 'combat-iea', name: 'Combat, Improved Expose Armor', source: GS, talentString: '005303125-32003311201515131', rotation: 'combatIea', stats: STATS, bar: COMBAT_BAR, options: { exposeArmorDuty: true } },
-  { id: 'combat-backstab', name: 'Combat Backstab', source: WS, talentString: '00532310101-32030320201515231-002', rotation: 'backstab', stats: DAGGER_STATS, bar: BACKSTAB_BAR },
-  { id: 'mutilate-gs', name: 'Mutilate, Assassination', source: WS, talentString: '00532310151501031-302303202014', rotation: 'mutilate', stats: DAGGER_STATS, bar: MUTILATE_BAR },
-  { id: 'mutilate-combat', name: 'Mutilate, Combat', source: WS, talentString: '00532310101401-302303202015152-001', rotation: 'mutilate', stats: DAGGER_STATS, bar: MUTILATE_BAR },
+  { id: 'combat-backstab', name: 'Combat Backstab', source: WS, talentString: '00532310101-32030320201515231-002', rotation: 'backstab', stats: BACKSTAB_STATS, bar: BACKSTAB_BAR },
+  { id: 'mutilate-gs', name: 'Mutilate, Assassination', source: WS, talentString: '00532310151501031-302303202014', rotation: 'mutilate', stats: MUTILATE_STATS, bar: MUTILATE_BAR },
+  { id: 'mutilate-combat', name: 'Mutilate, Combat', source: WS, talentString: '00532310101401-302303202015152-001', rotation: 'mutilate', stats: MUTILATE_STATS, bar: MUTILATE_BAR },
   { id: 'mutilate-fs', name: 'Mutilate', source: FS, talentString: '00530310551021051-302303202004', rotation: 'mutilate', stats: DAGGER_STATS, bar: MUTILATE_BAR },
-  { id: 'hemo-gs', name: 'Subtlety Hemorrhage', source: WS, talentString: '005323101014--4323200300013211501', rotation: 'hemorrhage', stats: DAGGER_STATS, bar: HEMO_BAR },
-  { id: 'sub-backstab', name: 'Subtlety Backstab', source: WS, talentString: '0053031-3203-4320203300013211051', rotation: 'backstab', stats: DAGGER_STATS, bar: SUB_BACKSTAB_BAR },
+  { id: 'hemo-gs', name: 'Subtlety Hemorrhage', source: WS, talentString: '005323101014--4323200300013211501', rotation: 'hemorrhage', stats: COMBAT_STATS, bar: HEMO_SWORDS_BAR },
+  { id: 'sub-backstab', name: 'Subtlety Backstab', source: WS, talentString: '0053031-3203-4320203300013211051', rotation: 'backstab', stats: SUB_BACKSTAB_STATS, bar: SUB_BACKSTAB_BAR },
   { id: 'hemo-fs', name: 'Subtlety Hemorrhage', source: FS, talentString: '125320101--5320003310013211551', rotation: 'hemorrhage', stats: DAGGER_STATS, bar: HEMO_BAR },
 ];
 

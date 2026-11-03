@@ -4,6 +4,13 @@
 //   provisional = a sim choice with no Forever source yet
 //   classic    = Forever says nothing; the sims keep Classic's value
 import type { AttackRules, Stats } from '../../engine/types';
+import { sheet } from '../gear';
+
+/** WoWSims Forever's gear, one set per way of fighting. */
+export const COMBAT_STATS = sheet('rogue-combat');
+export const BACKSTAB_STATS = sheet('rogue-backstab');
+export const MUTILATE_STATS = sheet('rogue-mutilate');
+export const SUB_BACKSTAB_STATS = sheet('rogue-sub-backstab');
 
 /** Attack table against a level 63 boss. Measured on the beta (magey) unless noted. */
 export const RULES: AttackRules = {

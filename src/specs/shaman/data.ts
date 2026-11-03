@@ -4,6 +4,11 @@
 //   provisional = a sim choice with no Forever source yet
 //   classic     = Forever says nothing; the sims keep Classic's value
 import type { Stats } from '../../engine/types';
+import { sheet } from '../gear';
+
+/** WoWSims Forever's gear. The sheets marked GS are the older sims', for the community builds. */
+export const ELEMENTAL_STATS = sheet('shaman-elemental');
+export const ENHANCEMENT_STATS = sheet('shaman-enhancement');
 
 const PERSUADER = { name: 'Persuader', type: 'mace' as const, min: 89, max: 167, speed: 2.8 };
 
@@ -13,17 +18,17 @@ const PERSUADER = { name: 'Persuader', type: 'mace' as const, min: 89, max: 167,
  * added from the talents. Spell power includes Mental Quickness where the
  * build has it, attack power Mental Dexterity (both scale with Intellect).
  */
-export const ELEMENTAL_STATS: Stats = {
+export const GS_ELEMENTAL_STATS: Stats = {
   attackPower: 296, crit: 9.3, hit: 6.9, spellCrit: 10.8,
   spellPower: 228, spellPowerBySchool: { nature: 10 },
   mainHand: PERSUADER, offHand: null, shield: true, health: 2510,
 };
 /** Stormcaller: the same gear; Mental Quickness turns 30 % of Intellect into spell power, Mental Dexterity 100 % into attack power. */
 export const STORMCALLER_STATS: Stats = {
-  ...ELEMENTAL_STATS, attackPower: 517, spellCrit: 11.0, spellPower: 294,
+  ...GS_ELEMENTAL_STATS, attackPower: 517, spellCrit: 11.0, spellPower: 294,
 };
 /** Enhancement: Forest Defender's Axe (two-handed), Orc (no Savage at launch: its +1 % crit is gone since Oct 26). */
-export const ENHANCEMENT_STATS: Stats = {
+export const GS_ENHANCEMENT_STATS: Stats = {
   attackPower: 732, crit: 12.5, hit: 4.9, spellCrit: 7.9,
   spellPower: 56,
   mainHand: { name: "Forest Defender's Axe", type: 'axe', twoHand: true, min: 162, max: 244, speed: 3.3 },

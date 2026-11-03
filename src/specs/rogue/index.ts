@@ -4,7 +4,7 @@
 import type { Combat } from '../../engine/combat';
 import type { Ability, Hand, Hit, Outcome, Spec, Unit, Weapon } from '../../engine/types';
 import { UI } from '../../strings';
-import { DATA, NORMALIZED_SPEED, RAID_STATS, RULES, STATS } from './data';
+import { COMBAT_STATS, DATA, MUTILATE_STATS, NORMALIZED_SPEED, RAID_STATS, RULES } from './data';
 import { BUILDS, buildById, buildLabel, summary, talentsFor, type Talents } from './talents';
 
 const D = DATA;
@@ -830,11 +830,11 @@ export const rogue: Spec = {
   resource: 'energy',
   comboPoints: true,
   abilities,
-  stats: STATS,
+  stats: COMBAT_STATS,
   rules: RULES,
   presets: [
-    { name: 'Swords and mace, unbuffed', stats: STATS },
-    { name: 'Daggers, unbuffed', stats: BUILDS.find((b) => b.rotation === 'backstab')!.stats },
+    { name: 'Mace and axe, unbuffed', stats: COMBAT_STATS },
+    { name: 'Daggers, unbuffed', stats: MUTILATE_STATS },
     { name: 'Raid-buffed, PvP swords', stats: RAID_STATS },
   ],
   builds: BUILDS.map((b) => ({ id: b.id, label: buildLabel(b), name: b.name, source: b.source, talentString: b.talentString, stats: b.stats, bar: b.bar, options: b.options, trees: summary(talentsFor(b.id)) })),

@@ -4,23 +4,15 @@
 //   provisional = a sim choice with no Forever source yet
 //   classic     = Forever says nothing; the sims keep Classic's value
 import type { Stats } from '../../engine/types';
+import { sheet } from '../gear';
 
-/**
- * Fury: gunba/wow-forever-sim's UI default (Human, real Forever items),
- * unbuffed. Crit is Agility + gear + Human Ruthless (+1 % with any weapon at launch, Oct 26; was 2 %
- * since Oct 15, was the sword racial); Cruelty and Berserker Stance go on top.
- */
-export const FURY_STATS: Stats = {
-  attackPower: 784,
-  crit: 15.2,   // Agility 7.15 + gear 7 + Human Ruthless 1
-  hit: 9.9,     // gear
-  spellCrit: 0,
-  mainHand: { name: 'Ironwood Blade', type: 'sword', min: 79, max: 148, speed: 2.4 },
-  offHand: { name: 'Persuader', type: 'mace', min: 89, max: 167, speed: 2.8 },
-};
+/** WoWSims Forever's Pre-BiS gear. */
+export const FURY_STATS = sheet('warrior-fury');
+export const ARMS_STATS = sheet('warrior-arms');
+export const PROT_STATS = sheet('warrior-prot');
 
-/** Arms: gunba's UI default (Human), a two-handed polearm, unbuffed. */
-export const ARMS_STATS: Stats = {
+/** The older sims' sheets, for the community builds. Arms: gunba's UI default (Human), a two-handed polearm, unbuffed. */
+export const GS_ARMS_STATS: Stats = {
   attackPower: 838,
   crit: 15.2,   // Agility 7.15 + gear 7 + Human Ruthless 1 (launch racials, Oct 26; Weaponmaster adds the polearm crit)
   hit: 7.9,
@@ -34,7 +26,7 @@ export const ARMS_STATS: Stats = {
  * sheet for the dummy demo (hypothetical gear). Crit and hit are an
  * assumption: the sims publish none for an unbuffed tank.
  */
-export const PROT_STATS: Stats = {
+export const GS_PROT_STATS: Stats = {
   attackPower: 1400,
   crit: 10,
   hit: 6,

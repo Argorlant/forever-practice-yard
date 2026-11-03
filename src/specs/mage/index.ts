@@ -7,7 +7,8 @@ import type { Combat } from '../../engine/combat';
 import type { Spec } from '../../engine/types';
 import { BOSS_RULES, CONTROLS } from '../common';
 import { ABILITIES, D, SOURCES, T, abStacks, chances, prepare, regen, stacksOf } from './core';
-import { ARCANE_STATS, FIRE_STATS, FROST_STATS } from './data';
+import { gearOptions } from '../gear';
+import { MAGE_STATS } from './data';
 import { buildLabel, buildsFor, summary, talentsFor, type MageSpec } from './talents';
 
 type Row = { label: string; value: string; good?: boolean };
@@ -128,8 +129,8 @@ function arcaneReview(c: Combat): Row[] {
 export const mageArcane: Spec = specFor('arcane', {
   id: 'mage-arcane',
   specName: 'Arcane',
-  stats: ARCANE_STATS,
-  defaultOptions: { build: 'arcane', mana: 4530, spirit: D.spirit, mp5: D.mp5, lockMana: false },
+  stats: MAGE_STATS,
+  defaultOptions: { build: 'arcane', ...gearOptions('mage'), lockMana: false },
   options: OPTIONS,
   lowMana: (c) => c.cost(c.ability('arcaneBlast')!),
   welcome: 'Welcome to Arcane practice (WoW Forever after the Oct 15 patch). Each Arcane Blast costs more and gives you spell damage for 15 sec. Arcane Missiles at once when Missile Barrage lights them, Arcane Wrath on cooldown with Presence of Mind, Fire Blast, and Arcane Blast as the filler; Arcane Power with Barrage or Wrath.',
@@ -209,8 +210,8 @@ function fireReview(c: Combat): Row[] {
 export const mageFire: Spec = specFor('fire', {
   id: 'mage-fire',
   specName: 'Fire',
-  stats: FIRE_STATS,
-  defaultOptions: { build: 'fire', mana: 4218, spirit: D.spirit, mp5: D.mp5, lockMana: false, fireFiller: 'scorch' },
+  stats: MAGE_STATS,
+  defaultOptions: { build: 'fire', ...gearOptions('mage'), lockMana: false, fireFiller: 'scorch' },
   options: [...OPTIONS, {
     key: 'fireFiller', name: 'Filler spell', kind: 'choice',
     choices: [{ value: 'scorch', label: 'Scorch (gunba: fast crits for Heating Up)' }, { value: 'fireball', label: 'Fireball (foreversim)' }, { value: 'frostfire', label: 'Frostfire Bolt (Fire/Frost builds)' }],
@@ -269,8 +270,8 @@ function frostReview(c: Combat): Row[] {
 export const mageFrost: Spec = specFor('frost', {
   id: 'mage-frost',
   specName: 'Frost',
-  stats: FROST_STATS,
-  defaultOptions: { build: 'frost', mana: 4203, spirit: D.spirit, mp5: D.mp5, lockMana: false },
+  stats: MAGE_STATS,
+  defaultOptions: { build: 'frost', ...gearOptions('mage'), lockMana: false },
   options: OPTIONS,
   lowMana: (c) => c.cost(c.ability('frostbolt')!),
   welcome: 'Welcome to Frost practice. Frostbolt is your spell; Fingers of Frost (15% per Frostbolt) gives two charges that make Ice Lance hit four times as hard and crit far more (8 sec cooldown since Oct 30). Winter\'s Chill stacks from Frostbolt and Fingers of Frost Ice Lances for Cone of Cold: stand within 10 yards and cast it at full stacks. Keep Ice Barrier up: Frigid Power +15% Frost damage, and +5% more while the shield holds. The Arcane-Frost build also fires Arcane Missiles on Missile Barrage and keeps Arcane Blast\'s stacks up.',

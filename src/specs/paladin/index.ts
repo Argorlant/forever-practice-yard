@@ -8,6 +8,7 @@ import { BOSS_RULES, CONTROLS } from '../common';
 import {
   ABILITIES, D, SOURCES, T, chances, currentSeal, executePhase, onCooldown, prepare, regen, sealLeft, storedSeal, undeadDummy,
 } from './core';
+import { gearOptions } from '../gear';
 import { PROT_STATS, RET_STATS, SHOCK_STATS } from './data';
 import { buildLabel, buildsFor, summary, talentsFor, type PaladinSpec } from './talents';
 
@@ -42,7 +43,7 @@ function specFor(spec: PaladinSpec, base: Omit<Spec, 'abilities' | 'rules' | 'pr
     resource: 'mana',
     abilities: ABILITIES,
     rules: BOSS_RULES,
-    builds: buildsFor(spec).map((b) => ({ id: b.id, label: buildLabel(b), name: b.name, source: b.source, talentString: b.talentString, stats: b.stats, bar: b.bar, tank: b.tank, trees: summary(talentsFor(b.id, spec)) })),
+    builds: buildsFor(spec).map((b) => ({ id: b.id, label: buildLabel(b), name: b.name, source: b.source, talentString: b.talentString, stats: b.stats, bar: b.bar, options: b.options, tank: b.tank, trees: summary(talentsFor(b.id, spec)) })),
     bar: buildsFor(spec)[0].bar,
     sources: SOURCES,
     prepare,
@@ -120,7 +121,7 @@ export const paladinRet: Spec = specFor('ret', {
   id: 'paladin-ret',
   specName: 'Retribution',
   stats: RET_STATS,
-  defaultOptions: { build: 'ret', mana: 4235, spirit: 100, mp5: 0, lockMana: false, undeadDummy: false },
+  defaultOptions: { build: 'ret', ...gearOptions('paladin-ret'), lockMana: false, undeadDummy: false },
   options: MANA_OPTIONS,
   sheet: { spellCrit: 'Spell crit (gear + Intellect)', spellPower: 'Spell power (Holy)' },
   lowMana: (c) => c.cost(c.ability('sealOfRighteousness')!),
@@ -188,7 +189,7 @@ export const paladinProt: Spec = specFor('prot', {
   tank: true,
   tankDamage: 3000,
   stats: PROT_STATS,
-  defaultOptions: { build: 'prot', mana: 4000, spirit: 100, mp5: 0, lockMana: false, undeadDummy: false },
+  defaultOptions: { build: 'prot', ...gearOptions('paladin-prot'), lockMana: false, undeadDummy: false },
   options: MANA_OPTIONS,
   sheet: { spellCrit: 'Spell crit (gear + Intellect)', spellPower: 'Spell power (Holy)' },
   lowMana: (c) => c.cost(c.ability('holyShield')!),
@@ -251,7 +252,7 @@ export const paladinShock: Spec = specFor('shock', {
   id: 'paladin-shock',
   specName: 'Shockadin',
   stats: SHOCK_STATS,
-  defaultOptions: { build: 'shockadin', mana: 4235, spirit: 100, mp5: 0, lockMana: false, undeadDummy: false },
+  defaultOptions: { build: 'shockadin', ...gearOptions('paladin-shock'), lockMana: false, undeadDummy: false },
   options: MANA_OPTIONS,
   sheet: { spellCrit: 'Spell crit (gear + Intellect)', spellPower: 'Spell power (Holy)' },
   lowMana: (c) => c.cost(c.ability('holyShock')!),

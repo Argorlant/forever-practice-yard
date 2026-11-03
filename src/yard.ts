@@ -23,6 +23,7 @@ import { createWorld } from './scene/world';
 import { SPECS, specById } from './specs';
 import { UI, fmt } from './strings';
 import { Floaters } from './ui/floaters';
+import { isOldSheet } from './specs/gear';
 import { addMissing, dropMissing, expandBar, fillExtraRows, noButton, slotShown } from './ui/bars';
 import { Hud } from './ui/hud';
 import { SettingsDialog, claimKey, defaultPrefs, type Prefs } from './ui/settings';
@@ -93,6 +94,12 @@ function loadPrefs(): Prefs {
 let refillRows = !load(PREFS_KEY);
 let prefs = loadPrefs();
 const persist = () => save(PREFS_KEY, prefs);
+const PATCH = '2026-11-03';
+// The builds' gear follows WoWSims Forever: a sheet nobody edited moves to its build's new one, a sheet of your own stays.
+if (prefs.patch !== PATCH && isOldSheet(prefs.stats)) {
+  const build = spec.builds?.find((b) => b.id === prefs.options.build);
+  if (build) { prefs.stats = structuredClone(build.stats); Object.assign(prefs.options, build.options ?? {}); }
+}
 // Talents of your own saved for older trees would read as other talents now.
 if (prefs.options.talents && prefs.options.talentsTree !== TREE_VERSION) prefs.options.talents = '';
 
@@ -559,7 +566,6 @@ applyEnemy();
 applyStats();
 combat.reset();
 /** The game update the yard follows: on the first visit after it, abilities it added get a button in an empty slot. */
-const PATCH = '2026-11-02.4';
 const newPatch = refillRows || prefs.patch !== PATCH;
 dropMissing(prefs.bar, combat);
 if (refillRows) { fillExtraRows(prefs.bar, combat); prefs.patch = PATCH; persist(); }

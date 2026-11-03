@@ -4,6 +4,12 @@
 //   provisional = a sim choice with no Forever source yet
 //   classic     = Forever says nothing; the sims keep Classic's value
 import type { Stats } from '../../engine/types';
+import { sheet } from '../gear';
+
+/** WoWSims Forever's gear. The sheets marked GS are the older sims', for the community builds. */
+export const CAT_STATS = sheet('druid-cat');
+export const BEAR_STATS = sheet('druid-bear');
+export const BALANCE_STATS = sheet('druid-balance');
 
 /**
  * Cat: gunba's UI default (Night Elf), unbuffed. In Forever a form swings
@@ -11,7 +17,7 @@ import type { Stats } from '../../engine/types';
  * "weapon" here is the Mithril Warhammer's DPS (32.6) at a 1.0 s swing.
  * AP is the cat sheet; crit is Agility + gear (talents are added on top).
  */
-export const CAT_STATS: Stats = {
+export const GS_CAT_STATS: Stats = {
   attackPower: 829,
   crit: 16.3,   // 0.9 base + Agility 257 / 20 + 2.5 gear
   hit: 3.9,     // gear (Nature's Reach adds 4 %)
@@ -24,7 +30,7 @@ export const CAT_STATS: Stats = {
  * Bear: the research's round demo sheet from gunba's ranked gear (hypothetical).
  * A bear swings every 2.5 s for weapon DPS x 2.5 + AP/14 x 2.5.
  */
-export const BEAR_STATS: Stats = {
+export const GS_BEAR_STATS: Stats = {
   attackPower: 900,
   crit: 16,     // Agility + gear (Sharpened Claws and Leader of the Pack are added on top)
   hit: 6,
@@ -35,7 +41,7 @@ export const BEAR_STATS: Stats = {
 };
 
 /** Balance: gunba's UI default moonkin (Night Elf), unbuffed. */
-export const BALANCE_STATS: Stats = {
+export const GS_BALANCE_STATS: Stats = {
   attackPower: 200,
   crit: 5,
   hit: 7.9,          // gear (Nature's Reach adds 4 %)

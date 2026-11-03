@@ -904,9 +904,9 @@ export const warrior: Spec = {
   stats: FURY_STATS,
   rules: BOSS_RULES,
   presets: [
-    { name: 'Fury: sword and mace', stats: FURY_STATS },
-    { name: 'Arms: two-handed polearm', stats: ARMS_STATS },
-    { name: 'Protection: sword and shield', stats: PROT_STATS },
+    { name: 'Fury: mace and axe', stats: FURY_STATS },
+    { name: 'Arms: two-handed sword', stats: ARMS_STATS },
+    { name: 'Protection: axe and shield', stats: PROT_STATS },
   ],
   builds: BUILDS.map((b) => ({ id: b.id, label: buildLabel(b), name: b.name, source: b.source, talentString: b.talentString, stats: b.stats, bar: b.bar, options: b.options, tank: b.tank, trees: summary(talentsFor(b.id)) })),
   defaultOptions: { build: BUILDS[0].id, sunderDuty: false },

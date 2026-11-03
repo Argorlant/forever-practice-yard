@@ -4,6 +4,11 @@
 //   provisional = a sim choice with no Forever source yet
 //   classic     = Forever says nothing; the sims keep Classic's value
 import type { Stats } from '../../engine/types';
+import { sheet } from '../gear';
+
+/** WoWSims Forever's gear. The sheets marked GS are the older sims', for the community builds. */
+export const SHADOW_STATS = sheet('priest-shadow');
+export const SMITE_STATS = sheet('priest-smite');
 
 const MACE = { name: 'Persuader', type: 'mace' as const, min: 89, max: 167, speed: 2.8 };
 
@@ -12,7 +17,7 @@ const MACE = { name: 'Persuader', type: 'mace' as const, min: 89, max: 167, spee
  * spell power 206 (178 for every school + 28 Shadow only), spell crit from
  * gear and Intellect, hit from gear (Shadow Focus adds 5 % to Shadow spells).
  */
-export const SHADOW_STATS: Stats = {
+export const GS_SHADOW_STATS: Stats = {
   attackPower: 100,
   crit: 5,
   hit: 7.9,
@@ -25,7 +30,7 @@ export const SHADOW_STATS: Stats = {
 };
 
 /** Smite: the same gear with the Holy pieces: Holy spell power 205 (192 + 13 Holy only). Holy Specialization adds crit on top. */
-export const SMITE_STATS: Stats = {
+export const GS_SMITE_STATS: Stats = {
   attackPower: 100,
   crit: 5,
   hit: 7.9,

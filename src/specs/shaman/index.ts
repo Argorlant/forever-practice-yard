@@ -7,6 +7,7 @@ import type { Combat } from '../../engine/combat';
 import type { Spec } from '../../engine/types';
 import { BOSS_RULES, CONTROLS } from '../common';
 import { ABILITIES, D, SOURCES, T, chances, fireTotem, imbue, maelstromStacks, nearFireTotem, prepare, regen } from './core';
+import { gearOptions } from '../gear';
 import { ELEMENTAL_STATS, ENHANCEMENT_STATS, OFFTANK_STATS } from './data';
 import { buildLabel, buildsFor, summary, talentsFor, type ShamanSpec } from './talents';
 
@@ -222,7 +223,7 @@ export const shamanElemental: Spec = specFor('elemental', {
   id: 'shaman-elemental',
   specName: 'Elemental',
   stats: ELEMENTAL_STATS,
-  defaultOptions: { build: 'elemental-fs', mana: 4376, spirit: D.spirit.elemental, mp5: D.mp5.elemental, lockMana: false },
+  defaultOptions: { build: 'elemental-fs', ...gearOptions('shaman-elemental'), lockMana: false },
   options: OPTIONS,
   sheet: { attackPower: false, crit: false, spellCrit: 'Spell crit (gear + Intellect; Thundering Strikes adds on top)', spellPower: 'Spell damage (every school)', hit: 'Hit (gear; Tidal Focus adds on top)', mainHand: false, offHand: false },
   lowMana: (c) => c.cost(c.ability('lightningBolt')!),
@@ -240,7 +241,7 @@ export const shamanEnhancement: Spec = specFor('enhancement', {
   id: 'shaman-enhancement',
   specName: 'Enhancement',
   stats: ENHANCEMENT_STATS,
-  defaultOptions: { build: 'enhancement', mana: 2623, spirit: D.spirit.enhancement, mp5: D.mp5.enhancement, lockMana: false, imbue: 'flametongue', weaponMastery: false },
+  defaultOptions: { build: 'enhancement', ...gearOptions('shaman-enhancement'), lockMana: false, imbue: 'flametongue', weaponMastery: false },
   options: [...MELEE_OPTIONS, {
     key: 'imbue', name: 'Weapon imbue', kind: 'choice',
     choices: [{ value: 'flametongue', label: 'Flametongue Weapon (WoWSims Forever, with a Windfury Totem)' }, { value: 'windfury', label: 'Windfury Weapon (turns the raid Windfury Totem off for you)' }],

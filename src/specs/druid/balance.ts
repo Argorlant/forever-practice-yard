@@ -7,6 +7,7 @@ import type { Ability, Outcome, School, Spec, Unit } from '../../engine/types';
 import { MOONKIN_AURA } from '../../engine/raid';
 import { ENERGIZED } from '../racials';
 import { BOSS_RULES } from '../common';
+import { gearOptions } from '../gear';
 import { BALANCE_STATS } from './data';
 import { CONTROLS, D, SOURCES, YARD, barkskin, clearcasting, faerieFire, manaPotion, omen, resetState, roll, useClearcasting } from './shared';
 import { buildById, buildLabel, buildsFor, summary, talentsFor, type Talents } from './talents';
@@ -318,8 +319,8 @@ export const druidBalance: Spec = {
   abilities,
   stats: BALANCE_STATS,
   rules: BOSS_RULES,
-  builds: buildsFor('balance').map((b) => ({ id: b.id, label: buildLabel(b), name: b.name, source: b.source, talentString: b.talentString, stats: b.stats, bar: b.bar, trees: summary(talentsFor(b.id, 'balance')) })),
-  defaultOptions: { build: 'moonkin', mana: 4024, spirit: 123, mp5: 9, lockMana: false },
+  builds: buildsFor('balance').map((b) => ({ id: b.id, label: buildLabel(b), name: b.name, source: b.source, talentString: b.talentString, stats: b.stats, bar: b.bar, options: b.options, trees: summary(talentsFor(b.id, 'balance')) })),
+  defaultOptions: { build: 'moonkin', ...gearOptions('druid-balance'), lockMana: false },
   // Running out of mana is part of Balance: play with the raid's mana buffs on.
   defaultRaid: ['judgementOfWisdom', 'blessingOfWisdom', 'manaSpring'],
   prefsRevision: 2,

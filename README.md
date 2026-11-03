@@ -8,8 +8,9 @@ played Forever at level 60, a DPS number would only mislead. It works with keybo
 
 **Play it online:** https://argorlant.github.io/forever-practice-yard/
 
-Builds and priority lists follow [WoWSims Forever](https://www.wowsims.com/forever/) as of 2 November 2026 (commit
-`bac92db`; gear sheets and some numbers still come from the older sims): spells at the last trainer rank (the Ahn'Qiraj books need raids, which open on
+Builds, gear and priority lists follow [WoWSims Forever](https://www.wowsims.com/forever/) as of 2 November 2026 (commit
+`bac92db`; `npm run gear` works out the sheets, listed with their items in
+[`research/wowsims_gear.md`](research/wowsims_gear.md); some numbers still come from the older sims): spells at the last trainer rank (the Ahn'Qiraj books need raids, which open on
 9 December), raid buffs too; a boss without resistances resists no spell partly; the Mage's Frost tree without Piercing
 Ice; Human Ruthless at 1 % and no Orc Savage in the race sheets. The live hotfix of October 30 rebuilt the Druid, Mage
 and Paladin trees (and moved or renamed a Hunter and a Priest talent); the site's trees and their tooltips were read then
@@ -30,7 +31,7 @@ can crit, the Forever talent build (Hack and Slash, Flawless Execution) and Fore
 values. Every number and its source is in [`research/rogue_forever.md`](research/rogue_forever.md);
 values marked provisional there are still unconfirmed for Forever.
 
-Pick a talent build from the WoW Forever sims in Settings: Combat Swords,
+Pick a talent build from the WoW Forever sims in Settings: Combat Sinister Strike,
 Combat Backstab, Mutilate (Assassination and Combat), Subtlety Hemorrhage and Subtlety Backstab from WoWSims Forever, and older community builds.
 Each build brings its talents, weapons, action bar and the sims' priority list for the "next
 ability" glow (the rotation helper: the Helper button turns it off to play from memory). Raid options: keep Expose Armor up (when no warrior applies Sunder Armor) and

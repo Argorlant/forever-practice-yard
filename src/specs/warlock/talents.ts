@@ -2,7 +2,8 @@
 // generated from research/warlock_forever.json). See research/warlock_forever.md → Builds.
 import type { Binding, Stats } from '../../engine/types';
 import { decodeTalents, talentSplit, talentSummary } from '../common';
-import { AFFLICTION_STATS, DESTRUCTION_STATS, PACT_STATS, RUIN_STATS } from './data';
+import { gearOptions } from '../gear';
+import { AFFLICTION_STATS, DESTRUCTION_STATS, PACT_STATS, RUIN_STATS, WRACK_STATS } from './data';
 import { NAMES, NEW_IN_FOREVER, TREES, TREE_NAMES, type Talents } from './talents.gen';
 
 export type { Talents };
@@ -44,15 +45,15 @@ const GS = 'community, from gunba/wow-forever-sim';
 const FS_REENCODED = 'community, from foreversim, re-encoded to the Oct 15 tree';
 // Mana: 1093 + 15 x Intellect, x1.15 with Fel Vitality 3/3 (research → Default stats).
 export const BUILDS: Build[] = [
-  { id: 'affliction', spec: 'affliction', name: 'Affliction (Shadow Mastery and Ruin)', talentString: '2550002013520105--0550205003', source: WS, stats: AFFLICTION_STATS, bar: AFFLICTION_BAR, rotation: 'affliction', options: { mana: 4033 } },
-  { id: 'affliction-deep', spec: 'affliction', name: 'Affliction with Wrack', talentString: '25300020135201351--0550005003', source: WS, stats: AFFLICTION_STATS, bar: AFFLICTION_BAR, rotation: 'wrack', options: { mana: 4033 } },
+  { id: 'affliction', spec: 'affliction', name: 'Affliction (Shadow Mastery and Ruin)', talentString: '2550002013520105--0550205003', source: WS, stats: AFFLICTION_STATS, bar: AFFLICTION_BAR, rotation: 'affliction', options: { ...gearOptions('warlock-affliction') } },
+  { id: 'affliction-deep', spec: 'affliction', name: 'Affliction with Wrack', talentString: '25300020135201351--0550005003', source: WS, stats: WRACK_STATS, bar: AFFLICTION_BAR, rotation: 'wrack', options: { ...gearOptions('warlock-wrack') } },
   // The Imp sacrificed (+15 % Shadow) before the Succubus comes out.
-  { id: 'pact', spec: 'demonology', name: 'Demonic Pact (Shadow Brand)', talentString: '011-0005003231220301351-0550005003', source: WS, stats: PACT_STATS, bar: PACT_BAR, rotation: 'pact', options: { mana: 4638, sacrifice: 'imp' } },
+  { id: 'pact', spec: 'demonology', name: 'Demonic Pact (Shadow Brand)', talentString: '011-0005003231220301351-0550005003', source: WS, stats: PACT_STATS, bar: PACT_BAR, rotation: 'pact', options: { ...gearOptions('warlock-affliction'), sacrifice: 'imp' } },
   // The Succubus sacrificed (+15 % Fire) before the Imp comes out.
-  { id: 'pact-fire', spec: 'demonology', name: 'Demonic Pact (Fire Brand)', talentString: '011-0305003201220301351-0050055003', source: WS, stats: PACT_STATS, bar: PACT_BAR, rotation: 'fireBrand', options: { mana: 4638, sacrifice: 'succubus', demon: 'imp' } },
-  { id: 'fire', spec: 'destruction', name: 'Shadow and Flame', talentString: '2550002013--0050355103101351', source: WS, stats: DESTRUCTION_STATS, bar: FIRE_BAR, rotation: 'fire', options: { mana: 4153 } },
-  { id: 'ruin', spec: 'destruction', name: 'DS/Ruin', talentString: '254000001351-0025003001-0550005103', source: GS, stats: RUIN_STATS, bar: RUIN_BAR, rotation: 'ruin', options: { mana: 4638, sacrifice: 'imp' } },
-  { id: 'ruin-fs', spec: 'destruction', name: 'DS/Ruin with Pandemic', talentString: '25400010135201-0025003001-05500051', source: FS_REENCODED, stats: RUIN_STATS, bar: RUIN_BAR, rotation: 'ruin', options: { mana: 4638, sacrifice: 'imp' } },
+  { id: 'pact-fire', spec: 'demonology', name: 'Demonic Pact (Fire Brand)', talentString: '011-0305003201220301351-0050055003', source: WS, stats: PACT_STATS, bar: PACT_BAR, rotation: 'fireBrand', options: { ...gearOptions('warlock-affliction'), sacrifice: 'succubus', demon: 'imp' } },
+  { id: 'fire', spec: 'destruction', name: 'Shadow and Flame', talentString: '2550002013--0050355103101351', source: WS, stats: DESTRUCTION_STATS, bar: FIRE_BAR, rotation: 'fire', options: { ...gearOptions('warlock-destruction') } },
+  { id: 'ruin', spec: 'destruction', name: 'DS/Ruin', talentString: '254000001351-0025003001-0550005103', source: GS, stats: RUIN_STATS, bar: RUIN_BAR, rotation: 'ruin', options: { mana: 4638, spirit: 132, mp5: 9, sacrifice: 'imp' } },
+  { id: 'ruin-fs', spec: 'destruction', name: 'DS/Ruin with Pandemic', talentString: '25400010135201-0025003001-05500051', source: FS_REENCODED, stats: RUIN_STATS, bar: RUIN_BAR, rotation: 'ruin', options: { mana: 4638, spirit: 132, mp5: 9, sacrifice: 'imp' } },
 ];
 
 export const buildsFor = (spec: WarlockSpec) => BUILDS.filter((b) => b.spec === spec);

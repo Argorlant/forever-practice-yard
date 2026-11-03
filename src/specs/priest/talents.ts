@@ -4,7 +4,8 @@
 // See research/priest_forever.md.
 import type { Binding, Stats } from '../../engine/types';
 import { decodeTalents, talentSplit, talentSummary } from '../common';
-import { SHADOW_STATS, SMITE_STATS } from './data';
+import { gearOptions } from '../gear';
+import { DATA, GS_SHADOW_STATS, GS_SMITE_STATS, SHADOW_STATS, SMITE_STATS } from './data';
 
 const TREES = [
   ['powerInLight', 'wandSpecialization', 'twinDisciplines', 'silentResolve', 'holyPrecision', 'mentalStrength', 'martyrdom',
@@ -51,6 +52,7 @@ export interface Build {
   source: string;
   stats: Stats;
   bar: Binding[];
+  options?: Record<string, number>;
 }
 
 const KEYS = ['Digit1', 'Digit2', 'Digit3', 'Digit4', 'Digit5', 'Digit6', 'Digit7', 'Digit8',
@@ -66,13 +68,14 @@ const WS = 'wowsims/forever';
 /** Builds with no equivalent in WoWSims Forever: they stay, for whoever practises them. */
 const OLDER = 'community, from the older sims';
 const FS = 'community, from foreversim';
+const OLD = (mana: number) => ({ mana, spirit: DATA.spirit, mp5: DATA.mp5 });
 export const BUILDS: Build[] = [
-  { id: 'shadow', spec: 'shadow', name: 'Shadow', talentString: '00530300103-3-50042201251302051', source: WS, stats: SHADOW_STATS, bar: SHADOW_BAR },
-  { id: 'shadow-community', spec: 'shadow', name: 'Shadow, community build', talentString: '02530003101--55052201201302251', source: OLDER, stats: SHADOW_STATS, bar: SHADOW_BAR },
-  { id: 'shadow-fs', spec: 'shadow', name: 'Shadow', talentString: '00530320103--50052201251302051', source: FS, stats: SHADOW_STATS, bar: SHADOW_BAR },
-  { id: 'smite', spec: 'smite', name: 'Smite', talentString: '525235031030001001-30515100002-3', source: WS, stats: SMITE_STATS, bar: SMITE_BAR },
-  { id: 'smite-launch', spec: 'smite', name: 'Smite, launch preset', talentString: '515335031030001001-30505113002', source: OLDER, stats: SMITE_STATS, bar: SMITE_BAR },
-  { id: 'smite-hybrid', spec: 'smite', name: 'Smite with Mind Blast and Pain', talentString: '505030031030001-305051102120003-50002', source: 'our proposal', stats: SMITE_STATS, bar: SMITE_BAR },
+  { id: 'shadow', spec: 'shadow', name: 'Shadow', talentString: '00530300103-3-50042201251302051', source: WS, stats: SHADOW_STATS, bar: SHADOW_BAR, options: { ...gearOptions('priest-shadow') } },
+  { id: 'shadow-community', spec: 'shadow', name: 'Shadow, community build', talentString: '02530003101--55052201201302251', source: OLDER, stats: GS_SHADOW_STATS, bar: SHADOW_BAR, options: { ...OLD(4212) } },
+  { id: 'shadow-fs', spec: 'shadow', name: 'Shadow', talentString: '00530320103--50052201251302051', source: FS, stats: GS_SHADOW_STATS, bar: SHADOW_BAR, options: { ...OLD(4212) } },
+  { id: 'smite', spec: 'smite', name: 'Smite', talentString: '525235031030001001-30515100002-3', source: WS, stats: SMITE_STATS, bar: SMITE_BAR, options: { ...gearOptions('priest-smite') } },
+  { id: 'smite-launch', spec: 'smite', name: 'Smite, launch preset', talentString: '515335031030001001-30505113002', source: OLDER, stats: GS_SMITE_STATS, bar: SMITE_BAR, options: { ...OLD(4495) } },
+  { id: 'smite-hybrid', spec: 'smite', name: 'Smite with Mind Blast and Pain', talentString: '505030031030001-305051102120003-50002', source: 'our proposal', stats: GS_SMITE_STATS, bar: SMITE_BAR, options: { ...OLD(4495) } },
 ];
 
 export const buildsFor = (spec: PriestSpec) => BUILDS.filter((b) => b.spec === spec);

@@ -7,6 +7,7 @@ import type { Ability, Hit, Outcome, Spec, Unit } from '../../engine/types';
 import { LEADER_OF_THE_PACK } from '../../engine/raid';
 import { UI } from '../../strings';
 import { BOSS_RULES } from '../common';
+import { gearOptions } from '../gear';
 import { CAT_STATS } from './data';
 import {
   CONTROLS, D, SOURCES, attack, bleed, faerieFire, faerieFireLeft, freeWithClearcasting, landed, manaPotion, note, omen,
@@ -377,9 +378,9 @@ export const druidCat: Spec = {
   abilities,
   stats: CAT_STATS,
   rules: BOSS_RULES,
-  builds: buildsFor('cat').map((b) => ({ id: b.id, label: buildLabel(b), name: b.name, source: b.source, talentString: b.talentString, stats: b.stats, bar: b.bar, trees: summary(talentsFor(b.id, 'cat')) })),
+  builds: buildsFor('cat').map((b) => ({ id: b.id, label: buildLabel(b), name: b.name, source: b.source, talentString: b.talentString, stats: b.stats, bar: b.bar, options: b.options, trees: summary(talentsFor(b.id, 'cat')) })),
   defaultOptions: {
-    build: 'cat', mana: 3000, manaRegen: 8, lockMana: false,
+    build: 'cat', mana: gearOptions('druid-cat').mana, manaRegen: 8, lockMana: false,
     wolfshead: true, howlingIdol: true, idolOfTheDream: false, thistleTea: true, faerieFire: true,
   },
   defaultRaid: ['judgementOfWisdom', 'blessingOfWisdom', 'manaSpring'],

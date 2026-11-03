@@ -7,6 +7,7 @@ import type { Spec } from '../../engine/types';
 import { BOSS_RULES, CONTROLS } from '../common';
 import { PET_HELP, PET_MODE } from '../pet';
 import { ABILITIES, D, SOURCES, T, chances, onCooldown, prepare, regen } from './core';
+import { gearOptions } from '../gear';
 import { MELEE_STATS, RANGED_STATS } from './data';
 import { buildLabel, buildsFor, summary, talentsFor, type HunterSpec } from './talents';
 import { WEAVE_OPTIONS, weaveAdvised, weaveCue, weaveRings, weaveRows, weaveSuggest } from './weave';
@@ -132,7 +133,7 @@ export const hunterMm: Spec = specFor('mm', {
   specName: 'Marksmanship',
   stats: RANGED_STATS,
   startDistance: 12,
-  defaultOptions: { build: 'mm', mana: 4000, spirit: D.spirit, lockMana: false, classicAutoShot: false, trackable: true, petSpeed: '1.2', petMode: 'assist', meleeWeaving: false, autoShotReset: 'classic' },
+  defaultOptions: { build: 'mm', ...gearOptions('hunter-ranged'), lockMana: false, classicAutoShot: false, trackable: true, petSpeed: '1.2', petMode: 'assist', meleeWeaving: false, autoShotReset: 'classic' },
   options: [...OPTIONS, PET_OPTION, PET_MODE, ...WEAVE_OPTIONS],
   sheet: { attackPower: 'Melee attack power', spellCrit: false, offHand: false },
   lowMana: (c) => c.cost(c.ability('aimedShot')!),
@@ -196,7 +197,7 @@ export const hunterBm: Spec = specFor('bm', {
   specName: 'Beast Mastery',
   stats: RANGED_STATS,
   startDistance: 12,
-  defaultOptions: { build: 'bm', mana: 4000, spirit: D.spirit, lockMana: false, classicAutoShot: false, trackable: true, petSpeed: '1.2', petMode: 'assist', meleeWeaving: false, autoShotReset: 'classic' },
+  defaultOptions: { build: 'bm', ...gearOptions('hunter-ranged'), lockMana: false, classicAutoShot: false, trackable: true, petSpeed: '1.2', petMode: 'assist', meleeWeaving: false, autoShotReset: 'classic' },
   options: [...OPTIONS, PET_OPTION, PET_MODE, ...WEAVE_OPTIONS],
   sheet: { attackPower: 'Melee attack power', spellCrit: false, offHand: false },
   lowMana: (c) => c.cost(c.ability('aimedShot')!),
@@ -265,7 +266,7 @@ export const hunterSv: Spec = specFor('sv', {
   prefsRevision: 2,
   specName: 'Survival',
   stats: MELEE_STATS,
-  defaultOptions: { build: 'sv-pet', mana: 3500, spirit: D.spirit, lockMana: false, classicAutoShot: false, trackable: true, petSpeed: '1.2', petMode: 'assist' },
+  defaultOptions: { build: 'sv-pet', ...gearOptions('hunter-melee'), lockMana: false, classicAutoShot: false, trackable: true, petSpeed: '1.2', petMode: 'assist' },
   options: [...OPTIONS.filter((o) => o.key !== 'classicAutoShot'), PET_OPTION, PET_MODE],
   sheet: { attackPower: 'Melee attack power', spellCrit: false },
   lowMana: (c) => c.cost(c.ability('raptorStrike')!),

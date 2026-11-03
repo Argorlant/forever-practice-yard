@@ -4,6 +4,18 @@
 //   provisional = a sim choice with no Forever source yet
 //   classic     = Forever says nothing; the sims keep Classic's value
 import type { Stats } from '../../engine/types';
+import { gearOptions, sheet } from '../gear';
+
+/** A sheet with Champion of the Light's share of your Intellect as spell power: 60 % at 5/5, 36 % at 3/5. */
+const champion = (id: 'paladin-ret' | 'paladin-shock', share: number): Stats => {
+  const s = sheet(id);
+  return { ...s, spellPower: Math.round((s.spellPower ?? 0) + share * ((gearOptions(id).mana - 1232) / 15)) };
+};
+
+/** WoWSims Forever's gear. */
+export const RET_STATS = champion('paladin-ret', 0.6);
+export const SHOCK_STATS = champion('paladin-shock', 0.36);
+export const PROT_STATS = sheet('paladin-prot');
 
 /**
  * Retribution: gs's ranked Ret sheet (Undead, modeled ilvl 65 gear), unbuffed.
@@ -13,18 +25,8 @@ import type { Stats } from '../../engine/types';
  * toward Strength and crit after the patch; this is still the earlier Int and
  * spell power sheet.
  */
-export const RET_STATS: Stats = {
-  attackPower: 736,
-  crit: 17.4,       // 22.4 on the sheet minus Conviction 5/5 (Conviction 3/3 adds 6 to melee and spells since Oct 30)
-  hit: 14.4,        // gear (Precision adds 1)
-  spellCrit: 20.1,
-  spellPower: 258,  // 138 + Champion of the Light 5/5 (60 % of 200 Int; 3/3 gave the same before the Oct 30 trees)
-  mainHand: { name: 'Two-handed spell mace', type: 'mace', min: 187, max: 281, speed: 3.8, twoHand: true },
-  offHand: null,
-};
-
-/** Protection: the research's round demo sheet (gs UI default, rounded up), one-hander and shield. */
-export const PROT_STATS: Stats = {
+/** The older sims' Protection sheet, for the community build. */
+export const GS_PROT_STATS: Stats = {
   attackPower: 600,
   crit: 20.5,       // gear + Agility (Conviction 2/3 adds 4 since Oct 30)
   hit: 14.4,        // gear (Precision adds 2)
@@ -37,16 +39,6 @@ export const PROT_STATS: Stats = {
 };
 
 /** Shockadin: the ranked Ret gear with the 23/0/28 build, whose Champion of the Light is 3/5 since Oct 30. */
-export const SHOCK_STATS: Stats = {
-  attackPower: 736,
-  crit: 17.4,       // gear + Agility (Conviction 3/3 adds 6)
-  hit: 14.4,
-  spellCrit: 20.1,  // gear + Intellect (Holy Power adds healing crit only since Oct 30)
-  spellPower: 210,  // 138 + Champion of the Light 3/5 (36 % of 200 Int)
-  mainHand: { name: 'Two-handed spell mace', type: 'mace', min: 187, max: 281, speed: 3.8, twoHand: true },
-  offHand: null,
-};
-
 const BASE_MANA = 1512;
 
 export const DATA = {

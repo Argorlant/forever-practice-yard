@@ -9,6 +9,7 @@ import type { MinionLook, Spec } from '../../engine/types';
 import { BOSS_RULES, CONTROLS } from '../common';
 import { PET_HELP, PET_MODE } from '../pet';
 import { ABILITIES, D, SOURCES, T, baneOn, build, chances, demons, left, lifeTapAmount, prepare, regen } from './core';
+import { gearOptions } from '../gear';
 import { AFFLICTION_STATS, DESTRUCTION_STATS, PACT_STATS } from './data';
 import { buildLabel, buildsFor, summary, talentsFor, type WarlockSpec } from './talents';
 
@@ -178,7 +179,7 @@ function specFor(spec: WarlockSpec, base: Omit<Spec, 'className' | 'resource' | 
   };
 }
 
-const opts = (build: string, mana: number, sacrifice = 'imp') => ({ build, mana, spirit: D.spirit, mp5: D.mp5, healingShare: D.healingShare, lockMana: false, demon: 'succubus', sacrifice, petMode: 'assist' });
+const opts = (build: string, gear: 'warlock-affliction' | 'warlock-destruction') => ({ build, ...gearOptions(gear), sacrifice: 'imp', healingShare: D.healingShare, lockMana: false, demon: 'succubus', petMode: 'assist' });
 
 export const warlockAffliction: Spec = specFor('affliction', {
   id: 'warlock-affliction',
@@ -186,7 +187,7 @@ export const warlockAffliction: Spec = specFor('affliction', {
   prefsRevision: 2,
   specName: 'Affliction',
   stats: AFFLICTION_STATS,
-  defaultOptions: opts('affliction', 4033),
+  defaultOptions: opts('affliction', 'warlock-affliction'),
   welcome: 'Welcome to Affliction practice. Curse of the Elements, Bane of Doom on cooldown (the Wrack build keeps Bane of Agony instead), then keep Corruption, Siphon Life and Immolate ticking and fill with Shadow Bolt. Shadow Trance (Nightfall) makes the next one instant. Life Tap turns health into mana; raid healing gives it back.',
   help: `${CONTROLS}
     ${PET_HELP}
@@ -202,7 +203,7 @@ export const warlockDemonology: Spec = specFor('demonology', {
   prefsRevision: 2,
   specName: 'Demonology',
   stats: PACT_STATS,
-  defaultOptions: opts('pact', 4638),
+  defaultOptions: opts('pact', 'warlock-affliction'),
   welcome: 'Welcome to Demonology practice (Demonic Pact). Your Succubus fights with you; Searing Pain brands the target so her next attacks add Shadow damage. Keep the Brand up, Bane of Doom on cooldown, Corruption and Immolate ticking, and fill with Shadow Bolt. Below 35% health, Decimation makes Soul Fire fast. The Fire Brand build fights with the Imp, fills with Searing Pain and casts Soul Fire on Decimation.',
   help: `${CONTROLS}
     ${PET_HELP}
@@ -218,7 +219,7 @@ export const warlockDestruction: Spec = specFor('destruction', {
   prefsRevision: 2,
   specName: 'Destruction',
   stats: DESTRUCTION_STATS,
-  defaultOptions: opts('fire', 4153),
+  defaultOptions: opts('fire', 'warlock-destruction'),
   welcome: 'Welcome to Destruction practice (Shadow and Flame). Immolate, Corruption, then Conflagrate and Shadowburn on cooldown: each keeps a +10% buff up for the other school, and Shadow and Flame keeps your Immolate burning. Corruption and Bane of Doom tick on the side; Incinerate is the filler. The DS/Ruin build plays Shadow Bolts instead.',
   help: `${CONTROLS}
     ${PET_HELP}

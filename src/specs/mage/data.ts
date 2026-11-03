@@ -4,6 +4,10 @@
 //   provisional = a sim choice with no Forever source yet
 //   classic     = Forever says nothing; the sims keep Classic's value
 import type { Stats } from '../../engine/types';
+import { sheet } from '../gear';
+
+/** WoWSims Forever's one mage set, for every tree. The sheets below are the older sims', for the community builds. */
+export const MAGE_STATS = sheet('mage');
 
 const SAGEBLADE = { name: 'Sageblade', type: 'sword' as const, min: 58, max: 109, speed: 1.8 };
 

@@ -399,6 +399,7 @@ export class Combat {
     this.player.maxHealth = this.player.health = tank?.health ?? this.stats.health ?? 4000;
     this.clearMeter();
     this.spec.prepare(this);
+    this.mod.expertise += this.stats.expertise ?? 0;
     this.lastWindfury = -Infinity;
     this.applyRaid();
     // prepare sets the cap (e.g. Vigor). Energy starts full, rage empty.

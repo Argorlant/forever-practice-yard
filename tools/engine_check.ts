@@ -14,6 +14,7 @@ import { warlockAffliction, warlockDemonology, warlockDestruction } from '../src
 import { warrior } from '../src/specs/warrior';
 import { SPECS } from '../src/specs';
 import { classKey, decode, pointsPerTree, treesOf } from '../src/ui/talents-data';
+import { isOldSheet } from '../src/specs/gear';
 import { addMissing, dropMissing, expandBar, fillExtraRows, slotShown } from '../src/ui/bars';
 import { Controls } from '../src/scene/controls';
 import * as THREE from 'three';
@@ -232,7 +233,8 @@ for (const b of warrior.builds ?? []) {
   const before = c.player.resource;
   c.deal({ target: dummy, source: 'melee_mh', outcome: 'hit', school: 'physical', amount: 100, white: true, hand: 'main', weaponStrike: true });
   const gain = c.player.resource - before;
-  if (Math.abs(gain - 3.46 * 2.4) > 1.01) failures.push(`main-hand rage per hit ${gain.toFixed(2)}, expected ${(3.46 * 2.4).toFixed(2)} (+1 with Unbridled Wrath)`);
+  const perHit = 3.46 * c.stats.mainHand.speed;
+  if (Math.abs(gain - perHit) > 1.01) failures.push(`main-hand rage per hit ${gain.toFixed(2)}, expected ${perHit.toFixed(2)} (+1 with Unbridled Wrath)`);
 }
 
 // The attacking dummy: swing rhythm, avoidance table and locked health.
@@ -501,7 +503,7 @@ for (const sp of [hunterMm, hunterBm, hunterSv]) {
 {
   const r = play(hunterMm, { build: 'mm', options: { lockMana: true } });
   const k = r.c.counters;
-  const floor = 300 / (2.5 / 1.15);
+  const floor = 300 / (r.c.stats.ranged!.speed / r.c.stats.rangedHaste!);
   console.log(`MM with locked mana: ${r.c.dps().toFixed(0)} DPS, ${k.autoShots} Auto Shots (quiver alone: ${floor.toFixed(0)}), Quick Shots ${k.quickShots ?? 0}`);
   if ((k.autoShots ?? 0) < floor * 0.97) failures.push(`only ${k.autoShots} Auto Shots in 5 min, expected at least ${floor.toFixed(0)}`);
   // Classic rule: casts clip the windup.
@@ -1530,7 +1532,31 @@ console.log(`Talent layouts checked for ${SPECS.reduce((n, s) => n + (s.builds?.
     on.pointermove(mouse({ buttons: 2, movementX: 80 }));
     if (cam.facing !== after) failures.push('A press from the HUD steered after a press on the scene ended');
   }
-  // A fresh visitor never picks the default build, so the spec's defaults must already be what that build asks for.
+  // Gear: WoWSims Forever's builds wear its sheets, community builds keep their sims', and every sheet can fight.
+for (const spec of SPECS) {
+  for (const b of spec.builds ?? []) {
+    const label = `${spec.id}/${b.id}`;
+    if (b.source === 'wowsims/forever' && isOldSheet(b.stats)) failures.push(`${label}: still on an older sim's sheet`);
+    if (b.source?.startsWith('community') && !isOldSheet(b.stats)) failures.push(`${label}: lost its sim's sheet`);
+    const w = b.stats.mainHand;
+    if (!(w.min > 0 && w.max >= w.min && w.speed > 0) || !w.type) failures.push(`${label}: its weapon is broken: ${JSON.stringify(w)}`);
+    if (b.stats.ranged && !(b.stats.ranged.speed > 0 && b.stats.rangedAttackPower! > 0)) failures.push(`${label}: its ranged weapon is broken`);
+    if (spec.resource === 'mana' && !(Number(b.options?.mana ?? spec.defaultOptions?.mana) > 1000)) failures.push(`${label}: no mana pool`);
+    if (b.tank && !(b.stats.tank && b.stats.tank.health > 0 && b.stats.tank.armor > 0)) failures.push(`${label}: a tank with no tank sheet`);
+  }
+}
+{
+  const fury = warrior.builds!.find((b) => b.id === 'fury-dw')!.stats;
+  if (isOldSheet({ ...fury, attackPower: fury.attackPower + 1 })) failures.push('A sheet of your own counts as an old one');
+  const c = new Combat(warrior, { ...(warrior.defaultOptions ?? {}), build: 'fury-dw' });
+  c.stats = structuredClone(fury);
+  c.reset();
+  const withGear = c.dodgeChance();
+  c.stats = { ...structuredClone(fury), expertise: 0 };
+  c.reset();
+  if (Math.abs(c.dodgeChance() - withGear - (fury.expertise ?? 0)) > 1e-9) failures.push('Expertise from gear does not lower the dodge chance');
+}
+// A fresh visitor never picks the default build, so the spec's defaults must already be what that build asks for.
 for (const spec of SPECS) {
   const first = spec.builds?.find((b) => b.id === spec.defaultOptions?.build);
   if (spec.builds?.length && !first) failures.push(`${spec.id}: its default build ${spec.defaultOptions?.build} does not exist`);
