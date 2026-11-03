@@ -527,6 +527,6 @@ export function chances(c: Combat): { title: string; rows: [string, string][] }[
 }
 
 export const SOURCES = [
-  { label: 'wow-forever-sim', url: 'https://github.com/gunba/wow-forever-sim' },
+  { label: 'wow-forever-sim (retired)', url: 'https://github.com/gunba/wow-forever-sim' },
   { label: 'foreversim', url: 'https://github.com/laurencestokes/foreversim' },
 ];

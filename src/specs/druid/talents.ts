@@ -1,7 +1,8 @@
 // WoW Forever druid talents and the builds the sims use. Order: Wowhead's
 // Forever calculator after the live hotfix of 30 October (Balance 16, Feral
-// Combat 20, Restoration 16); the sims' builds are re-spent for it until they
-// publish theirs. See research/druid_forever.md → Talents and Builds.
+// Combat 20, Restoration 16), the same order as WoWSims Forever's. Moonkin is its
+// preset; the rest are older sims' builds, re-spent for these trees and still to be
+// reviewed against it. See research/druid_forever.md → Talents and Builds.
 import type { Binding, Stats } from '../../engine/types';
 import { decodeTalents, talentSplit, talentSummary } from '../common';
 import { BALANCE_STATS, BEAR_STATS, CAT_STATS } from './data';
@@ -64,6 +65,7 @@ const BEAR_BAR = bar(['primalBite', 'lacerate', 'maul', 'swipe', 'demoralizingRo
 const BALANCE_BAR = bar(['wrath', 'starfire', 'moonfire', 'insectSwarm', 'faerieFire', 'innervate', 'moonkinForm', 'barkskin',
   'manaPotion', null, null, null, null, null, null, null]);
 
+const WS = 'wowsims/forever';
 const GS = 'gunba/wow-forever-sim';
 // The Oct 30 trees moved Furor to Feral and Heart of the Wild to Restoration and dropped Berserk and Improved
 // Shifting Power; their points went to Feral Swiftness, Predatory Discipline and the row fillers. Balance builds
@@ -74,7 +76,7 @@ export const BUILDS: Build[] = [
   { id: 'cat', spec: 'cat', name: 'Feral Cat', talentString: '05002-55200032023012125001-055', source: RESPENT, stats: CAT_STATS, bar: CAT_BAR },
   { id: 'cat-feral', spec: 'cat', name: 'Feral, deeper (Natural Shapeshifter)', talentString: '-55220132023012125011-05503', source: RESPENT, stats: CAT_STATS, bar: CAT_BAR },
   { id: 'bear', spec: 'bear', name: 'Bear tank', talentString: '01-5502233212310212551-05', source: RESPENT, stats: BEAR_STATS, bar: BEAR_BAR, tank: true },
-  { id: 'moonkin', spec: 'balance', name: 'Moonkin', talentString: '533222011550135--5053', source: REENCODED, stats: BALANCE_STATS, bar: BALANCE_BAR },
+  { id: 'moonkin', spec: 'balance', name: 'Moonkin', talentString: '5232220115501351--5053', source: WS, stats: BALANCE_STATS, bar: BALANCE_BAR },
   { id: 'balance', spec: 'balance', name: 'Balance', talentString: '5532220115001351--505203', source: REENCODED, stats: BALANCE_STATS, bar: BALANCE_BAR },
 ];
 

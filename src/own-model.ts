@@ -26,7 +26,7 @@ export interface SlotSpec {
   localKeys?: () => string[] | Promise<string[]>;
   /** Separate saved places (and anchors) for each faction. */
   cacheKey?: () => string | Promise<string>;
-  /** Not needed for the first scene: it loads on start(), when its fight is chosen or Settings opens. */
+  /** Not needed for the first scene: it loads on start(), when its form or fight comes up or you ask in Settings. */
   later?: boolean;
   /** Drawn only for the race its names point to: with none for the race, a published model of another race is not kept. */
   raceOnly?: boolean;
@@ -213,8 +213,10 @@ export class OwnModel {
   private localFile: string | null = null;
   private storageKey: string;
   private go!: () => void;
+  private started: boolean;
 
   constructor(readonly slot: SlotSpec) {
+    this.started = !slot.later;
     this.storageKey = slot.key;
     this.ready = new Promise<void>((go) => { this.go = go; if (!slot.later) go(); })
       .then(() => this.restore())
@@ -223,7 +225,9 @@ export class OwnModel {
 
   /** Loads a slot marked `later`; settles with `ready`. */
   start(): Promise<void> {
+    this.started = true;
     this.go();
+    this.draw();
     return this.ready;
   }
 
@@ -398,10 +402,11 @@ export class OwnModel {
 
   /** Fills this slot's part of the Settings section; it redraws itself as the model loads. */
   panel(parent: HTMLElement): void {
-    void this.start();
     this.box = el('div', 'own-model');
     parent.append(this.box);
     this.draw();
+    // Opening Settings fetches nothing: only a model you imported, already in this browser, loads by itself.
+    if (!this.started) void getModel(this.storageKey).then((kept) => { if (isPersonal(kept)) void this.start(); });
   }
 
   private draw(): void {
@@ -409,6 +414,13 @@ export class OwnModel {
     if (!box?.isConnected) return;
     box.innerHTML = '';
     box.append(el('h4', '', this.slot.title), el('p', 'note', this.slot.hint));
+    if (!this.started) {
+      const load = el('button', 'hud-btn small', 'Load or replace this model');
+      load.title = 'It also loads by itself when you need it';
+      load.addEventListener('click', () => void this.start());
+      box.append(load);
+      return;
+    }
     const s = this.stored;
     if (s) {
       const row = el('label', 'field toggle');

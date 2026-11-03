@@ -128,6 +128,6 @@ export const attack: Ability = {
 export { CONTROLS } from '../common';
 
 export const SOURCES = [
-  { label: 'wow-forever-sim', url: 'https://github.com/gunba/wow-forever-sim' },
+  { label: 'wow-forever-sim (retired)', url: 'https://github.com/gunba/wow-forever-sim' },
   { label: 'foreversim', url: 'https://github.com/laurencestokes/foreversim' },
 ];

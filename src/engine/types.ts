@@ -101,6 +101,10 @@ export interface Aura {
   damageDone?: number;
   /** On the player: damage taken multiplier (stances, Shield Wall). */
   damageTaken?: number;
+  /** Multiplies what you take from physical hits only (Stoneform). */
+  physicalTaken?: number;
+  /** Multiplies what you take from magic only (Shatter Curse). */
+  magicTaken?: number;
   /** On the player: threat multiplier (stances). */
   threat?: number;
   /** On an attacking dummy: attack power removed (Demoralizing Shout). */
@@ -121,6 +125,8 @@ export interface Aura {
   schoolTaken?: Partial<Record<School, number>>;
   /** On the player: mana per second (Blessing of Wisdom). */
   manaPerSecond?: number;
+  /** Multiplies mana regeneration, whichever pool mana is (Energized). */
+  manaRegen?: number;
   /** On the player: Windfury Totem's extra attacks. */
   windfury?: boolean;
   /** On the player: extra spell power (Blood Fury). */

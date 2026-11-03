@@ -17,8 +17,9 @@ reads those trees and their tooltips from Wowhead's WoW Forever calculator (`too
 `research/wowhead/`) and re-spends the sims' builds on them. Those builds and the Ret and Shockadin loops are ours,
 **provisional**, until the sims publish theirs.
 > **Speculative, built on the sims.** This site was made before WoW Forever's launch on 4 November 2026. The talents,
-> builds, rotations and numbers here follow the community sims ([wow-forever-sim](https://github.com/gunba/wow-forever-sim) and
-> [foreversim](https://github.com/laurencestokes/foreversim)) and our own reading of the beta, so they
+> builds, rotations and numbers here follow the community sims ([WoWSims Forever](https://www.wowsims.com/forever/), our main source, and, for
+> what we have not reviewed against it yet, [foreversim](https://github.com/laurencestokes/foreversim) and gunba's retired
+> [wow-forever-sim](https://github.com/gunba/wow-forever-sim)) and our own reading of the beta, so they
 > may not match the live game, and classes can still change as players reach level 60. Use it as a practice tool: learn a rotation's rhythm and get a feel for how a class might play at max
 > level. That's why it shows no DPS: the damage in the floating combat text is only a rough guide. Spotted something wrong? Feedback is very welcome in the
 > [issues](https://github.com/Argorlant/forever-practice-yard/issues).
@@ -218,7 +219,7 @@ and your talents. The notes come from the research sheets: `node tools/talent_no
 **Action bars and keys.** Up to four rows of 8 buttons (2 to 4 shown, in Settings or the Spellbook). Rows 3 and 4 start with
 the build's abilities that have no other button (Charge and Intercept for a warrior, and what the Helper may ask for), row 3 on Shift+1-8. The Spellbook lists
 the class's whole book to drag onto a button, under Rotation, Racial and More spells; dragging a button off the bar clears it.
-Your race decides your racials, and the combat ones take an empty button by themselves. More spells stay off the bar until you
+Your race decides your racials (from WoWSims Forever), and the combat ones take an empty button by themselves. More spells stay off the bar until you
 drag them there: their damage, heals and shields are real, with the client's level 60 numbers, crowd control says Immune against
 a dummy, and the rest only run their timers (the tooltip says which). An ability from a talent has a button only on a build with that talent.
 The Keys button turns on key binding: hover a
@@ -362,9 +363,10 @@ Then open http://127.0.0.1:5180.
 - Published wow.export character, creature and environment assets © Blizzard Entertainment; these game assets are not covered by the code's MIT license.
 - Dummy portrait: [game-icons.net](https://game-icons.net) by Lorc (CC BY 3.0).
 - Floors of your own places: [three-mesh-bvh](https://github.com/gkjohnson/three-mesh-bvh) (MIT).
-- Combat formulas follow [WoWSims](https://github.com/wowsims/classic) (MIT) and its WoW Forever
-  forks [foreversim](https://github.com/laurencestokes/foreversim) and
-  [wow-forever-sim](https://github.com/gunba/wow-forever-sim).
+- Combat formulas and racials follow [WoWSims Forever](https://www.wowsims.com/forever/)
+  ([source](https://github.com/wowsims/forever), MIT), our main source. Builds not yet reviewed against it come from
+  [foreversim](https://github.com/laurencestokes/foreversim) and the retired
+  [wow-forever-sim](https://github.com/gunba/wow-forever-sim), both built on [WoWSims Classic](https://github.com/wowsims/classic) (MIT).
 - The rest of each class's spellbook (`tools/spellbook.mjs`): a roster kept by hand, with its numbers from foreversim's client
   spell table and its icon names from wow-forever-sim.
 

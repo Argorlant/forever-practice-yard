@@ -104,8 +104,8 @@ function page(spec: Spec): string {
     <ul class="builds">
         ${buildRows}
     </ul>
-    <p class="note"><b>Speculative, built on the sims.</b> The talents, builds, rotations and numbers follow the community sims (gunba's
-      wow-forever-sim and foreversim) and our reading of the beta, made before WoW Forever's launch, so they may not match the live game. A practice tool for a
+    <p class="note"><b>Speculative, built on the sims.</b> The talents, builds, rotations and numbers follow the community sims (<a href="https://www.wowsims.com/forever/">WoWSims Forever</a>,
+      our main source, and, for what we have not reviewed against it yet, foreversim and gunba's retired wow-forever-sim) and our reading of the beta, made before WoW Forever's launch, so they may not match the live game. A practice tool for a
       rotation's rhythm: it shows no DPS. Spotted something wrong? <a href="${ISSUES}">Tell us on GitHub</a>.</p>
     <h2>Other classes</h2>
     <ul class="others">${others}</ul>

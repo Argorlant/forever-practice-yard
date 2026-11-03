@@ -1253,6 +1253,7 @@ console.log(`Talent layouts checked for ${SPECS.reduce((n, s) => n + (s.builds?.
     troll.use('berserking');
     if (Math.abs(troll.haste() / haste - 1.1) > 0.001) failures.push(`Berserking: haste ${haste} -> ${troll.haste()}`);
     if (troll.player.gcdEnd > troll.t) failures.push('Berserking takes the global cooldown');
+    if (troll.aura(troll.player, 'berserking')?.end !== troll.t + 15) failures.push('Berserking does not last 15 seconds');
     const elf = yard(rogue, 'nightelf-m').c;
     const crit = elf.critChance('melee_mh');
     elf.use('elunesLight');
@@ -1261,10 +1262,74 @@ console.log(`Talent layouts checked for ${SPECS.reduce((n, s) => n + (s.builds?.
     const fireball = gnome.ability('fireball')!;
     const full = gnome.cost(fireball);
     gnome.use('eureka');
-    if (Math.abs(gnome.cost(fireball) - full / 2) > 1) failures.push(`Eureka!: a mage's Fireball costs ${gnome.cost(fireball)} of ${full}`);
+    if (Math.abs(gnome.cost(fireball) - full * 0.9) > 1) failures.push(`Eureka!: a mage's Fireball costs ${gnome.cost(fireball)} of ${full}`);
+    if (gnome.cooldownLeft('eureka').total !== 120) failures.push('Eureka!: not a 2 minute cooldown');
     gnome.use('fireball');
     for (let t = 0; t < 5; t += 0.1) gnome.update(0.1);
-    if (gnome.aura(gnome.player, 'eureka')?.stacks !== 2) failures.push('Eureka!: a cast did not spend a charge');
+    if (!gnome.aura(gnome.player, 'eureka')) failures.push('Eureka!: a cast ended it; it has no charges');
+    for (let t = 0; t < 3.1; t += 0.1) gnome.update(0.1);
+    if (gnome.aura(gnome.player, 'eureka')) failures.push('Eureka!: still up after 8 seconds');
+    // Stoneform and Shatter Curse: each for its own kind of damage, on the global cooldown.
+    // Next to the same hit on someone without it: a stance changes both.
+    const taken = (c: Combat, kind: 'physical' | 'magic') => {
+      c.player.maxHealth = 1e6; c.player.health = 1e6;
+      c.hurtPlayer(1000, 'check', kind);
+      return 1e6 - c.player.health;
+    };
+    const plain = yard(warrior, 'human-m').c;
+    const dwarf = yard(warrior, 'dwarf-m').c;
+    dwarf.use('stoneform');
+    if (taken(dwarf, 'physical') !== Math.round(taken(plain, 'physical') * 0.9) || taken(dwarf, 'magic') !== taken(plain, 'magic')) failures.push('Stoneform: not -10% physical damage only');
+    if (dwarf.player.gcdEnd <= dwarf.t) failures.push('Stoneform is off the global cooldown');
+    const curse = yard(warrior, 'orc-m').c;
+    curse.use('shatterCurse');
+    if (taken(curse, 'magic') !== Math.round(taken(plain, 'magic') * 0.95) || taken(curse, 'physical') !== taken(plain, 'physical')) failures.push('Shatter Curse: not -5% magic damage only');
+    if (curse.cooldownLeft('shatterCurse').total !== 180 || curse.player.gcdEnd <= curse.t) failures.push('Shatter Curse: not 3 minutes on the global cooldown');
+    // Read Leyline: half a second, mana only, and never with Innervate.
+    const reader = yard(druidBalance, 'highorder-f', 'moonkin').c;
+    const leyline = reader.ability('readLeyLine')!;
+    if (leyline.castTime !== 0.5) failures.push('Read Leyline: not a half second cast');
+    const manaBefore = reader.regenRate();
+    reader.use('readLeyLine');
+    for (let t = 0; t < 1; t += 0.1) reader.update(0.1);
+    if (!reader.aura(reader.player, 'energized')) failures.push('Read Leyline: no Energized');
+    if (Math.abs(reader.regenRate() / manaBefore - 1.5) > 0.01) failures.push(`Read Leyline: mana regeneration ${manaBefore} -> ${reader.regenRate()}`);
+    for (let t = 0; t < 1; t += 0.1) reader.update(0.1);
+    reader.player.resource = 1e6;
+    reader.use('innervate');
+    if (reader.aura(reader.player, 'energized')) failures.push('Innervate did not end Energized');
+    const under = yard(druidBalance, 'highorder-f', 'moonkin').c;
+    under.player.resource = 1e6;
+    under.use('innervate');
+    if (under.blocker(under.ability('readLeyLine')!) !== "Can't do that under Innervate") failures.push('Read Leyline casts under Innervate');
+    const reading = (c: Combat) => { c.use('readLeyLine'); for (let t = 0; t < 1; t += 0.1) c.update(0.1); };
+    const sneak = yard(rogue, 'highorder-m').c;
+    const energy = sneak.regenRate();
+    reading(sneak);
+    if (!sneak.aura(sneak.player, 'energized') || sneak.regenRate() !== energy) failures.push('Read Leyline changed a rogue\'s energy');
+    const cat = yard(druidCat, 'highorder-f').c;
+    cat.applyAura(cat.player, { id: 'casterForm', name: '', icon: 'dummy', duration: Infinity });
+    const catEnergy = cat.regenRate();
+    reading(cat);
+    if (!cat.aura(cat.player, 'energized') || cat.regenRate() !== catEnergy) failures.push('Read Leyline changed a cat\'s energy');
+    cat.player.mana = 0;
+    cat.update(1);
+    if (Math.abs(cat.player.mana - 1.5 * cat.player.manaPerSecond) > 0.5) failures.push(`Read Leyline: a cat regained ${cat.player.mana} mana of ${cat.player.manaPerSecond} per second`);
+    // Skysight: speed, for a Windshaper.
+    const wind = yard(rogue, 'windshaper-m').c;
+    if (yard(rogue, 'highorder-m').c.use('skysight')) failures.push('A High Order used Skysight');
+    wind.use('skysight');
+    for (let t = 0; t < 1; t += 0.1) wind.update(0.1);
+    if (Math.abs(wind.moveSpeed() - 1.15) > 1e-9) failures.push(`Skysight: speed ${wind.moveSpeed()}`);
+    if (wind.cooldownLeft('skysight').total !== 120) failures.push('Skysight: not a 2 minute cooldown');
+    // The new racials take an empty button for whoever has them, and only them.
+    const buttons = (spec: Spec, race: string) => {
+      const b = expandBar(spec.bar);
+      fillExtraRows(b, yard(spec, race).c);
+      return b.map((s) => s.id);
+    };
+    if (!buttons(warrior, 'orc-m').includes('shatterCurse') || buttons(warrior, 'human-m').includes('shatterCurse')) failures.push('Shatter Curse: wrong buttons');
+    if (!buttons(warrior, 'windshaper-m').includes('skysight') || buttons(warrior, 'human-m').includes('skysight')) failures.push('Skysight: wrong buttons');
     const nature = yard(priestShadow, 'human-m').c;
     if (nature.ability('starshards') && nature.blocker(nature.ability('starshards')!) !== 'Your race does not have that') failures.push('A human priest can cast Starshards');
   }
@@ -1371,14 +1436,20 @@ console.log(`Talent layouts checked for ${SPECS.reduce((n, s) => n + (s.builds?.
   }
   if (!dropped) failures.push('No build lost a button: the talent check does nothing');
   {
-    const has = (build: string) => {
+    // WoWSims Forever's Moonkin preset, with Moonkin Form's point back on Genesis.
+    const NO_FORM = '533222011550135--5053';
+    const has = (build: string, talents = '') => {
       const { c } = yard(druidBalance, 'nightelf-f', build);
+      c.options.talents = talents;
       const bar = expandBar(druidBalance.builds!.find((b) => b.id === build)!.bar!);
       dropMissing(bar, c);
       return bar[6].id === 'moonkinForm';
     };
-    if (has('moonkin')) failures.push('The Moonkin build has a Moonkin Form button');
+    if (has('moonkin', NO_FORM)) failures.push('Talents without Moonkin Form have its button');
+    if (!has('moonkin')) failures.push('The Moonkin build lost its Moonkin Form button');
     if (!has('balance')) failures.push('The Balance build lost its Moonkin Form button');
+    if (druidBalance.builds!.find((b) => b.id === 'moonkin')!.talentString !== '5232220115501351--5053') failures.push("The Moonkin build is not WoWSims Forever's preset");
+    if (druidBalance.form!(yard(druidBalance, 'nightelf-f', 'moonkin').c) !== 'moonkin') failures.push('The default Balance build does not start in Moonkin Form');
     // A moment's refusal is not a missing talent: Combustion while it burns.
     const { c } = yard(mageFire, 'human-m', 'fire');
     c.use('combustion');
@@ -1386,12 +1457,13 @@ console.log(`Talent layouts checked for ${SPECS.reduce((n, s) => n + (s.builds?.
     if (c.blocker(c.ability('combustion')!) && (dropMissing(bar, c), !bar[0].id)) failures.push('Combustion lost its button while active');
     // Talents of your own: taking one gives a button, dropping it takes it away.
     const own = yard(druidBalance, 'nightelf-f', 'moonkin').c;
+    own.options.talents = NO_FORM;
     const mine = expandBar(druidBalance.bar);
     dropMissing(mine, own);
-    own.options.talents = druidBalance.builds!.find((b) => b.id === 'balance')!.talentString!;
+    own.options.talents = '';
     addMissing(mine, own);
     if (!mine.some((s) => s.id === 'moonkinForm')) failures.push('Taking the Moonkin Form talent gives no button');
-    own.options.talents = '';
+    own.options.talents = NO_FORM;
     dropMissing(mine, own);
     if (mine.some((s) => s.id === 'moonkinForm')) failures.push('Dropping the Moonkin Form talent leaves its button');
   }

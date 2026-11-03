@@ -1,8 +1,9 @@
-// Active racials. Values from the sims' race audit (client data and Blizzard's
-// October 26-27 notes): Blood Fury, Berserking, Elune's Light, Stoneform, Eureka!
-// and Read Ley Line. The rest are Classic's, unconfirmed for Forever, and only
-// run their timers against a dummy.
-import type { Combat } from '../engine/combat';
+// Active racials, from WoWSims Forever (sim/core/racials.go, and the client's rows
+// for Eureka!). Where Blizzard's October notes and the game build disagree it follows
+// the notes, and so do we until the live game settles it: Berserking 15 sec (build 10),
+// Blood Fury 2 min (build 3), Read Leyline 15 sec at +50% (build 30 at +100%), Skysight
+// 15 sec at +15% (build 30 at +10%). War Stomp and the book's are Classic's, unconfirmed
+// for Forever, and only run their timers against a dummy.
 import type { Ability } from '../engine/types';
 
 const icon = (name: string) => `local:${name}`;
@@ -21,12 +22,12 @@ const RACES: Record<string, string[]> = {
   warrior: ['human', 'dwarf', 'nightelf', 'gnome', 'highorder', 'orc', 'tauren', 'troll', 'undead', 'windshaper'],
 };
 
-/** Eureka!'s cost reduction per class (client variants); only these classes can be Gnomes. */
-const EUREKA: Record<string, number> = { rogue: 0.2, warrior: 0.4, mage: 0.5, warlock: 0.5, priest: 0.15 };
-
 const base = { gcd: 0, target: 'self' as const, group: 'racial' as const, keepsStealth: true };
 
-function all(cls: string): Ability[] {
+/** Read Leyline's buff, which an Innervate ends. */
+export const ENERGIZED = 'energized';
+
+function all(): Ability[] {
   return [
     {
       ...base, id: 'bloodFury', name: 'Blood Fury', icon: cdnIcon('racial_orc_berserkerstrength'), race: ['orc'], cooldown: 120,
@@ -38,28 +39,39 @@ function all(cls: string): Ability[] {
     },
     {
       ...base, id: 'berserking', name: 'Berserking', icon: icon('racial_troll_berserk'), race: ['troll'], cooldown: 180,
-      description: () => 'Troll racial. Free, off the global cooldown: +10% attack and casting speed for 10 sec. 3 min cooldown.',
-      use: (c) => { c.applyAura(c.player, { id: 'berserking', name: 'Berserking', icon: icon('racial_troll_berserk'), duration: 10, haste: 0.1, rangedHaste: 0.1, castHaste: 0.1 }); },
+      description: () => 'Troll racial. Free, off the global cooldown: +10% attack and casting speed for 15 sec. 3 min cooldown.',
+      use: (c) => { c.applyAura(c.player, { id: 'berserking', name: 'Berserking', icon: icon('racial_troll_berserk'), duration: 15, haste: 0.1, rangedHaste: 0.1, castHaste: 0.1 }); },
     },
     {
-      ...base, id: 'elunesLight', name: "Elune's Light", icon: cdnIcon('spell_holy_elunesgrace'), race: ['nightelf'], cooldown: 180,
+      ...base, id: 'elunesLight', name: "Elune's Light", icon: icon('spell_nature_moonglow'), race: ['nightelf'], cooldown: 180,
       description: () => 'Night Elf racial. Free, off the global cooldown: +10% critical strike chance with spells and attacks for 15 sec. 3 min cooldown.',
-      use: (c) => { c.applyAura(c.player, { id: 'elunesLight', name: "Elune's Light", icon: cdnIcon('spell_holy_elunesgrace'), duration: 15, crit: 10, spellCrit: 10 }); },
+      use: (c) => { c.applyAura(c.player, { id: 'elunesLight', name: "Elune's Light", icon: icon('spell_nature_moonglow'), duration: 15, crit: 10, spellCrit: 10 }); },
     },
     {
-      ...base, id: 'stoneform', name: 'Stoneform', icon: cdnIcon('spell_shadow_unholystrength'), race: ['dwarf'], cooldown: 180,
-      description: () => 'Dwarf racial. +10% armor for 8 sec; it also removes bleeds, poisons and diseases, which the dummy does not use. 3 min cooldown.',
-      use: (c) => { c.applyAura(c.player, { id: 'stoneform', name: 'Stoneform', icon: cdnIcon('spell_shadow_unholystrength'), duration: 8, playerArmor: 1.1 }); },
+      ...base, id: 'stoneform', name: 'Stoneform', icon: cdnIcon('spell_shadow_unholystrength'), race: ['dwarf'], cooldown: 180, gcd: 1.5,
+      description: () => 'Dwarf racial. -10% physical damage taken for 8 sec. 3 min cooldown.',
+      use: (c) => { c.applyAura(c.player, { id: 'stoneform', name: 'Stoneform', icon: cdnIcon('spell_shadow_unholystrength'), duration: 8, physicalTaken: 0.9 }); },
     },
-    ...(EUREKA[cls] ? [{
-      ...base, id: 'eureka', name: 'Eureka!', icon: cdnIcon('inv_misc_gear_01'), race: ['gnome'], cooldown: 120,
-      description: () => `Gnome racial. Three charges for 15 sec: each ability that costs something pays ${Math.round(EUREKA[cls] * 100)}% less, deals 10% more and spends one. 2 min cooldown.`,
-      use: (c: Combat) => { c.applyAura(c.player, { id: 'eureka', name: 'Eureka!', icon: cdnIcon('inv_misc_gear_01'), duration: 15, stacks: 3, costMult: 1 - EUREKA[cls], damageDone: 1.1 }); },
-    }] : []),
     {
-      ...base, id: 'readLeyLine', name: 'Read Ley Line', icon: cdnIcon('spell_arcane_arcane01'), race: ['highorder'], cooldown: 120, gcd: 1.5, castTime: 2,
-      description: () => 'High Order racial. 2 sec cast: +100% health and mana regeneration for 15 sec. 2 min cooldown.',
-      use: (c) => { c.applyAura(c.player, { id: 'readLeyLine', name: 'Read Ley Line', icon: cdnIcon('spell_arcane_arcane01'), duration: 15, regen: 2 }); },
+      ...base, id: 'shatterCurse', name: 'Shatter Curse', icon: cdnIcon('spell_nature_removecurse'), race: ['orc'], cooldown: 180, gcd: 1.5,
+      description: () => 'Orc racial. -5% magic damage taken for 8 sec. 3 min cooldown.',
+      use: (c) => { c.applyAura(c.player, { id: 'shatterCurse', name: 'Shatter Curse', icon: cdnIcon('spell_nature_removecurse'), duration: 8, magicTaken: 0.95 }); },
+    },
+    {
+      ...base, id: 'eureka', name: 'Eureka!', icon: cdnIcon('inv_gnometoy'), race: ['gnome'], cooldown: 120,
+      description: () => 'Gnome racial. Free, off the global cooldown: for 8 sec your abilities cost 10% less and deal 10% more direct damage (in the yard, all your damage). 2 min cooldown.',
+      use: (c) => { c.applyAura(c.player, { id: 'eureka', name: 'Eureka!', icon: cdnIcon('inv_gnometoy'), duration: 8, costMult: 0.9, damageDone: 1.1 }); },
+    },
+    {
+      ...base, id: 'readLeyLine', name: 'Read Leyline', icon: cdnIcon('ability_mage_incantersabsorbtion'), race: ['highorder'], cooldown: 120, gcd: 1.5, castTime: 0.5,
+      requirements: (c) => (c.aura(c.player, 'innervate') ? "Can't do that under Innervate" : null),
+      description: () => 'High Order racial. 0.5 sec cast: Energized, +50% health and mana regeneration for 15 sec (mana only in the yard), or +100% if Attuned at a Ley Line, which the yard does not have. Not under Innervate, and an Innervate ends it. 2 min cooldown.',
+      use: (c) => { c.applyAura(c.player, { id: ENERGIZED, name: 'Energized', icon: cdnIcon('spell_arcane_arcane02'), duration: 15, manaRegen: 1.5 }); },
+    },
+    {
+      ...base, id: 'skysight', name: 'Skysight', icon: cdnIcon('ability_skyreach_lens_flare'), race: ['windshaper'], cooldown: 120, gcd: 1.5, castTime: 0.5,
+      description: () => 'Windshaper racial. 0.5 sec cast: Elemental Blessing, +15% movement speed for 15 sec, or +30% if Charged at an elemental convergence, which the yard does not have. 2 min cooldown.',
+      use: (c) => { c.applyAura(c.player, { id: 'elementalBlessing', name: 'Elemental Blessing', icon: cdnIcon('ability_monk_ridethewind'), duration: 15, speed: 1.15 }); },
     },
     {
       ...base, id: 'warStomp', name: 'War Stomp', icon: cdnIcon('ability_warstomp'), race: ['tauren'], cooldown: 120, gcd: 1.5, castTime: 0.5, provisional: true,
@@ -99,5 +111,5 @@ function all(cls: string): Ability[] {
 /** The active racials of the races this class can be. */
 export function racialsFor(cls: string): Ability[] {
   const races = RACES[cls] ?? [];
-  return all(cls).filter((a) => a.race!.some((r) => races.includes(r)));
+  return all().filter((a) => a.race!.some((r) => races.includes(r)));
 }

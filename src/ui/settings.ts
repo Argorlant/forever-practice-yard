@@ -322,7 +322,8 @@ export class SettingsDialog {
       <a href="https://opengameart.org/content/cethiels-weapons-3d" target="_blank" rel="noopener">Cethiel's Weapons 3D</a> by Cethiel and Drummyfish (CC0).
       Ability icons © Blizzard Entertainment, used in this fan tool so the buttons look as they do in the game.
       Dummy portrait: <a href="https://game-icons.net" target="_blank" rel="noopener">game-icons.net</a> by ${ICON_AUTHORS.join(', ')} (CC BY 3.0).
-      Combat formulas follow <a href="https://github.com/wowsims/classic" target="_blank" rel="noopener">WoWSims</a> (MIT) and its WoW Forever forks:
+      Combat formulas and racials follow <a href="https://www.wowsims.com/forever/" target="_blank" rel="noopener">WoWSims Forever</a>
+      (<a href="https://github.com/wowsims/forever" target="_blank" rel="noopener">source</a>, MIT), our main source. Builds not yet reviewed against it come from:
       ${this.spec.sources.map((s) => `<a href="${s.url}" target="_blank" rel="noopener">${s.label}</a>`).join(', ')}.<br><br>
       Fan-made practice tool. Not affiliated with or endorsed by Blizzard Entertainment.
       World of Warcraft is a trademark of Blizzard Entertainment, Inc.`));

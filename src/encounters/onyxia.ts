@@ -214,7 +214,7 @@ export class OnyxiaFight {
 
   private hurt(what: 'flameBreath' | 'tailSweep' | 'deepBreath' | 'fireball' | 'lava', amount: number, source: string): void {
     this.review[what]++;
-    this.combat.hurtPlayer(Math.round(amount), source);
+    this.combat.hurtPlayer(Math.round(amount), source, what === 'tailSweep' ? 'physical' : 'magic');
   }
 
   update(dt: number): void {
@@ -526,7 +526,7 @@ export class OnyxiaFight {
       } else if (this.t >= w.swingAt) {
         w.swingAt = this.t + 1.5;
         this.review.whelpBites++;
-        this.combat.hurtPlayer(Math.round(rand(140, 180)), 'Onyxian Whelp');
+        this.combat.hurtPlayer(Math.round(rand(140, 180)), 'Onyxian Whelp', 'physical');
         this.emit('bite', w);
       }
     }

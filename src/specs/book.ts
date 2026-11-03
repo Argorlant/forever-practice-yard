@@ -7,6 +7,7 @@
 import type { Combat } from '../engine/combat';
 import type { Ability, School, Spec, Unit } from '../engine/types';
 import BOOK from './book.gen.json';
+import { ENERGIZED } from './racials';
 
 interface Entry {
   id: string; name: string; school?: string; icon?: string; local?: boolean;
@@ -74,6 +75,7 @@ function effect(c: Combat, e: Entry, t: Unit | null, groups: Map<string, string[
   if (group) for (const id of groups.get(group) ?? []) if (id !== e.id) c.removeAura(p, id);
   if (e.id === 'totemicRecall') for (const [name, ids] of groups) if (name.startsWith('totem-')) for (const id of ids) c.removeAura(p, id);
   if (e.demon) c.options.demon = e.demon;
+  if (e.id === 'innervate') c.removeAura(p, ENERGIZED);
   // Nature's Swiftness: the book's healing spells are instant while it lasts.
   if (e.heal && c.aura(p, 'naturesSwiftness')) c.removeAura(p, 'naturesSwiftness');
   const hit = victims(c, e, t);
@@ -121,7 +123,8 @@ function describe(e: Entry, cost: number, resource: string): string {
   if (says.length) return `${head}${says.join(', then ').replace(/^./, (x) => x.toUpperCase())}.`;
   if (e.speed) return `${head}Run speed +${Math.round((e.speed - 1) * 100)}%.`;
   if (e.kind === 'buff') return `${head}Shows on you${e.lasting || !e.dur ? '' : ` for ${seconds(e.dur)}`}; its effect is not simulated in the yard. Raid buffs are in Settings.`;
-  if (e.kind === 'debuff') return `${head}Shows on the target${e.dur ? ` for ${seconds(e.dur)}` : ''}; its effect is not simulated in the yard.`;
+  if (e.id === 'disengage') return `${head}Reduces your threat on the target; the yard does not simulate it.`;
+  if (e.kind === 'debuff') return e.dur ? `${head}Shows on the target for ${seconds(e.dur)}; its effect is not simulated in the yard.` : `${head}Its effect is not simulated in the yard.`;
   if (e.slot) return `${head}Drops the totem; its effect is not simulated in the yard.`;
   return `${head}Nothing to act on in the yard: it only runs its timers.`;
 }

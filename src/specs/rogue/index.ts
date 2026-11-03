@@ -890,7 +890,7 @@ export const rogue: Spec = {
   look: { clothColor: 0x3a2a58, leatherColor: 0x36302c, hood: true },
   sources: [
     { label: 'foreversim', url: 'https://github.com/laurencestokes/foreversim' },
-    { label: 'wow-forever-sim', url: 'https://github.com/gunba/wow-forever-sim' },
+    { label: 'wow-forever-sim (retired)', url: 'https://github.com/gunba/wow-forever-sim' },
   ],
   prepare,
   suggest,

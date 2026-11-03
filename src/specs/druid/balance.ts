@@ -5,6 +5,7 @@
 import type { Combat } from '../../engine/combat';
 import type { Ability, Outcome, School, Spec, Unit } from '../../engine/types';
 import { MOONKIN_AURA } from '../../engine/raid';
+import { ENERGIZED } from '../racials';
 import { BOSS_RULES } from '../common';
 import { BALANCE_STATS } from './data';
 import { CONTROLS, D, SOURCES, YARD, barkskin, clearcasting, faerieFire, manaPotion, omen, resetState, roll, useClearcasting } from './shared';
@@ -180,6 +181,7 @@ const abilities: Ability[] = [
     cost: () => D.innervate.mana, cooldown: D.innervate.cooldown,
     description: () => `For ${D.innervate.duration} sec your Spirit regeneration is 5 times faster and continues fully while casting.`,
     use: (c) => {
+      c.removeAura(c.player, ENERGIZED);
       c.applyAura(c.player, { id: 'innervate', name: 'Innervate', icon: 'innervate', duration: D.innervate.duration });
       afterCast(c, 0);
     },
@@ -317,7 +319,7 @@ export const druidBalance: Spec = {
   abilities,
   stats: BALANCE_STATS,
   rules: BOSS_RULES,
-  builds: buildsFor('balance').map((b) => ({ id: b.id, label: buildLabel(b), name: b.name, source: 'gunba/wow-forever-sim', talentString: b.talentString, stats: b.stats, bar: b.bar, trees: summary(talentsFor(b.id, 'balance')) })),
+  builds: buildsFor('balance').map((b) => ({ id: b.id, label: buildLabel(b), name: b.name, source: b.source, talentString: b.talentString, stats: b.stats, bar: b.bar, trees: summary(talentsFor(b.id, 'balance')) })),
   defaultOptions: { build: 'moonkin', mana: 4024, spirit: 123, mp5: 9, lockMana: false },
   // Running out of mana is part of Balance: play with the raid's mana buffs on.
   defaultRaid: ['judgementOfWisdom', 'blessingOfWisdom', 'manaSpring'],

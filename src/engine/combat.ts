@@ -416,6 +416,7 @@ export class Combat {
   regenRate(): number {
     let mult = 1;
     for (const a of this.player.auras.values()) if (a.regen) mult *= a.regen;
+    if (this.spec.resource === 'mana') mult *= this.auraProduct('manaRegen');
     const base = this.spec.regen ? this.spec.regen(this) : this.player.regenPerSecond;
     return base * mult;
   }
@@ -439,7 +440,7 @@ export class Combat {
     if (!p.inCombat && p.decayPerSecond && ![...p.auras.values()].some((a) => a.pauseDecay)) this.addResource(-p.decayPerSecond * dt);
     let buffMana = 0;
     for (const a of p.auras.values()) if (a.manaPerSecond) buffMana += a.manaPerSecond;
-    if (p.maxMana) p.mana = Math.min(p.maxMana, p.mana + (p.manaPerSecond + buffMana) * dt);
+    if (p.maxMana) p.mana = Math.min(p.maxMana, p.mana + (p.manaPerSecond * this.auraProduct('manaRegen') + buffMana) * dt);
     else if (this.spec.resource === 'mana' && buffMana) this.addResource(buffMana * dt);
     // External healing while the dummy attacks and your health is not locked (an encounter has its own healer).
     if ((this.enemyAttacks.on || this.spec.showHealth) && !this.encounter && !this.playerHealthLocked && p.health > 0) {
@@ -468,16 +469,6 @@ export class Combat {
     let cost = Math.max(0, a.cost(this));
     for (const aura of this.player.auras.values()) if (aura.costMult) cost *= aura.costMult;
     return cost;
-  }
-
-  /** An ability that cost something spends a stack of what made it cheaper (Eureka!). */
-  private spendCostStacks(): void {
-    if (!this.costPaid) return;
-    for (const aura of [...this.player.auras.values()]) {
-      if (!aura.costMult) continue;
-      aura.stacks = (aura.stacks ?? 1) - 1;
-      if (aura.stacks <= 0) this.removeAura(this.player, aura.id);
-    }
   }
 
   cooldownLeft(id: string): { left: number; total: number } {
@@ -659,7 +650,6 @@ export class Combat {
     p.resource -= this.costPaid;
     if (this.costPaid > 0 && this.spec.resource === 'mana') this.lastSpend = this.t;
     if (a.manaCost && !this.manaLocked) p.mana -= a.manaCost(this);
-    this.spendCostStacks();
     if (a.gcd > 0) { p.gcdStart = this.t; p.gcdEnd = this.t + this.gcdOf(a); }
     const cd = typeof a.cooldown === 'function' ? a.cooldown(this) : a.cooldown;
     if (cd) this.startCooldown(a.id, cd);
@@ -703,7 +693,6 @@ export class Combat {
     this.player.resource -= this.costPaid;
     if (this.costPaid > 0 && this.spec.resource === 'mana') this.lastSpend = this.t;
     if (a.manaCost && !this.manaLocked) this.player.mana -= a.manaCost(this);
-    this.spendCostStacks();
     const cd = typeof a.cooldown === 'function' ? a.cooldown(this) : a.cooldown;
     if (cd) this.startCooldown(a.id, cd);
     this.breakStealth();
@@ -1171,7 +1160,7 @@ export class Combat {
   }
 
   /** Product of a multiplier carried by the player's auras. */
-  auraProduct(key: 'damageDone' | 'damageTaken' | 'threat'): number {
+  auraProduct(key: 'damageDone' | 'damageTaken' | 'physicalTaken' | 'magicTaken' | 'threat' | 'manaRegen'): number {
     let m = 1;
     for (const a of this.player.auras.values()) if (a[key] !== undefined) m *= a[key]!;
     return m;
@@ -1443,7 +1432,7 @@ export class Combat {
         blocked = Math.min(d, this.stats.tank?.blockValue ?? 0);
         d -= blocked;
       }
-      amount = d * (1 - this.playerArmorReduction()) * this.mod.damageTaken * this.auraProduct('damageTaken');
+      amount = d * (1 - this.playerArmorReduction()) * this.mod.damageTaken * this.auraProduct('damageTaken') * this.auraProduct('physicalTaken');
       amount = Math.round(amount);
     }
     // Absorb shields soak what is left; a used-up shield goes away.
@@ -1474,10 +1463,10 @@ export class Combat {
    * Damage from an encounter's mechanics (a breath, lava, a whelp): damage-taken effects and absorb
    * shields apply, and it can kill. Returns what got through.
    */
-  hurtPlayer(amount: number, source: string): number {
+  hurtPlayer(amount: number, source: string, kind: 'physical' | 'magic'): number {
     const p = this.player;
     if (p.health <= 0) return 0;
-    let d = Math.round(amount * this.mod.damageTaken * this.auraProduct('damageTaken'));
+    let d = Math.round(amount * this.mod.damageTaken * this.auraProduct('damageTaken') * this.auraProduct(kind === 'physical' ? 'physicalTaken' : 'magicTaken'));
     let absorbed = 0;
     for (const a of [...p.auras.values()]) {
       if (!a.absorb || absorbed >= d) continue;

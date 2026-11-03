@@ -325,8 +325,9 @@ const avatar = () => {
 function updateFormStatus(): void {
   if (!formStatus) return;
   const form = previewForm ?? spec.form?.(combat) ?? null;
-  const definition = form && ownForms[form]?.source?.scene.userData.definition;
-  const detail = form ? `${FORM_NAMES[form]} · ${definition === 'hd' ? 'HD (Skyborne SD unavailable)' : definition === 'sd' ? 'SD' : 'model unavailable'}`
+  const slot = form ? ownForms[form] : undefined;
+  const definition = slot?.source?.scene.userData.definition;
+  const detail = form ? `${FORM_NAMES[form]} · ${definition === 'hd' ? 'HD (Skyborne SD unavailable)' : definition === 'sd' ? 'SD' : slot?.personal ? 'your model' : slot?.loading ? 'loading' : 'model unavailable'}`
     : spec.id === 'druid-balance' && !combat.ability('moonkinForm')?.usable?.(combat) ? 'Humanoid · Moonkin requires its talent; preview is available' : 'Humanoid';
   const text = previewForm ? `Preview · practice paused. ${detail}.${previewForm === 'tree' ? ' Client model only; no healing simulation.' : previewForm === 'aquatic' ? ' Model preview on land; no swimming simulation.' : ''}` : `Practice · ${detail}`;
   if (formStatus.textContent !== text) formStatus.textContent = text;
@@ -558,7 +559,7 @@ applyEnemy();
 applyStats();
 combat.reset();
 /** The game update the yard follows: on the first visit after it, abilities it added get a button in an empty slot. */
-const PATCH = '2026-11-02.2';
+const PATCH = '2026-11-02.3';
 const newPatch = refillRows || prefs.patch !== PATCH;
 dropMissing(prefs.bar, combat);
 if (refillRows) { fillExtraRows(prefs.bar, combat); prefs.patch = PATCH; persist(); }
@@ -1074,9 +1075,12 @@ function frame(): void {
   const move = controls.update(dt);
   if (dash && !previewForm) {
     dash.t = Math.min(1, dash.t + dt / 0.25);
-    controls.x = dash.fromX + (dash.toX - dash.fromX) * dash.t;
-    controls.z = dash.fromZ + (dash.toZ - dash.fromZ) * dash.t;
-    if (dash.t >= 1) dash = null;
+    const x = dash.fromX + (dash.toX - dash.fromX) * dash.t;
+    const z = dash.fromZ + (dash.toZ - dash.fromZ) * dash.t;
+    // A wall in the way ends the rush.
+    const clear = controls.canStep(controls.x, controls.z, controls.y, x, z);
+    if (clear) { controls.x = x; controls.z = z; }
+    if (!clear || dash.t >= 1) dash = null;
   }
   const p = combat.player;
   p.x = controls.x; p.z = controls.z; p.facing = controls.facing; p.moving = move.moving;

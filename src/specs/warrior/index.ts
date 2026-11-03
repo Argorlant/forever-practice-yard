@@ -918,7 +918,7 @@ export const warrior: Spec = {
     This is a practice tool: crit, proc and rage numbers follow WoW Forever; damage is an approximation.`,
   look: { clothColor: 0x7a1f1f, leatherColor: 0x4a4f57, hood: false, plate: true },
   sources: [
-    { label: 'wow-forever-sim', url: 'https://github.com/gunba/wow-forever-sim' },
+    { label: 'wow-forever-sim (retired)', url: 'https://github.com/gunba/wow-forever-sim' },
     { label: 'foreversim', url: 'https://github.com/laurencestokes/foreversim' },
     { label: 'magey/forever-warrior', url: 'https://github.com/magey/forever-warrior' },
   ],
