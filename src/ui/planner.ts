@@ -6,11 +6,11 @@
 import type { Spec, SpecBuild } from '../engine/types';
 import { SPECS } from '../specs';
 import { CLASSES } from './talents-data';
-import { iconHtml } from './icon';
+import { iconHtml, talentIconSrc } from './icon';
 import { load, save } from './storage';
 import NOTES from './talent-notes.json';
 import {
-  MAX_POINTS, TREE_VERSION, type Order, type Points, canAdd, canRemove, decodeOrder, defaultOrder, encode, encodeOrder,
+  MAX_POINTS, TREES_BUILD, type Order, type Points, canAdd, canRemove, decodeOrder, defaultOrder, encode, encodeOrder, treeVersion,
   levelFor, pointsOf, repairOrder, totalPoints,
 } from './talent-rules';
 import { talentTreesHtml } from './talent-tree';
@@ -29,7 +29,7 @@ const h = (tag: string, cls = '', html = '') => {
   return el;
 };
 const esc = (s: string) => s.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;');
-const wowIcon = (name: string | null) => (name ? `<img class="wow-icon" src="${import.meta.env.BASE_URL}icons/${name}.jpg" alt="" draggable="false">` : '');
+const wowIcon = (name: string | null) => (name ? `<img class="wow-icon" src="${talentIconSrc(name)}" alt="" draggable="false"${name.startsWith('cdn:') ? ' referrerpolicy="no-referrer"' : ''}>` : '');
 const sum = (a: number[]) => a.reduce((x, y) => x + y, 0);
 
 const presetsOf = (cls: string): Preset[] =>
@@ -56,7 +56,7 @@ export function showPlanner(app: HTMLElement): void {
   let removing = false;
 
   const keep = () => {
-    save(`fpy.planner.${cls}`, { o: encodeOrder(cls, order), tree: TREE_VERSION } satisfies Saved);
+    save(`fpy.planner.${cls}`, { o: encodeOrder(cls, order), tree: treeVersion(cls) } satisfies Saved);
     save('fpy.planner', cls);
     const url = new URLSearchParams({ planner: cls });
     if (order.length) url.set('o', encodeOrder(cls, order));
@@ -96,7 +96,7 @@ export function showPlanner(app: HTMLElement): void {
   const back = h('a', 'hud-btn picker-back', '‹ Practice') as HTMLAnchorElement;
   back.href = './';
   root.append(back, title,
-    h('p', 'picker-sub', `WoW Forever's talent trees (client build ${TREE_VERSION}). Click a talent to spend a point, right-click to take one back. The planner keeps the order you spend them in: one point a level from level 10, 51 at level 60.`),
+    h('p', 'picker-sub', `WoW Forever's talent trees (client build ${TREES_BUILD}). Click a talent to spend a point, right-click to take one back. The planner keeps the order you spend them in: one point a level from level 10, 51 at level 60.`),
     classRow, bar, graphic, cols);
 
   for (const c of CLASSES) {
@@ -317,7 +317,7 @@ export function showPlanner(app: HTMLElement): void {
     const saved = load<Saved>(`fpy.planner.${cls}`);
     if (linked) setOrder(linked);
     else if (preset) loadPreset(preset);
-    else setOrder(saved?.tree === TREE_VERSION ? decodeOrder(cls, saved.o) ?? [] : []);
+    else setOrder(saved?.tree === treeVersion(cls) ? decodeOrder(cls, saved.o) ?? [] : []);
     draw();
   };
 

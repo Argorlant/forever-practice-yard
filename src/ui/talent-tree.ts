@@ -2,6 +2,7 @@
 // side over their backgrounds, every talent at its row and column, lit with
 // its rank where the build put points, dark where it did not. In edit mode
 // (Settings → Edit talents) the talents you can take are lit green, as in the game.
+import { talentIconSrc } from './icon';
 import { canAdd } from './talent-rules';
 import { decode, describe, treesOf } from './talents-data';
 
@@ -31,7 +32,7 @@ export function talentTreesHtml(cls: string, talentString: string, editing = fal
         state += canAdd(cls, points, i, j) ? ' avail' : r === 0 ? ' locked' : '';
         if (r > 0 && r < t.max) tip += `\n\nNext rank:\n${describe(t, r + 1)}`;
       }
-      const icon = t.icon ? `<img src="${base}icons/${t.icon}.jpg" alt="" draggable="false" loading="lazy">` : '';
+      const icon = t.icon ? `<img src="${talentIconSrc(t.icon)}" alt="" draggable="false" loading="lazy"${t.icon.startsWith('cdn:') ? ' referrerpolicy="no-referrer"' : ''}>` : '';
       const at = editing || !titles ? ` data-t="${i}" data-j="${j}"` : '';
       const title = titles ? ` title="${esc(tip)}"` : '';
       return `<div class="tal ${state}"${at} style="grid-row:${t.row + 1};grid-column:${t.col + 1}"${title}>${icon}<span class="tal-rank">${r}/${t.max}</span>${opts.marks?.(i, j) ?? ''}</div>`;

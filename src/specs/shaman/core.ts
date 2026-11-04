@@ -1,6 +1,6 @@
 // What every shaman spec shares: the spell table with Elemental Fury,
 // Clearcasting and Lightning Overload, shocks on one shared cooldown,
-// Lava Burst, Stormstrike's personal charge, Maelstrom Weapon, Flurry,
+// Call of Thunder, Stormstrike's personal charge, Maelstrom Weapon, Flurry,
 // weapon imbues (Windfury, Flametongue, Rockbiter), totems in four element
 // slots (Searing and Magma attack; Fire Nova needs a Fire totem), Lightning
 // Shield for the off-tank and the mana model. Numbers in ./data.ts; sources
@@ -9,7 +9,7 @@ import type { Combat, Incoming } from '../../engine/combat';
 import { YARD } from '../../engine/combat';
 import type { Ability, Outcome, School, Unit } from '../../engine/types';
 import { DATA } from './data';
-import { buildById, talentsFor, type ShamanSpec, type Talents } from './talents';
+import { WS, buildById, talentsFor, type ShamanSpec, type Talents } from './talents';
 
 export const D = DATA;
 const roll = (c: Combat, pct: number) => c.random() * 100 < pct;
@@ -26,9 +26,9 @@ export const imbue = (c: Combat) => (specOf(c) === 'tank' ? 'rockbiter' : specOf
 
 // ------------------------------------------------------------------- mana
 const SHOCKS = ['earthShock', 'flameShock', 'frostShock'];
-const CONVECTION = ['lightningBolt', 'chainLightning', 'lavaBurst', ...SHOCKS];
+const CONVECTION = ['lightningBolt', 'chainLightning', ...SHOCKS];
 /** Damage spells Clearcasting makes free. */
-const CLEARCASTING = ['lightningBolt', 'chainLightning', 'lavaBurst', 'fireNova', ...SHOCKS];
+const CLEARCASTING = ['lightningBolt', 'chainLightning', 'fireNova', ...SHOCKS];
 const TOTEMS = ['searingTotem', 'magmaTotem', 'strengthOfEarthTotem', 'stoneskinTotem', 'graceOfAirTotem', 'windfuryTotem', 'manaSpringTotem'];
 
 /** Maelstrom Weapon: each stack takes 4 % per point off Lightning Bolt's cast time and cost (5 stacks at 5/5: instant and free). */
@@ -62,14 +62,13 @@ export function regen(c: Combat): number {
 // --------------------------------------------------------------- spell table
 const elementalFury = (c: Combat) => c.rules.spellCritMultiplier + 0.1 * T(c).elementalFury;
 
-/** Talent multipliers per spell: Concussion, Call of Flame, Improved Fire Nova; Lava Burst on your Flame Shock. */
-function spellMult(c: Combat, t: Unit, id: string): number {
+/** Talent multipliers per spell: Concussion, Call of Flame, Improved Fire Nova. */
+function spellMult(c: Combat, _t: Unit, id: string): number {
   const tl = T(c);
   let m = 1;
   if (id === 'lightningBolt' || id === 'chainLightning' || id === 'earthShock' || id === 'lightningOverload') m *= 1 + 0.01 * tl.concussion;
-  if (id === 'flameShock' || id === 'fireNova' || id === 'lavaBurst' || id === 'searingTotem' || id === 'magmaTotem') m *= 1 + 0.05 * tl.callOfFlame;
+  if (id === 'flameShock' || id === 'fireNova' || id === 'searingTotem' || id === 'magmaTotem') m *= 1 + 0.05 * tl.callOfFlame;
   if (id === 'fireNova') m *= 1 + 0.1 * tl.improvedFireNova;
-  if (id === 'lavaBurst' && c.aura(t, 'flameShock')) m *= 1 + D.lavaBurst.flameShockBonus;
   return m;
 }
 
@@ -81,7 +80,8 @@ function spellMult(c: Combat, t: Unit, id: string): number {
 function spellHit(c: Combat, t: Unit, id: string, school: School, base: number, coeff: number,
   opts: { charge?: boolean; scale?: number; direct?: boolean } = {}): { outcome: Outcome; amount: number } {
   const tl = T(c);
-  const outcome: Outcome = roll(c, Math.max(0, D.spellMiss - c.totalHit())) ? 'resist' : roll(c, c.spellCritChance()) ? 'crit' : 'hit';
+  const thunder = tl.callOfThunder && (id === 'lightningBolt' || id === 'chainLightning' || id === 'lightningOverload') ? D.callOfThunder.crit : 0;
+  const outcome: Outcome = roll(c, Math.max(0, D.spellMiss - c.totalHit())) ? 'resist' : roll(c, c.spellCritChance() + thunder) ? 'crit' : 'hit';
   let amount = 0;
   if (outcome !== 'resist') {
     let m = spellMult(c, t, id) * (opts.scale ?? 1);
@@ -118,13 +118,14 @@ function afterCast(c: Combat, id: string): void {
   }
 }
 
-/** Lightning Overload: 3/7/10 % for a free copy at half damage, no threat. */
-function overload(c: Combat, t: Unit, base: number, coeff: number): void {
+/** Lightning Overload: 10/20/30 % for a free copy from its own row, no threat. `scale` is what a Chain Lightning jump keeps. */
+function overload(c: Combat, t: Unit, spell: 'lightningBolt' | 'chainLightning', scale = 1): void {
   const lo = T(c).lightningOverload;
-  if (!lo || !roll(c, [0, 3, 7, 10][lo])) return;
+  if (!lo || !roll(c, D.lightningOverload.chance[lo])) return;
   c.count('overloads');
   c.emit('bolt', { target: t, color: 0x9ad8ff, speed: D.lightningBolt.speed, style: 'lightning' });
-  spellHit(c, t, 'lightningOverload', 'nature', base, coeff, { scale: D.lightningOverload.damage, direct: false });
+  const row = D.lightningOverload[spell];
+  spellHit(c, t, 'lightningOverload', 'nature', between(c, row.min, row.max), row.coeff, { scale, direct: false });
 }
 
 /** Spells start your melee swing when you stand next to the dummy (Enhancement). */
@@ -188,7 +189,7 @@ const spell = (a: Omit<Ability, 'gcd' | 'target' | 'hastedGcd' | 'noAutoAttack'>
   gcd: D.gcd, target: 'enemy', hastedGcd: true, noAutoAttack: true, animation: 'cast', ...a, range: a.range ?? 30,
 });
 const alacrity = (c: Combat) => [0, 0.17, 0.33, 0.5][T(c).elementalAlacrity];
-/** Elemental Mastery: Lightning Bolt and Lava Burst 0.5 s faster while it lasts. */
+/** Lightning Mastery: Lightning Bolt 0.5 s faster while it lasts. */
 const mastery = (c: Combat) => (c.aura(c.player, 'elementalMastery') ? D.elementalMastery.castCut : 0);
 const castTime = (base: (c: Combat) => number) => (c: Combat) => Math.max(0, base(c)) / c.castHaste();
 const shockCd = (c: Combat) => D.shockCooldown - 0.2 * T(c).reverberation;
@@ -212,19 +213,19 @@ export const ABILITIES: Ability[] = [
       }
       const base = between(c, l.min, l.max);
       spellHit(c, u, 'lightningBolt', 'nature', base, l.coeff, { charge: true });
-      overload(c, u, base, l.coeff);
+      overload(c, u, 'lightningBolt');
       afterCast(c, 'lightningBolt');
     },
   }),
   spell({
     id: 'chainLightning', name: 'Chain Lightning', icon: 'chainLightning',
     projectile: { color: 0x9ad8ff, speed: 30, style: 'lightning' },
-    // Elemental Mastery takes Chain Lightning's cooldown away while it lasts.
+    // Lightning Mastery takes Chain Lightning's cooldown away while it lasts.
     cost: cost('chainLightning', D.chainLightning.mana), cooldown: (c) => (c.aura(c.player, 'elementalMastery') ? 0 : D.chainLightning.cooldown),
     castTime: castTime((c) => D.chainLightning.cast - alacrity(c)),
     resetsSwing: true,
     highlight: (c) => !!c.aura(c.player, 'clearcasting'),
-    description: (c) => `A ${(D.chainLightning.cast - alacrity(c)).toFixed(1)} sec cast: ${D.chainLightning.min}-${D.chainLightning.max} Nature damage plus spell damage, then jumps to 2 more targets for 30% less each. 6 sec cooldown (none during Elemental Mastery). Best on Clearcasting (free).`,
+    description: (c) => `A ${(D.chainLightning.cast - alacrity(c)).toFixed(1)} sec cast: ${D.chainLightning.min}-${D.chainLightning.max} Nature damage plus spell damage, then jumps to 2 more targets for 30% less each. 6 sec cooldown (none during Lightning Mastery). Best on Clearcasting (free).`,
     use: (c, t) => {
       const u = t!;
       const k = D.chainLightning;
@@ -233,22 +234,9 @@ export const ABILITIES: Ability[] = [
         const base = between(c, k.min, k.max);
         spellHit(c, x, 'chainLightning', 'nature', base, k.coeff, { charge: i === 0, scale: k.jump ** i });
         if (i > 0) c.emit('bolt', { target: x, color: 0x9ad8ff, speed: 30, style: 'lightning' });
-        overload(c, x, base * k.jump ** i, k.coeff * k.jump ** i);
+        overload(c, x, 'chainLightning', k.jump ** i);
       });
       afterCast(c, 'chainLightning');
-    },
-  }),
-  spell({
-    id: 'lavaBurst', name: 'Lava Burst', icon: 'lavaBurst',
-    projectile: { color: 0xff6a1a, speed: 24, style: 'fire' },
-    cost: cost('lavaBurst', D.lavaBurst.mana), cooldown: D.lavaBurst.cooldown,
-    castTime: castTime((c) => D.lavaBurst.cast - alacrity(c) - mastery(c)),
-    resetsSwing: true,
-    ...talent('lavaBurst', 'Lava Burst'),
-    description: (c) => `A ${(D.lavaBurst.cast - alacrity(c)).toFixed(1)} sec cast (0.5 sec less during Elemental Mastery): ${D.lavaBurst.min}-${D.lavaBurst.max} Fire damage plus spell damage, 20% more while your Flame Shock burns on the target. 10 sec cooldown.`,
-    use: (c, t) => {
-      spellHit(c, t!, 'lavaBurst', 'fire', between(c, D.lavaBurst.min, D.lavaBurst.max), D.lavaBurst.coeff);
-      afterCast(c, 'lavaBurst');
     },
   }),
   spell({
@@ -269,7 +257,7 @@ export const ABILITIES: Ability[] = [
     description: (c) => {
       // Call of Flame: one more tick (3 sec) per point.
       const ticks = D.flameShock.ticks + T(c).callOfFlame;
-      return `Instant: ${D.flameShock.direct} Fire damage plus spell damage, then ${ticks} ticks of ${D.flameShock.tick} plus spell damage over ${ticks * D.flameShock.period} sec; the ticks can crit. Lava Burst deals 20% more while it burns. Shares the shock cooldown.`;
+      return `Instant: ${D.flameShock.direct} Fire damage plus spell damage, then ${ticks} ticks of ${D.flameShock.tick} plus spell damage over ${ticks * D.flameShock.period} sec; the ticks can crit. Shares the shock cooldown.`;
     },
     use: (c, t) => {
       const u = t!;
@@ -308,7 +296,9 @@ export const ABILITIES: Ability[] = [
     use: (c, t) => {
       const u = t!;
       const outcome = c.rollSpecial(u, 'stormstrike');
-      const amount = c.physicalDamage(u, 'stormstrike', c.weaponDamage('main'), outcome);
+      const w = c.stats.mainHand;
+      const normalized = c.weaponDamage('main', { normalizedSpeed: w.twoHand ? 3.3 : w.type === 'dagger' ? 1.7 : 2.4 });
+      const amount = c.physicalDamage(u, 'stormstrike', normalized * D.stormstrike.weapon, outcome);
       c.deal({ target: u, source: 'stormstrike', outcome, school: 'physical', amount, white: false, hand: 'main', weaponStrike: true });
       c.count('casts:stormstrike');
       if (amount > 0) c.applyAura(u, { id: 'stormstrike', name: 'Stormstrike', icon: 'stormstrike', duration: D.stormstrike.duration });
@@ -335,12 +325,12 @@ export const ABILITIES: Ability[] = [
     },
   }),
   {
-    id: 'elementalMastery', name: 'Elemental Mastery', icon: 'elementalMastery', gcd: 0, target: 'self',
+    id: 'elementalMastery', name: 'Lightning Mastery', icon: 'cdn:spell_nature_unrelentingstorm', gcd: 0, target: 'self',
     cooldown: D.elementalMastery.cooldown,
-    ...talent('elementalMastery', 'Elemental Mastery'),
-    description: () => `For ${D.elementalMastery.duration} sec Lightning Bolt and Lava Burst cast 0.5 sec faster and Chain Lightning has no cooldown. Off the global cooldown; 3 min cooldown.`,
+    ...talent('lightningMastery', 'Lightning Mastery'),
+    description: () => `For ${D.elementalMastery.duration} sec Lightning Bolt casts 0.5 sec faster and Chain Lightning has no cooldown. Off the global cooldown; 3 min cooldown.`,
     use: (c) => {
-      c.applyAura(c.player, { id: 'elementalMastery', name: 'Elemental Mastery', icon: 'elementalMastery', duration: D.elementalMastery.duration });
+      c.applyAura(c.player, { id: 'elementalMastery', name: 'Lightning Mastery', icon: 'cdn:spell_nature_unrelentingstorm', duration: D.elementalMastery.duration });
       c.clearCooldown('chainLightning');
     },
   },
@@ -421,6 +411,10 @@ export function prepare(c: Combat): void {
   // Thundering Strikes: crit for every attack and spell. Tidal Focus: melee and spell hit.
   c.mod.crit += tl.thunderingStrikes;
   c.mod.spellCrit += tl.thunderingStrikes;
+  // WoWSims' sheets leave out talents, so these two read its Intellect from the mana (1240 + 15 x Intellect); the older sheets already count them.
+  const intellect = build(c).source === WS ? Math.max(0, (p.maxResource - 1240) / 15) : 0;
+  c.mod.attackPower += intellect * D.mentalDexterity[tl.mentalDexterity];
+  c.mod.spellPower += intellect * D.mentalQuickness[tl.mentalQuickness];
   c.mod.hit += tl.tidalFocus;
   c.mod.threatFor.earthShock = D.earthShock.threat;
   c.mod.threatFor.lightningOverload = 0;
@@ -446,7 +440,7 @@ export function prepare(c: Combat): void {
       fl.stacks = (fl.stacks ?? 1) - 1;
       if (fl.stacks <= 0) c.removeAura(p, 'flurry');
     }
-    if (h.outcome === 'crit' && tl.flurry) c.applyAura(p, { id: 'flurry', name: 'Flurry', icon: 'flurry', duration: D.flurry.duration, stacks: D.flurry.charges, haste: 0.05 * tl.flurry });
+    if (h.outcome === 'crit' && tl.flurry) c.applyAura(p, { id: 'flurry', name: 'Flurry', icon: 'flurry', duration: D.flurry.duration, stacks: D.flurry.charges, haste: D.flurry.haste * tl.flurry });
     // Maelstrom Weapon: 10 procs per minute at any rank, from any landed melee hit.
     if (tl.maelstromWeapon && roll(c, (100 * D.maelstromWeapon.ppm * c.stats.mainHand.speed) / 60)) {
       const before = maelstromStacks(c);
@@ -507,7 +501,7 @@ export function chances(c: Combat): { title: string; rows: [string, string][] }[
   if (melee(c)) {
     if (imbue(c) === 'windfury') procs.push(['Windfury Weapon per landed main-hand hit', `20% (1.5 s cooldown): 2 attacks with +${c.mod.windfuryWeapon?.ap ?? D.windfuryWeapon.ap} AP`]);
     if (tl.maelstromWeapon) procs.push(['Maelstrom Weapon stack per landed hit', pct((100 * D.maelstromWeapon.ppm * c.stats.mainHand.speed) / 60)]);
-    if (tl.flurry) procs.push(['Flurry after a melee crit', `+${5 * tl.flurry}% attack speed for 3 swings`]);
+    if (tl.flurry) procs.push(['Flurry after a melee crit', `+${Math.round(100 * D.flurry.haste * tl.flurry)}% attack speed for 3 swings`]);
   }
   if (c.raid.has('judgementOfWisdom')) procs.push(['Judgement of Wisdom: +59 mana', '50% per landed hit or direct spell']);
   const rows: [string, string][] = [

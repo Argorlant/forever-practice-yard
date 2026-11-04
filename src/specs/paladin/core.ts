@@ -57,7 +57,8 @@ export function holyDamage(c: Combat, t: Unit, id: string, base: number, coeff: 
   if (!landed(outcome)) return 0;
   const crit = outcome === 'crit' ? (opts.spellTable ? c.rules.spellCritMultiplier : c.rules.critMultiplier) : 1;
   const ground = c.aura(t, 'consecratedGround') ? 1 + D.consecratedGround.perPoint * T(c).consecratedGround : 1;
-  const d = ((base + coeff * spellPower(c)) * c.auraProduct('damageDone') * (c.mod.damageFor[id] ?? 1) * ground
+  const twoHand = twoHanded(c) ? 1 + 0.02 * T(c).twoHandedWeaponSpecialization : 1;
+  const d = ((base + coeff * spellPower(c)) * c.auraProduct('damageDone') * (c.mod.damageFor[id] ?? 1) * ground * twoHand
     + coeff * c.bonusTaken(t, 'holy')) * crit;
   return Math.max(1, Math.round(d));
 }
@@ -449,8 +450,8 @@ export function prepare(c: Combat): void {
   c.mod.crit = 2 * t.conviction;
   c.mod.spellCrit = 2 * t.conviction;
   c.mod.hit = t.precision;
-  // Two-Handed Weapon Specialization (Oct 30): +2 % physical damage per point and 7/14/20 % less threat with a two-hander;
-  // it no longer raises seals, Judgements or Holy Strike. One-Handed Weapon Specialization is gone.
+  // Two-Handed Weapon Specialization: +2 % Physical and Holy damage per point (Holy since build 70755, in holyDamage) and
+  // 7/14/20 % less threat with a two-hander. One-Handed Weapon Specialization is gone.
   const twoHand = twoHanded(c) ? t.twoHandedWeaponSpecialization : 0;
   c.mod.physicalDamage = 1 + 0.02 * twoHand;
   c.mod.threat = 1 - [0, 0.07, 0.14, 0.2][twoHand];
@@ -495,7 +496,7 @@ export function prepare(c: Combat): void {
     c.applyAura(c.player, { id: 'unsealedWrath', name: `Unsealed Wrath (${SEAL_NAMES[now]})`, icon: now, duration: D.unsealedWrath.duration, stacks });
   });
 
-  // Vengeance: any non-periodic crit stacks up to 3 times (+1/2/3 % Physical and Holy per stack).
+  // Vengeance: any non-periodic crit stacks up to 5 times (+1/2/3 % Physical and Holy per stack).
   c.afterDamage.push((hit: Hit) => {
     if (hit.outcome !== 'crit' || hit.periodic || !t.vengeance) return;
     const stacks = Math.min(D.vengeance.stacks, (c.aura(c.player, 'vengeance')?.stacks ?? 0) + 1);
@@ -563,7 +564,7 @@ export function chances(c: Combat): { title: string; rows: [string, string][] }[
   if (tl.sealOfCommand) procs.push(['Seal of Command per landed white swing', `${pct(((D.sealOfCommand.ppm * w.speed) / 60) * 100)} (7 per minute, 1 s cooldown)`]);
   procs.push(['Seal of Righteousness', 'every landed white swing; rolls only for a crit']);
   if (tl.unsealedWrath) procs.push(['Unsealed Wrath', `each landed swing stores a copy of your seal (up to ${D.unsealedWrath.stacks}, ${D.unsealedWrath.duration} s); a swing with another seal gives each copy its normal chance`]);
-  if (tl.vengeance) procs.push(['Vengeance after any crit', `+${tl.vengeance}% Physical and Holy per stack, 3 stacks, 30 s`]);
+  if (tl.vengeance) procs.push(['Vengeance after any crit', `+${tl.vengeance}% Physical and Holy per stack, ${D.vengeance.stacks} stacks, 30 s`]);
   if (tl.vindication) procs.push(['Vindication per landed swing or melee special (5 a minute)', `${pct(((D.vindication.ppm * w.speed) / 60) * 100)}: the dummy -${D.vindication.apPerRank * tl.vindication} attack power if it lands (spell hit)`]);
   if (tl.reckoning) procs.push(['Reckoning: a charge after a block / a crit taken', `${D.reckoning.onBlock * tl.reckoning}% / ${D.reckoning.onCrit * tl.reckoning}% (blocks at most once per 1.5 s); up to ${D.reckoning.charges}, all fired by your next swing`]);
   if (tl.redoubt) procs.push(['Redoubt: +block after a hit taken', `${D.redoubt.chance}% for +${D.redoubt.block * tl.redoubt}% block (10 s or 5 blocks)`]);

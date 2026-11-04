@@ -2,7 +2,7 @@
  "warrior": {
   "talents": {
    "improvedTacticalMastery": {
-    "change": "Was 'Tactical Mastery'; base 10 rage is now baseline, talent adds 3/point (max 25)."
+    "change": "Was 'Tactical Mastery'; base 10 rage is now baseline. 3 points: 5/10/15 more rage."
    },
    "improvedOverpower": {
     "change": "Moved to row 2."
@@ -11,19 +11,21 @@
     "change": "Rolling bleed, no attack power, cannot crit; required for Impale again (8 Oct)."
    },
    "spearingStrike": {
-    "new": true
+    "new": true,
+    "change": "75% normalized weapon damage."
    },
    "twoHandedWeaponSpecialization": {
-    "change": "3 ranks, 1/2/3% (Classic 5 ranks, 1-5%)."
+    "change": "3 ranks, 2/4/6% (Classic 5 ranks, 1-5%)."
    },
    "bloodthrill": {
-    "new": true
+    "new": true,
+    "change": "2 points: 10/20%."
    },
    "weaponmaster": {
     "new": true
    },
    "improvedSlam": {
-    "change": "Moved from Fury, 2 points: -0.25 s cast and GCD and -1.5 s cooldown per point; Slam no longer interrupts the swing."
+    "change": "Moved from Fury, 2 points: -0.25 s cast and GCD and -2.5 s cooldown per point; Slam no longer interrupts the swing."
    },
    "boomingVoice": {
     "change": "Now +radius and -5%/point shout rage cost (durations baseline)."
@@ -40,23 +42,28 @@
    "bloodCraze": {
     "change": "Also triggered by hits over 20% of max health; Bloodthirst trigger removed 1 Oct."
    },
+   "enrage": {
+    "change": "Redesigned: 30% chance on any damage taken, rank scales the Physical damage bonus 2-10%."
+   },
    "dualWieldSpecialization": {
     "change": "Off-hand damage 5%/point plus off-hand rage (gs curve 10%/point, unconfirmed); the 20%/point rage and the off-hand hit were removed on 1 Oct."
    },
-   "ragingBlows": {
-    "new": true
-   },
-   "enrage": {
-    "change": "Redesigned: 30% chance on any damage taken, rank scales the Physical damage bonus 2-10%."
+   "recklessSwings": {
+    "new": true,
+    "change": "25% of base health: the next 4 white swings add 5 rage each. 15 s cooldown."
    },
    "improvedBerserkerRage": {
     "change": "Moved to row 5."
    },
-   "flurry": {
-    "change": "Max 25% (was 30%); Death Wish is now the prerequisite (1 Oct)."
-   },
    "goreDrinker": {
     "new": true
+   },
+   "improvedWhirlwind": {
+    "new": true,
+    "change": "2 points: 1/2 s off the cooldown and 15/30% more to the closest enemy."
+   },
+   "flurry": {
+    "change": "3 points: 10/20/30% for 3 swings after a crit; no prerequisite."
    },
    "bloodthirst": {
     "change": "45% AP + 48, no heal, +10% movement speed."
@@ -234,13 +241,13 @@
     "change": "New: Holy Strike +20% (24 Sep, was 10%) and refreshes all Judgements on the target."
    },
    "twoHandedWeaponSpecialization": {
-    "change": "2/4/6% (24 Sep, beta had 3/6/9%), Physical in fs; gs also applies it to seal procs, Judgement of Command and Holy Strike."
+    "change": "2/4/6% Physical and Holy damage, 7/14/20% less threat."
    },
    "turnEvil": {
     "new": true
    },
    "vengeance": {
-    "change": "Reworked: +1/2/3% Physical and Holy damage per stack, 3 stacks, 30 s, after any non-periodic crit (24 Sep). Wowhead raw text prints 5%."
+    "change": "Reworked: +1/2/3% Physical and Holy damage per stack, 5 stacks, 30 s, after any non-periodic crit."
    },
    "championOfTheLight": {
     "new": true,
@@ -339,7 +346,7 @@
     "change": "New 11-point milestone: +20% damage with all attacks while no pet is active."
    },
    "trueshotAura": {
-    "change": "Moved from row 7 to row 4 (Blizzard calls it the 21-point milestone; in gs's tree row 4 needs 15 points); ranged AP only; new low ranks (talent rank 1 = 30 RAP)."
+    "change": "Moved from row 7 to row 4; ranged AP only, 100 at rank 5."
    },
    "mortalShots": {
     "change": "Now needs Careful Aim: +6%/point ranged crit damage bonus."
@@ -349,7 +356,7 @@
     "change": "New: Serpent Sting hit -> 25/50% casting regen for 15 s; needs Rapid Killing."
    },
    "barrage": {
-    "change": "3/7/10% (was 5/10/15%); now Aimed Shot too, plus Multi-Shot and Volley."
+    "change": "5/10/15%; now Aimed Shot too, plus Multi-Shot and Volley."
    },
    "sniperShot": {
     "new": true,
@@ -407,7 +414,7 @@
     "change": "New 21-point milestone: 100% weapon damage, 8 s, +30% speed for 3 s."
    },
    "lightningReflexes": {
-    "change": "2%/point Agility (was 3%; fs still 3%)."
+    "change": "3%/point Agility."
    },
    "laceratingStrikes": {
     "new": true,
@@ -644,18 +651,21 @@
     "change": "New 21-point milestone: Earthbind Totem roots for 5 s on cast."
    },
    "elementalReach": {
-    "change": "Formerly Storm Reach: +3/6 yd LB, CL, Fire Nova, Lava Burst; +8/15 yd Flame Shock."
+    "change": "Formerly Storm Reach: +3/6 yd LB, CL, Fire Nova; +8/15 yd Flame Shock."
    },
-   "lavaBurst": {
+   "callOfThunder": {
     "new": true,
-    "change": "New 31-point milestone (ranks 2-3 from the spellbook at 50 and 60)."
+    "change": "Replaced Lava Burst in November: +5% crit on LB and CL."
    },
    "lightningOverload": {
     "new": true,
-    "change": "New: 3/7/10% free half-damage copy of LB or CL, no threat."
+    "change": "New: 10/20/30% free copy of LB or CL, no threat."
    },
    "elementalFury": {
     "change": "Moved to row 6, requires Call of Thunder; 20% crit bonus per point (5 ranks)."
+   },
+   "lightningMastery": {
+    "change": "Elemental Mastery, renamed in November: Lava Burst is gone."
    },
    "earthsGrasp": {
     "change": "Moved from Elemental to Enhancement row 1."
@@ -668,10 +678,7 @@
    },
    "mentalDexterity": {
     "new": true,
-    "change": "New: AP from Intellect."
-   },
-   "improvedGhostWolf": {
-    "change": "Rank 2 makes Ghost Wolf instant; usable indoors."
+    "change": "New: AP from Intellect, 50/100/150%."
    },
    "elementalWeapons": {
     "change": "Moved to row 3."
@@ -687,10 +694,13 @@
     "change": "Stamina % instead of armor."
    },
    "flurry": {
-    "change": "5%/point (25% max, was 30%); requires Mental Dexterity."
+    "change": "6%/point (30% max); requires Mental Dexterity."
    },
    "stormstrike": {
-    "change": "16-point milestone; 8 s, 125 mana, personal +20% to the next LB/CL/ES."
+    "change": "16-point milestone; 6 s, 150% normalized weapon damage, personal +20% to the next LB/CL/ES."
+   },
+   "improvedGhostWolf": {
+    "change": "Rank 2 makes Ghost Wolf instant; usable indoors."
    },
    "spiritWeapons": {
     "change": "Formerly Parry (21 points): parry plus a Rockbiter-dependent threat modifier."
@@ -705,7 +715,7 @@
    },
    "maelstromWeapon": {
     "new": true,
-    "change": "New: stacks that make Lightning Bolt faster and cheaper."
+    "change": "New: stacks that make Lightning Bolt faster and cheaper. Chance doubled in November."
    },
    "rageOfTheFarseer": {
     "new": true,
@@ -776,7 +786,7 @@
     "change": "Resists +5/10 and 1/2% mana on a full resist, now with a 1 s internal cooldown."
    },
    "arcaneConcentration": {
-    "change": "2%/point Clearcasting after a landed damage spell; 1 s ICD (client 11213). Lower chance with much lower-rank spells. Wowhead prints a raw 100%."
+    "change": "2%/point Clearcasting after a landed damage spell, each Arcane Missiles missile too; 1 s ICD. Lower chance with much lower-rank spells."
    },
    "missileBarrage": {
     "new": true,

@@ -40,12 +40,14 @@ export function omen(c: Combat, speed: number, opts: { mult?: number; icd?: numb
 export const clearcasting = (c: Combat) => !!c.aura(c.player, 'clearcasting');
 /** Spends Clearcasting (when the ability was free because of it). */
 export function useClearcasting(c: Combat): void {
+  // Poised is spent by the same strikes.
+  c.removeAura(c.player, 'poised');
   if (!clearcasting(c)) return;
   c.removeAura(c.player, 'clearcasting');
   c.count('clearcastingUsed');
 }
 /** A cost that Clearcasting makes free. */
-export const freeWithClearcasting = (base: (c: Combat) => number) => (c: Combat) => (clearcasting(c) ? 0 : base(c));
+export const freeWithClearcasting = (base: (c: Combat) => number) => (c: Combat) => (clearcasting(c) ? 0 : Math.max(0, base(c) - (c.aura(c.player, 'poised') ? D.poised.energy : 0)));
 
 // ------------------------------------------------------------------ bleeds
 /**

@@ -1,4 +1,4 @@
-// Shaman for WoW Forever: Elemental (Lightning Bolt, Lava Burst on Flame
+// Shaman for WoW Forever: Elemental (Lightning Bolt, Chain Lightning, Flame
 // Shock, Clearcasting, Lightning Overload; Stormcaller as a build),
 // Enhancement (one two-hander with Windfury Weapon, Stormstrike, Maelstrom
 // Weapon, Fire Nova around your Searing Totem) and our experimental
@@ -57,7 +57,7 @@ const onCooldown = (c: Combat, id: string, cd: number) => {
 };
 
 // --------------------------------------------------------------- Elemental
-/** WoWSims Forever's Elemental list: Fire totem, Elemental Mastery and Lava Burst on your Flame Shock, Flame Shock, Lightning Bolt; Fire Nova and Chain Lightning on more than one target. */
+/** WoWSims Forever's Elemental list: Fire totem, Lightning Mastery on your Flame Shock, Chain Lightning above 40% mana, Flame Shock, Lightning Bolt; Fire Nova and Chain Lightning on more than one target. */
 function elementalSuggest(c: Combat): string | null {
   const t = c.target;
   if (!t || t.health <= 0) return null;
@@ -69,14 +69,15 @@ function elementalSuggest(c: Combat): string | null {
   if (totem) return totem;
   const drink = potion(c);
   if (drink) return drink;
-  if (many && fireTotem(c) && nearFireTotem(c, t, D.fireNova.radius) && can('fireNova')) return 'fireNova';
   const flame = !!c.aura(t, 'flameShock');
-  // Elemental Mastery on your Flame Shock: instant and off the global cooldown.
-  if (tl.elementalMastery && p.inCombat && flame && can('elementalMastery')) return 'elementalMastery';
+  // Lightning Mastery on your Flame Shock: instant and off the global cooldown.
+  if (tl.lightningMastery && p.inCombat && flame && can('elementalMastery')) return 'elementalMastery';
   // On the move, only instants: Flame Shock when it is down, otherwise Earth Shock.
   if (p.moving) return !flame && can('flameShock') ? 'flameShock' : can('earthShock') ? 'earthShock' : null;
-  if (many && can('chainLightning')) return 'chainLightning';
-  if (tl.lavaBurst && flame && can('lavaBurst') && c.casting?.id !== 'lavaBurst') return 'lavaBurst';
+  // On one target Chain Lightning waits while Lightning Mastery lasts, and below 40% mana.
+  const mana = p.resource / p.maxResource;
+  if ((many || (mana >= 0.4 && !has('elementalMastery'))) && can('chainLightning')) return 'chainLightning';
+  if (many && fireTotem(c) && nearFireTotem(c, t, D.fireNova.radius) && can('fireNova')) return 'fireNova';
   if (!flame && can('flameShock')) return 'flameShock';
   const flameLeft = (c.aura(t, 'flameShock')?.end ?? c.t) - c.t;
   if (String(c.options.build ?? '').startsWith('stormcaller') && has('clearcasting') && flameLeft > 2 && can('earthShock')) return 'earthShock';
@@ -94,10 +95,7 @@ function elementalReview(c: Combat): Row[] {
     { label: 'Flame Shock uptime', value: pctOf(uptime('uptime:target:flameShock')), good: uptime('uptime:target:flameShock') >= 0.85 },
     { label: 'Searing Totem uptime', value: pctOf(uptime('uptime:searingTotem')), good: uptime('uptime:searingTotem') >= 0.9 },
   ];
-  if (tl.lavaBurst) {
-    const lvb = Math.min(1, (casts('lavaBurst') * D.lavaBurst.cooldown) / time);
-    rows.push({ label: 'Lava Burst on cooldown', value: pctOf(lvb), good: lvb >= 0.8 });
-  }
+  rows.push({ label: 'Chain Lightning on cooldown', value: pctOf(Math.min(1, (casts('chainLightning') * D.chainLightning.cooldown) / time)) });
   if (tl.elementalFocus) rows.push({ label: 'Clearcasting procs / spent on Earth Shock', value: `${k.clearcasting ?? 0} / ${k['clearcasting:earthShock'] ?? 0}` });
   if (tl.lightningOverload) rows.push({ label: 'Lightning Overloads', value: String(k.overloads ?? 0) });
   manaRows(c, rows, 'Time without mana for Lightning Bolt');
@@ -227,10 +225,10 @@ export const shamanElemental: Spec = specFor('elemental', {
   options: OPTIONS,
   sheet: { attackPower: false, crit: false, spellCrit: 'Spell crit (gear + Intellect; Thundering Strikes adds on top)', spellPower: 'Spell damage (every school)', hit: 'Hit (gear; Tidal Focus adds on top)', mainHand: false, offHand: false },
   lowMana: (c) => c.cost(c.ability('lightningBolt')!),
-  welcome: 'Welcome to Elemental practice. Drop Searing Totem and Mana Spring Totem, keep Flame Shock burning, cast Lava Burst whenever it is ready on your Flame Shock, Elemental Mastery with Flame Shock up, and Lightning Bolt for everything else; on more than one target, Magma Totem, Fire Nova and Chain Lightning. Mana runs out; that is part of the spec in WoW Forever.',
+  welcome: 'Welcome to Elemental practice. Drop Searing Totem and Mana Spring Totem, keep Flame Shock burning, cast Chain Lightning whenever it is ready and you have mana above 40%, Lightning Mastery with Flame Shock up, and Lightning Bolt for everything else; on more than one target, Magma Totem, Fire Nova and Chain Lightning. Mana runs out; that is part of the spec in WoW Forever.',
   help: `${CONTROLS}
     ${HELP_COMMON}
-    Elemental in WoW Forever: casts are faster and weaker (Lightning Bolt 2.0 sec with Elemental Alacrity). Lava Burst (21 points, no prerequisite) deals 20% more on your own Flame Shock; Call of Flame keeps Flame Shock up 3/6/9 sec longer. Elemental Fury makes your spells and Searing Totem crit for 2.0x; Lightning Overload has 10% for a free half-damage copy. Elemental Mastery (31 points, needs Lava Burst) is back since Oct 15: for 15 sec Lightning Bolt and Lava Burst cast 0.5 sec faster (1.5 sec with Alacrity) and Chain Lightning has no cooldown; 3 min cooldown. The Stormcaller builds trade Lava Burst for Intellect turned into spell damage.
+    Elemental in WoW Forever: casts are faster and weaker (Lightning Bolt 2.0 sec with Elemental Alacrity). Call of Thunder (21 points) adds 5% crit to Lightning Bolt and Chain Lightning; Call of Flame keeps Flame Shock up 3/6/9 sec longer. Elemental Fury makes your spells and Searing Totem crit for 2.0x; Lightning Overload has up to 30% for a free, weaker copy. Lightning Mastery (31 points, needs Call of Thunder): for 15 sec Lightning Bolt casts 0.5 sec faster (1.5 sec with Alacrity) and Chain Lightning has no cooldown; 3 min cooldown. The Stormcaller builds trade Call of Thunder for Intellect turned into spell damage.
     This is a practice tool: hit, crit and proc chances follow WoW Forever; damage numbers are an approximation.`,
   look: { clothColor: 0x2a5a8a, leatherColor: 0x4a3a20, hood: false, robe: true },
   suggest: elementalSuggest,

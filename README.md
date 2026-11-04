@@ -15,7 +15,9 @@ Builds, gear and priority lists follow [WoWSims Forever](https://www.wowsims.com
 Ice; Human Ruthless at 1 % and no Orc Savage in the race sheets. The live hotfix of October 30 rebuilt the Druid, Mage
 and Paladin trees (and moved or renamed a Hunter and a Priest talent); the site's trees and their tooltips were read then
 from Wowhead's WoW Forever calculator (`tools/wowhead_trees.mjs`, data in `research/wowhead/`), and they match WoWSims
-Forever's talent order. Builds marked **community** have no equivalent there: they come from older sims, re-spent where the
+Forever's talent order. The hotfixes of early November changed the Warrior and Shaman trees again; those follow WoWSims
+Forever at `7c3453f` (`tools/wowsims_trees.mjs`), with its numbers and rotations for Warrior, Shaman and Hunter. Its Rogue,
+Warlock and feral Druid changes are not merged yet, so the site's stay as they were. Builds marked **community** have no equivalent there: they come from older sims, re-spent where the
 trees changed, and stay for whoever practises them.
 > **Speculative, built on the sims.** This site was made before WoW Forever's launch on 4 November 2026. The talents,
 > builds, rotations and numbers here follow the community sims ([WoWSims Forever](https://www.wowsims.com/forever/), our main source; the
@@ -165,8 +167,8 @@ The **Shaman** comes as two specs and an experiment (sources in [`research/shama
 Totems sit in four element slots (a new one replaces the old; Searing Totem attacks, buff totems last 5 min, a 1.0 s
 global cooldown), Earth, Flame and Frost Shock share one cooldown, and Clearcasting makes the next damage spell free:
 
-- **Elemental** (`?class=shaman-elemental`): Lightning Bolt (2.0 s), Lava Burst for 20% more on your own Flame Shock,
-  Elemental Mastery (0.5 s faster Lightning Bolt and Lava Burst, Chain Lightning off cooldown), Chain Lightning on Clearcasting, Lightning Overload copies and 2.0x crits from Elemental Fury. Mana runs out, as in the
+- **Elemental** (`?class=shaman-elemental`): Lightning Bolt (2.0 s), Chain Lightning on cooldown above 40% mana,
+  Call of Thunder's crit, Lightning Mastery (0.5 s faster Lightning Bolt, Chain Lightning off cooldown), Lightning Overload copies and 2.0x crits from Elemental Fury. Mana runs out, as in the
   sims; the Stormcaller hybrids are builds of this spec.
 - **Enhancement** (`?class=shaman-enhancement`): one two-hander (no dual wield in Forever) with Windfury Weapon (two extra
   attacks; it turns a raid Windfury Totem off for you) or Flametongue, Stormstrike's personal charge for your next Lightning
@@ -198,7 +200,8 @@ The first screen picks the class (WoW's class icons) and then a build, grouped b
 like the game's talent frame (hover a talent for what it does). `?class=warrior` opens a class directly; Settings shows the
 current build's trees and links back to the first screen. `npm run talents` rebuilds the tree layouts from gunba's retired sim
 (`tools/talent_layout.mjs`); `node tools/wowhead_trees.mjs` then lays the Oct 30 trees from Wowhead over them, and
-`npm run icons` fetches their icons.
+`node tools/wowsims_trees.mjs` lays the November trees over those, and `npm run icons` fetches their icons (icons marked
+`cdn:` stay on the image server).
 
 **Your own talents.** In Settings, *Edit talents* turns the build's talent frame into a calculator: left click adds a
 point, right click (or *Remove* on a touch screen) takes one back, under the game's rules (51 points, five per row,

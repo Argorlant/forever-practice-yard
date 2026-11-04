@@ -144,9 +144,9 @@ function resolve(c: Combat, t: Unit, id: string, school: School, base: number, c
   c.deal({ target: t, source: id, outcome, school: o.frostfire ? 'fire' : school, amount, white: false, spell: true });
   if (outcome === 'resist') return { outcome, amount };
 
-  // Clearcasting: 2 % per point per landed damage spell, 1 s internal cooldown; Arcane Missiles' missiles roll none (Oct 21).
+  // Clearcasting: 2 % per point per landed damage spell, 1 s internal cooldown; each Arcane Missiles missile rolls it (WoWSims, Nov 3).
   const s = state(c);
-  if (tl.arcaneConcentration && fighting && id !== 'arcaneMissiles' && c.t - s.lastClearcasting >= D.clearcasting.icd && roll(c, 2 * tl.arcaneConcentration)) {
+  if (tl.arcaneConcentration && fighting && c.t - s.lastClearcasting >= D.clearcasting.icd && roll(c, 2 * tl.arcaneConcentration)) {
     s.lastClearcasting = c.t;
     c.applyAura(c.player, { id: 'clearcasting', name: 'Clearcasting', icon: 'clearcasting', duration: D.clearcasting.duration });
     c.count('clearcasting');
@@ -327,14 +327,14 @@ export const ABILITIES: Ability[] = [
       duration: (c) => (c.aura(c.player, 'missileBarrage') ? D.arcaneMissiles.duration / 2 : D.arcaneMissiles.duration),
       ticks: D.arcaneMissiles.missiles,
       onStart: (c) => {
-        spend(c, 0);
-        if (c.aura(c.player, 'missileBarrage')) { c.removeAura(c.player, 'missileBarrage'); c.count('barrageUsed'); }
+        // A Missile Barrage pays for the channel, so Clearcasting stays up for the next spell (WoWSims, Nov 3).
+        if (c.aura(c.player, 'missileBarrage')) { c.removeAura(c.player, 'missileBarrage'); c.count('barrageUsed'); } else spend(c, 0);
         return true;
       },
       onTick: (c, t) => {
         const u = t!;
         c.emit('bolt', { target: u, color: 0xe9a8ff, speed: 20, style: 'arcane' });
-        // Each missile rolls its own hit and crit (no Clearcasting or Missile Barrage since Oct 21); Arcane Blast's stacks add spell damage.
+        // Each missile rolls its own hit, crit and Clearcasting (no Missile Barrage); Arcane Blast's stacks add spell damage.
         resolve(c, u, 'arcaneMissiles', 'arcane', D.arcaneMissiles.damage, D.arcaneMissiles.coeff);
       },
     },
@@ -521,7 +521,7 @@ export function chances(c: Combat): { title: string; rows: [string, string][] }[
     ['Frost: miss / crit / crit damage', `${pct(miss('frost'))} / ${pct(critChance(c, t, 'frostbolt', 'frost', {}, false))} / ${critMultiplier(c, 'frost', {}).toFixed(1)}x`],
   ];
   const procs: [string, string][] = [];
-  if (tl.arcaneConcentration) procs.push(['Clearcasting per landed damage spell (not Arcane Missiles)', `${2 * tl.arcaneConcentration}%, 1 s cooldown`]);
+  if (tl.arcaneConcentration) procs.push(['Clearcasting per landed damage spell, each missile too', `${2 * tl.arcaneConcentration}%, 1 s cooldown`]);
   if (tl.missileBarrage) procs.push(['Missile Barrage', `${D.missileBarrage.arcaneBlast * tl.missileBarrage}% per Arcane Blast, ${D.missileBarrage.other * tl.missileBarrage}% per Arcane Wrath, Fireball, Frostbolt or Frostfire Bolt; none from missiles`]);
   if (tl.hotStreak) procs.push(['Heating Up per direct Fire crit (and every Fire Blast)', '-25% Pyroblast cast, 3 stacks, 20 s']);
   if (tl.firePower) procs.push(['Fire Power', `+${tl.firePower}% Fire damage per Fire effect of yours on the target, up to ${D.firePower.maxEffects}`]);

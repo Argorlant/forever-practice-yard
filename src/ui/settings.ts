@@ -10,7 +10,7 @@ import { ICON_AUTHORS } from './icons.gen';
 import { bindingFor, keyLabel, wheelBinding } from './storage';
 import { DISCLAIMER_HTML, INSPIRATION_HTML, SUPPORT_HTML } from './disclaimer';
 import { raidPicker } from './raid-picker';
-import { MAX_POINTS, TREE_VERSION, canAdd, canRemove, encode, totalPoints } from './talent-rules';
+import { MAX_POINTS, canAdd, canRemove, encode, totalPoints, treeVersion } from './talent-rules';
 import { talentTreesHtml } from './talent-tree';
 import { classKey, decode, treesOf } from './talents-data';
 
@@ -474,7 +474,7 @@ export class SettingsDialog {
     const commit = () => {
       const s = encode(points);
       p.options.talents = s === buildString ? '' : s;
-      p.options.talentsTree = TREE_VERSION;
+      p.options.talentsTree = treeVersion(cls);
       this.onChange('talents');
       draw();
     };

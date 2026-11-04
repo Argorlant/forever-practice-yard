@@ -40,7 +40,7 @@ function enterStance(c: Combat, s: Stance, keepRage = true): void {
     : s === 'defensive' ? { damageTaken: 0.9, damageDone: 0.9, threat: 1.3 * defiance }
       : { crit: 3, damageTaken: 1.1, threat: 0.8 };
   c.applyAura(c.player, { id: STANCES[s].aura, name: STANCES[s].name, icon: STANCES[s].aura, duration: Infinity, ...mods });
-  if (keepRage) c.player.resource = Math.min(c.player.resource, D.rage.tacticalMastery + 3 * t.improvedTacticalMastery);
+  if (keepRage) c.player.resource = Math.min(c.player.resource, D.rage.tacticalMastery + 5 * t.improvedTacticalMastery);
 }
 
 // ------------------------------------------------------------------- rage
@@ -135,7 +135,7 @@ const abilities: Ability[] = [
   {
     id: 'cleave', name: 'Cleave', icon: 'cleave', gcd: 0, target: 'enemy', range: 'melee', onNextSwing: true,
     animation: 'slash',
-    cost: (c) => D.cleave.cost - 3 * T(c).ragingBlows - focused(c),
+    cost: (c) => D.cleave.cost - focused(c),
     description: () => `Your next main-hand swing hits your target and one more nearby enemy for weapon damage plus ${D.cleave.bonus}.`,
     use: (c, t) => {
       // Its flat threat is split between the targets it lands on (Oct 21).
@@ -167,14 +167,19 @@ const abilities: Ability[] = [
   {
     id: 'whirlwind', name: 'Whirlwind', icon: 'whirlwind', gcd: D.gcd, target: 'enemy', range: 'melee', needsFacing: false,
     animation: 'slash',
-    cost: (c) => D.whirlwind.cost - 3 * T(c).ragingBlows, cooldown: D.whirlwind.cooldown,
+    cost: () => D.whirlwind.cost, cooldown: (c) => D.whirlwind.cooldown - D.whirlwind.improvedCooldown * T(c).improvedWhirlwind,
     requirements: (c) => needsStance(c, 'berserker'),
     usable: (c) => stanceOf(c) === 'berserker',
-    description: () => `Strikes up to ${D.whirlwind.targets} nearby enemies with normalized weapon damage, with both weapons when dual wielding.`,
+    description: (c) => {
+      const closest = Math.round(100 * D.whirlwind.improvedClosest * T(c).improvedWhirlwind);
+      return `Strikes up to ${D.whirlwind.targets} nearby enemies with normalized weapon damage, with both weapons when dual wielding.${closest ? ` The closest enemy takes ${closest}% more.` : ''}`;
+    },
     use: (c, t) => {
-      for (const u of [t!, ...others(c, t!).slice(0, D.whirlwind.targets - 1)]) {
-        strike(c, u, 'whirlwind', normalized(c), { refund: false });
-        if (c.stats.offHand) strike(c, u, 'whirlwindOH', normalized(c, 'off'), { refund: false, hand: 'off' });
+      const closest = 1 + D.whirlwind.improvedClosest * T(c).improvedWhirlwind;
+      for (const [i, u] of [t!, ...others(c, t!).slice(0, D.whirlwind.targets - 1)].entries()) {
+        const m = i === 0 ? closest : 1;
+        strike(c, u, 'whirlwind', normalized(c) * m, { refund: false });
+        if (c.stats.offHand) strike(c, u, 'whirlwindOH', normalized(c, 'off') * m, { refund: false, hand: 'off' });
       }
     },
   },
@@ -182,7 +187,7 @@ const abilities: Ability[] = [
     id: 'slam', name: 'Slam', icon: 'slam', gcd: D.gcd, target: 'enemy', range: 'melee',
     animation: 'slash',
     cost: () => D.slam.cost,
-    cooldown: (c) => D.slam.cooldown - (T(c).improvedSlam ? 3 : 0),
+    cooldown: (c) => D.slam.cooldown - D.slam.improvedCooldown * T(c).improvedSlam,
     castTime: (c) => D.slam.cast - 0.25 * T(c).improvedSlam,
     // Base Slam interrupts the swing timer (Blizzard); Improved Slam removes that.
     resetsSwing: true,
@@ -321,6 +326,16 @@ const abilities: Ability[] = [
     use: (c) => {
       c.applyAura(c.player, { id: 'battleShout', name: 'Battle Shout', icon: 'battleShout', duration: D.battleShout.duration, attackPower: D.battleShout.ap });
       c.addThreat(D.battleShout.threat);
+    },
+  },
+  {
+    id: 'recklessSwings', name: 'Reckless Swings', icon: 'cdn:ability_warrior_bloodfrenzy', gcd: D.recklessSwings.gcd, target: 'self',
+    cooldown: D.recklessSwings.cooldown,
+    ...talent('recklessSwings', 'Reckless Swings'),
+    description: () => `Costs ${D.recklessSwings.health} health. Your next ${D.recklessSwings.charges} white swings generate ${D.recklessSwings.rage} additional rage. Lasts ${D.recklessSwings.duration} sec.`,
+    use: (c) => {
+      if (!c.playerHealthLocked) c.player.health = Math.max(1, c.player.health - D.recklessSwings.health);
+      c.applyAura(c.player, { id: 'recklessSwings', name: 'Reckless Swings', icon: 'cdn:ability_warrior_bloodfrenzy', duration: D.recklessSwings.duration, stacks: D.recklessSwings.charges });
     },
   },
   {
@@ -526,7 +541,7 @@ function prepare(c: Combat): void {
   const impale = c.rules.critMultiplier + 0.1 * t.impale;
   for (const id of ABILITY_SOURCES) c.mod.critMultiplierFor[id] = impale;
   c.mod.critFor.overpower = 25 * t.improvedOverpower;
-  if (c.stats.mainHand.twoHand) c.mod.physicalDamage *= 1 + 0.01 * t.twoHandedWeaponSpecialization;
+  if (c.stats.mainHand.twoHand) c.mod.physicalDamage *= 1 + 0.02 * t.twoHandedWeaponSpecialization;
   if (hasShield(c)) c.mod.physicalDamage *= 1 + 0.02 * t.bastion;
   c.mod.threatFor = { execute: 1.25, whirlwind: 1.25, whirlwindOH: 1.25, hamstring: 1.25, overpower: 0.75, revenge: 2.25, thunderClap: 2.5 };
 
@@ -596,6 +611,14 @@ function prepare(c: Combat): void {
       c.applyAura(c.player, { id: 'overpowerReady', name: 'Overpower', icon: 'overpower', duration: D.overpower.window });
       c.count('overpowerWindows');
     }
+    // Reckless Swings: a landed white swing adds rage and spends a charge.
+    const rs = c.aura(c.player, 'recklessSwings');
+    if (rs && hit.white && hit.amount > 0) {
+      gainRage(c, D.recklessSwings.rage);
+      c.count('recklessSwingsRage', D.recklessSwings.rage);
+      rs.stacks = (rs.stacks ?? 1) - 1;
+      if (rs.stacks <= 0) c.removeAura(c.player, 'recklessSwings');
+    }
     // Flurry: each white swing (and Heroic Strike/Cleave) spends a charge; a crit refreshes it.
     const fl = c.aura(c.player, 'flurry');
     if (fl && (hit.white || hit.source === 'heroicStrike' || hit.source === 'cleave')) {
@@ -603,7 +626,7 @@ function prepare(c: Combat): void {
       if (fl.stacks <= 0) c.removeAura(c.player, 'flurry');
     }
     if (hit.outcome === 'crit' && t.flurry) {
-      c.applyAura(c.player, { id: 'flurry', name: 'Flurry', icon: 'flurry', duration: 15, stacks: D.flurryCharges, haste: 0.05 * t.flurry });
+      c.applyAura(c.player, { id: 'flurry', name: 'Flurry', icon: 'flurry', duration: 15, stacks: D.flurryCharges, haste: 0.1 * t.flurry });
     }
     // Deep Wounds: any physical crit bleeds for a share of average weapon damage (no AP, cannot crit).
     if (hit.outcome === 'crit' && t.deepWounds) {
@@ -724,14 +747,14 @@ function suggest(c: Combat): string | null {
   const sunderDue = !!c.options.sunderDuty && (!sunder || (sunder.stacks ?? 0) < 5 || sunder.end - c.t < 8);
 
   if (b.rotation === 'arms') {
-    // WoWSims Forever's Arms list: Battle Stance throughout, and Berserker Stance only for Whirlwind on three or more targets.
+    // WoWSims Forever's Arms list: Battle Stance throughout, and Berserker Stance only for Whirlwind on two or more targets.
     if (sunderDue && can('sunderArmor')) return 'sunderArmor';
     if (p.inCombat && tl.deathWish && can('deathWish')) return 'deathWish';
-    if (targets >= 3 && can('whirlwind')) return 'whirlwind';
-    if (stance !== 'battle' && ready('battleStance')) return 'battleStance';
+    const whirlwindReady = targets >= 2 && c.cooldownLeft('whirlwind').left === 0;
     if (targets > 1 && can('sweepingStrikes')) return 'sweepingStrikes';
     if (can('overpower')) return 'overpower';
-    if (targets >= 3 && rage >= 25 && stance === 'battle' && c.cooldownLeft('whirlwind').left === 0 && ready('berserkerStance')) return 'berserkerStance';
+    if (whirlwindReady && rage >= 25 && stance !== 'berserker' && ready('berserkerStance')) return 'berserkerStance';
+    if (targets >= 2 && can('whirlwind')) return 'whirlwind';
     if (can('mortalStrike')) return 'mortalStrike';
     const slam = (c.ability('slam')!.castTime as (cc: Combat) => number)(c);
     if (!exec && slam < D.gcd && can('slam')) return 'slam';
@@ -739,10 +762,12 @@ function suggest(c: Combat): string | null {
     const swing = c.swingLeft('main');
     if (!exec && slam >= D.gcd && swing.total - swing.left <= 0.4 && can('slam')) return 'slam';
     if (!exec && can('spearingStrike')) return 'spearingStrike';
+    if (stance !== 'battle' && !whirlwindReady && ready('battleStance')) return 'battleStance';
     if (windfury && !exec && can('hamstring')) return 'hamstring';
     if (exec && can('execute')) return 'execute';
     if (!hsQueued && targets > 1 && rage >= 40) return 'cleave';
     if (!hsQueued && !exec && rage >= 90 && !tl.improvedSlam) return 'heroicStrike';
+    if (whirlwindReady && stance !== 'berserker' && ready('berserkerStance')) return 'berserkerStance';
     if (p.inCombat && rage < 90 && ready('bloodrage')) return 'bloodrage';
     if (bs && bs.end - c.t <= 10 && rage >= 10 && c.cooldownLeft('mortalStrike').left >= D.gcd) return 'battleShout';
     return null;
@@ -767,6 +792,7 @@ function suggest(c: Combat): string | null {
     if (stance !== 'battle' && opWindow && rage <= 80 && ready('battleStance')) return 'battleStance';
     if (rage >= 50 && c.swingLeft('main').left >= 2.25 && can('slam')) return 'slam';
     if (windfury && !exec && c.swingLeft('main').left >= 1 && can('hamstring')) return 'hamstring';
+    if (p.inCombat && tl.recklessSwings && ready('recklessSwings')) return 'recklessSwings';
     if (!hsQueued && !exec && rage >= 95) return 'heroicStrike';
     return null;
   }
@@ -781,15 +807,16 @@ function suggest(c: Combat): string | null {
   if (overpowerDue && ready('battleStance')) return 'battleStance';
   if (exec && can('execute')) return 'execute';
   if (can('whirlwind')) return 'whirlwind';
+  if (!hsQueued && targets > 1 && rage >= 25) return 'cleave';
   if (can('bloodthirst')) return 'bloodthirst';
   const spare = c.cooldownLeft('bloodthirst').left >= D.gcd && c.cooldownLeft('whirlwind').left >= D.gcd;
   if (!hsQueued && ((targets === 1 && !exec && rage >= 40) || (spare && rage > 60))) return 'heroicStrike';
-  if (!hsQueued && targets > 1 && rage >= 40) return 'cleave';
   const rendDue = !exec && !rend && rage >= 10;
   if (rendDue && stance === 'battle') return 'rend';
   if (rendDue && ready('battleStance')) return 'battleStance';
   if (stance === 'battle' && !overpowerDue && !rendDue && ready('berserkerStance')) return 'berserkerStance';
-  if (windfury && spare && !exec && can('hamstring')) return 'hamstring';
+  if (windfury && spare && !exec && targets < 2 && can('hamstring')) return 'hamstring';
+  if (p.inCombat && tl.recklessSwings && ready('recklessSwings')) return 'recklessSwings';
   if (p.inCombat && rage < 90 && ready('bloodrage')) return 'bloodrage';
   if (spare && tl.improvedBerserkerRage && stance === 'berserker' && ready('berserkerRage')) return 'berserkerRage';
   if (spare && bs && bs.end - c.t <= 10 && rage >= 10) return 'battleShout';
@@ -805,7 +832,7 @@ function chances(c: Combat): { title: string; rows: [string, string][] }[] {
   const dual = !!c.stats.offHand;
   const mh = c.stats.mainHand, oh = c.stats.offHand;
   const procs: [string, string][] = [];
-  if (tl.flurry) procs.push(['Flurry: faster attacks for 3 swings after a crit', `+${5 * tl.flurry}% speed`]);
+  if (tl.flurry) procs.push(['Flurry: faster attacks for 3 swings after a crit', `+${10 * tl.flurry}% speed`]);
   if (tl.unbridledWrath) procs.push(['Unbridled Wrath: +1 rage per landed white swing', `${12 * tl.unbridledWrath}%`]);
   if (tl.deepWounds) procs.push(['Deep Wounds: bleed after any crit', `${20 * tl.deepWounds}% of weapon damage over 12 s`]);
   if (tl.weaponmaster && [mh, oh].some((w) => w?.type === 'sword')) procs.push(['Weaponmaster: extra attack per sword hit', `${tl.weaponmaster}%`]);
@@ -821,7 +848,7 @@ function chances(c: Combat): { title: string; rows: [string, string][] }[] {
     ['Misses, dodges, parries, Heroic Strike swings', '0 rage'],
     ['Per hit taken: normal / crit / crushing blow (before armor and blocks)', [1, 2, 1.5].map((m) => incomingRage(m * c.enemyAttacks.damage * (1 + 1 / 6 + c.enemyAttacks.ap / 2478)).toFixed(1)).join(' / ') + ' rage'],
     ['Hits you dodge, parry or that miss you', '0 rage'],
-    ['Kept when changing stance', `${D.rage.tacticalMastery + 3 * tl.improvedTacticalMastery} rage`],
+    ['Kept when changing stance', `${D.rage.tacticalMastery + 5 * tl.improvedTacticalMastery} rage`],
   );
   const groups = [
     {

@@ -48,17 +48,16 @@ export const DATA = {
   totemGcd: 1,             // confirmed: every totem, not hasted
   baseMana: 1520,
   spellMiss: 17,
-  lightningBolt: { mana: 220, cast: 2.5, min: 190, max: 212, coeff: 0.714, speed: 20 },
-  // Oct 15: about 35% cheaper on every rank (gs chain_lightning.go: 145/200/250/315, was 225/305/390/485).
-  chainLightning: { mana: 315, cast: 2, cooldown: 6, min: 119, max: 134, coeff: 0.571, jump: 0.7, targets: 3 },
-  // Rank 4 since Oct 15 (the old rank 3's numbers; ranks at 30/40/50/60). Elemental Mastery cuts the cast by 0.5 s.
-  lavaBurst: { mana: 265, cast: 2.5, cooldown: 10, min: 192, max: 248, coeff: 0.714, flameShockBonus: 0.2 },
+  // Hotfix of November (WoWSims' spell table): the highest ranks. Blizzard's notes give Chain Lightning 2.5 s; the table still has 2 s.
+  lightningBolt: { mana: 220, cast: 2.5, min: 342, max: 381, coeff: 0.714, speed: 20 },
+  chainLightning: { mana: 495, cast: 2, cooldown: 6, min: 494, max: 552, coeff: 0.714, jump: 0.7, targets: 3 },
+  callOfThunder: { crit: 5 },   // Lightning Bolt and Chain Lightning, Overload copies too
   shockCooldown: 6,
-  earthShock: { mana: 450, min: 293, max: 309, coeff: 0.386, threat: 2, range: 20 },
-  flameShock: { mana: 410, direct: 166, coeff: 0.214, tick: 44, tickCoeff: 0.1, ticks: 4, period: 3, range: 20 },
-  frostShock: { mana: 430, min: 278, max: 295, coeff: 0.386, range: 20 },
-  // Oct 15: 8% of base mana (1520 at 60, gs base_stats.go), was 125.
-  stormstrike: { mana: 121, cooldown: 8, bonus: 0.2, duration: 12 },
+  earthShock: { mana: 450, min: 517, max: 545, coeff: 0.386, threat: 2, range: 20 },
+  flameShock: { mana: 410, direct: 292, coeff: 0.214, tick: 80, tickCoeff: 0.1, ticks: 4, period: 3, range: 20 },
+  frostShock: { mana: 430, min: 495, max: 524, coeff: 0.386, range: 20 },
+  // Oct 15: 8% of base mana (1520 at 60, gs base_stats.go), was 125. Hotfix of November: 150% of normalized weapon damage, 6 s.
+  stormstrike: { mana: 121, cooldown: 6, weapon: 1.5, bonus: 0.2, duration: 12 },
   // Oct 15: rank 5 much weaker and cheaper (gs fire_totems.go: 232-258, 375 mana, coefficient 0.143; was 397-443, 520, 0.214).
   fireNova: { mana: 375, cooldown: 10, min: 232, max: 258, coeff: 0.143, radius: 10 },
   lightningShield: { mana: 370, orbs: 3, damage: 178, coeff: 0.267, icd: 3.5, duration: 600 },
@@ -75,12 +74,21 @@ export const DATA = {
   manaSpringTotem: { mana: 100, duration: 300, perSecond: 5 },     // 10 mana every 2 s
   clearcasting: { chance: 10, duration: 15 },
   elementalDevastation: { duration: 10 },
-  // Oct 15: the 31-point talent again. 15 s of Lightning Bolt and Lava Burst 0.5 s faster and Chain Lightning off cooldown; 3 min.
+  // Lightning Mastery, the 31-point talent (Elemental Mastery before November; the id stays so saved bars keep their key).
+  // 15 s of Lightning Bolt 0.5 s faster and Chain Lightning off cooldown; 3 min.
   elementalMastery: { cooldown: 180, duration: 15, castCut: 0.5 },
-  maelstromWeapon: { ppm: 10, max: 5, duration: 30 },              // 10 per minute at any rank (both sims, Oct 16)
-  flurry: { charges: 3, duration: 15 },
+  // Blizzard's notes double the chance and no row states it, so WoWSims doubles its measured 10 per minute.
+  maelstromWeapon: { ppm: 20, max: 5, duration: 30 },
+  flurry: { charges: 3, duration: 15, haste: 0.06 },   // per point
+  mentalDexterity: [0, 0.5, 1, 1.5],                   // Intellect into attack power, by points
+  mentalQuickness: [0, 0.15, 0.3],                     // Intellect into spell power, by points
   improvedStormstrike: { duration: 15, regen: 0.5 },
-  lightningOverload: { damage: 0.5 },
+  // WoWSims reads the copies from their own rows, which now state less than half of the cast. Its TODO: check in game.
+  lightningOverload: {
+    chance: [0, 10, 20, 30],
+    lightningBolt: { min: 95, max: 106, coeff: 0.357 },
+    chainLightning: { min: 63, max: 71, coeff: 0.2855 },
+  },
   weaponMastery: 1.1,       // disputed: off by default
   manaPotion: { min: 1350, max: 2250, cooldown: 120 },
   spirit: { elemental: 110, enhancement: 103 },

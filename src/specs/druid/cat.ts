@@ -261,6 +261,8 @@ function prepare(c: Combat): void {
   // Natural Instinct: ability crits only, not white hits.
   for (const id of ABILITY_SOURCES) c.mod.critMultiplierFor[id] = c.rules.critMultiplier + 0.1 * t.naturalInstinct;
   if (t.leaderOfThePack) c.applyAura(p, LEADER_OF_THE_PACK);
+  // Poised (build 70755): at full Energy out of combat, the next ability costs 10 less. As in WoWSims, up from the start until spent.
+  c.applyAura(p, { id: 'poised', name: 'Poised', icon: 'cdn:ability_racial_darkflight', duration: Infinity });
 
   c.trackedTargetAuras.push('rip', 'faerieFire', 'rake');
   c.trackedAuras.push('clearcasting');

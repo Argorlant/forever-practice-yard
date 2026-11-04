@@ -6,7 +6,7 @@
 // Usage: node tools/gear_sheets.mjs
 import fs from 'node:fs';
 
-const COMMIT = 'bac92dbd59e8101e4c37b737bb6d6d071cff0d5d';
+const COMMIT = '7c3453f5ad4576193235e2db05e1eec5bf0b1316';
 const RAW = `https://raw.githubusercontent.com/wowsims/forever/${COMMIT}/`;
 const SPECS = 'ui/specs/';
 
@@ -75,9 +75,9 @@ const SHEETS = [
   ['warlock-destruction', 'warlock', 'human', 'warlock/dps/gear_sets/preraid.gear.json', { health: true }],
   ['priest-shadow', 'priest', 'human', 'priest/dps/builds/testing.build.json', { health: true }],
   ['priest-smite', 'priest', 'undead', 'priest/dps/builds/smite_testing.build.json', { health: true }],
-  ['paladin-ret', 'paladin', 'human', 'paladin/retribution/gear_sets/default.gear.json'],
-  ['paladin-shock', 'paladin', 'human', 'paladin/retribution/gear_sets/holy_shock.gear.json'],
-  ['paladin-prot', 'paladin', 'human', 'paladin/protection/gear_sets/default.gear.json', { tank: true }],
+  ['paladin-ret', 'paladin', 'human', 'paladin/retribution/gear_sets/default.gear.siml'],
+  ['paladin-shock', 'paladin', 'human', 'paladin/retribution/gear_sets/holy_shock.gear.siml'],
+  ['paladin-prot', 'paladin', 'human', 'paladin/protection/gear_sets/default.gear.siml', { tank: true }],
   ['shaman-elemental', 'shaman', 'windshaper', 'shaman/elemental/builds/testing.build.json', { health: true }],
   // It opens with a Manual Crowd Pummeler and swaps to this two-hander for the fight.
   ['shaman-enhancement', 'shaman', 'windshaper', 'shaman/enhancement/builds/testing.build.json', { health: true, mainHand: 'Stormcarver' }],
@@ -102,6 +102,8 @@ const ENCHANT = new Map(db.enchants.map((e) => [e.effectId, e]));
 const SUFFIX = new Map(db.randomSuffixes.map((s) => [s.id, s]));
 const SUFFIX_NAMED = new Map(db.randomSuffixes.map((s) => [norm(s.name), s]));
 
+const SIML_NAMES = JSON.parse(await get('sim/siml/names.json'));
+
 // A .gear.siml names items and enchants: "chest  beaststalkers_tunic + chest_greater_stats".
 function parseSiml(text) {
   const items = [];
@@ -110,7 +112,9 @@ function parseSiml(text) {
     if (!m) continue;
     const [what, enchantName] = m[2].split('+').map((s) => s.trim());
     const [name, ...suffix] = what.split(/\s+/);
-    const item = ITEM_NAMED.get(norm(name));
+    // Most names are the item's own; a few differ from the item database, so its names table comes first.
+    const named = SIML_NAMES.items[name];
+    const item = (named ? ITEM.get(named.id ?? named) : null) ?? ITEM_NAMED.get(norm(name));
     if (!item) throw new Error(`No item ${name}`);
     const rec = { id: item.id };
     if (suffix.length) {
@@ -119,8 +123,7 @@ function parseSiml(text) {
       rec.randomSuffix = s.id;
     }
     if (enchantName) {
-      const key = norm(enchantName).replace(/\d+$/, '');
-      const e = db.enchants.find((x) => norm(x.name).includes(key)) ?? db.enchants.find((x) => key.includes(norm(x.name)));
+      const e = SIML_NAMES.enchants[enchantName];
       if (!e) throw new Error(`No enchant ${enchantName}`);
       rec.enchant = e.effectId;
     }

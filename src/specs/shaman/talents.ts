@@ -25,14 +25,14 @@ const KEYS = ['Digit1', 'Digit2', 'Digit3', 'Digit4', 'Digit5', 'Digit6', 'Digit
   'KeyR', 'KeyF', 'KeyG', 'KeyT', 'KeyZ', 'KeyX', 'KeyC', 'KeyV'];
 const bar = (ids: (string | null)[]): Binding[] => KEYS.map((key, i) => ({ id: ids[i] ?? null, key }));
 
-const ELEMENTAL_BAR = bar(['lightningBolt', 'lavaBurst', 'flameShock', 'chainLightning', 'earthShock', 'searingTotem', 'manaSpringTotem', 'manaPotion',
-  'frostShock', 'magmaTotem', 'fireNova', 'strengthOfEarthTotem', 'graceOfAirTotem', 'elementalMastery']);
+const ELEMENTAL_BAR = bar(['lightningBolt', 'chainLightning', 'flameShock', 'earthShock', 'frostShock', 'searingTotem', 'manaSpringTotem', 'manaPotion',
+  'magmaTotem', 'fireNova', 'strengthOfEarthTotem', 'graceOfAirTotem', 'elementalMastery']);
 const ENHANCEMENT_BAR = bar(['stormstrike', 'earthShock', 'flameShock', 'fireNova', 'lightningBolt', 'magmaTotem', 'strengthOfEarthTotem', 'windfuryTotem',
   'rageOfTheFarseer', 'manaSpringTotem', 'manaPotion', 'frostShock', 'searingTotem', 'graceOfAirTotem', 'chainLightning']);
 const TANK_BAR = bar(['stormstrike', 'earthShock', 'flameShock', 'lightningShield', 'lightningBolt', 'searingTotem', 'stoneskinTotem', 'strengthOfEarthTotem',
   'rageOfTheFarseer', 'graceOfAirTotem', 'manaSpringTotem', 'manaPotion', 'fireNova', 'magmaTotem', 'frostShock']);
 
-const WS = 'wowsims/forever';
+export const WS = 'wowsims/forever';
 const OLD_ELEMENTAL = { spirit: DATA.spirit.elemental, mp5: DATA.mp5.elemental };
 const OLD_ENHANCEMENT = { spirit: DATA.spirit.enhancement, mp5: DATA.mp5.enhancement };
 /** Builds with no equivalent in WoWSims Forever: they stay, for whoever practises them. */
@@ -40,18 +40,19 @@ const GS = 'community, from gunba/wow-forever-sim';
 const FS = 'community, from foreversim';
 /** foreversim's builds, still on the old tree: the same points in the Oct 15 tree (Call of Thunder's points moved). */
 const FS_REENCODED = 'community, from foreversim, re-encoded to the Oct 15 tree';
+// Improved Ghost Wolf's move changed the order of the Enhancement tree; these older builds keep the same points.
 const OURS = 'our proposal';
 // Mana: 1240 + 15 x Intellect (research → Default stats).
 export const BUILDS: Build[] = [
-  { id: 'elemental-fs', spec: 'elemental', name: 'Elemental', talentString: '5500331023001351-053002001-053', source: WS, stats: ELEMENTAL_STATS, bar: ELEMENTAL_BAR, options: { ...gearOptions('shaman-elemental') } },
-  { id: 'elemental', spec: 'elemental', name: 'Elemental', talentString: '5503331000011351-055000001-05301', source: GS, stats: GS_ELEMENTAL_STATS, bar: ELEMENTAL_BAR, options: { ...OLD_ELEMENTAL, mana: 4376 } },
+  { id: 'elemental-fs', spec: 'elemental', name: 'Elemental', talentString: '5500331023001351-05500001-053', source: WS, stats: ELEMENTAL_STATS, bar: ELEMENTAL_BAR, options: { ...gearOptions('shaman-elemental') } },
+  { id: 'elemental', spec: 'elemental', name: 'Elemental', talentString: '5503331000011351-05500001-05301', source: GS, stats: GS_ELEMENTAL_STATS, bar: ELEMENTAL_BAR, options: { ...OLD_ELEMENTAL, mana: 4376 } },
   { id: 'elemental-60', spec: 'elemental', name: 'Elemental "Level 60"', talentString: '5505331000001351--553302001', source: FS_REENCODED, stats: GS_ELEMENTAL_STATS, bar: ELEMENTAL_BAR, options: { ...OLD_ELEMENTAL, mana: 4376 } },
-  { id: 'stormcaller', spec: 'elemental', name: 'Stormcaller (caster hybrid)', talentString: '551333100000134-055030021004002', source: GS, stats: STORMCALLER_STATS, bar: ELEMENTAL_BAR, options: { ...OLD_ELEMENTAL, mana: 4556 } },
-  { id: 'stormcaller-fs', spec: 'elemental', name: 'Stormcaller', talentString: '253533100000033-055030030004102', source: FS_REENCODED, stats: STORMCALLER_STATS, bar: ELEMENTAL_BAR, options: { ...OLD_ELEMENTAL, mana: 4556 } },
-  { id: 'enhancement', spec: 'enhancement', name: 'Enhancement', talentString: '053303102-053030031005102251-03', source: WS, stats: ENHANCEMENT_STATS, bar: ENHANCEMENT_BAR, options: { ...gearOptions('shaman-enhancement'), imbue: 'flametongue' } },
-  { id: 'enhancement-60', spec: 'enhancement', name: 'Enhancement "Level 60"', talentString: '5505031-053030031005112251', source: GS, stats: GS_ENHANCEMENT_STATS, bar: ENHANCEMENT_BAR, options: { ...OLD_ENHANCEMENT, mana: 2623, imbue: 'windfury' } },
-  { id: 'enhancement-fs', spec: 'enhancement', name: 'Enhancement', talentString: '053503102-053030031005112251', source: FS, stats: GS_ENHANCEMENT_STATS, bar: ENHANCEMENT_BAR, options: { ...OLD_ENHANCEMENT, mana: 2623, imbue: 'windfury' } },
-  { id: 'tank', spec: 'tank', name: 'Off-tank (experimental)', talentString: '05350013-050230031355112201', source: OURS, stats: OFFTANK_STATS, bar: TANK_BAR, options: { mana: 2900 }, tank: true },
+  { id: 'stormcaller', spec: 'elemental', name: 'Stormcaller (caster hybrid)', talentString: '551333100000134-055030210040002', source: GS, stats: STORMCALLER_STATS, bar: ELEMENTAL_BAR, options: { ...OLD_ELEMENTAL, mana: 4556 } },
+  { id: 'stormcaller-fs', spec: 'elemental', name: 'Stormcaller', talentString: '253533100000033-055030300041002', source: FS_REENCODED, stats: STORMCALLER_STATS, bar: ELEMENTAL_BAR, options: { ...OLD_ELEMENTAL, mana: 4556 } },
+  { id: 'enhancement', spec: 'enhancement', name: 'Enhancement', talentString: '053303102-053030310051002251-03', source: WS, stats: ENHANCEMENT_STATS, bar: ENHANCEMENT_BAR, options: { ...gearOptions('shaman-enhancement'), imbue: 'flametongue' } },
+  { id: 'enhancement-60', spec: 'enhancement', name: 'Enhancement "Level 60"', talentString: '5505031-053030310051012251', source: GS, stats: GS_ENHANCEMENT_STATS, bar: ENHANCEMENT_BAR, options: { ...OLD_ENHANCEMENT, mana: 2623, imbue: 'windfury' } },
+  { id: 'enhancement-fs', spec: 'enhancement', name: 'Enhancement', talentString: '053503102-053030310051012251', source: FS, stats: GS_ENHANCEMENT_STATS, bar: ENHANCEMENT_BAR, options: { ...OLD_ENHANCEMENT, mana: 2623, imbue: 'windfury' } },
+  { id: 'tank', spec: 'tank', name: 'Off-tank (experimental)', talentString: '05350013-050230313551012201', source: OURS, stats: OFFTANK_STATS, bar: TANK_BAR, options: { mana: 2900 }, tank: true },
 ];
 
 export const buildsFor = (spec: ShamanSpec) => BUILDS.filter((b) => b.spec === spec);

@@ -93,6 +93,9 @@ export interface Modifiers {
   offHand: number;
   /** Lowers the target's dodge and parry, in percentage points. */
   expertise: number;
+  /** Attack power and spell power from talents that read a stat the sheet does not count. */
+  attackPower: number;
+  spellPower: number;
   /** Fraction of the target's armor ignored, per damage source. */
   armorIgnoreFor: Record<string, number>;
   /** Fraction of the target's armor ignored by every physical attack. */
@@ -156,7 +159,7 @@ interface EventMap {
 
 const freshModifiers = (): Modifiers => ({
   hit: 0, crit: 0, critFor: {}, damageFor: {}, critMultiplierFor: {},
-  physicalDamage: 1, natureDamage: 1, offHand: 1, expertise: 0, armorIgnoreFor: {}, armorIgnore: 0,
+  physicalDamage: 1, natureDamage: 1, offHand: 1, expertise: 0, attackPower: 0, spellPower: 0, armorIgnoreFor: {}, armorIgnore: 0,
   threat: 1, threatFor: {}, hitOff: 0, damageTaken: 1, block: 0, spellCrit: 0, arcaneDamage: 1, vsBleeding: 0,
   windfuryWeapon: null,
 });
@@ -1155,7 +1158,7 @@ export class Combat {
 
   /** Attack power with buffs (Battle Shout). */
   attackPower(): number {
-    let ap = this.stats.attackPower + this.bonusAp;
+    let ap = this.stats.attackPower + this.bonusAp + this.mod.attackPower;
     for (const a of this.player.auras.values()) if (a.attackPower) ap += a.attackPower;
     return ap;
   }
@@ -1280,7 +1283,7 @@ export class Combat {
 
   /** Spell power for one school: general spell power plus school-only gear. */
   spellPowerFor(school: Hit['school']): number {
-    let power = (this.stats.spellPower ?? 0) + (this.stats.spellPowerBySchool?.[school] ?? 0);
+    let power = (this.stats.spellPower ?? 0) + (this.stats.spellPowerBySchool?.[school] ?? 0) + this.mod.spellPower;
     for (const a of this.player.auras.values()) if (a.spellPower) power += a.spellPower;
     return power;
   }

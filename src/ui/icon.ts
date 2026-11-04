@@ -8,6 +8,8 @@ const wow = WOW_ICONS as Record<string, string>;
 const BASE = `${import.meta.env.BASE_URL}icons/`;
 /** The rest of the spellbook's icons are not in the site: the browser loads them from Wowhead's image server. */
 const REMOTE = 'https://wow.zamimg.com/images/wow/icons/large/';
+/** A talent's icon file, hosted or (`cdn:name`) on the image server. */
+export const talentIconSrc = (name: string) => (name.startsWith('cdn:') ? `${REMOTE}${name.slice(4)}.jpg` : `${BASE}${name}.jpg`);
 
 let uid = 0;
 

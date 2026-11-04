@@ -69,6 +69,7 @@ export const DATA = {
   prowl: { cooldown: 10, speed: 0.7 },
   cower: { cost: 20, cooldown: 10, threat: -1200 },
   dash: { cooldown: 300, duration: 15, speed: 1.6 },
+  poised: { energy: 10 },
   thistleTea: { energy: 100, cooldown: 300 },
   manaPotion: { min: 1350, max: 2250, cooldown: 120 },
   omen: { ppm: 2, icd: 10 },          // provisional: 2 procs per minute (fs), 10 s internal cooldown

@@ -67,7 +67,7 @@ export const DATA = {
   // Rank 3, Wowhead Oct 30 (489-538, was 473-523). Champion of the Light cuts the cast 0.2 s per point (instant at 5/5).
   hammerOfWrath: { mana: 425, cooldown: 6, gcd: 1, cast: 1, min: 489, max: 538, coeff: 0.429, range: 30, threshold: 0.2 },
   // Rank 3, Wowhead Oct 30: 153 Holy per block (the yard had 221).
-  holyShield: { mana: 240, cooldown: 10, duration: 10, block: 30, charges: 4, damage: 153, coeff: 0.08, threat: 1.2 },
+  holyShield: { mana: 240, cooldown: 10, duration: 10, block: 30, charges: 4, damage: 221, coeff: 0.08, threat: 1.2 },   // rank 4 (WoWSims, build 70755)
   righteousFury: { mana: Math.round(BASE_MANA * 0.3), duration: 1800, holyThreat: 1.9 },   // Oct 15: +90% (back from 60%)
   templarsBulwark: { mana: 110, cooldown: 300, duration: 8, absorb: 1, forbearance: 60 },
   swiftJudgement: { cooldown: 60 },   // Oct 30: a second Judgement with its own 1 min cooldown, no mana
@@ -76,7 +76,7 @@ export const DATA = {
   layOnHands: { cooldown: 1200 },
   manaPotion: { min: 1350, max: 2250, cooldown: 120 },
   // Procs and passives
-  vengeance: { duration: 30, stacks: 3 },
+  vengeance: { duration: 30, stacks: 5 },
   // Oct 21 (Forever logs): 5 procs a minute from swings and melee specials; the dummy's debuff rolls spell hit.
   // Since Oct 30 it no longer raises your own attack power.
   vindication: { apPerRank: 68, duration: 30, ppm: 5 },

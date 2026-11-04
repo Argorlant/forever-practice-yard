@@ -6,7 +6,12 @@ import { decode, treesOf } from './talents-data';
 
 export const MAX_POINTS = 51;
 /** The trees' version: talents saved for older trees are dropped (the Oct 15 trees moved talents, the Oct 21 hotfix the Mage's Frost tree, the Oct 30 hotfix the Druid, Mage and Paladin trees from Wowhead). */
-export const TREE_VERSION = '70707';
+const TREE_VERSION = '70707';
+/** WoWSims Forever's trees since the November hotfixes moved talents of these classes (client 70755). */
+const REWORKED: Record<string, string> = { warrior: '70755', shaman: '70755' };
+export const treeVersion = (cls: string) => REWORKED[cls] ?? TREE_VERSION;
+/** The client the trees were read from. */
+export const TREES_BUILD = '70755';
 export type Points = number[][];
 
 /** The sims' talent string: one digit per talent, trees split by '-', trailing zeros left out. */

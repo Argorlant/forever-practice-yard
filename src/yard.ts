@@ -29,7 +29,7 @@ import { Hud } from './ui/hud';
 import { SettingsDialog, claimKey, defaultPrefs, type Prefs } from './ui/settings';
 import { raidPicker } from './ui/raid-picker';
 import { DISCLAIMER_SHORT_HTML } from './ui/disclaimer';
-import { TREE_VERSION, parseTalents } from './ui/talent-rules';
+import { parseTalents, treeVersion } from './ui/talent-rules';
 import { classKey, mainTree } from './ui/talents-data';
 import { bindingFor, load, save, wheelBinding } from './ui/storage';
 
@@ -94,14 +94,14 @@ function loadPrefs(): Prefs {
 let refillRows = !load(PREFS_KEY);
 let prefs = loadPrefs();
 const persist = () => save(PREFS_KEY, prefs);
-const PATCH = '2026-11-03.2';
+const PATCH = '2026-11-04.1';
 // The builds' gear follows WoWSims Forever: a sheet nobody edited moves to its build's new one, a sheet of your own stays.
 if (prefs.patch !== PATCH && isOldSheet(prefs.stats)) {
   const build = spec.builds?.find((b) => b.id === prefs.options.build);
   if (build) { prefs.stats = structuredClone(build.stats); Object.assign(prefs.options, build.options ?? {}); }
 }
 // Talents of your own saved for older trees would read as other talents now.
-if (prefs.options.talents && prefs.options.talentsTree !== TREE_VERSION) prefs.options.talents = '';
+if (prefs.options.talents && prefs.options.talentsTree !== treeVersion(classKey(spec.className))) prefs.options.talents = '';
 
 /** A build picked on the first screen (?build=): its talents, gear, options and action bar; your keys stay. */
 function applyBuild(id: string): boolean {
@@ -122,7 +122,7 @@ const urlBuild = params.get('build');
 if (urlBuild && urlBuild !== prefs.options.build && applyBuild(urlBuild)) refillRows = true;
 // A shared link's own talents (Settings → Copy link), if they are a legal level 60 build.
 const urlTalents = params.has('talents') ? parseTalents(classKey(spec.className), params.get('talents')) : null;
-if (urlTalents !== null) { prefs.options.talents = urlTalents; prefs.options.talentsTree = TREE_VERSION; refillRows = true; }
+if (urlTalents !== null) { prefs.options.talents = urlTalents; prefs.options.talentsTree = treeVersion(classKey(spec.className)); refillRows = true; }
 if (urlBuild || params.has('talents')) {
   // Applied once: a reload keeps whatever you change afterwards.
   params.delete('build');

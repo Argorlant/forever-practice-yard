@@ -27,6 +27,44 @@ function clean(note, row) {
   return sentences.join(' ').trim() || null;
 }
 
+// What the hotfixes of November changed since the research sheets were written (WoWSims Forever's spell table).
+const NOVEMBER = {
+  warrior: {
+    flurry: '3 points: 10/20/30% for 3 swings after a crit; no prerequisite.',
+    improvedTacticalMastery: "Was 'Tactical Mastery'; base 10 rage is now baseline. 3 points: 5/10/15 more rage.",
+    bloodthrill: '2 points: 10/20%.',
+    twoHandedWeaponSpecialization: '3 ranks, 2/4/6% (Classic 5 ranks, 1-5%).',
+    improvedSlam: 'Moved from Fury, 2 points: -0.25 s cast and GCD and -2.5 s cooldown per point; Slam no longer interrupts the swing.',
+    spearingStrike: '75% normalized weapon damage.',
+    recklessSwings: '25% of base health: the next 4 white swings add 5 rage each. 15 s cooldown.',
+    improvedWhirlwind: '2 points: 1/2 s off the cooldown and 15/30% more to the closest enemy.',
+  },
+  shaman: {
+    flurry: '6%/point (30% max); requires Mental Dexterity.',
+    lightningOverload: 'New: 10/20/30% free copy of LB or CL, no threat.',
+    mentalDexterity: 'New: AP from Intellect, 50/100/150%.',
+    stormstrike: '16-point milestone; 6 s, 150% normalized weapon damage, personal +20% to the next LB/CL/ES.',
+    maelstromWeapon: 'New: stacks that make Lightning Bolt faster and cheaper. Chance doubled in November.',
+    callOfThunder: 'Replaced Lava Burst in November: +5% crit on LB and CL.',
+    lightningMastery: 'Elemental Mastery, renamed in November: Lava Burst is gone.',
+    elementalReach: 'Formerly Storm Reach: +3/6 yd LB, CL, Fire Nova; +8/15 yd Flame Shock.',
+  },
+  hunter: {
+    lightningReflexes: '3%/point Agility.',
+    barrage: '5/10/15%; now Aimed Shot too, plus Multi-Shot and Volley.',
+    trueshotAura: 'Moved from row 7 to row 4; ranged AP only, 100 at rank 5.',
+  },
+  paladin: {
+    vengeance: 'Reworked: +1/2/3% Physical and Holy damage per stack, 5 stacks, 30 s, after any non-periodic crit.',
+    twoHandedWeaponSpecialization: '2/4/6% Physical and Holy damage, 7/14/20% less threat.',
+  },
+  mage: {
+    arcaneConcentration: '2%/point Clearcasting after a landed damage spell, each Arcane Missiles missile too; 1 s ICD. Lower chance with much lower-rank spells.',
+  },
+};
+/** Listed as removed by the research sheets, but only renamed since. */
+const RENAMED = ['elemental mastery'];
+
 const out = {};
 for (const cls of Object.keys(layout)) {
   const file = `research/${cls}_forever.json`;
@@ -43,7 +81,7 @@ for (const cls of Object.keys(layout)) {
       const r = research.get(t.key);
       const note = {};
       if (fresh.has(t.key) || r?.newInForever) note.new = true;
-      const change = clean(r?.foreverChange, t.row);
+      const change = NOVEMBER[cls]?.[t.key] ?? clean(r?.foreverChange, t.row);
       if (change) note.change = change;
       if (r?.renamedFrom && !(change ?? '').includes(r.renamedFrom)) note.was = r.renamedFrom;
       if (Object.keys(note).length) talents[t.key] = note;
@@ -53,7 +91,7 @@ for (const cls of Object.keys(layout)) {
   // Older sheets can list a talent the current trees have again: those are left out.
   const names = layout[cls].flatMap((tree) => tree.talents.map((t) => t.name.toLowerCase()));
   const list = (Array.isArray(removed) ? removed : removed?.value ?? [])
-    .filter((s) => typeof s === 'string' && !/\bremains?\b/.test(s) && !names.some((n) => s.toLowerCase().startsWith(n)));
+    .filter((s) => typeof s === 'string' && !/\bremains?\b/.test(s) && ![...names, ...RENAMED].some((n) => s.toLowerCase().startsWith(n)));
   out[cls] = { talents, removed: list };
 }
 fs.writeFileSync('src/ui/talent-notes.json', `${JSON.stringify(out, null, 1)}\n`);

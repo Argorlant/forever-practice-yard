@@ -59,8 +59,8 @@ export const DATA = {
   cleave: { cost: 20, bonus: 50, threat: 92, targets: 2 },
   bloodthirst: { cost: 30, cooldown: 6, apRatio: 0.45, bonus: 48, haste: 0.1, duration: 10 },
   mortalStrike: { cost: 30, cooldown: 6, bonus: 160 },
-  whirlwind: { cost: 25, cooldown: 10, targets: 4 },
-  slam: { cost: 15, cooldown: 18, cast: 1.5, bonus: 87, threat: 140 },
+  whirlwind: { cost: 25, cooldown: 10, targets: 4, improvedCooldown: 1, improvedClosest: 0.15 },   // Improved Whirlwind, per point
+  slam: { cost: 15, cooldown: 15, cast: 1.5, bonus: 87, threat: 140, improvedCooldown: 2.5 },   // Improved Slam, per point
   execute: { cost: 15, base: 600, perRage: 15, threshold: 0.2 },
   overpower: { cost: 5, cooldown: 5, bonus: 35, window: 5 },
   revenge: { cost: 5, cooldown: 5, min: 109, max: 133, ap: 0.25, window: 5 },   // rank 5, +25 % of attack power (Oct 30 hotfix); threat 2.25x its damage
@@ -84,13 +84,15 @@ export const DATA = {
   concussionBlow: { cost: 10, cooldown: 45, duration: 5 },
   charge: { rage: 15, cooldown: 15, minRange: 8, maxRange: 25 },
   intercept: { cost: 10, cooldown: 30, damage: 65, minRange: 8, maxRange: 25 },
-  spearingStrike: { cost: 15, cooldown: 20, percent: 0.4 },
+  spearingStrike: { cost: 15, cooldown: 20, percent: 0.75 },
+  // 25 % of base health (1689 at 60); each of the next 4 white swings adds 5 rage.
+  recklessSwings: { cooldown: 15, gcd: 1, duration: 8, charges: 4, rage: 5, health: 422 },
   stanceCooldown: 1,
   // Procs and passives.
   flurryCharges: 3,
   deepWounds: { ticks: 4, period: 3 },
   enrage: { chance: 30, duration: 12 },
-  bloodthrill: { chance: 4, window: 5 },   // per point; the Overpower window is 5 s since a server hotfix (gs Oct 21)
+  bloodthrill: { chance: 10, window: 5 },   // per point; the Overpower window is 5 s since a server hotfix (gs Oct 21)
   weaponmasterIcd: 0.2,
   threatPerRage: 5,         // rage from non-damage sources, times the stance's threat when the rage arrives (gs Oct 21)
 };

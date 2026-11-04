@@ -153,7 +153,7 @@ for (const r of runs) {
 // Warrior: every build plays its own priority list for 5 minutes.
 console.log('Warrior builds (5 min, own gear, priority list):');
 const WARRIOR_MUST_USE: Record<string, string[]> = {
-  'fury-dw': ['bloodthirst', 'whirlwind', 'heroicStrike', 'battleShout'],
+  'fury-dw': ['bloodthirst', 'whirlwind', 'heroicStrike', 'battleShout', 'recklessSwings'],
   'fury-sunder': ['bloodthirst', 'sunderArmor'],
   'arms-2h': ['mortalStrike', 'overpower', 'rend', 'slam'],
   'fury-2h': ['bloodthirst', 'whirlwind'],
@@ -482,7 +482,7 @@ const HUNTER_MUST_USE: Record<string, string[]> = {
   'mm-fs': ['autoShot', 'aimedShot', 'serpentSting', 'sniperShot'],
   'mm-p1': ['autoShot', 'aimedShot', 'serpentSting'],
   'sv-ranged': ['autoShot', 'aimedShot', 'serpentSting'],
-  bm: ['autoShot', 'aimedShot', 'serpentSting', 'summonHawk', 'arcaneShot', 'bestialWrath', 'intimidation', 'rapidFire'],
+  bm: ['autoShot', 'aimedShot', 'serpentSting', 'arcaneShot', 'bestialWrath', 'intimidation', 'rapidFire'],
   'bm-weave': ['autoShot', 'serpentSting', 'summonHawk', 'arcaneShot', 'multiShot'],
   'bm-fs': ['autoShot', 'aimedShot', 'serpentSting', 'bestialWrath'],
   sv: ['attack', 'raptorStrike', 'mongooseBite', 'striderKick', 'immolationTrap', 'huntersMark'],
@@ -771,20 +771,24 @@ for (const sp of [mageArcane, mageFire, mageFrost]) {
   cast('arcaneMissiles');
   const kept = c.aura(c.player, 'arcaneBlast')?.stacks ?? 0;
   if (stacks !== 4 || Math.abs(end - firstEnd) > 1e-9 || kept !== 4) failures.push(`Arcane Blast stacks: ${stacks} after five Blasts (4), timer ${end.toFixed(2)} vs first ${firstEnd.toFixed(2)}, ${kept} after Frostbolt and Missiles (4)`);
-  // Since Oct 21 Arcane Missiles' missiles proc neither Clearcasting nor Missile Barrage (a log: none from 34 casts).
-  let fromMissiles = 0;
+  // Since WoWSims' Nov 3 update each missile rolls Clearcasting; none of them rolls Missile Barrage.
+  let clearcasts = 0;
+  let barrages = 0;
   for (let i = 0; i < 150; i++) {
     c.use('arcaneMissiles');
     step();
     while (c.channeling) {
-      const procs = (c.counters.clearcasting ?? 0) + (c.counters.missileBarrage ?? 0);
+      const cc = c.counters.clearcasting ?? 0;
+      const mb = c.counters.missileBarrage ?? 0;
       step();
-      if ((c.counters.clearcasting ?? 0) + (c.counters.missileBarrage ?? 0) > procs) fromMissiles++;
+      if ((c.counters.clearcasting ?? 0) > cc) clearcasts++;
+      if ((c.counters.missileBarrage ?? 0) > mb) barrages++;
     }
     while (c.player.gcdEnd > c.t) step();
   }
-  console.log(`Arcane Blast: ${stacks} stacks on the first one's timer, kept by other spells; ${fromMissiles} procs from missiles in 150 casts`);
-  if (fromMissiles) failures.push(`${fromMissiles} Clearcasting or Missile Barrage procs from Arcane Missiles' missiles`);
+  console.log(`Arcane Blast: ${stacks} stacks on the first one's timer, kept by other spells; from missiles in 150 casts ${clearcasts} Clearcasting, ${barrages} Missile Barrage`);
+  if (!clearcasts) failures.push('Arcane Missiles missiles never rolled Clearcasting');
+  if (barrages) failures.push(`${barrages} Missile Barrage procs from Arcane Missiles' missiles`);
 }
 // Frost (Oct 15): Winter's Chill feeds Cone of Cold within 10 yards; Ice Lance x3 on Fingers of Frost.
 {
@@ -907,9 +911,9 @@ for (const sp of [warlockAffliction, warlockDemonology, warlockDestruction]) {
 // ----------------------------------------------------------------- shaman
 console.log('Shaman builds (5 min, own gear, priority list, default raid buffs):');
 const SHAMAN_MUST_USE: Record<string, string[]> = {
-  elemental: ['lightningBolt', 'lavaBurst', 'flameShock', 'searingTotem', 'manaSpringTotem', 'elementalMastery'],
-  'elemental-fs': ['lightningBolt', 'lavaBurst', 'flameShock', 'searingTotem', 'elementalMastery'],
-  'elemental-60': ['lightningBolt', 'lavaBurst', 'flameShock', 'searingTotem', 'elementalMastery'],
+  elemental: ['lightningBolt', 'chainLightning', 'flameShock', 'searingTotem', 'manaSpringTotem', 'elementalMastery'],
+  'elemental-fs': ['lightningBolt', 'chainLightning', 'flameShock', 'searingTotem', 'elementalMastery'],
+  'elemental-60': ['lightningBolt', 'chainLightning', 'flameShock', 'searingTotem', 'elementalMastery'],
   stormcaller: ['lightningBolt', 'flameShock', 'earthShock', 'searingTotem'],
   'stormcaller-fs': ['lightningBolt', 'flameShock', 'searingTotem'],
   enhancement: ['stormstrike', 'earthShock', 'flameShock', 'fireNova', 'lightningBolt', 'magmaTotem', 'strengthOfEarthTotem', 'rageOfTheFarseer'],
@@ -947,17 +951,42 @@ for (const sp of [shamanElemental, shamanEnhancement, shamanTank]) {
   if (!((ftRow?.hits ?? 0) > 100)) failures.push('Flametongue Weapon barely hit');
   if (!((ft.c.counters.windfury ?? 0) > 10)) failures.push('the own Windfury Totem never procced');
 }
-// Elemental: Lava Burst on Flame Shock, Searing Totem keeps attacking, Overload copies; mana runs out without a lock.
+// Elemental: Chain Lightning on cooldown, Searing Totem keeps attacking, Overload copies; mana runs out without a lock.
 {
   const r = play(shamanElemental, { build: 'elemental', options: { lockMana: true } });
   const k = r.c.counters;
   const time = k.combatTime ?? 1;
-  console.log(`Elemental with locked mana: ${r.c.dps().toFixed(0)} DPS, Flame Shock ${Math.round((k['uptime:target:flameShock'] ?? 0) / time * 100)}%, Searing ${Math.round((k['uptime:searingTotem'] ?? 0) / time * 100)}%, ${r.c.meter.rows.get('lavaBurst')?.hits ?? 0} Lava Bursts, ${k.overloads ?? 0} Overloads`);
+  console.log(`Elemental with locked mana: ${r.c.dps().toFixed(0)} DPS, Flame Shock ${Math.round((k['uptime:target:flameShock'] ?? 0) / time * 100)}%, Searing ${Math.round((k['uptime:searingTotem'] ?? 0) / time * 100)}%, ${r.c.meter.rows.get('chainLightning')?.hits ?? 0} Chain Lightning hits, ${k.overloads ?? 0} Overloads`);
   if ((k['uptime:searingTotem'] ?? 0) / time < 0.9) failures.push('Searing Totem was not kept up');
-  if (!((r.c.meter.rows.get('lavaBurst')?.hits ?? 0) > 20)) failures.push('few Lava Bursts');
+  if (!((r.c.meter.rows.get('chainLightning')?.hits ?? 0) > 20)) failures.push('few Chain Lightnings');
+  if (!((k.overloads ?? 0) > 20)) failures.push('Lightning Overload at 30% barely fired');
+  if (r.c.ability('lavaBurst')) failures.push('Lava Burst is still a spell');
   const tank = play(shamanTank, { build: 'tank' });
   console.log(`Off-tank: ${tank.c.dps().toFixed(0)} DPS, ${tank.c.tps().toFixed(0)} TPS, ${tank.c.meter.rows.get('lightningShield')?.hits ?? 0} Lightning Shield orbs, ${tank.c.counters.stormstrikeResets ?? 0} Stormstrike resets`);
   if (!((tank.c.meter.rows.get('lightningShield')?.hits ?? 0) > 10)) failures.push('Lightning Shield orbs barely fired');
+}
+
+// ------------------------------------------------- the hotfixes of November
+{
+  const fury = play(warrior, { build: 'fury-dw', seconds: 0 }).c;
+  const ability = (id: string) => fury.ability(id)!;
+  const time = (x: unknown, c: Combat) => (typeof x === 'function' ? (x as (cc: Combat) => number)(c) : x as number);
+  if (time(ability('whirlwind').cooldown, fury) !== 8) failures.push(`Improved Whirlwind 2/2: Whirlwind cooldown ${time(ability('whirlwind').cooldown, fury)}, want 8`);
+  const arms = play(warrior, { build: 'arms-2h', seconds: 0 }).c;
+  if (time(arms.ability('slam')!.cooldown, arms) !== 10) failures.push(`Improved Slam 2/2: Slam cooldown ${time(arms.ability('slam')!.cooldown, arms)}, want 10`);
+  const swings = play(warrior, { build: 'fury-dw' });
+  if (!(swings.c.counters.recklessSwingsRage > 100)) failures.push(`Reckless Swings gave ${swings.c.counters.recklessSwingsRage ?? 0} rage in 5 min`);
+  const elemental = play(shamanElemental, { build: 'elemental-fs', seconds: 0 }).c;
+  if (elemental.ability('elementalMastery')!.name !== 'Lightning Mastery') failures.push('Elemental Mastery was not renamed');
+  // Mental Dexterity 3/3 turns 150% of the sheet's Intellect into attack power; the older sheets already count it.
+  const enh = play(shamanEnhancement, { build: 'enhancement', seconds: 0 }).c;
+  if (Math.abs(enh.mod.attackPower - 382.5) > 1) failures.push(`Mental Dexterity gave ${enh.mod.attackPower} attack power, want 382.5`);
+  if (play(shamanEnhancement, { build: 'enhancement-fs', seconds: 0 }).c.mod.attackPower !== 0) failures.push('Mental Dexterity counted twice on an older sheet');
+  // Poised: the first cat ability costs 10 Energy less, then it is spent.
+  const cat = play(druidCat, { build: 'cat', seconds: 0 }).c;
+  const shred = cat.cost(cat.ability('shred')!);
+  cat.removeAura(cat.player, 'poised');
+  if (cat.cost(cat.ability('shred')!) - shred !== 10) failures.push('Poised did not take 10 Energy off the first ability');
 }
 
 // ----------------------------------------------------------- raid effects

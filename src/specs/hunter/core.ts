@@ -493,7 +493,7 @@ export function prepare(c: Combat): void {
   c.mod.physicalDamage = s.allDamage;
   const mult = (id: string, n: number) => { c.mod.damageFor[id] = (c.mod.damageFor[id] ?? 1) * n; };
   for (const id of RANGED_SHOTS) mult(id, 1 + 0.01 * t.rangedWeaponSpecialization);
-  for (const id of ['aimedShot', 'multiShot']) mult(id, 1 + [0, 0.03, 0.07, 0.1][t.barrage]);
+  for (const id of ['aimedShot', 'multiShot']) mult(id, 1 + 0.05 * t.barrage);
   mult('serpentSting', 1 + [0, 0.06, 0.13, 0.2][t.improvedStings]);
   for (const id of [...RANGED_SHOTS, 'arcaneShot', 'serpentSting']) c.mod.critMultiplierFor[id] = c.rules.critMultiplier + 0.06 * t.mortalShots;
   for (const id of MELEE_ABILITIES) {
