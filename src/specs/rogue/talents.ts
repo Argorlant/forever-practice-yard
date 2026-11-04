@@ -3,21 +3,21 @@
 // '-'; the order is WoWSims Forever's (proto/rogue.proto).
 // See research/rogue_forever.json → talents and builds.
 import type { Binding, Stats } from '../../engine/types';
-import { BACKSTAB_STATS, COMBAT_STATS, DAGGER_STATS, MUTILATE_STATS, STATS, SUB_BACKSTAB_STATS } from './data';
+import { BACKSTAB_STATS, COMBAT_STATS, MUTILATE_STATS, SUB_BACKSTAB_STATS } from './data';
 
 const TREES = [
   // Assassination
-  ['improvedGouge', 'remorselessAttacks', 'malice', 'ruthlessness', 'murder', 'improvedSliceAndDice',
-    'relentlessStrikes', 'improvedExposeArmor', 'lethality', 'vilePoisons', 'coldBlood', 'improvedPoisons',
-    'vigor', 'mutilate', 'improvedKidneyShot', 'sealFate', 'venom'],
+  ['improvedGouge', 'remorselessAttacks', 'malice', 'ruthlessness', 'improvedExposeArmor', 'improvedSliceAndDice',
+    'vigor', 'bloodSplatter', 'lethality', 'vilePoisons', 'coldBlood', 'improvedPoisons',
+    'relentlessStrikes', 'venom', 'improvedKidneyShot', 'sealFate', 'mutilate'],
   // Combat
-  ['improvedEviscerate', 'improvedSinisterStrike', 'lightningReflexes', 'puncturingWounds', 'deflection',
-    'precision', 'endurance', 'riposte', 'improvedSprint', 'improvedKick', 'flawlessExecution',
-    'dualWieldSpecialization', 'bladeFlurry', 'hackAndSlash', 'weaponExpertise', 'aggression', 'adrenalineRush'],
+  ['coupDeGrace', 'efficientStrikes', 'lightningReflexes', 'puncturingWounds', 'deflection', 'precision', 'improvedSprint',
+    'endurance', 'riposte', 'composure', 'improvedKick', 'flawlessExecution', 'weaponExpertise', 'aggression',
+    'dualWieldSpecialization', 'bladeFlurry', 'hackAndSlash', 'flashOfSteel', 'adrenalineRush'],
   // Subtlety
-  ['camouflage', 'masterOfDeception', 'opportunity', 'setup', 'elusiveness', 'dirtyTricks', 'improvedAmbush',
-    'initiative', 'ghostlyStrike', 'improvedDistract', 'heightenedSenses', 'premeditation', 'serratedBlades',
-    'dirtyDeeds', 'preparation', 'hemorrhage', 'quietus', 'cutthroat', 'thousandCuts'],
+  ['setup', 'masterOfDeception', 'opportunity', 'dirtyDeeds', 'camouflage', 'improvedAmbush', 'dirtyTricks', 'initiative',
+    'premeditation', 'serratedBlades', 'elusiveness', 'ghostlyStrike', 'quickGetaway', 'heightenedSenses', 'preparation',
+    'hemorrhage', 'bootKnife', 'deathMark'],
 ] as const;
 
 export type TalentKey = (typeof TREES)[number][number];
@@ -25,26 +25,26 @@ export type Talents = Record<TalentKey, number>;
 
 const NAMES: Record<TalentKey, string> = {
   improvedGouge: 'Improved Gouge', remorselessAttacks: 'Remorseless Attacks', malice: 'Malice',
-  ruthlessness: 'Ruthlessness', murder: 'Murder', improvedSliceAndDice: 'Improved Slice and Dice',
-  relentlessStrikes: 'Relentless Strikes', improvedExposeArmor: 'Improved Expose Armor', lethality: 'Lethality',
-  vilePoisons: 'Vile Poisons', coldBlood: 'Cold Blood', improvedPoisons: 'Improved Poisons', vigor: 'Vigor',
-  mutilate: 'Mutilate', improvedKidneyShot: 'Improved Kidney Shot', sealFate: 'Seal Fate', venom: 'Venom',
-  improvedEviscerate: 'Improved Eviscerate', improvedSinisterStrike: 'Improved Sinister Strike',
+  ruthlessness: 'Ruthlessness', improvedExposeArmor: 'Improved Expose Armor', improvedSliceAndDice: 'Improved Slice and Dice',
+  vigor: 'Vigor', bloodSplatter: 'Blood Splatter', lethality: 'Lethality',
+  vilePoisons: 'Vile Poisons', coldBlood: 'Cold Blood', improvedPoisons: 'Improved Poisons',
+  relentlessStrikes: 'Relentless Strikes', venom: 'Venom', improvedKidneyShot: 'Improved Kidney Shot', sealFate: 'Seal Fate', mutilate: 'Mutilate',
+  coupDeGrace: 'Coup de Grace', efficientStrikes: 'Efficient Strikes',
   lightningReflexes: 'Lightning Reflexes', puncturingWounds: 'Puncturing Wounds', deflection: 'Deflection',
-  precision: 'Precision', endurance: 'Endurance', riposte: 'Riposte', improvedSprint: 'Improved Sprint',
+  precision: 'Precision', improvedSprint: 'Improved Sprint', endurance: 'Endurance', riposte: 'Riposte', composure: 'Composure',
   improvedKick: 'Improved Kick', flawlessExecution: 'Flawless Execution',
+  weaponExpertise: 'Weapon Expertise', aggression: 'Aggression',
   dualWieldSpecialization: 'Dual Wield Specialization', bladeFlurry: 'Blade Flurry', hackAndSlash: 'Hack and Slash',
-  weaponExpertise: 'Weapon Expertise', aggression: 'Aggression', adrenalineRush: 'Adrenaline Rush',
-  camouflage: 'Camouflage', masterOfDeception: 'Master of Deception', opportunity: 'Opportunity', setup: 'Setup',
-  elusiveness: 'Elusiveness', dirtyTricks: 'Dirty Tricks', improvedAmbush: 'Improved Ambush', initiative: 'Initiative',
-  ghostlyStrike: 'Ghostly Strike', improvedDistract: 'Improved Distract', heightenedSenses: 'Heightened Senses',
-  premeditation: 'Premeditation', serratedBlades: 'Serrated Blades', dirtyDeeds: 'Dirty Deeds',
-  preparation: 'Preparation', hemorrhage: 'Hemorrhage', quietus: 'Quietus', cutthroat: 'Cutthroat',
-  thousandCuts: 'Thousand Cuts',
+  flashOfSteel: 'Flash of Steel', adrenalineRush: 'Adrenaline Rush',
+  setup: 'Setup', masterOfDeception: 'Master of Deception', opportunity: 'Opportunity', dirtyDeeds: 'Dirty Deeds',
+  camouflage: 'Camouflage', improvedAmbush: 'Improved Ambush', dirtyTricks: 'Dirty Tricks', initiative: 'Initiative',
+  premeditation: 'Premeditation', serratedBlades: 'Serrated Blades', elusiveness: 'Elusiveness',
+  ghostlyStrike: 'Ghostly Strike', quickGetaway: 'Quick Getaway', heightenedSenses: 'Heightened Senses',
+  preparation: 'Preparation', hemorrhage: 'Hemorrhage', bootKnife: 'Boot Knife', deathMark: 'Death Mark',
 };
 
 /** Talents that are new in WoW Forever (marked in the build summary). */
-const NEW_IN_FOREVER = new Set<TalentKey>(['mutilate', 'venom', 'flawlessExecution', 'hackAndSlash', 'puncturingWounds', 'quietus', 'cutthroat', 'thousandCuts']);
+const NEW_IN_FOREVER = new Set<TalentKey>(['mutilate', 'venom', 'flawlessExecution', 'hackAndSlash', 'puncturingWounds', 'bloodSplatter', 'composure', 'flashOfSteel', 'quickGetaway', 'bootKnife', 'deathMark']);
 
 export function decode(talentString: string): Talents {
   const out = {} as Talents;
@@ -74,7 +74,7 @@ export function summary(t: Talents): { tree: string; points: number; talents: st
   });
 }
 
-export type Rotation = 'combat' | 'combatIea' | 'backstab' | 'mutilate' | 'hemorrhage';
+export type Rotation = 'combat' | 'backstab' | 'mutilate' | 'hemorrhage';
 
 export interface Build {
   id: string;
@@ -92,35 +92,24 @@ const KEYS = ['Digit1', 'Digit2', 'Digit3', 'Digit4', 'Digit5', 'Digit6', 'Digit
   'KeyR', 'KeyF', 'KeyG', 'KeyT', 'KeyZ', 'KeyX', 'KeyC', 'KeyV'];
 const bar = (ids: (string | null)[]): Binding[] => ids.map((id, i) => ({ id, key: KEYS[i] }));
 
-const COMBAT_BAR = bar(['sinisterStrike', 'eviscerate', 'sliceAndDice', 'rupture', 'exposeArmor', 'bladeFlurry', 'adrenalineRush', 'coldBlood',
-  'kick', 'kidneyShot', 'thistleTea', 'feint', 'stealth', 'garrote', 'sprint', 'vanish']);
-const BACKSTAB_BAR = bar(['backstab', 'eviscerate', 'sliceAndDice', 'rupture', 'exposeArmor', 'bladeFlurry', 'adrenalineRush', 'coldBlood',
-  'kick', 'kidneyShot', 'thistleTea', 'feint', 'stealth', 'garrote', 'sprint', 'vanish']);
-const MUTILATE_BAR = bar(['mutilate', 'eviscerate', 'sliceAndDice', 'rupture', 'exposeArmor', 'venom', 'coldBlood', 'thistleTea',
+const COMBAT_BAR = bar(['sinisterStrike', 'shank', 'eviscerate', 'sliceAndDice', 'rupture', 'bladeFlurry', 'adrenalineRush', 'coldBlood',
+  'exposeArmor', 'kick', 'kidneyShot', 'thistleTea', 'stealth', 'garrote', 'sprint', 'vanish']);
+const VENOM_BAR = bar(['sinisterStrike', 'shank', 'eviscerate', 'sliceAndDice', 'rupture', 'bladeFlurry', 'coldBlood', 'thistleTea',
+  'exposeArmor', 'kick', 'kidneyShot', 'feint', 'stealth', 'garrote', 'sprint', 'vanish']);
+const BACKSTAB_BAR = bar(['backstab', 'shank', 'eviscerate', 'sliceAndDice', 'rupture', 'bladeFlurry', 'adrenalineRush', 'thistleTea',
+  'exposeArmor', 'kick', 'kidneyShot', 'feint', 'stealth', 'garrote', 'sprint', 'vanish']);
+const MUTILATE_BAR = bar(['mutilate', 'shank', 'eviscerate', 'sliceAndDice', 'rupture', 'coldBlood', 'thistleTea', 'exposeArmor',
   'kick', 'kidneyShot', 'gouge', 'feint', 'stealth', 'garrote', 'sprint', 'vanish']);
-const SUB_BACKSTAB_BAR = bar(['backstab', 'eviscerate', 'sliceAndDice', 'rupture', 'hemorrhage', 'premeditation', 'preparation', 'ambush',
-  'kick', 'kidneyShot', 'thistleTea', 'feint', 'stealth', 'garrote', 'sprint', 'vanish']);
-const HEMO_SWORDS_BAR = bar(['hemorrhage', 'eviscerate', 'sliceAndDice', 'rupture', 'premeditation', 'preparation', 'thistleTea', 'coldBlood',
-  'kick', 'kidneyShot', 'gouge', 'feint', 'stealth', 'garrote', 'sprint', 'vanish']);
-const HEMO_BAR = bar(['hemorrhage', 'eviscerate', 'sliceAndDice', 'rupture', 'ghostlyStrike', 'premeditation', 'preparation', 'thistleTea',
-  'kick', 'kidneyShot', 'garrote', 'feint', 'stealth', 'ambush', 'sprint', 'vanish']);
+const HEMO_BAR = bar(['hemorrhage', 'shank', 'deathMark', 'sliceAndDice', 'rupture', 'ghostlyStrike', 'garrote', 'premeditation',
+  'preparation', 'kick', 'thistleTea', 'exposeArmor', 'stealth', 'eviscerate', 'sprint', 'vanish']);
 
 const WS = 'wowsims/forever';
-/** Builds with no equivalent in WoWSims Forever: they stay, for whoever practises them. */
-const GS = 'community, from gunba/wow-forever-sim';
-const FS = 'community, from foreversim';
-
 export const BUILDS: Build[] = [
-  { id: 'combat-gs', name: 'Combat Sinister Strike', source: WS, talentString: '005323101012-32030320201515231', rotation: 'combat', stats: COMBAT_STATS, bar: COMBAT_BAR },
-  { id: 'combat-fs', name: 'Combat Swords', source: FS, talentString: '00530310501-32003311201515231', rotation: 'combat', stats: STATS, bar: COMBAT_BAR },
-  { id: 'combat-iea', name: 'Combat, Improved Expose Armor', source: GS, talentString: '005303125-32003311201515131', rotation: 'combatIea', stats: STATS, bar: COMBAT_BAR, options: { exposeArmorDuty: true } },
-  { id: 'combat-backstab', name: 'Combat Backstab', source: WS, talentString: '00532310101-32030320201515231-002', rotation: 'backstab', stats: BACKSTAB_STATS, bar: BACKSTAB_BAR },
-  { id: 'mutilate-gs', name: 'Mutilate, Assassination', source: WS, talentString: '00532310151501031-302303202014', rotation: 'mutilate', stats: MUTILATE_STATS, bar: MUTILATE_BAR },
-  { id: 'mutilate-combat', name: 'Mutilate, Combat', source: WS, talentString: '00532310101401-302303202015152-001', rotation: 'mutilate', stats: MUTILATE_STATS, bar: MUTILATE_BAR },
-  { id: 'mutilate-fs', name: 'Mutilate', source: FS, talentString: '00530310551021051-302303202004', rotation: 'mutilate', stats: DAGGER_STATS, bar: MUTILATE_BAR },
-  { id: 'hemo-gs', name: 'Subtlety Hemorrhage', source: WS, talentString: '005323101014--4323200300013211501', rotation: 'hemorrhage', stats: COMBAT_STATS, bar: HEMO_SWORDS_BAR },
-  { id: 'sub-backstab', name: 'Subtlety Backstab', source: WS, talentString: '0053031-3203-4320203300013211051', rotation: 'backstab', stats: SUB_BACKSTAB_STATS, bar: SUB_BACKSTAB_BAR },
-  { id: 'hemo-fs', name: 'Subtlety Hemorrhage', source: FS, talentString: '125320101--5320003310013211551', rotation: 'hemorrhage', stats: DAGGER_STATS, bar: HEMO_BAR },
+  { id: 'combat-gs', name: 'Combat Sinister Strike', source: WS, talentString: '00530320201-3200132202012321551', rotation: 'combat', stats: COMBAT_STATS, bar: COMBAT_BAR },
+  { id: 'combat-backstab', name: 'Combat Backstab', source: WS, talentString: '005203002-3203130202012321351-005', rotation: 'backstab', stats: BACKSTAB_STATS, bar: BACKSTAB_BAR },
+  { id: 'combat-venom', name: 'Combat Venom', source: WS, talentString: '00530320241001-320013220201232115', rotation: 'combat', stats: SUB_BACKSTAB_STATS, bar: VENOM_BAR },
+  { id: 'mutilate-gs', name: 'Mutilate, Assassination', source: WS, talentString: '00530311231251031-32030302020103-001', rotation: 'mutilate', stats: MUTILATE_STATS, bar: MUTILATE_BAR },
+  { id: 'hemo-gs', name: 'Subtlety Hemorrhage', source: WS, talentString: '00530301-320003-305230031321001151', rotation: 'hemorrhage', stats: COMBAT_STATS, bar: HEMO_BAR },
 ];
 
 export const buildLabel = (b: Build) => `${b.name} ${split(b.talentString)} (${b.source})`;

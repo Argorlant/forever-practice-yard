@@ -46,7 +46,7 @@ const STRIKES: Record<string, { color: number; kind?: StrikeKind }> = {
   stormstrike: { color: 0x9ad8ff },
   // Rogue
   backstab: { color: 0xffffff, kind: 'thrust' }, ambush: { color: 0xffffff, kind: 'thrust' }, mutilate: { color: 0x8ae040, kind: 'thrust' },
-  hemorrhage: { color: 0xe02020 }, ghostlyStrike: { color: 0xb8c8ff }, eviscerate: { color: 0xffd060 }, cutthroat: { color: 0xffffff, kind: 'thrust' },
+  hemorrhage: { color: 0xe02020 }, ghostlyStrike: { color: 0xb8c8ff }, eviscerate: { color: 0xffd060 }, shank: { color: 0xffffff, kind: 'thrust' },
   // Hunter
   raptorStrike: { color: 0xffa040 }, mongooseBite: { color: 0xffd040, kind: 'thrust' },
   // Druid

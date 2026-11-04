@@ -14,7 +14,7 @@ import { CLASSES, classKey, pointsPerTree, specTitle } from '../src/ui/talents-d
 
 const SITE = 'https://argorlant.github.io/forever-practice-yard/';
 const OUT = 'dist';
-const IMAGE = `${SITE}og-image.jpg`;
+const IMAGE = `${SITE}og-image-v2.jpg`;
 const KOFI = 'https://ko-fi.com/argorlant';
 const ISSUES = 'https://github.com/Argorlant/forever-practice-yard/issues';
 

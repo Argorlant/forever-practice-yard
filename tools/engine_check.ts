@@ -96,17 +96,16 @@ const currentSealOf = (c: Combat) => ['sealOfRighteousness', 'sealOfCommand', 's
 // Every talent build plays its own priority list without errors.
 console.log('Builds (5 min, own gear, priority list):');
 const MUST_USE: Record<string, string[]> = {
-  combat: ['sinisterStrike', 'eviscerate', 'sliceAndDice', 'bladeFlurry', 'adrenalineRush'],
-  combatIea: ['sinisterStrike', 'exposeArmor', 'eviscerate'],
-  backstab: ['backstab', 'eviscerate', 'sliceAndDice'],
-  mutilate: ['mutilate', 'eviscerate', 'sliceAndDice'],
-  hemorrhage: ['hemorrhage', 'rupture', 'sliceAndDice', 'premeditation'],
+  combat: ['sinisterStrike', 'shank', 'eviscerate', 'sliceAndDice', 'bladeFlurry', 'adrenalineRush'],
+  combatVenom: ['sinisterStrike', 'shank', 'eviscerate', 'sliceAndDice', 'bladeFlurry'],
+  backstab: ['backstab', 'shank', 'eviscerate', 'sliceAndDice'],
+  mutilate: ['mutilate', 'shank', 'eviscerate', 'sliceAndDice'],
+  hemorrhage: ['hemorrhage', 'shank', 'deathMark', 'ghostlyStrike', 'garrote', 'rupture', 'sliceAndDice', 'premeditation'],
 };
 for (const b of spec.builds ?? []) {
   const options = { ...(spec.defaultOptions ?? {}), build: b.id, ...(b.options ?? {}) };
   const r = run(spec, 300, 4242, b.stats, options);
-  const rotation = (b.id.startsWith('combat-iea') ? 'combatIea' : b.id.startsWith('combat-backstab') || b.id.startsWith('sub-') ? 'backstab'
-    : b.id.startsWith('combat') ? 'combat' : b.id.startsWith('mutilate') ? 'mutilate' : 'hemorrhage');
+  const rotation = b.id === 'combat-venom' ? 'combatVenom' : rogueTalents.buildById(b.id).rotation;
   const missing = MUST_USE[rotation].filter((id) => !r.used[id]);
   const review = (spec.review?.(r.c) ?? []).map((x) => `${x.label}: ${x.value}`).join(' | ');
   console.log(`  ${b.label.padEnd(48)} ${r.dps.toFixed(0).padStart(4)} DPS  ${review}`);
@@ -967,6 +966,21 @@ for (const sp of [shamanElemental, shamanEnhancement, shamanTank]) {
 }
 
 // ------------------------------------------------- the hotfixes of November
+{
+  // Rogue: Shank gives energy and cannot miss, Poised takes energy off the first ability, Death Mark pays out what it stored.
+  const combat = play(rogue, { build: 'combat-gs', seconds: 0 }).c;
+  const ss = combat.cost(combat.ability('sinisterStrike')!);
+  combat.removeAura(combat.player, 'poised');
+  if (combat.cost(combat.ability('sinisterStrike')!) - ss !== 20) failures.push('Poised with Composure 2/2 did not take 20 Energy off the first ability');
+  const subtle = play(rogue, { build: 'hemo-gs' });
+  const mark = subtle.c.meter.rows.get('deathMark');
+  if (!((mark?.hits ?? 0) > 5)) failures.push(`Death Mark paid out ${mark?.hits ?? 0} times in 5 min`);
+  if (!((subtle.c.counters.bootKnife ?? 0) > 5)) failures.push('Boot Knife barely fired');
+  const venom = play(rogue, { build: 'combat-venom' });
+  if (!venom.used.shank) failures.push('Combat Venom never used Shank');
+  if (venom.c.ability('venom')) failures.push('Venom is still a finisher');
+  if (spec.builds!.length !== 5) failures.push(`${spec.builds!.length} Rogue builds, WoWSims has 5`);
+}
 {
   const fury = play(warrior, { build: 'fury-dw', seconds: 0 }).c;
   const ability = (id: string) => fury.ability(id)!;

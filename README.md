@@ -15,9 +15,9 @@ Builds, gear and priority lists follow [WoWSims Forever](https://www.wowsims.com
 Ice; Human Ruthless at 1 % and no Orc Savage in the race sheets. The live hotfix of October 30 rebuilt the Druid, Mage
 and Paladin trees (and moved or renamed a Hunter and a Priest talent); the site's trees and their tooltips were read then
 from Wowhead's WoW Forever calculator (`tools/wowhead_trees.mjs`, data in `research/wowhead/`), and they match WoWSims
-Forever's talent order. The hotfixes of early November changed the Warrior and Shaman trees again; those follow WoWSims
-Forever at `7c3453f` (`tools/wowsims_trees.mjs`), with its numbers and rotations for Warrior, Shaman and Hunter. Its Rogue,
-Warlock and feral Druid changes are not merged yet, so the site's stay as they were. Builds marked **community** have no equivalent there: they come from older sims, re-spent where the
+Forever's talent order. The hotfixes of early November changed the Warrior, Shaman and Rogue trees again; those follow WoWSims
+Forever (`tools/wowsims_trees.mjs`), with its numbers and rotations for Warrior, Shaman, Hunter and Rogue. The site's
+Warlock and feral Druid do not have their November changes yet. Builds marked **community** have no equivalent there: they come from older sims, re-spent where the
 trees changed, and stay for whoever practises them.
 > **Speculative, built on the sims.** This site was made before WoW Forever's launch on 4 November 2026. The talents,
 > builds, rotations and numbers here follow the community sims ([WoWSims Forever](https://www.wowsims.com/forever/), our main source; the

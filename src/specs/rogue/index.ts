@@ -8,6 +8,9 @@ import { COMBAT_STATS, DATA, MUTILATE_STATS, NORMALIZED_SPEED, RAID_STATS, RULES
 import { BUILDS, buildById, buildLabel, summary, talentsFor, type Talents } from './talents';
 
 const D = DATA;
+const SHANK_ICON = 'cdn:ability_theblackarrow';
+const DEATH_MARK_ICON = 'cdn:ability_creature_cursed_02';
+const POISED_ICON = 'cdn:ability_rogue_fleetfooted';
 /** Talent ranks of the build chosen in Settings. */
 const T = (c: Combat): Talents => talentsFor(c.options.build, c.options.talents);
 const landed = (o: Outcome) => o === 'hit' || o === 'crit' || o === 'glance';
@@ -15,7 +18,7 @@ const roll = (c: Combat, pct: number) => c.random() * 100 < pct;
 const round1 = (n: number) => Math.round(n * 10) / 10;
 
 /** Per-fight state that is not an aura: internal cooldowns of procs. */
-interface RogueState { lastSealFate: number; lastHackAndSlash: number; lastThousandCuts: number }
+interface RogueState { lastSealFate: number; lastHackAndSlash: number; deathMarkPoints: number }
 const states = new WeakMap<Combat, RogueState>();
 const state = (c: Combat) => states.get(c)!;
 
@@ -47,9 +50,6 @@ function normalized(c: Combat, hand: Hand = 'main'): number {
   return c.weaponDamage(hand, { normalizedSpeed: speed });
 }
 const mhDagger = (c: Combat) => c.stats.mainHand.type === 'dagger';
-/** Quietus: more damage from some builders below 35 % health. */
-const quietus = (c: Combat, t: Unit) => (t.health / t.maxHealth < 0.35 ? 1 + 0.02 * T(c).quietus : 1);
-
 /** Cold Blood: the next Sinister Strike, Backstab, Ambush, Mutilate or Eviscerate is a sure crit. */
 function useColdBlood(c: Combat): boolean {
   if (!c.aura(c.player, 'coldBlood')) return false;
@@ -75,7 +75,7 @@ function addPoints(c: Combat, t: Unit, n: number): void {
 /** Seal Fate: a builder crit can add a combo point (one try per cast, 500 ms ICD). */
 function sealFate(c: Combat, t: Unit): void {
   const s = state(c);
-  if (T(c).sealFate && c.t - s.lastSealFate >= D.sealFateIcd && roll(c, 20 * T(c).sealFate)) {
+  if (T(c).sealFate && c.t - s.lastSealFate >= D.sealFateIcd && roll(c, D.sealFate[T(c).sealFate])) {
     s.lastSealFate = c.t;
     c.addComboPoints(t, 1);
     c.count('sealFate');
@@ -128,7 +128,7 @@ function attackFinisher(c: Combat, t: Unit, id: string, opts: { forceCrit?: bool
 /** After any finisher: Relentless Strikes and Ruthlessness. */
 function afterFinisher(c: Combat, t: Unit, cp: number): void {
   const tl = T(c);
-  if (tl.relentlessStrikes && roll(c, 20 * cp)) {
+  if (tl.relentlessStrikes && roll(c, 4 * tl.relentlessStrikes * cp)) {
     c.addResource(D.relentlessEnergy);
     c.count('relentlessEnergy', D.relentlessEnergy);
     note(c, `+${D.relentlessEnergy} Energy`, 'resource');
@@ -146,29 +146,32 @@ function afterFinisher(c: Combat, t: Unit, cp: number): void {
  * Bleeds ignore armor.
  */
 function bleed(c: Combat, t: Unit, id: string, name: string, ticks: number, period: number,
-  perTick: (cc: Combat) => number, snapshot = 1, onTick?: (cc: Combat) => void): void {
+  perTick: (cc: Combat) => number, snapshot = 1): void {
   c.applyAura(t, {
     id, name, icon: id, duration: ticks * period, period,
     onTick: (cc) => {
       const crit = cc.rollTickCrit(cc.critChance(id));
       const amount = Math.round(perTick(cc) * snapshot * cc.mod.physicalDamage * (cc.mod.damageFor[id] ?? 1) * (crit ? cc.rules.critMultiplier : 1));
       cc.deal({ target: t, source: id, outcome: crit ? 'crit' : 'hit', school: 'physical', amount, white: false, periodic: true });
-      onTick?.(cc);
     },
   });
 }
 
 const sndDuration = (c: Combat, cp: number) => round1((D.sliceAndDice.base + D.sliceAndDice.perCp * cp) * (1 + 0.15 * T(c).improvedSliceAndDice));
 const ruptureTick = (c: Combat, cp: number) => D.rupture.tick + D.rupture.tickPerCp * cp + c.stats.attackPower * D.rupture.apPerTick[cp - 1];
-const thousandCutsStacks = (c: Combat) => c.aura(c.player, 'thousandCuts')?.stacks ?? 0;
+/** Ghostly Strike's buff: the next Ambush or Garrote needs no Stealth. */
+const unseen = (c: Combat) => c.stealthed() || !!c.aura(c.player, 'ghostlyStrikeNext');
+const shankEnergy = (c: Combat) => D.shank.energy + D.shank.flashEnergy * T(c).flashOfSteel;
+/** Hemorrhage raises your Rupture and Garrote, as cast. */
+const hemoBonus = (c: Combat, t: Unit) => (c.aura(t, 'hemorrhage') ? 1 + D.hemorrhage.bleedBonus : 1);
 
 function enterStealth(c: Combat): void {
   const camo = T(c).camouflage;
   c.applyAura(c.player, {
     id: 'stealth', name: 'Stealth', icon: 'stealth', duration: Infinity,
-    speed: D.stealthSpeed + 0.03 * camo,
+    speed: D.stealthSpeed + 0.05 * camo,
     // The cooldown starts when stealth ends; Camouflage shortens it by 2 to 6 sec.
-    onRemove: (cc) => cc.startCooldown('stealth', D.stealth.cooldown - (camo ? camo + 1 : 0)),
+    onRemove: (cc) => cc.startCooldown('stealth', D.stealth.cooldown - 2 * camo),
   });
 }
 
@@ -177,32 +180,26 @@ const abilities: Ability[] = [
   {
     id: 'sinisterStrike', name: 'Sinister Strike', icon: 'sinisterStrike', gcd: D.gcd, target: 'enemy', range: 'melee',
     animation: 'strike1',
-    cost: (c) => D.sinisterStrike.cost - [0, 3, 5][T(c).improvedSinisterStrike],
+    cost: (c) => D.sinisterStrike.cost - [0, 3, 5][T(c).efficientStrikes],
     description: () => `An instant strike that causes normalized weapon damage plus ${D.sinisterStrike.bonus}. Awards 1 combo point.`,
-    use: (c, t) => { builder(c, t!, 'sinisterStrike', (normalized(c) + D.sinisterStrike.bonus) * quietus(c, t!)); },
+    use: (c, t) => { builder(c, t!, 'sinisterStrike', normalized(c) + D.sinisterStrike.bonus); },
   },
   {
     id: 'backstab', name: 'Backstab', icon: 'backstab', gcd: D.gcd, target: 'enemy', range: 'melee',
     animation: 'stab',
-    cost: (c) => D.backstab.cost - 3 * thousandCutsStacks(c),
+    cost: () => D.backstab.cost,
     requirements: (c, t) => needsDagger(c) ?? needsBehind(c, t),
     usable: mhDagger,
     description: () => `Backstab the target, causing ${D.backstab.percent * 100}% weapon damage plus ${D.backstab.bonus}. Must be behind the target. Requires a dagger in the main hand. Awards 1 combo point.`,
     use: (c, t) => {
       const u = t!;
       const tl = T(c);
-      if (thousandCutsStacks(c)) c.removeAura(c.player, 'thousandCuts');
       const outcome = builder(c, u, 'backstab', (normalized(c) + D.backstab.bonus) * D.backstab.percent);
       if (!landed(outcome)) return;
       if (tl.puncturingWounds && roll(c, 15 * tl.puncturingWounds)) {
         c.addComboPoints(u, 1);
         c.count('puncturingWounds');
         note(c, 'Puncturing Wounds +1 combo point');
-      }
-      if (tl.cutthroat && roll(c, 3 * tl.cutthroat)) {
-        c.applyAura(c.player, { id: 'cutthroat', name: 'Cutthroat', icon: 'ambush', duration: 10 });
-        c.count('cutthroat');
-        note(c, 'Cutthroat: Ambush ready');
       }
     },
   },
@@ -214,7 +211,7 @@ const abilities: Ability[] = [
       ?? (c.stats.mainHand.type !== 'dagger' || c.stats.offHand?.type !== 'dagger' ? 'Requires a dagger in each hand' : null),
     usable: (c) => T(c).mutilate > 0 && c.stats.mainHand.type === 'dagger' && c.stats.offHand?.type === 'dagger',
     learned: (c) => T(c).mutilate > 0,
-    description: () => `Strike with both daggers, each for 75% weapon damage plus ${Math.round(D.mutilate.bonus * D.mutilate.percent)}; 20% more if the target has your Deadly Poison. Awards 2 combo points.`,
+    description: () => `Strike with both daggers, each for ${D.mutilate.percent * 100}% weapon damage plus ${Math.round(D.mutilate.bonus * D.mutilate.percent)}; 20% more if the target has your Deadly Poison. Awards 2 combo points.`,
     use: (c, t) => {
       const u = t!;
       // Cold Blood: both hands crit; a Mutilate that misses outright keeps it (Oct 15, gs).
@@ -244,14 +241,13 @@ const abilities: Ability[] = [
   {
     id: 'hemorrhage', name: 'Hemorrhage', icon: 'hemorrhage', gcd: D.gcd, target: 'enemy', range: 'melee',
     animation: 'strike2',
-    cost: (c) => D.hemorrhage.cost - 3 * thousandCutsStacks(c),
+    cost: (c) => D.hemorrhage.cost - [0, 3, 5][T(c).efficientStrikes],
     ...talent('hemorrhage', 'Hemorrhage'),
-    description: () => `An instant strike for ${D.hemorrhage.percent * 100}% normalized weapon damage (${D.hemorrhage.daggerPercent * 100}% with a dagger). For ${D.hemorrhage.duration} sec your Rupture on the target deals ${D.hemorrhage.ruptureBonus * 100}% more. Awards 1 combo point.`,
+    description: () => `An instant strike for ${D.hemorrhage.percent * 100}% normalized weapon damage (${D.hemorrhage.daggerPercent * 100}% with a dagger). For ${D.hemorrhage.duration} sec your Rupture and Garrote on the target deal ${D.hemorrhage.bleedBonus * 100}% more. Awards 1 combo point.`,
     use: (c, t) => {
       const u = t!;
-      if (thousandCutsStacks(c)) c.removeAura(c.player, 'thousandCuts');
       const pct = mhDagger(c) ? D.hemorrhage.daggerPercent : D.hemorrhage.percent;
-      const outcome = builder(c, u, 'hemorrhage', normalized(c) * pct * quietus(c, u));
+      const outcome = builder(c, u, 'hemorrhage', normalized(c) * pct);
       if (landed(outcome)) c.applyAura(u, { id: 'hemorrhage', name: 'Hemorrhage', icon: 'hemorrhage', duration: D.hemorrhage.duration });
     },
   },
@@ -264,14 +260,16 @@ const abilities: Ability[] = [
     use: (c, t) => {
       const u = t!;
       const pct = mhDagger(c) ? D.ghostlyStrike.daggerPercent : D.ghostlyStrike.percent;
-      const outcome = builder(c, u, 'ghostlyStrike', c.weaponDamage('main') * pct * quietus(c, u));
-      if (landed(outcome)) c.applyAura(c.player, { id: 'ghostlyStrikeBuff', name: 'Ghostly Strike', icon: 'ghostlyStrike', duration: D.ghostlyStrike.duration });
+      const outcome = builder(c, u, 'ghostlyStrike', normalized(c) * pct);
+      if (!landed(outcome)) return;
+      c.applyAura(c.player, { id: 'ghostlyStrikeBuff', name: 'Ghostly Strike', icon: 'ghostlyStrike', duration: D.ghostlyStrike.duration });
+      c.applyAura(c.player, { id: 'ghostlyStrikeNext', name: 'Ghostly Strike: no Stealth needed', icon: 'ghostlyStrike', duration: D.ghostlyStrike.duration });
     },
   },
   {
     id: 'eviscerate', name: 'Eviscerate', icon: 'eviscerate', gcd: D.gcd, target: 'enemy', range: 'melee',
     animation: 'slash',
-    cost: (c) => D.eviscerate.cost - 10 * T(c).flawlessExecution,
+    cost: (c) => D.eviscerate.cost - 15 * T(c).flawlessExecution,
     requirements: (c, t) => needsComboPoints(c, t),
     usable: hasPoints,
     description: (c) => `Finishing move that causes ${D.eviscerate.min}-${D.eviscerate.max} damage plus ${D.eviscerate.perCp} and ${D.eviscerate.apPerCp * 100}% of attack power per combo point. 5 points: ${D.eviscerate.min + 5 * D.eviscerate.perCp}-${D.eviscerate.max + 5 * D.eviscerate.perCp} plus ${Math.round(c.stats.attackPower * D.eviscerate.apPerCp * 5)}.`,
@@ -315,9 +313,8 @@ const abilities: Ability[] = [
       const done = attackFinisher(c, u, 'rupture');
       if (!done) return;
       const cp = done.cp;
-      // The Hemorrhage bonus counts as cast.
-      const hemo = c.aura(u, 'hemorrhage') ? 1 + D.hemorrhage.ruptureBonus : 1;
-      bleed(c, u, 'rupture', 'Rupture', 3 + cp, D.rupture.period, (cc) => ruptureTick(cc, cp), hemo, thousandCutsTick);
+      const ticks = 3 + cp + (T(c).bloodSplatter ? D.bloodSplatter.ruptureTicks : 0);
+      bleed(c, u, 'rupture', 'Rupture', ticks, D.rupture.period, (cc) => ruptureTick(cc, cp), hemoBonus(c, u));
       afterFinisher(c, u, cp);
     },
   },
@@ -357,30 +354,65 @@ const abilities: Ability[] = [
     },
   },
   {
-    id: 'venom', name: 'Venom', icon: 'venom', gcd: D.gcd, target: 'enemy', needsFacing: false,
-    animation: 'block',
-    cost: () => D.venom.cost,
-    requirements: (c, t) => talent('venom', 'Venom').requirements(c) ?? needsComboPoints(c, t),
-    usable: (c) => T(c).venom > 0 && hasPoints(c),
-    learned: (c) => T(c).venom > 0,
-    description: () => `Finishing move: your poisons deal ${D.venom.damage * 100}% more damage and have ${D.venom.chance}% more chance to apply. ${D.venom.base + D.venom.perCp} to ${D.venom.base + 5 * D.venom.perCp} sec.`,
+    id: 'shank', name: 'Shank', icon: SHANK_ICON, gcd: D.gcd, target: 'enemy', range: 'melee',
+    animation: 'jab',
+    cost: () => D.shank.cost,
+    cooldown: (c) => D.shank.cooldown - D.shank.flashCooldown * T(c).flashOfSteel,
+    requirements: (c) => (c.stats.offHand ? null : 'Requires an off-hand weapon'),
+    usable: (c) => !!c.stats.offHand,
+    description: (c) => `Strike with your off-hand weapon for ${D.shank.weapon * 100}% weapon damage and gain ${shankEnergy(c)} energy. Cannot miss.${T(c).venom ? ` Venom: for ${D.venom.duration} sec your poisons deal ${D.venom.damage * 100}% more and have ${D.venom.chance}% more chance to apply.` : ''}`,
     use: (c, t) => {
-      keepPremeditation(c);
-      const cp = c.spendComboPoints();
-      c.applyAura(c.player, { id: 'venom', name: 'Venom', icon: 'venom', duration: D.venom.base + D.venom.perCp * cp });
-      afterFinisher(c, t!, cp);
+      const u = t!;
+      const tl = T(c);
+      const outcome: Outcome = roll(c, c.critChance('shank')) ? 'crit' : 'hit';
+      const amount = c.physicalDamage(u, 'shank', (c.weaponDamage('off') / c.mod.offHand) * D.shank.weapon, outcome);
+      c.deal({ target: u, source: 'shank', outcome, school: 'physical', amount, white: false });
+      c.addResource(shankEnergy(c));
+      if (tl.venom) c.applyAura(c.player, { id: 'venom', name: 'Venom', icon: 'venom', duration: D.venom.duration });
+      if (tl.bootKnife && roll(c, D.shank.bootKnifeChance * tl.bootKnife)) {
+        addPoints(c, u, D.shank.bootKnifePoints);
+        c.count('bootKnife');
+        note(c, `Boot Knife +${D.shank.bootKnifePoints} combo points`);
+      }
+    },
+  },
+  {
+    id: 'deathMark', name: 'Death Mark', icon: DEATH_MARK_ICON, gcd: D.gcd, target: 'enemy', range: 'melee',
+    animation: 'cross',
+    cost: () => D.deathMark.cost, cooldown: D.deathMark.cooldown,
+    requirements: (c, t) => talent('deathMark', 'Death Mark').requirements(c) ?? needsComboPoints(c, t),
+    usable: (c) => T(c).deathMark > 0 && hasPoints(c),
+    learned: (c) => T(c).deathMark > 0,
+    description: () => `Finishing move: for ${D.deathMark.duration} sec the mark stores ${D.deathMark.perPoint * 100}% per combo point of the damage you deal the target, twice that from Garrote and Rupture, then deals what it stored, up to a limit that rises with combo points, attack power and crit.`,
+    use: (c, t) => {
+      const u = t!;
+      const done = attackFinisher(c, u, 'deathMark');
+      if (!done) return;
+      const cp = done.cp;
+      state(c).deathMarkPoints = cp;
+      c.count('deathMarks');
+      c.applyAura(u, {
+        id: 'deathMark', name: 'Death Mark', icon: DEATH_MARK_ICON, duration: D.deathMark.duration, value: 0,
+        onRemove: (cc, a, expired) => {
+          if (!expired) return;
+          const m = D.deathMark;
+          const limit = (m.capBase + m.capPerPoint * cp + m.capAp * cp * cc.stats.attackPower) * (1 + (cc.stats.crit + cc.mod.crit) / 100) * (1 + D.coupDeGrace[T(cc).coupDeGrace]);
+          cc.deal({ target: u, source: 'deathMark', outcome: 'hit', school: 'physical', amount: Math.round(Math.min(a.value ?? 0, limit)), white: false, periodic: true });
+        },
+      });
+      afterFinisher(c, u, cp);
     },
   },
   {
     id: 'ambush', name: 'Ambush', icon: 'ambush', gcd: D.gcd, target: 'enemy', range: 'melee',
     animation: 'stab',
     cost: () => D.ambush.cost,
-    requirements: (c, t) => (c.aura(c.player, 'cutthroat') ? null : needsStealth(c)) ?? needsDagger(c) ?? needsBehind(c, t),
-    usable: (c) => (c.stealthed() || !!c.aura(c.player, 'cutthroat')) && mhDagger(c),
-    highlight: (c) => !!c.aura(c.player, 'cutthroat'),
+    requirements: (c, t) => (c.aura(c.player, 'ghostlyStrikeNext') ? null : needsStealth(c)) ?? needsDagger(c) ?? needsBehind(c, t),
+    usable: (c) => unseen(c) && mhDagger(c),
+    highlight: (c) => !!c.aura(c.player, 'ghostlyStrikeNext'),
     description: () => `Ambush the target, causing ${D.ambush.percent * 100}% weapon damage plus ${Math.round(D.ambush.bonus * D.ambush.percent)}. Must be stealthed and behind the target. Requires a dagger. Awards 1 combo point.`,
     use: (c, t) => {
-      c.removeAura(c.player, 'cutthroat');
+      c.removeAura(c.player, 'ghostlyStrikeNext');
       const outcome = builder(c, t!, 'ambush', (normalized(c) + D.ambush.bonus) * D.ambush.percent);
       if (landed(outcome)) initiative(c, t!);
     },
@@ -389,18 +421,21 @@ const abilities: Ability[] = [
     id: 'garrote', name: 'Garrote', icon: 'garrote', gcd: D.gcd, target: 'enemy', range: 'melee',
     animation: 'hook',
     cost: (c) => D.garrote.cost - 10 * T(c).dirtyDeeds,
-    requirements: (c, t) => needsStealth(c) ?? (T(c).dirtyDeeds ? null : needsBehind(c, t)),
-    usable: (c) => c.stealthed(),
+    requirements: (c, t) => (c.aura(c.player, 'ghostlyStrikeNext') ? null : needsStealth(c)) ?? (T(c).dirtyDeeds ? null : needsBehind(c, t)),
+    usable: unseen,
+    highlight: (c) => !!c.aura(c.player, 'ghostlyStrikeNext'),
     description: (c) => `Garrote the enemy: ${D.garrote.ticks} ticks of ${Math.round(D.garrote.tick + c.stats.attackPower * D.garrote.apPerTick)} every ${D.garrote.period} sec. Must be stealthed and behind the target. Can crit; ignores armor. Awards 1 combo point.`,
     use: (c, t) => {
       const u = t!;
+      c.removeAura(c.player, 'ghostlyStrikeNext');
       const outcome = c.rollSpecial(u, 'garrote', { noDodge: true });
       if (!landed(outcome)) {
         c.refund(D.builderRefund);
         c.deal({ target: u, source: 'garrote', outcome, school: 'physical', amount: 0, white: false });
         return;
       }
-      bleed(c, u, 'garrote', 'Garrote', D.garrote.ticks, D.garrote.period, (cc) => D.garrote.tick + cc.stats.attackPower * D.garrote.apPerTick);
+      const ticks = D.garrote.ticks + (T(c).bloodSplatter ? D.bloodSplatter.garroteTicks : 0);
+      bleed(c, u, 'garrote', 'Garrote', ticks, D.garrote.period, (cc) => D.garrote.tick + cc.stats.attackPower * D.garrote.apPerTick, hemoBonus(c, u));
       addPoints(c, u, 1);
       initiative(c, u);
     },
@@ -486,7 +521,7 @@ const abilities: Ability[] = [
     requirements: (c) => (c.player.inCombat ? UI.cantInCombat : null),
     usable: (c) => !c.player.inCombat,
     highlight: (c) => c.stealthed(),
-    description: (c) => `Sneak around at ${Math.round((1 - D.stealthSpeed - 0.03 * T(c).camouflage) * 100)}% less speed. Breaks when you attack. Press again to leave stealth.`,
+    description: (c) => `Sneak around at ${Math.round((1 - D.stealthSpeed - 0.05 * T(c).camouflage) * 100)}% less speed. Breaks when you attack. Press again to leave stealth.`,
     use: (c) => {
       if (c.stealthed()) { c.breakStealth(); return; }
       enterStealth(c);
@@ -543,7 +578,7 @@ const abilities: Ability[] = [
     ...talent('preparation', 'Preparation'),
     description: () => 'Finishes the cooldown of your other rogue abilities: Vanish, Cold Blood, Premeditation, Sprint, Evasion and more.',
     use: (c) => {
-      for (const id of ['vanish', 'coldBlood', 'premeditation', 'sprint', 'evasion', 'ghostlyStrike', 'kick', 'gouge', 'kidneyShot', 'feint', 'stealth']) c.clearCooldown(id);
+      for (const id of ['vanish', 'coldBlood', 'premeditation', 'sprint', 'evasion', 'ghostlyStrike', 'shank', 'deathMark', 'kick', 'gouge', 'kidneyShot', 'feint', 'stealth']) c.clearCooldown(id);
     },
   },
   {
@@ -555,14 +590,13 @@ const abilities: Ability[] = [
   },
 ];
 
-/** Thousand Cuts: each Rupture tick makes the next Hemorrhage or Backstab cheaper. */
-function thousandCutsTick(c: Combat): void {
-  const r = T(c).thousandCuts;
-  const s = state(c);
-  if (!r || c.t - s.lastThousandCuts < 1.9) return;
-  s.lastThousandCuts = c.t;
-  const stacks = Math.min(5, thousandCutsStacks(c) + 1);
-  c.applyAura(c.player, { id: 'thousandCuts', name: 'Thousand Cuts', icon: 'rupture', duration: 10, stacks });
+// Poised is spent by the first ability that pays energy.
+const poisedDiscount = (c: Combat) => (c.aura(c.player, 'poised') ? D.poised.energy + D.poised.composure * T(c).composure : 0);
+for (const a of abilities) {
+  const { cost, use } = a;
+  if (!cost) continue;
+  a.cost = (c) => Math.max(0, cost(c) - poisedDiscount(c));
+  a.use = (c, t) => { use(c, t); c.removeAura(c.player, 'poised'); };
 }
 
 // ----------------------------------------------------------------- setup
@@ -571,22 +605,22 @@ const MAIN_HAND_STRIKES = ['sinisterStrike', 'backstab', 'ambush', 'hemorrhage',
 
 function prepare(c: Combat): void {
   const t = T(c);
-  states.set(c, { lastSealFate: -Infinity, lastHackAndSlash: -Infinity, lastThousandCuts: -Infinity });
+  states.set(c, { lastSealFate: -Infinity, lastHackAndSlash: -Infinity, deathMarkPoints: 0 });
   // Stats are gear only; the build's talents go on top.
   c.mod.crit = t.malice;
   c.mod.hit = t.precision;
   c.mod.expertise = t.weaponExpertise;
-  c.mod.offHand = 1 + 0.05 * t.dualWieldSpecialization;
+  c.mod.offHand = 1 + 0.25 * t.dualWieldSpecialization;
   c.mod.armorIgnore = 0.03 * t.serratedBlades;
   c.mod.natureDamage = 1 + 0.04 * t.vilePoisons;
   c.player.maxResource = 100 + 5 * t.vigor;
 
-  const lethality = c.rules.critMultiplier + 0.04 * t.lethality;
+  const lethality = c.rules.critMultiplier + 0.1 * t.lethality;
   for (const id of ['sinisterStrike', 'backstab', 'gouge', 'mutilate', 'mutilateOH', 'ghostlyStrike', 'hemorrhage']) c.mod.critMultiplierFor[id] = lethality;
   const add = (id: string, n: number) => { c.mod.damageFor[id] = (c.mod.damageFor[id] ?? 1) + n; };
-  for (const id of ['sinisterStrike', 'backstab', 'eviscerate']) add(id, 0.02 * t.aggression);
-  add('eviscerate', [0, 0.07, 0.13, 0.2][t.improvedEviscerate]);
-  for (const id of ['backstab', 'garrote', 'ambush', 'mutilate', 'mutilateOH']) add(id, 0.05 * t.opportunity);
+  for (const id of ['sinisterStrike', 'eviscerate']) add(id, 0.05 * t.aggression);
+  add('eviscerate', D.coupDeGrace[t.coupDeGrace]);
+  for (const id of ['backstab', 'garrote', 'ambush', 'mutilate', 'mutilateOH']) add(id, 0.04 * t.opportunity);
   add('rupture', 0.1 * t.serratedBlades);
   const crit = (id: string, n: number) => { c.mod.critFor[id] = (c.mod.critFor[id] ?? 0) + n; };
   crit('backstab', 10 * t.puncturingWounds);
@@ -612,6 +646,8 @@ function prepare(c: Combat): void {
   c.registerSource('deadlyPoison', 'Deadly Poison', 'deadlyPoison');
   c.registerSource('bladeFlurryCopy', 'Blade Flurry', 'bladeFlurry');
   c.registerSource('mutilateOH', 'Mutilate (off hand)', 'mutilate');
+  // Poised: at full Energy out of combat, the next ability costs less. As in WoWSims, up from the start until spent.
+  c.applyAura(c.player, { id: 'poised', name: 'Poised', icon: POISED_ICON, duration: Infinity });
 
   // Poisons and the Hack and Slash extra attack on landed weapon hits.
   // Extra attacks do not chain into more extra attacks.
@@ -634,6 +670,14 @@ function prepare(c: Combat): void {
       c.extraAttack(hit.target);
       extra = false;
     }
+  });
+
+  // Death Mark stores a share of what you deal its target, twice that from Garrote and Rupture.
+  c.afterDamage.push((hit: Hit) => {
+    const mark = c.aura(hit.target, 'deathMark');
+    if (!mark || hit.source === 'deathMark' || hit.amount <= 0) return;
+    const rate = D.deathMark.perPoint * state(c).deathMarkPoints * (1 + D.coupDeGrace[t.coupDeGrace]);
+    mark.value = (mark.value ?? 0) + hit.amount * rate * (hit.source === 'garrote' || hit.source === 'rupture' ? 2 : 1);
   });
 
   // Blade Flurry copies physical damage to a second nearby dummy.
@@ -668,7 +712,7 @@ function deadlyPoison(c: Combat, t: Unit): void {
     id: 'deadlyPoison', name: 'Deadly Poison', icon: 'deadlyPoison', duration: dp.duration, period: dp.period, stacks,
     onTick: (cc, a) => {
       const crit = cc.rollTickCrit(cc.stats.spellCrit + cc.mod.crit);
-      const amount = Math.round(dp.tick * (a.stacks ?? 1) * cc.mod.natureDamage * venomDamage(cc) * (crit ? cc.rules.spellCritMultiplier : 1));
+      const amount = Math.round((dp.tick + (dp.ap / dp.ticks) * cc.stats.attackPower) * (a.stacks ?? 1) * cc.mod.natureDamage * venomDamage(cc) * (crit ? cc.rules.spellCritMultiplier : 1));
       cc.deal({ target: t, source: 'deadlyPoison', outcome: crit ? 'crit' : 'hit', school: 'nature', amount, white: false, periodic: true });
     },
   });
@@ -692,46 +736,42 @@ function suggest(c: Combat): string | null {
   const snd = c.aura(p, 'sliceAndDice');
   const sndLeft = snd ? snd.end - c.t : 0;
   const ready = (id: string) => c.cooldownLeft(id).left === 0;
-  const canAmbush = mhDagger(c) && c.behind(t);
   // WoWSims Forever's list, the same for every rogue: the build only decides what makes the points.
   const energy = p.resource;
   const inCombat = p.inCombat;
   const ea = c.aura(t, 'exposeArmor');
   const exposeLow = !!c.options.exposeArmorDuty && (!ea || ea.end - c.t <= 16);
-  const falling = sndLeft <= 2;
-  const rupture = c.aura(t, 'rupture');
-  const ruptureLeft = rupture ? rupture.end - c.t : 0;
-  const hemorrhage = c.aura(t, 'hemorrhage');
-  const cutthroat = c.aura(p, 'cutthroat');
+  const garrote = c.aura(t, 'garrote');
+  const garroteLeft = garrote ? garrote.end - c.t : 0;
 
   if (!inCombat && !c.stealthed() && ready('stealth')) return 'stealth';
   if (exposeLow && cp === 5) return 'exposeArmor';
-  if (cp < 5 && cutthroat && canAmbush) return 'ambush';
   if (c.stealthed() && cp <= 3 && tl.premeditation && ready('premeditation')) return 'premeditation';
-  if (c.stealthed() && cp < 5 && !c.aura(t, 'garrote')) return 'garrote';
-  if (inCombat && !c.aura(t, 'garrote') && energy >= D.garrote.cost && cp < 5 && !falling && ready('vanish')) return 'vanish';
+  if (unseen(c) && cp < 5 && !garrote) return 'garrote';
+  if (inCombat && !garrote && energy >= c.cost(c.ability('garrote')!) && cp < 5 && ready('vanish')) return 'vanish';
   if (tl.preparation && ready('preparation') && !ready('vanish')) return 'preparation';
+  if (inCombat && tl.bladeFlurry && snd && energy >= D.bladeFlurry.cost && ready('bladeFlurry')) return 'bladeFlurry';
+  if (inCombat && c.stats.offHand && ready('shank') && energy <= 80 && (!tl.bootKnife || cp <= 3)) return 'shank';
   if (inCombat && tl.adrenalineRush && energy <= 50 && snd && ready('adrenalineRush')) return 'adrenalineRush';
-  if (inCombat && c.options.thistleTea !== false && energy <= 15 && (cp < 3 || exposeLow) && ready('thistleTea')) return 'thistleTea';
-  if (tl.bladeFlurry && !falling && energy >= D.bladeFlurry.cost && ready('bladeFlurry')) return 'bladeFlurry';
+  const teaDue = tl.deathMark ? energy <= 25 && !!c.aura(t, 'deathMark') : energy <= 15;
+  if (inCombat && c.options.thistleTea !== false && teaDue && (cp < 3 || exposeLow) && ready('thistleTea')) return 'thistleTea';
+  if (tl.deathMark && cp >= 4 && ready('deathMark')) return 'deathMark';
   if (!exposeLow) {
+    if ((tl.bloodSplatter || tl.hemorrhage) && cp >= 3 && !c.aura(t, 'rupture') && !tl.flawlessExecution) return 'rupture';
     if (cp >= 1 && !snd) return 'sliceAndDice';
-    if (tl.venom && cp >= 3 && !c.aura(p, 'venom')) return 'venom';
-    if (cp >= 3 && !rupture && (tl.thousandCuts || hemorrhage)) return 'rupture';
     const eviscerate = c.cost(c.ability('eviscerate')!);
-    if (cp === 5 && !falling && energy >= eviscerate && tl.coldBlood && ready('coldBlood') && !c.aura(p, 'coldBlood') && !c.aura(p, 'elunesLight')) return 'coldBlood';
-    const points = cp >= 5 || (cp === 4 && tl.mutilate) || (cp >= 4 && sndLeft <= 6 && !falling);
-    if (points && (!tl.thousandCuts || ruptureLeft >= 4 || energy >= 75)) return 'eviscerate';
+    if (cp === 5 && energy >= eviscerate && tl.coldBlood && ready('coldBlood') && !c.aura(p, 'coldBlood') && !c.aura(p, 'elunesLight')) return 'coldBlood';
+    if (!tl.deathMark && (cp >= 5 || (cp === 4 && tl.mutilate) || (cp >= 4 && sndLeft <= 6))) return 'eviscerate';
   }
   if (cp >= 5) return null;
-  if (tl.ghostlyStrike && ready('ghostlyStrike')) return 'ghostlyStrike';
+  if (tl.ghostlyStrike && ready('ghostlyStrike') && (c.behind(t) || tl.dirtyDeeds) && garroteLeft <= 4) return 'ghostlyStrike';
   const backstab = rotation === 'backstab' && mhDagger(c);
-  if (backstab && tl.hemorrhage && !hemorrhage) return 'hemorrhage';
-  // With Slice and Dice about to fall and points to spend, wait for it.
-  if (falling && cp >= 1 && energy < 75 && !exposeLow) return null;
-  if (backstab) return cutthroat ? null : 'backstab';
+  if (backstab && tl.hemorrhage && !c.aura(t, 'hemorrhage')) return 'hemorrhage';
+  if (backstab) return c.aura(p, 'ghostlyStrikeNext') ? null : 'backstab';
   if (tl.mutilate) return 'mutilate';
-  return tl.hemorrhage ? 'hemorrhage' : 'sinisterStrike';
+  // Hemorrhage saves its energy for Ghostly Strike and Garrote when Garrote is about to fall.
+  if (tl.hemorrhage) return garroteLeft >= 8 || !tl.ghostlyStrike ? 'hemorrhage' : null;
+  return 'sinisterStrike';
 }
 
 // ------------------------------------------------------- practice helpers
@@ -750,12 +790,12 @@ function chances(c: Combat): { title: string; rows: [string, string][] }[] {
   const swordHands = [c.stats.mainHand, c.stats.offHand].filter((w) => w && (w.type === 'sword' || w.type === 'axe')).length;
   const procs: [string, string][] = [];
   if (tl.hackAndSlash) procs.push(['Hack and Slash: extra main-hand attack', swordHands ? `${tl.hackAndSlash}% per sword or axe hit` : 'no sword or axe equipped']);
-  if (tl.sealFate) procs.push(['Seal Fate: +1 combo point on a builder crit', `${20 * tl.sealFate}%`]);
+  if (tl.sealFate) procs.push(['Seal Fate: +1 combo point on a builder crit', `${D.sealFate[tl.sealFate]}%`]);
   if (tl.puncturingWounds) procs.push(['Puncturing Wounds: +1 combo point from Backstab', `${15 * tl.puncturingWounds}%`]);
   if (tl.initiative) procs.push(['Initiative: +1 combo point from openers', `${[0, 33, 67, 100][tl.initiative]}%`]);
-  if (tl.relentlessStrikes) procs.push(['Relentless Strikes: +25 energy', '20% per combo point spent (100% at 5)']);
+  if (tl.relentlessStrikes) procs.push(['Relentless Strikes: +25 energy', `${4 * tl.relentlessStrikes}% per combo point spent`]);
   if (tl.ruthlessness) procs.push(['Ruthlessness: +1 combo point after a finisher', `${20 * tl.ruthlessness}%`]);
-  if (tl.cutthroat) procs.push(['Cutthroat: Ambush without stealth after Backstab', `${3 * tl.cutthroat}%`]);
+  if (tl.bootKnife) procs.push([`Boot Knife: +${D.shank.bootKnifePoints} combo points from Shank`, `${D.shank.bootKnifeChance * tl.bootKnife}%`]);
   procs.push(poisonRow('Main-hand', c.options.poisonMH), poisonRow('Off-hand', c.options.poisonOH));
   procs.push(['Poisons: resisted / crit', `${pct(Math.max(0, r.spellMiss - hit))} / ${pct(c.stats.spellCrit + c.mod.crit)}`]);
   const builderCrit = (id: string) => pct(c.critChance(id));
@@ -797,13 +837,14 @@ function review(c: Combat): { label: string; value: string; good?: boolean }[] {
   const atTarget = k.evisceratesAtTarget ?? 0;
   const need = evisceratePoints(c);
   const rows: { label: string; value: string; good?: boolean }[] = [
+    ...(tl.deathMark ? [{ label: 'Death Marks', value: String(k.deathMarks ?? 0) }] : []),
     { label: 'Slice and Dice uptime', value: `${Math.round(snd * 100)}%`, good: snd >= 0.9 },
     ...(c.options.exposeArmorDuty ? [{
       label: 'Expose Armor uptime', value: `${Math.round(((k['uptime:target:exposeArmor'] ?? 0) / time) * 100)}%`,
       good: (k['uptime:target:exposeArmor'] ?? 0) / time >= 0.9,
     }] : []),
     { label: 'Energy wasted at full', value: `${Math.round(wasted)} (${Math.round(perMinute)}/min)`, good: perMinute < 30 },
-    { label: `Eviscerates at ${need}${need < 5 ? '+' : ''} points`, value: evis ? `${atTarget} of ${evis}` : '-', good: evis === 0 || atTarget / evis >= 0.8 },
+    ...(tl.deathMark ? [] : [{ label: `Eviscerates at ${need}${need < 5 ? '+' : ''} points`, value: evis ? `${atTarget} of ${evis}` : '-', good: evis === 0 || atTarget / evis >= 0.8 }]),
   ];
   // Only procs that can happen with this build and these weapons.
   const swords = [c.stats.mainHand, c.stats.offHand].some((w) => w && (w.type === 'sword' || w.type === 'axe'));
@@ -812,6 +853,7 @@ function review(c: Combat): { label: string; value: string; good?: boolean }[] {
   if (tl.sealFate) rows.push({ label: 'Seal Fate combo points', value: `+${k.sealFate ?? 0}` });
   if (tl.puncturingWounds && rotation === 'backstab') rows.push({ label: 'Puncturing Wounds combo points', value: `+${k.puncturingWounds ?? 0}` });
   if (tl.initiative) rows.push({ label: 'Initiative combo points', value: `+${k.initiative ?? 0}` });
+  if (tl.bootKnife) rows.push({ label: 'Boot Knife procs', value: String(k.bootKnife ?? 0) });
   if (tl.relentlessStrikes) rows.push({ label: 'Relentless Strikes energy', value: `+${k.relentlessEnergy ?? 0}` });
   if (tl.ruthlessness) rows.push({ label: 'Ruthlessness combo points', value: `+${k.ruthlessness ?? 0}` });
   return rows;
@@ -859,8 +901,7 @@ export const rogue: Spec = {
     This is a practice tool: crit and proc chances follow WoW Forever; damage numbers are an approximation.`,
   look: { clothColor: 0x3a2a58, leatherColor: 0x36302c, hood: true },
   sources: [
-    { label: 'foreversim', url: 'https://github.com/laurencestokes/foreversim' },
-    { label: 'wow-forever-sim (retired)', url: 'https://github.com/gunba/wow-forever-sim' },
+    { label: 'WoWSims Forever', url: 'https://www.wowsims.com/forever/' },
   ],
   prepare,
   suggest,

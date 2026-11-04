@@ -29,6 +29,27 @@ function clean(note, row) {
 
 // What the hotfixes of November changed since the research sheets were written (WoWSims Forever's spell table).
 const NOVEMBER = {
+  rogue: {
+    mutilate: 'New capstone of Assassination in November: 90% weapon damage per hand.',
+    venom: 'A passive since November: Shank raises poison damage 30% and their chance 20% for 6 s.',
+    lethality: '2 points: 10/20%.',
+    relentlessStrikes: '5 points: 4-20% per combo point for 25 Energy.',
+    sealFate: '3 points: 33/66/100%.',
+    flawlessExecution: '15 Energy off Eviscerate.',
+    aggression: '5/10/15%, Sinister Strike and Eviscerate only.',
+    dualWieldSpecialization: '2 points: 25/50% off-hand damage.',
+    setup: '15/30/45%.',
+    opportunity: '5 points: 4-20%.',
+    camouflage: '3 points: 5/10/15% speed in Stealth, 2/4/6 s off its cooldown.',
+    ghostlyStrike: 'Also lets your next Ambush or Garrote skip Stealth.',
+    hemorrhage: 'Raises your Rupture and Garrote by 15%.',
+    bloodSplatter: 'New: 6 s more Rupture and 9 s more Garrote.',
+    composure: 'New: 5/10 more Energy off Poised.',
+    flashOfSteel: 'New: 3-15 more Energy from Shank and 0.4-2 s off its cooldown.',
+    quickGetaway: 'New: speed after a Sap.',
+    bootKnife: 'New: 20-100% for Shank to add 2 combo points.',
+    deathMark: 'New capstone of Subtlety.',
+  },
   warrior: {
     flurry: '3 points: 10/20/30% for 3 swings after a crit; no prerequisite.',
     improvedTacticalMastery: "Was 'Tactical Mastery'; base 10 rage is now baseline. 3 points: 5/10/15 more rage.",

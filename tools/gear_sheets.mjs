@@ -6,7 +6,7 @@
 // Usage: node tools/gear_sheets.mjs
 import fs from 'node:fs';
 
-const COMMIT = '7c3453f5ad4576193235e2db05e1eec5bf0b1316';
+const COMMIT = '8298ab833f0249a0f6ca89d567103f26c219ea2f';
 const RAW = `https://raw.githubusercontent.com/wowsims/forever/${COMMIT}/`;
 const SPECS = 'ui/specs/';
 

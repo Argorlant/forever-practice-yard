@@ -433,29 +433,77 @@
  },
  "rogue": {
   "talents": {
-   "mutilate": {
-    "new": true
+   "bloodSplatter": {
+    "new": true,
+    "change": "New: 6 s more Rupture and 9 s more Garrote."
+   },
+   "lethality": {
+    "change": "2 points: 10/20%."
+   },
+   "relentlessStrikes": {
+    "change": "5 points: 4-20% per combo point for 25 Energy."
    },
    "venom": {
-    "new": true
+    "new": true,
+    "change": "A passive since November: Shank raises poison damage 30% and their chance 20% for 6 s."
+   },
+   "sealFate": {
+    "change": "3 points: 33/66/100%."
+   },
+   "mutilate": {
+    "new": true,
+    "change": "New capstone of Assassination in November: 90% weapon damage per hand."
    },
    "puncturingWounds": {
     "new": true
    },
+   "composure": {
+    "new": true,
+    "change": "New: 5/10 more Energy off Poised."
+   },
    "flawlessExecution": {
-    "new": true
+    "new": true,
+    "change": "15 Energy off Eviscerate."
+   },
+   "aggression": {
+    "change": "5/10/15%, Sinister Strike and Eviscerate only."
+   },
+   "dualWieldSpecialization": {
+    "change": "2 points: 25/50% off-hand damage."
    },
    "hackAndSlash": {
     "new": true
    },
-   "quietus": {
-    "new": true
+   "flashOfSteel": {
+    "new": true,
+    "change": "New: 3-15 more Energy from Shank and 0.4-2 s off its cooldown."
    },
-   "cutthroat": {
-    "new": true
+   "setup": {
+    "change": "15/30/45%."
    },
-   "thousandCuts": {
-    "new": true
+   "opportunity": {
+    "change": "5 points: 4-20%."
+   },
+   "camouflage": {
+    "change": "3 points: 5/10/15% speed in Stealth, 2/4/6 s off its cooldown."
+   },
+   "ghostlyStrike": {
+    "change": "Also lets your next Ambush or Garrote skip Stealth."
+   },
+   "quickGetaway": {
+    "new": true,
+    "change": "New: speed after a Sap."
+   },
+   "hemorrhage": {
+    "change": "Raises your Rupture and Garrote by 15%."
+   },
+   "bootKnife": {
+    "new": true,
+    "change": "New: 20-100% for Shank to add 2 combo points."
+   },
+   "deathMark": {
+    "new": true,
+    "change": "New capstone of Subtlety."
    }
   },
   "removed": []

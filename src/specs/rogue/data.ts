@@ -28,20 +28,6 @@ export const RULES: AttackRules = {
   offHandMultiplier: 0.5,   // classic
 };
 
-/**
- * Default gear: gunba/wow-forever-sim's Combat preset (Orc, real Forever
- * items), unbuffed. Crit and hit are what the gear (and Agility) give; the
- * build's talents (Malice, Precision…) are added on top.
- */
-export const STATS: Stats = {
-  attackPower: 594,
-  crit: 12.1,     // Agility 236 / 29 + 4 % gear (Orc Savage's +1 % is gone at launch, Oct 26)
-  hit: 7.9,       // gear
-  spellCrit: 4,   // gear: Agility does not count for poisons
-  mainHand: { name: 'Ironwood Blade', type: 'sword', min: 79, max: 148, speed: 2.4 },
-  offHand: { name: 'Persuader', type: 'mace', min: 89, max: 167, speed: 2.8 },
-};
-
 /** gunba's raid-buffed test character (Human, PvP swords), without the talent crit. */
 export const RAID_STATS: Stats = {
   attackPower: 1263,
@@ -50,17 +36,6 @@ export const RAID_STATS: Stats = {
   spellCrit: 4,
   mainHand: { name: "Premier High Warlord's Blade", type: 'sword', min: 109, max: 165, speed: 2.9 },
   offHand: { name: "Premier High Warlord's Quickblade", type: 'sword', min: 68, max: 102, speed: 1.8 },
-};
-
-/**
- * Dagger builds (Backstab, Mutilate, Hemorrhage). The sims publish no real
- * level-60 dagger set, so these are generic practice daggers with the same
- * sheet as the default gear: the damage is approximate, the rotation is not.
- */
-export const DAGGER_STATS: Stats = {
-  ...STATS,
-  mainHand: { name: 'Practice dagger (main hand)', type: 'dagger', min: 66, max: 123, speed: 1.8 },
-  offHand: { name: 'Practice dagger (off hand)', type: 'dagger', min: 52, max: 97, speed: 1.5 },
 };
 
 export const NORMALIZED_SPEED = { dagger: 1.7, oneHand: 2.4 };
@@ -94,14 +69,23 @@ export const DATA = {
   adrenalineRush: { cooldown: 300, duration: 15 },
   coldBlood: { cooldown: 180 },
   thistleTea: { energy: 100, cooldown: 300 },
-  instantPoison: { chance: 20, min: 76, max: 100, ap: 0.005 },
-  deadlyPoison: { chance: 30, tick: 18, period: 3, duration: 12, maxStacks: 5 },   // Deadly Poison IV
+  instantPoison: { chance: 20, min: 76, max: 100, ap: 0.01 },
+  deadlyPoison: { chance: 30, tick: 18, ap: 0.009, ticks: 4, period: 3, duration: 12, maxStacks: 5 },   // Deadly Poison IV; ap over all its ticks, per stack
   hackAndSlashIcd: 0.2,
-  mutilate: { cost: 60, bonus: 67, percent: 0.75, poisonedBonus: 0.2 },
-  hemorrhage: { cost: 35, percent: 1, daggerPercent: 1.45, duration: 15, ruptureBonus: 0.15 },
+  mutilate: { cost: 60, bonus: 88, percent: 0.9, poisonedBonus: 0.2 },
+  hemorrhage: { cost: 35, percent: 1, daggerPercent: 1.45, duration: 15, bleedBonus: 0.15 },
   ghostlyStrike: { cost: 40, cooldown: 20, percent: 1.25, daggerPercent: 1.8, duration: 7 },
   premeditation: { cooldown: 120, window: 20 },
   preparation: { cooldown: 600 },
-  venom: { cost: 25, base: 6, perCp: 3, damage: 0.3, chance: 10 },
+  // A passive since November: your Shank raises poison damage and the chance to apply them.
+  venom: { duration: 6, damage: 0.3, chance: 20 },
+  // Rank 2. Always hits; the weapon share is of the off-hand's damage at half, and Dual Wield Specialization does not reach it.
+  shank: { cost: 5, cooldown: 10, weapon: 0.5, energy: 25, flashEnergy: 3, flashCooldown: 0.4, bootKnifeChance: 20, bootKnifePoints: 2 },
+  // Rank 4. WoWSims reads the rates from the tooltip: no row states them.
+  deathMark: { cost: 25, cooldown: 10, duration: 6, perPoint: 0.12, capBase: 156, capPerPoint: 245, capAp: 0.04 },
+  coupDeGrace: [0, 0.07, 0.13, 0.2],
+  poised: { energy: 10, composure: 5 },
+  bloodSplatter: { ruptureTicks: 3, garroteTicks: 3 },   // +6 s and +9 s
+  sealFate: [0, 33, 66, 100],
   sealFateIcd: 0.5,
 };

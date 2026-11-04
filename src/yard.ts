@@ -94,7 +94,7 @@ function loadPrefs(): Prefs {
 let refillRows = !load(PREFS_KEY);
 let prefs = loadPrefs();
 const persist = () => save(PREFS_KEY, prefs);
-const PATCH = '2026-11-04.1';
+const PATCH = '2026-11-04.2';
 // The builds' gear follows WoWSims Forever: a sheet nobody edited moves to its build's new one, a sheet of your own stays.
 if (prefs.patch !== PATCH && isOldSheet(prefs.stats)) {
   const build = spec.builds?.find((b) => b.id === prefs.options.build);
@@ -118,6 +118,8 @@ function applyBuild(id: string): boolean {
   prefs.bar.forEach((slot, i) => { slot.id = full[i]?.id ?? null; });
   return true;
 }
+// A build that has left the list (the November Rogue trees) gives way to the spec's first one.
+if (spec.builds?.length && !spec.builds.some((b) => b.id === prefs.options.build) && applyBuild(spec.builds[0].id)) refillRows = true;
 const urlBuild = params.get('build');
 if (urlBuild && urlBuild !== prefs.options.build && applyBuild(urlBuild)) refillRows = true;
 // A shared link's own talents (Settings → Copy link), if they are a legal level 60 build.
