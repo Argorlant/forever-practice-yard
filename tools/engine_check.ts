@@ -23,6 +23,7 @@ import {
 } from '../src/ui/talent-rules';
 import { animKey } from '../src/scene/custom-model';
 import { CRACKS, OnyxiaFight, ROOM } from '../src/encounters/onyxia';
+import { DATA as D_DRUID } from '../src/specs/druid/data';
 import * as druidTalents from '../src/specs/druid/talents';
 import * as hunterTalents from '../src/specs/hunter/talents';
 import * as mageTalents from '../src/specs/mage/talents';
@@ -841,7 +842,7 @@ for (const sp of [mageArcane, mageFire, mageFrost]) {
 console.log('Warlock builds (5 min, own gear, priority list, default raid buffs):');
 const WARLOCK_MUST_USE: Record<string, string[]> = {
   affliction: ['shadowBolt', 'corruption', 'immolate', 'baneOfDoom', 'curseOfTheElements', 'lifeTap'],
-  'affliction-deep': ['shadowBolt', 'corruption', 'siphonLife', 'immolate', 'baneOfAgony', 'amplifyCurse', 'wrack', 'lifeTap'],
+  'affliction-deep': ['corruption', 'siphonLife', 'baneOfDoom', 'wrack', 'lifeTap'],
   'pact-fire': ['searingPain', 'corruption', 'immolate', 'baneOfDoom', 'lifeTap'],
   pact: ['shadowBolt', 'searingPain', 'corruption', 'immolate', 'baneOfDoom', 'lifeTap'],
   fire: ['incinerate', 'immolate', 'conflagrate', 'shadowburn', 'corruption', 'baneOfDoom', 'lifeTap'],
@@ -966,6 +967,15 @@ for (const sp of [shamanElemental, shamanEnhancement, shamanTank]) {
 }
 
 // ------------------------------------------------- the hotfixes of November
+{
+  // Warlock: Wrack is the filler of its list, Shadow and Flame gives 4% a point.
+  const wrack = play(warlockAffliction, { build: 'affliction-deep', options: { lockMana: true } });
+  const wrackRow = wrack.c.meter.rows.get('wrack');
+  if (!((wrackRow?.hits ?? 0) > 60)) failures.push(`Wrack ticked ${wrackRow?.hits ?? 0} times in 5 min`);
+  if (!wrack.used.baneOfDoom) failures.push('Affliction with Wrack never used Bane of Doom');
+  // Cat: the November strikes.
+  if (D_DRUID.shred.percent !== 2 || D_DRUID.claw.percent !== 1.4 || D_DRUID.ravage.percent !== 4.35) failures.push('Shred, Claw or Ravage kept its old weapon share');
+}
 {
   // Rogue: Shank gives energy and cannot miss, Poised takes energy off the first ability, Death Mark pays out what it stored.
   const combat = play(rogue, { build: 'combat-gs', seconds: 0 }).c;

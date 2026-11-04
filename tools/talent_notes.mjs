@@ -29,6 +29,14 @@ function clean(note, row) {
 
 // What the hotfixes of November changed since the research sheets were written (WoWSims Forever's spell table).
 const NOVEMBER = {
+  warlock: {
+    wrack: 'New: 86 damage per second at level 60, coefficient doubled in November.',
+    shadowAndFlame: 'Conflagrate: more Shadow, Shadowburn: more Fire, 4-20%, for 20 s; 20-100% to keep Immolate or refund the Soul Shard.',
+    improvedDrains: 'No longer raises Wrack; raises Drain Mana instead.',
+  },
+  druid: {
+    rendAndTear: '3-15% more melee damage on bleeding targets.',
+  },
   rogue: {
     mutilate: 'New capstone of Assassination in November: 90% weapon damage per hand.',
     venom: 'A passive since November: Shank raises poison damage 30% and their chance 20% for 6 s.',

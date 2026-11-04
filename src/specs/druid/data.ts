@@ -55,17 +55,17 @@ export const DATA = {
   // Cat
   catGcd: 1,
   catRefund: 0.8,           // provisional: builders refund 80 % when avoided
-  shred: { cost: 60, bonus: 80, percent: 1.55 },
-  claw: { cost: 45, bonus: 115, percent: 1.1 },
+  shred: { cost: 60, bonus: 80, percent: 2 },
+  claw: { cost: 45, bonus: 115, percent: 1.4 },
   // Attack power shares: gs's fit to beta logs (provisional); foreversim uses 5 % on both.
-  rake: { cost: 40, initial: 61, tick: 34, ticks: 3, period: 3, apInitial: 0.065, apTick: 0.045 },
-  rip: { cost: 30, tick: 15, tickPerCp: 25.5, apPerCp: 0.01, ticks: 6, period: 2 },
+  rake: { cost: 40, initial: 76, tick: 42, ticks: 3, period: 3, apInitial: 0.065, apTick: 0.045 },
+  rip: { cost: 30, tick: 19, tickPerCp: 31.9, apPerCp: 0.01, ticks: 6, period: 2 },
   // Rank 4 (gs Oct 21): rank 5 is an Ahn'Qiraj book, and raids open on 9 December.
-  ferociousBite: { cost: 35, min: 45, max: 95, perCp: 128, apPerCp: 0.03, perEnergy: 2.5 },
+  ferociousBite: { cost: 35, min: 56, max: 118, perCp: 160, apPerCp: 0.03, perEnergy: 3.1 },
   shiftingPower: { mana: 684, energy: 40, cooldown: 8 },   // 8 s since the Oct 30 hotfix (16 s, 8 with Improved Shifting Power 2/2)
   faerieFire: { cooldown: 6, armor: 505, duration: 40, mana: 115 },
-  ravage: { cost: 60, bonus: 98, percent: 3.5 },
-  pounce: { cost: 50, total: 150, ticks: 6, period: 3, stun: 2 },
+  ravage: { cost: 60, bonus: 98, percent: 4.35 },
+  pounce: { cost: 50, total: 186, ticks: 6, period: 3, stun: 2 },
   prowl: { cooldown: 10, speed: 0.7 },
   cower: { cost: 20, cooldown: 10, threat: -1200 },
   dash: { cooldown: 300, duration: 15, speed: 1.6 },
@@ -93,7 +93,7 @@ export const DATA = {
   // Balance
   spellGcd: 1.5,
   wrath: { mana: 120, cast: 2, min: 92, max: 102, coeff: 0.571, eclipseCharges: 2 },
-  starfire: { mana: 315, cast: 3.5, min: 313, max: 370, coeff: 1 },   // rank 6 (gs Oct 21): rank 7 is an Ahn'Qiraj book
+  starfire: { mana: 315, cast: 3.5, min: 438, max: 517, coeff: 1 },   // rank 6 (gs Oct 21): rank 7 is an Ahn'Qiraj book
   moonfire: { mana: 375, min: 128, max: 151, coeff: 0.15, tick: 60, tickCoeff: 0.13, ticks: 4, period: 3 },
   insectSwarm: { mana: 160, tick: 31, tickCoeff: 0.158, ticks: 6, period: 2 },
   innervate: { mana: 62, cooldown: 360, duration: 20, regen: 5 },

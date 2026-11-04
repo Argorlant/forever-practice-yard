@@ -31,6 +31,9 @@ const bar = (ids: (string | null)[]): Binding[] => KEYS.map((key, i) => ({ id: i
 
 const AFFLICTION_BAR = bar(['shadowBolt', 'corruption', 'siphonLife', 'immolate', 'baneOfDoom', 'baneOfAgony', 'curseOfTheElements', 'lifeTap',
   'drainLife', 'amplifyCurse', 'wrack', 'manaPotion', 'deathCoil', 'petAttackOrder', 'petFollowOrder', 'petStayOrder']);
+// The Imp is sacrificed, so no demon to give orders to.
+const WRACK_BAR = bar(['wrack', 'corruption', 'baneOfDoom', 'baneOfAgony', 'siphonLife', 'shadowBolt', 'curseOfTheElements', 'lifeTap',
+  'amplifyCurse', 'drainLife', 'immolate', 'manaPotion', 'deathCoil']);
 const FIRE_BAR = bar(['incinerate', 'immolate', 'conflagrate', 'shadowburn', 'corruption', 'baneOfDoom', 'curseOfTheElements', 'lifeTap',
   'shadowBolt', 'baneOfAgony', 'searingPain', 'manaPotion', 'deathCoil', 'petAttackOrder', 'petFollowOrder', 'petStayOrder']);
 const RUIN_BAR = bar(['shadowBolt', 'corruption', 'immolate', 'baneOfDoom', 'baneOfAgony', 'curseOfTheElements', 'lifeTap', 'shadowburn',
@@ -46,7 +49,7 @@ const FS_REENCODED = 'community, from foreversim, re-encoded to the Oct 15 tree'
 // Mana: 1093 + 15 x Intellect, x1.15 with Fel Vitality 3/3 (research → Default stats).
 export const BUILDS: Build[] = [
   { id: 'affliction', spec: 'affliction', name: 'Affliction (Shadow Mastery and Ruin)', talentString: '2550002013520105--0550205003', source: WS, stats: AFFLICTION_STATS, bar: AFFLICTION_BAR, rotation: 'affliction', options: { ...gearOptions('warlock-affliction') } },
-  { id: 'affliction-deep', spec: 'affliction', name: 'Affliction with Wrack', talentString: '25300020135201351--0550005003', source: WS, stats: WRACK_STATS, bar: AFFLICTION_BAR, rotation: 'wrack', options: { ...gearOptions('warlock-wrack') } },
+  { id: 'affliction-deep', spec: 'affliction', name: 'Affliction with Wrack', talentString: '25500020135201351-0050203001-05', source: WS, stats: WRACK_STATS, bar: WRACK_BAR, rotation: 'wrack', options: { ...gearOptions('warlock-wrack'), sacrifice: 'imp' } },
   // The Imp sacrificed (+15 % Shadow) before the Succubus comes out.
   { id: 'pact', spec: 'demonology', name: 'Demonic Pact (Shadow Brand)', talentString: '011-0005003231220301351-0550005003', source: WS, stats: PACT_STATS, bar: PACT_BAR, rotation: 'pact', options: { ...gearOptions('warlock-affliction'), sacrifice: 'imp' } },
   // The Succubus sacrificed (+15 % Fire) before the Imp comes out.

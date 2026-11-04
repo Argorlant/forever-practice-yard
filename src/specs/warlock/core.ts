@@ -78,16 +78,16 @@ function damageMult(c: Combat, t: Unit, id: string, school: School, _periodic: b
   if (school === 'shadow') {
     m *= 1 + 0.02 * tl.shadowMastery;
     if (c.aura(t, 'improvedShadowBolt')) m *= 1 + 0.04 * tl.improvedShadowBolt;
-    if (c.aura(p, 'shadowFlameShadow')) m *= 1 + 0.02 * tl.shadowAndFlame;
+    if (c.aura(p, 'shadowFlameShadow')) m *= 1 + 0.04 * tl.shadowAndFlame;
     if (c.aura(p, 'burningShadow')) m *= D.demonicSacrifice.damage;
     if (c.aura(p, 'masterDemonologist')) m *= 1 + 0.02 * tl.masterDemonologist;
   } else if (school === 'fire') {
-    if (c.aura(p, 'shadowFlameFire')) m *= 1 + 0.02 * tl.shadowAndFlame;
+    if (c.aura(p, 'shadowFlameFire')) m *= 1 + 0.04 * tl.shadowAndFlame;
     if (c.aura(p, 'touchOfFire')) m *= D.demonicSacrifice.damage;
   }
   if (DESTRUCTION.includes(id)) m *= 1 + [0, 0.03, 0.07, 0.1][tl.agonizingFlames];
   if (id === 'corruption') m *= 1 + 0.02 * tl.improvedCorruption;
-  if (id === 'drainLife' || id === 'wrack') m *= 1 + [0, 0.07, 0.13, 0.2][tl.improvedDrains];
+  if (id === 'drainLife') m *= 1 + [0, 0.07, 0.13, 0.2][tl.improvedDrains];
   if ((id === 'corruption' || id === 'baneOfAgony') && c.channeling?.id === 'wrack') m *= 1 + D.wrack.bonus;
   if (c.aura(p, 'soulLink')) m *= D.soulLink;
   return m;
@@ -311,7 +311,7 @@ export const ABILITIES: Ability[] = [
       c.removeAura(c.player, 'amplifyCurse');
       const improved = 1 + 0.05 * T(c).improvedBaneOfAgony;
       bane(c, u, 'baneOfAgony');
-      dot(c, u, 'baneOfAgony', 'Bane of Agony', 'shadow', a.ticks, a.period, (cc, n) => a.blocks[Math.min(2, Math.floor((n - 1) / 4))] * amp * improved + a.coeff * cc.spellPowerFor('shadow'));
+      dot(c, u, 'baneOfAgony', 'Bane of Agony', 'shadow', a.ticks, a.period, (cc, n) => (a.blocks[Math.min(2, Math.floor((n - 1) / 4))] * improved + a.coeff * cc.spellPowerFor('shadow')) * amp);
     },
   }),
   spell({
@@ -432,7 +432,7 @@ export const ABILITIES: Ability[] = [
     requirements: (c, t) => (T(c).conflagrate ? null : 'Requires the Conflagrate talent') ?? (t && !c.aura(t, 'immolate') ? 'Needs your Immolate on the target' : null),
     usable: (c) => T(c).conflagrate > 0 && !!c.target && !!c.aura(c.target, 'immolate'),
     learned: (c) => T(c).conflagrate > 0,
-    description: (c) => `Instant: ${D.conflagrate.min}-${D.conflagrate.max} Fire damage plus spell power. Needs your Immolate${T(c).shadowAndFlame ? `; Shadow and Flame keeps it (${20 * T(c).shadowAndFlame}%) and gives +${2 * T(c).shadowAndFlame}% Shadow damage for 20 sec` : ' and consumes it'}.`,
+    description: (c) => `Instant: ${D.conflagrate.min}-${D.conflagrate.max} Fire damage plus spell power. Needs your Immolate${T(c).shadowAndFlame ? `; Shadow and Flame keeps it (${20 * T(c).shadowAndFlame}%) and gives +${4 * T(c).shadowAndFlame}% Shadow damage for 20 sec` : ' and consumes it'}.`,
     use: (c, t) => {
       const u = t!;
       const r = directSpell(c, u, 'conflagrate', 'fire', between(c, D.conflagrate.min, D.conflagrate.max), D.conflagrate.coeff);
@@ -445,7 +445,7 @@ export const ABILITIES: Ability[] = [
     id: 'shadowburn', name: 'Shadowburn', icon: 'shadowburn',
     cost: cost('shadowburn', D.shadowburn.mana), cooldown: D.shadowburn.cooldown,
     ...talent('shadowburn', 'Shadowburn'),
-    description: (c) => `Instant: ${D.shadowburn.min}-${D.shadowburn.max} Shadow damage plus spell power.${T(c).shadowAndFlame ? ` Shadow and Flame: +${2 * T(c).shadowAndFlame}% Fire damage for 20 sec.` : ''}`,
+    description: (c) => `Instant: ${D.shadowburn.min}-${D.shadowburn.max} Shadow damage plus spell power.${T(c).shadowAndFlame ? ` Shadow and Flame: +${4 * T(c).shadowAndFlame}% Fire damage for 20 sec.` : ''}`,
     use: (c, t) => {
       const r = directSpell(c, t!, 'shadowburn', 'shadow', between(c, D.shadowburn.min, D.shadowburn.max), D.shadowburn.coeff);
       if (r.outcome !== 'resist' && T(c).shadowAndFlame) c.applyAura(c.player, { id: 'shadowFlameFire', name: 'Shadow and Flame: Flame', icon: 'immolate', duration: D.shadowAndFlame.duration });
@@ -478,7 +478,7 @@ export const ABILITIES: Ability[] = [
     id: 'amplifyCurse', name: 'Amplify Curse', icon: 'amplifyCurse', gcd: 0, target: 'self',
     cooldown: D.amplifyCurse.cooldown,
     ...talent('amplifyCurse', 'Amplify Curse'),
-    description: () => 'Your next Bane of Agony deals 50% more base damage. Off the global cooldown. It does nothing for Bane of Doom.',
+    description: () => 'Your next Bane of Agony deals 50% more. Off the global cooldown. It does nothing for Bane of Doom.',
     use: (c) => { c.applyAura(c.player, { id: 'amplifyCurse', name: 'Amplify Curse', icon: 'amplifyCurse', duration: D.amplifyCurse.duration }); },
   },
   {
@@ -553,7 +553,7 @@ export function chances(c: Combat): { title: string; rows: [string, string][] }[
   const procs: [string, string][] = [];
   if (tl.nightfall) procs.push(['Shadow Trance per Corruption or drain tick', `${2 * tl.nightfall}%: next Shadow Bolt instant`]);
   if (tl.improvedShadowBolt) procs.push(['Improved Shadow Bolt on a Shadow Bolt crit', `+${4 * tl.improvedShadowBolt}% to your Shadow damage, 12 s`]);
-  if (tl.shadowAndFlame) procs.push(['Shadow and Flame', `Conflagrate: +${2 * tl.shadowAndFlame}% Shadow; Shadowburn: +${2 * tl.shadowAndFlame}% Fire; ${20 * tl.shadowAndFlame}% to keep Immolate`]);
+  if (tl.shadowAndFlame) procs.push(['Shadow and Flame', `Conflagrate: +${4 * tl.shadowAndFlame}% Shadow; Shadowburn: +${4 * tl.shadowAndFlame}% Fire; ${20 * tl.shadowAndFlame}% to keep Immolate`]);
   if (tl.demonicBrand) procs.push(['Demonic Brand from Searing Pain', `your demon's next ${2 * tl.demonicBrand} attacks add Shadow damage`]);
   if (c.raid.has('judgementOfWisdom')) procs.push(['Judgement of Wisdom: +59 mana', '50% per landed direct spell']);
   return [

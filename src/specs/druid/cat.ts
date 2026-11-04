@@ -256,7 +256,7 @@ function prepare(c: Combat): void {
   c.mod.hit = 2 * t.naturesReach;
   c.mod.threat = D.catThreat;
   c.mod.physicalDamage = 1 + 0.02 * t.naturalist;   // Naturalist 2 % a point since the Oct 30 hotfix
-  c.mod.vsBleeding = 0.02 * t.rendAndTear;
+  c.mod.vsBleeding = 0.03 * t.rendAndTear;
   for (const id of ['shred', 'claw', 'rake']) c.mod.damageFor[id] = 1 + 0.05 * t.savageFury;
   // Natural Instinct: ability crits only, not white hits.
   for (const id of ABILITY_SOURCES) c.mod.critMultiplierFor[id] = c.rules.critMultiplier + 0.1 * t.naturalInstinct;

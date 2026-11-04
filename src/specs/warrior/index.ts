@@ -723,10 +723,15 @@ function suggest(c: Combat): string | null {
     const hp = c.playerHealthLocked || c.aura(p, 'lastStand') || c.aura(p, 'shieldWall') ? 1 : p.health / p.maxHealth;
     if (hp <= 0.4 && tl.lastStand && ready('lastStand')) return 'lastStand';
     if (hp <= 0.35 && ready('shieldWall')) return 'shieldWall';
+    if (p.inCombat && tl.recklessSwings && ready('recklessSwings')) return 'recklessSwings';
+    if (p.inCombat && tl.deathWish && can('deathWish')) return 'deathWish';
     if (c.enemyAttacks.on && can('shieldBlock') && (rage >= 40 || (!c.aura(p, 'revengeReady') && c.cooldownLeft('revenge').left <= 1.5))) return 'shieldBlock';
+    if (targets > 1 && can('sweepingStrikes')) return 'sweepingStrikes';
     if (targets > 2 && can('thunderClap')) return 'thunderClap';
-    if (can('shieldSlam')) return 'shieldSlam';
     if (can('revenge')) return 'revenge';
+    if (can('shieldSlam')) return 'shieldSlam';
+    if (can('bloodthirst')) return 'bloodthirst';
+    if (can('mortalStrike')) return 'mortalStrike';
     if (targets > 1 && can('thunderClap')) return 'thunderClap';
     const demo = c.aura(t, 'demoralizingShout');
     if ((!demo || demo.end - c.t <= 6) && can('demoralizingShout')) return 'demoralizingShout';
@@ -736,7 +741,8 @@ function suggest(c: Combat): string | null {
     const slamSoon = c.cooldownLeft('shieldSlam').left < 1.5;
     if (!rend && !slamSoon && can('rend')) return 'rend';
     if ((!sunder || (sunder.stacks ?? 0) < 5 || (!slamSoon && sunder.end - c.t <= 10)) && can('sunderArmor')) return 'sunderArmor';
-    if (!hsQueued && rage >= 40) return targets > 1 ? 'cleave' : 'heroicStrike';
+    if (!hsQueued && targets === 1 && rage >= 20) return 'heroicStrike';
+    if (!hsQueued && targets > 1 && rage >= 40) return 'cleave';
     if (rage < 90 && ready('bloodrage')) return 'bloodrage';
     return null;
   }
@@ -757,11 +763,11 @@ function suggest(c: Combat): string | null {
     if (targets >= 2 && can('whirlwind')) return 'whirlwind';
     if (can('mortalStrike')) return 'mortalStrike';
     const slam = (c.ability('slam')!.castTime as (cc: Combat) => number)(c);
-    if (!exec && slam < D.gcd && can('slam')) return 'slam';
+    if (slam < D.gcd && can('slam')) return 'slam';
     if (!exec && rendLeft <= D.gcd && can('rend')) return 'rend';
     const swing = c.swingLeft('main');
     if (!exec && slam >= D.gcd && swing.total - swing.left <= 0.4 && can('slam')) return 'slam';
-    if (!exec && can('spearingStrike')) return 'spearingStrike';
+    if (can('spearingStrike')) return 'spearingStrike';
     if (stance !== 'battle' && !whirlwindReady && ready('battleStance')) return 'battleStance';
     if (windfury && !exec && can('hamstring')) return 'hamstring';
     if (exec && can('execute')) return 'execute';
@@ -811,7 +817,7 @@ function suggest(c: Combat): string | null {
   if (can('bloodthirst')) return 'bloodthirst';
   const spare = c.cooldownLeft('bloodthirst').left >= D.gcd && c.cooldownLeft('whirlwind').left >= D.gcd;
   if (!hsQueued && ((targets === 1 && !exec && rage >= 40) || (spare && rage > 60))) return 'heroicStrike';
-  const rendDue = !exec && !rend && rage >= 10;
+  const rendDue = targets === 1 && !exec && !rend && rage >= 10;
   if (rendDue && stance === 'battle') return 'rend';
   if (rendDue && ready('battleStance')) return 'battleStance';
   if (stance === 'battle' && !overpowerDue && !rendDue && ready('berserkerStance')) return 'berserkerStance';

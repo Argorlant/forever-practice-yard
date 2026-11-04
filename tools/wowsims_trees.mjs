@@ -131,9 +131,17 @@ const REWORKED = {
 /** Values per rank in a tree that kept its shape. */
 const NEW_RANKS = {
   hunter: { lightningReflexes: [[3], [6], [9], [12], [15]], barrage: [[5], [10], [15]] },
+  warlock: {
+    wrack: [[86, 1, 10, 6]],
+    shadowAndFlame: [[4, 20, 4, 20, 20, 20], [8, 20, 8, 20, 40, 40], [12, 20, 12, 20, 60, 60], [16, 20, 16, 20, 80, 80], [20, 20, 20, 20, 100, 100]],
+  },
+  druid: { rendAndTear: [[3], [6], [9], [12], [15]] },
 };
 /** Words in a tree that kept its shape. */
 const NEW_TEXT = {
+  warlock: {
+    improvedDrains: 'Increases health drained or damage done by your Drain Life and Drain Soul spells, and the Mana drained by your Drain Mana spell, by {0}%.',
+  },
   paladin: {
     twoHandedWeaponSpecialization: 'Increases the Physical and Holy damage you deal by {0}%, and reduces all threat you generate by {1}% while a two-handed melee weapon is equipped.',
     vengeance: 'Increases your Physical and Holy damage dealt by {0}% for 30 sec after landing a non-periodic critical strike.  Stacks up to 5 times.',

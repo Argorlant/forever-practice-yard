@@ -24,7 +24,7 @@ function ctx(c: Combat) {
   const castOf = (id: string) => { const a = c.ability(id)!; return typeof a.castTime === 'function' ? a.castTime(c) : a.castTime ?? 0; };
   /** Recast a DoT when it has no more time left than its cast (instants when they drop), unless it is being cast now. */
   const due = (id: string) => c.casting?.id !== id && left(c, t, id) <= castOf(id) && ready(id) && afford(id);
-  return { p, t, ready, afford, due };
+  return { p, t, ready, afford, due, castOf };
 }
 
 /** WoWSims Forever's lists: the curse, Bane of Doom on cooldown, the DoTs in each list's order, and a filler. */
@@ -32,35 +32,33 @@ function rotationSuggest(c: Combat): string | null {
   const t = c.target;
   if (!t || t.health <= 0) return null;
   const tl = T(c);
-  const { p, ready, afford, due } = ctx(c);
-  if (c.channeling) return null;
+  const { p, ready, afford, due, castOf } = ctx(c);
+  // A channel runs its course; Wrack only gives way, after two ticks, to a DoT that has dropped.
+  if (c.channeling && !(c.channeling.id === 'wrack' && c.channeling.done >= 2 && (!c.aura(t, 'corruption') || !baneOn(c, t)))) return null;
   const rotation = build(c).rotation;
   const mana = p.resource / p.maxResource;
   if (!c.manaLocked && p.inCombat && p.resource <= p.maxResource - D.manaPotion.max && mana < 0.5 && ready('manaPotion')) return 'manaPotion';
   if (!c.raid.has('curseOfElements') && !c.aura(t, 'curseOfElements') && afford('curseOfTheElements')) return 'curseOfTheElements';
   // Bane of Agony with Amplify Curse first, for the list that keeps it and for the others while Doom waits.
   const agony = () => (tl.amplifyCurse && !c.aura(p, 'amplifyCurse') && ready('amplifyCurse') ? 'amplifyCurse' : due('baneOfAgony') ? 'baneOfAgony' : null);
-  // Life Tap under 30% mana, or with no mana for the filler, health allowing (healers keep up with you).
-  const filler = (id: string) => {
+  // Life Tap under its list's mana share, or with no mana for the filler, health allowing (healers keep up with you).
+  const filler = (id: string, tapBelow = 0.3) => {
     const tap = lifeTapAmount(c);
     const healthy = c.playerHealthLocked || p.health > tap;
-    if (!c.manaLocked && (mana < 0.3 || !afford(id)) && healthy && p.resource + tap <= p.maxResource + 100) return 'lifeTap';
+    if (!c.manaLocked && (mana < tapBelow || !afford(id)) && healthy && p.resource + tap <= p.maxResource + 100) return 'lifeTap';
     return id;
   };
 
+  const doom = ready('baneOfDoom') && afford('baneOfDoom') && !c.aura(t, 'baneOfDoom');
+  if (doom) return 'baneOfDoom';
   if (rotation === 'wrack') {
     const bane = !baneOn(c, t) ? agony() : null;
     if (bane) return bane;
-    for (const id of ['corruption', 'siphonLife', 'immolate']) if ((id !== 'siphonLife' || tl.siphonLife) && due(id)) return id;
-    if (tl.improvedShadowBolt && !c.aura(t, 'improvedShadowBolt') && c.casting?.id !== 'shadowBolt') return filler('shadowBolt');
+    if (due('corruption')) return 'corruption';
+    if (tl.siphonLife && !c.aura(t, 'improvedShadowBolt') && due('siphonLife')) return 'siphonLife';
     if (c.aura(p, 'shadowTrance')) return 'shadowBolt';
-    const floor = Math.min(left(c, t, 'corruption'), left(c, t, 'baneOfAgony'));
-    if (tl.wrack && ready('wrack') && afford('wrack') && floor >= 4) return 'wrack';
-    return filler('shadowBolt');
+    return filler(tl.wrack && ready('wrack') ? 'wrack' : 'shadowBolt');
   }
-
-  const doom = ready('baneOfDoom') && afford('baneOfDoom') && !c.aura(t, 'baneOfDoom');
-  if (doom) return 'baneOfDoom';
   if (rotation === 'pact' || rotation === 'fireBrand') {
     const brand = c.aura(t, 'demonicBrand');
     if (tl.demonicBrand && c.pet.out && (!brand || brand.end - c.t < 2.5) && c.casting?.id !== 'searingPain' && afford('searingPain')) return 'searingPain';
@@ -68,7 +66,7 @@ function rotationSuggest(c: Combat): string | null {
     for (const id of ['corruption', 'immolate']) if (due(id)) return id;
     if (rotation === 'pact') return filler('shadowBolt');
     if (c.aura(p, 'decimation') && c.casting?.id !== 'soulFire' && ready('soulFire') && afford('soulFire')) return 'soulFire';
-    return filler('searingPain');
+    return filler('searingPain', 0.35);
   }
   if (rotation === 'fire') {
     const bane = !baneOn(c, t) ? agony() : null;
@@ -76,7 +74,8 @@ function rotationSuggest(c: Combat): string | null {
     for (const id of ['immolate', 'corruption']) if (due(id)) return id;
     if (tl.conflagrate && ready('conflagrate') && afford('conflagrate') && c.aura(t, 'immolate')) return 'conflagrate';
     if (tl.shadowburn && ready('shadowburn') && afford('shadowburn')) return 'shadowburn';
-    return filler(tl.incinerate ? 'incinerate' : 'shadowBolt');
+    if (mana >= 0.35 && c.casting?.id !== 'immolate' && left(c, t, 'immolate') < castOf('incinerate') && afford('immolate')) return 'immolate';
+    return filler(tl.incinerate ? 'incinerate' : 'shadowBolt', 0.35);
   }
   // Affliction with Shadow Mastery and Ruin; the older DS/Ruin builds play it too.
   if (c.aura(p, 'shadowTrance')) return 'shadowBolt';
@@ -95,7 +94,7 @@ function review(c: Combat): Row[] {
   const rot = build(c).rotation;
   const rows: Row[] = [
     { label: 'Corruption uptime', value: pctOf(uptime('corruption')), good: uptime('corruption') >= 0.85 },
-    { label: 'Immolate uptime', value: pctOf(uptime('immolate')), good: uptime('immolate') >= (rot === 'fire' ? 0.85 : 0.75) },
+    ...(rot === 'wrack' ? [] : [{ label: 'Immolate uptime', value: pctOf(uptime('immolate')), good: uptime('immolate') >= (rot === 'fire' ? 0.85 : 0.75) }]),
     { label: 'Bane uptime (Doom or Agony)', value: pctOf(Math.min(1, uptime('baneOfDoom') + uptime('baneOfAgony'))), good: uptime('baneOfDoom') + uptime('baneOfAgony') >= 0.9 },
   ];
   if (tl.siphonLife && (rot === 'affliction' || rot === 'wrack')) rows.push({ label: 'Siphon Life uptime', value: pctOf(uptime('siphonLife')), good: uptime('siphonLife') >= 0.85 });

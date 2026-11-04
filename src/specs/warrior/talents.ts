@@ -81,11 +81,11 @@ const COMMUNITY = 'community, from gunba/wow-forever-sim';
 /** The same build on the November tree: Improved Tactical Mastery, Raging Blows and Flurry freed 5 points, which went to Reckless Swings, Improved Whirlwind, Improved Heroic Strike and Anger Management. */
 const MOVED = `${COMMUNITY}, moved to the November tree`;
 export const BUILDS: Build[] = [
-  { id: 'fury-dw', name: 'Fury, dual wield', talentString: '30303213002-350531005122100231', source: WS, rotation: 'fury', stance: 'berserker', stats: FURY_STATS, bar: FURY_BAR },
-  { id: 'fury-sunder', name: 'Fury, keeps Sunder Armor up', talentString: '30303213002-350531005122100231', source: WS, rotation: 'fury', stance: 'berserker', stats: FURY_STATS, bar: FURY_BAR, options: { sunderDuty: true } },
-  { id: 'arms-2h', name: 'Arms, two-hander', talentString: '30323213132215201-5505-2', source: WS, rotation: 'arms', stance: 'battle', stats: ARMS_STATS, bar: ARMS_BAR },
+  { id: 'fury-dw', name: 'Fury, dual wield', talentString: '30303213002-350530005122100231-1', source: WS, rotation: 'fury', stance: 'berserker', stats: FURY_STATS, bar: FURY_BAR },
+  { id: 'fury-sunder', name: 'Fury, keeps Sunder Armor up', talentString: '30303213002-350530005122100231-1', source: WS, rotation: 'fury', stance: 'berserker', stats: FURY_STATS, bar: FURY_BAR, options: { sunderDuty: true } },
+  { id: 'arms-2h', name: 'Arms, two-hander', talentString: '30303213132215201-55050000002-2', source: WS, rotation: 'arms', stance: 'battle', stats: ARMS_STATS, bar: ARMS_BAR },
   { id: 'fury-2h', name: 'Two-hand Bloodthirst', talentString: '30303213032-450500250120100231', source: MOVED, rotation: 'twoHandBloodthirst', stance: 'berserker', stats: GS_ARMS_STATS, bar: TWO_HAND_BAR },
-  { id: 'prot', name: 'Protection', talentString: '35301003002-03-050530120301011351', source: WS, rotation: 'protection', stance: 'defensive', stats: PROT_STATS, bar: PROT_BAR, tank: true },
+  { id: 'prot', name: 'Protection', talentString: '05-05050005-150531120300001351', source: WS, rotation: 'protection', stance: 'defensive', stats: PROT_STATS, bar: PROT_BAR, tank: true },
   { id: 'prot-deep', name: 'Protection, deeper', talentString: '31-0501-255333120230021351', source: COMMUNITY, rotation: 'protection', stance: 'defensive', stats: GS_PROT_STATS, bar: PROT_BAR, tank: true },
 ];
 

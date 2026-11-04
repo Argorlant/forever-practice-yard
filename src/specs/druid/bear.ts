@@ -212,7 +212,7 @@ function prepare(c: Combat): void {
   c.mod.threat = D.bearThreat;
   c.mod.threatFor = { maul: D.maul.threat, primalBite: D.primalBite.threat, lacerate: D.lacerate.threat, swipe: D.swipe.threat };
   c.mod.physicalDamage = 1 + 0.02 * t.naturalist;   // Naturalist 2 % a point since the Oct 30 hotfix
-  c.mod.vsBleeding = 0.02 * t.rendAndTear;
+  c.mod.vsBleeding = 0.03 * t.rendAndTear;
   c.mod.damageFor = { maul: 1 + 0.05 * t.savageFury, swipe: (1 + 0.05 * t.savageFury) * (1 + 0.1 * t.feralInstinct) };
   for (const id of ABILITY_SOURCES) c.mod.critMultiplierFor[id] = c.rules.critMultiplier + 0.1 * t.naturalInstinct;
   if (t.leaderOfThePack) c.applyAura(p, LEADER_OF_THE_PACK);
