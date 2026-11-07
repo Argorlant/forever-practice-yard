@@ -58,10 +58,10 @@ export const DATA = {
   shred: { cost: 60, bonus: 80, percent: 2 },
   claw: { cost: 45, bonus: 115, percent: 1.4 },
   // Attack power shares: gs's fit to beta logs (provisional); foreversim uses 5 % on both.
-  rake: { cost: 40, initial: 76, tick: 42, ticks: 3, period: 3, apInitial: 0.065, apTick: 0.045 },
-  rip: { cost: 30, tick: 19, tickPerCp: 31.9, apPerCp: 0.01, ticks: 6, period: 2 },
+  rake: { cost: 40, initial: 76, tick: 42, ticks: 3, period: 3, apInitial: 0, apTick: 0.06875 },   // WoWSims: only the ticks scale
+  rip: { cost: 30, tick: 19, tickPerCp: 31.9, apPerCp: 0.0125, ticks: 6, period: 2 },
   // Rank 4 (gs Oct 21): rank 5 is an Ahn'Qiraj book, and raids open on 9 December.
-  ferociousBite: { cost: 35, min: 56, max: 118, perCp: 160, apPerCp: 0.03, perEnergy: 3.1 },
+  ferociousBite: { cost: 35, min: 56, max: 118, perCp: 160, apPerCp: 0.0375, perEnergy: 3.1 },
   shiftingPower: { mana: 684, energy: 40, cooldown: 8 },   // 8 s since the Oct 30 hotfix (16 s, 8 with Improved Shifting Power 2/2)
   faerieFire: { cooldown: 6, armor: 505, duration: 40, mana: 115 },
   ravage: { cost: 60, bonus: 98, percent: 4.35 },
@@ -82,14 +82,14 @@ export const DATA = {
   maul: { cost: 15, bonus: 128, threat: 1.75 },
   primalBite: { cost: 20, cooldown: 6, bonus: 77, threat: 3 },
   lacerate: { cost: 15, tick: 15, period: 3, duration: 15, stacks: 5, hitPerStack: 0.1, threat: 3.33 },
-  swipe: { cost: 20, base: 83, apRatio: 0.03, targets: 3, threat: 2 },
+  swipe: { cost: 20, base: 83, apRatio: 0.03, targets: 3, threat: 1.75 },
   demoralizingRoar: { cost: 10, apReduction: 204, duration: 30, threat: 100 },
   enrage: { now: 10, perSecond: 2, duration: 10, cooldown: 60 },
   frenziedRegeneration: { cooldown: 180, duration: 10, ragePerSecond: 10 },
   barkskin: { cooldown: 60, duration: 15, damageTaken: 0.8 },
   bash: { cost: 10, cooldown: 60, duration: 4 },
   feralCharge: { cost: 5, cooldown: 15, minRange: 8, maxRange: 25 },
-  bearThreat: 1.5,
+  bearThreat: 2.15,   // +115 % since the November notes (Blessing of Salvation is gone)
   // Balance
   spellGcd: 1.5,
   wrath: { mana: 120, cast: 2, min: 92, max: 102, coeff: 0.571, eclipseCharges: 2 },

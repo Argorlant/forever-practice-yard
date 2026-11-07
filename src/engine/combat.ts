@@ -234,6 +234,8 @@ export class Combat {
   raid = new Set<string>();
   /** Attack power added to the swing in progress (Windfury's extra attack). */
   private bonusAp = 0;
+  /** True while the Windfury Totem's extra swing lands (procs that this swing does not bring). */
+  windfurySwing = false;
   private lastWindfury = -Infinity;
   /** Runs for every swing of the attacking dummy (rage from damage, Revenge…). Rebuilt on prepare. */
   onIncoming: Array<(i: Incoming) => void> = [];
@@ -1331,7 +1333,9 @@ export class Combat {
       return;
     }
     this.bonusAp = WINDFURY.ap;
+    this.windfurySwing = true;
     this.extraAttack(h.target);
+    this.windfurySwing = false;
     this.bonusAp = 0;
   }
 

@@ -7,7 +7,7 @@
 // Usage: node tools/wowsims_trees.mjs
 import fs from 'node:fs';
 
-const COMMIT = '8298ab833f0249a0f6ca89d567103f26c219ea2f';
+const COMMIT = '2547239a5920c90d6ca291bfddd9b0522dbc7a86';
 const TREES = `https://raw.githubusercontent.com/wowsims/forever/${COMMIT}/ui/sim/talents/trees`;
 const FILE = 'src/ui/talent-layout.json';
 
@@ -137,6 +137,8 @@ const NEW_RANKS = {
   },
   druid: { rendAndTear: [[3], [6], [9], [12], [15]] },
 };
+// Warrior's Defiance: 7/13/20 % from hotfix push 113605 (WoWSims #862).
+NEW_RANKS.warrior = { defiance: [[7], [13], [20]] };
 /** Words in a tree that kept its shape. */
 const NEW_TEXT = {
   warlock: {

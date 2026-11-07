@@ -98,7 +98,7 @@ function arcaneSuggest(c: Combat): string | null {
   if (wrath && tl.presenceOfMind && ready('presenceOfMind') && !c.aura(p, 'presenceOfMind')) return 'presenceOfMind';
   if (tl.pyroblast) {
     const blast = c.aura(p, 'arcaneBlast');
-    if (tl.arcaneBlast && (abStacks(c) < 3 || (blast ? blast.end - c.t : 0) < castOf(c, 'arcaneBlast'))) return 'arcaneBlast';
+    if (tl.arcaneBlast && (abStacks(c) < 3 || (blast ? blast.end - c.t : 0) < castOf(c, 'arcaneBlast') || (c.casting?.id !== 'arcaneBlast' && abStacks(c) < 4))) return 'arcaneBlast';
     if (wrath) return 'arcaneWrath';
     return tl.arcaneBlast && mana >= 0.6 ? 'arcaneBlast' : 'scorch';
   }
@@ -238,6 +238,14 @@ function frostSuggest(c: Combat): string | null {
   // WoWSims Forever's Frost list. Missile Barrage and Arcane Blast only for the builds of your own that have them.
   const tool = manaTool(c, 0.05);
   if (tool) return tool;
+  // On three or more targets: Cone of Cold and Ice Lance on Fingers of Frost, Cold Snap, Ice Barrier (the site has no Blizzard).
+  const fingers = stacksOf(c, p, 'fingersOfFrost');
+  if (c.targets.length >= 3) {
+    if (fingers >= 1 && ready('coneOfCold') && c.inRange(t, D.coneOfCold.range)) return 'coneOfCold';
+    if (tl.iceLance && fingers >= 1 && !c.casting && ready('iceLance')) return 'iceLance';
+    if (tl.coldSnap && ready('coldSnap') && c.cooldownLeft('coneOfCold').left >= 5) return 'coldSnap';
+    if (tl.iceBarrier && !c.aura(p, 'iceBarrier') && ready('iceBarrier')) return 'iceBarrier';
+  }
   if (tl.coldSnap && ready('coldSnap') && c.cooldownLeft('coneOfCold').left >= 7) return 'coldSnap';
   if (tl.wintersChill && stacksOf(c, t, 'wintersChill') >= tl.wintersChill && ready('coneOfCold') && c.inRange(t, D.coneOfCold.range)) return 'coneOfCold';
   // Frostbolt spends the first Fingers of Frost charge, Ice Lance the second.

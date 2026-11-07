@@ -48,9 +48,9 @@ export const DATA = {
   totemGcd: 1,             // confirmed: every totem, not hasted
   baseMana: 1520,
   spellMiss: 17,
-  // Hotfix of November (WoWSims' spell table): the highest ranks. Blizzard's notes give Chain Lightning 2.5 s; the table still has 2 s.
+  // Hotfix of November (WoWSims' spell table): the highest ranks.
   lightningBolt: { mana: 220, cast: 2.5, min: 342, max: 381, coeff: 0.714, speed: 20 },
-  chainLightning: { mana: 495, cast: 2, cooldown: 6, min: 494, max: 552, coeff: 0.714, jump: 0.7, targets: 3 },
+  chainLightning: { mana: 495, cast: 2.5, cooldown: 6, min: 494, max: 552, coeff: 0.714, jump: 0.7, targets: 3 },
   callOfThunder: { crit: 5 },   // Lightning Bolt and Chain Lightning, Overload copies too
   shockCooldown: 6,
   earthShock: { mana: 450, min: 517, max: 545, coeff: 0.386, threat: 2, range: 20 },

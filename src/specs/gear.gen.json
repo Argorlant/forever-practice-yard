@@ -167,8 +167,8 @@
  },
  "hunter-ranged": {
   "stats": {
-   "attackPower": 699,
-   "crit": 7.7,
+   "attackPower": 696,
+   "crit": 7.6,
    "hit": 3.7,
    "spellCrit": 5.9,
    "expertise": 2,
@@ -181,7 +181,7 @@
     "speed": 3.2
    },
    "offHand": null,
-   "rangedAttackPower": 978,
+   "rangedAttackPower": 972,
    "ranged": {
     "name": "Fahrad's Reloading Repeater",
     "type": "crossbow",
@@ -200,8 +200,8 @@
  },
  "hunter-melee": {
   "stats": {
-   "attackPower": 652,
-   "crit": 8.6,
+   "attackPower": 649,
+   "crit": 8.5,
    "hit": 2.7,
    "spellCrit": 6.9,
    "expertise": 2,
@@ -219,7 +219,7 @@
     "max": 102,
     "speed": 1.9
    },
-   "rangedAttackPower": 964,
+   "rangedAttackPower": 958,
    "ranged": {
     "name": "Fahrad's Reloading Repeater",
     "type": "crossbow",
@@ -361,7 +361,7 @@
    "crit": 6.4,
    "hit": 0,
    "spellCrit": 6.1,
-   "spellPower": 243,
+   "spellPower": 241,
    "spellPowerBySchool": {
     "holy": 32,
     "shadow": 23
@@ -379,7 +379,7 @@
   },
   "options": {
    "mana": 4531,
-   "spirit": 223,
+   "spirit": 224,
    "mp5": 18
   }
  },
@@ -471,15 +471,15 @@
  },
  "shaman-elemental": {
   "stats": {
-   "attackPower": 268,
-   "crit": 8.1,
+   "attackPower": 262,
+   "crit": 8.2,
    "hit": 2,
-   "spellCrit": 9.2,
-   "spellPower": 365,
+   "spellCrit": 9.3,
+   "spellPower": 368,
    "spellPowerBySchool": {
     "arcane": 15,
     "fire": 15,
-    "nature": 45
+    "nature": 35
    },
    "mainHand": {
     "name": "Verimonde's Last Resort",
@@ -489,18 +489,18 @@
     "speed": 1.4
    },
    "offHand": null,
-   "health": 2470
+   "health": 2480
   },
   "options": {
-   "mana": 4285,
-   "spirit": 135,
+   "mana": 4390,
+   "spirit": 138,
    "mp5": 0
   }
  },
  "shaman-enhancement": {
   "stats": {
-   "attackPower": 370,
-   "crit": 8.7,
+   "attackPower": 364,
+   "crit": 8.8,
    "hit": 4.9,
    "spellCrit": 10.6,
    "spellPower": 286,
@@ -518,11 +518,11 @@
     "speed": 3.6
    },
    "offHand": null,
-   "health": 3060
+   "health": 3070
   },
   "options": {
-   "mana": 5065,
-   "spirit": 157,
+   "mana": 5035,
+   "spirit": 160,
    "mp5": 12
   }
  },

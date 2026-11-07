@@ -14,7 +14,7 @@ const build = (c: Combat) => buildById(c.options.build);
 const landed = (o: Outcome) => o === 'hit' || o === 'crit' || o === 'glance' || o === 'block';
 const roll = (c: Combat, pct: number) => c.random() * 100 < pct;
 
-interface WarriorState { lastWeaponmaster: number }
+interface WarriorState { lastWeaponmaster: number; lastAoeRoll: number }
 const states = new WeakMap<Combat, WarriorState>();
 
 // ---------------------------------------------------------------- stances
@@ -35,19 +35,22 @@ const needsShield = (c: Combat) => (hasShield(c) ? null : 'Requires a shield');
 function enterStance(c: Combat, s: Stance, keepRage = true): void {
   for (const st of Object.values(STANCES)) c.removeAura(c.player, st.aura);
   const t = T(c);
-  const defiance = hasShield(c) ? 1 + 0.05 * t.defiance : 1;
+  const defiance = hasShield(c) ? 1 + [0, 0.07, 0.13, 0.2][t.defiance] : 1;
   const mods = s === 'battle' ? { threat: 0.8 }
-    : s === 'defensive' ? { damageTaken: 0.9, damageDone: 0.9, threat: 1.3 * defiance }
+    : s === 'defensive' ? { damageTaken: 0.9, damageDone: 0.9, threat: 1.8 * defiance }
       : { crit: 3, damageTaken: 1.1, threat: 0.8 };
   c.applyAura(c.player, { id: STANCES[s].aura, name: STANCES[s].name, icon: STANCES[s].aura, duration: Infinity, ...mods });
   if (keepRage) c.player.resource = Math.min(c.player.resource, D.rage.tacticalMastery + 5 * t.improvedTacticalMastery);
 }
 
 // ------------------------------------------------------------------- rage
-/** Rage from talents and abilities also makes threat: 5 per rage, times the stance's threat (Oct 21). */
-function gainRage(c: Combat, n: number, threat = true): void {
+/**
+ * Rage from talents and abilities also makes threat: 5 per rage, times the stance's threat (Oct 21), none before the pull.
+ * Bloodrage's instant rage and Shield Specialization's make the same 5 in every stance (WoWSims, from logs).
+ */
+function gainRage(c: Combat, n: number, threat: boolean | 'unscaled' = true): void {
   c.addResource(n);
-  if (threat) c.addThreat(n * D.threatPerRage);
+  if (threat && c.player.inCombat) c.addThreat(n * D.threatPerRage, { ignoreStance: threat === 'unscaled' });
 }
 
 /** Forever's normalized rage: a fixed amount per landed white swing, from the listed weapon speed. */
@@ -120,7 +123,7 @@ const abilities: Ability[] = [
     requirements: (c) => (stanceOf(c) === s ? 'You are already in that stance' : null),
     usable: (c) => stanceOf(c) !== s,
     highlight: (c) => stanceOf(c) === s,
-    description: (c) => `${s === 'battle' ? 'Threat x0.8.' : s === 'defensive' ? 'Take 10% less damage, deal 10% less, threat x1.3.' : '+3% crit, take 10% more damage, threat x0.8.'} Changing stance keeps up to ${D.rage.tacticalMastery + 3 * T(c).improvedTacticalMastery} rage.`,
+    description: (c) => `${s === 'battle' ? 'Threat x0.8.' : s === 'defensive' ? 'Take 10% less damage, deal 10% less, threat x1.8.' : '+3% crit, take 10% more damage, threat x0.8.'} Changing stance keeps up to ${D.rage.tacticalMastery + 3 * T(c).improvedTacticalMastery} rage.`,
     use: (c) => enterStance(c, s),
   })),
   {
@@ -344,7 +347,7 @@ const abilities: Ability[] = [
     description: (c) => `Gain ${Math.round(D.bloodrage.now * (1 + 0.25 * T(c).improvedBloodrage))} rage now and ${Math.round(D.bloodrage.overTime * (1 + 0.25 * T(c).improvedBloodrage))} over ${D.bloodrage.duration} sec, at the cost of some health. Before a pull its rage does not decay while it lasts, and you can still Charge.`,
     use: (c) => {
       const mult = 1 + 0.25 * T(c).improvedBloodrage;
-      gainRage(c, D.bloodrage.now * mult);
+      gainRage(c, D.bloodrage.now * mult, 'unscaled');
       c.count('bloodrageRage', D.bloodrage.now * mult);
       if (!c.playerHealthLocked) c.player.health = Math.max(1, c.player.health - 338);
       c.applyAura(c.player, {
@@ -530,7 +533,7 @@ const ABILITY_SOURCES = ['heroicStrike', 'cleave', 'bloodthirst', 'mortalStrike'
 function prepare(c: Combat): void {
   const t = T(c);
   const p = c.player;
-  states.set(c, { lastWeaponmaster: -Infinity });
+  states.set(c, { lastWeaponmaster: -Infinity, lastAoeRoll: -Infinity });
   p.maxResource = D.maxRage;
   p.regenPerSecond = 0;
   p.decayPerSecond = D.decayOutOfCombat * (t.angerManagement ? 0.7 : 1);
@@ -543,7 +546,7 @@ function prepare(c: Combat): void {
   c.mod.critFor.overpower = 25 * t.improvedOverpower;
   if (c.stats.mainHand.twoHand) c.mod.physicalDamage *= 1 + 0.02 * t.twoHandedWeaponSpecialization;
   if (hasShield(c)) c.mod.physicalDamage *= 1 + 0.02 * t.bastion;
-  c.mod.threatFor = { execute: 1.25, whirlwind: 1.25, whirlwindOH: 1.25, hamstring: 1.25, overpower: 0.75, revenge: 2.25, thunderClap: 2.5 };
+  c.mod.threatFor = { execute: 1.25, whirlwind: 1.25, whirlwindOH: 1.25, hamstring: 1.25, overpower: 0.75, revenge: 2.25, thunderClap: 2.5, shieldBash: 1.5 };
 
   // Weaponmaster, per weapon in each hand.
   const wm = t.weaponmaster;
@@ -585,9 +588,13 @@ function prepare(c: Combat): void {
     }
     const w = weaponOf(c, hand);
     const s = states.get(c)!;
-    // Shield Slam and Shield Bash cannot trigger it (Oct 15 fix).
-    if (!extra && wm && w?.type === 'sword' && hit.source !== 'shieldSlam' && hit.source !== 'shieldBash'
-      && c.t - s.lastWeaponmaster >= D.weaponmasterIcd && roll(c, wm)) {
+    // Shield Slam and Shield Bash cannot trigger it (Oct 15 fix); Sweeping Strikes' copies and the Windfury Totem swing
+    // never do, and Whirlwind and Cleave roll once a cast however many targets they hit (WoWSims, from logs).
+    const aoe = hit.source === 'whirlwind' || hit.source === 'whirlwindOH' || hit.source === 'cleave';
+    const rolled = aoe && s.lastAoeRoll === c.t;
+    if (aoe) s.lastAoeRoll = c.t;
+    if (!extra && wm && w?.type === 'sword' && hit.source !== 'shieldSlam' && hit.source !== 'shieldBash' && hit.source !== 'sweepingStrikesCopy'
+      && !c.windfurySwing && !rolled && c.t - s.lastWeaponmaster >= D.weaponmasterIcd && roll(c, wm)) {
       extra = true;
       s.lastWeaponmaster = c.t;
       c.count('weaponmaster');
@@ -676,7 +683,7 @@ function prepare(c: Combat): void {
         if (sb.stacks <= 0) c.removeAura(c.player, 'shieldBlock');
       }
       if (t.shieldSpecialization && roll(c, 20 * t.shieldSpecialization)) {
-        gainRage(c, 5);
+        gainRage(c, 5, 'unscaled');
         note(c, '+5 Rage', 'resource');
       }
     }
@@ -707,6 +714,8 @@ function suggest(c: Combat): string | null {
   const cost = (id: string) => c.cost(c.ability(id)!);
 
   if (!p.inCombat && c.cooldownLeft('charge').left === 0 && c.distance(t) > 8 * 0.9144 && c.distance(t) < 25 * 0.9144 && stance === 'battle') return 'charge';
+  // WoWSims' Fury casts Reckless Swings just before the pull.
+  if (!p.inCombat && b.rotation === 'fury' && tl.recklessSwings && ready('recklessSwings')) return 'recklessSwings';
   // A fight starts with the auto attack: rage comes from landed swings.
   if (!p.autoAttacking && c.inRange(t)) return 'attack';
 

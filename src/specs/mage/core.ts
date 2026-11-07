@@ -122,6 +122,15 @@ const spellPower = (c: Combat, school: School, o: SpellOpts) => (o.frostfire ? M
   + D.arcaneBlast.intPerStack * intellect(c) * abStacks(c);
 
 /** Resolves one spell hit (or one missile): hit, crit, damage and every proc that rolls on it. */
+/** Arcane Concentration: 2 % a point, 1 s internal cooldown; a damage spell's hit, each missile and the start of an Arcane Missiles channel roll it. */
+function arcaneConcentration(c: Combat): void {
+  const s = state(c);
+  if (!T(c).arcaneConcentration || c.t - s.lastClearcasting < D.clearcasting.icd || !roll(c, 2 * T(c).arcaneConcentration)) return;
+  s.lastClearcasting = c.t;
+  c.applyAura(c.player, { id: 'clearcasting', name: 'Clearcasting', icon: 'clearcasting', duration: D.clearcasting.duration });
+  c.count('clearcasting');
+}
+
 function resolve(c: Combat, t: Unit, id: string, school: School, base: number, coeff: number, o: SpellOpts = {}, frozenBonus = 1): { outcome: Outcome; amount: number } {
   const tl = T(c);
   // Fingers of Frost: this damage cast treats the target as frozen and spends a charge.
@@ -144,13 +153,8 @@ function resolve(c: Combat, t: Unit, id: string, school: School, base: number, c
   c.deal({ target: t, source: id, outcome, school: o.frostfire ? 'fire' : school, amount, white: false, spell: true });
   if (outcome === 'resist') return { outcome, amount };
 
-  // Clearcasting: 2 % per point per landed damage spell, 1 s internal cooldown; each Arcane Missiles missile rolls it (WoWSims, Nov 3).
-  const s = state(c);
-  if (tl.arcaneConcentration && fighting && c.t - s.lastClearcasting >= D.clearcasting.icd && roll(c, 2 * tl.arcaneConcentration)) {
-    s.lastClearcasting = c.t;
-    c.applyAura(c.player, { id: 'clearcasting', name: 'Clearcasting', icon: 'clearcasting', duration: D.clearcasting.duration });
-    c.count('clearcasting');
-  }
+  // Clearcasting: each landed damage spell and missile rolls it (the channel's start rolls too, in its onStart).
+  if (fighting) arcaneConcentration(c);
   // Missile Barrage, per point: 20 % from Arcane Blast, 10 % from Arcane Wrath, Fireball, Frostbolt and Frostfire Bolt.
   const mb = D.missileBarrage;
   const barrage = id === 'arcaneBlast' ? mb.arcaneBlast : ['arcaneWrath', 'fireball', 'frostbolt', 'frostfireBolt'].includes(id) ? mb.other : 0;
@@ -329,6 +333,7 @@ export const ABILITIES: Ability[] = [
       onStart: (c) => {
         // A Missile Barrage pays for the channel, so Clearcasting stays up for the next spell (WoWSims, Nov 3).
         if (c.aura(c.player, 'missileBarrage')) { c.removeAura(c.player, 'missileBarrage'); c.count('barrageUsed'); } else spend(c, 0);
+        if (c.player.inCombat) arcaneConcentration(c);
         return true;
       },
       onTick: (c, t) => {

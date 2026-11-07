@@ -6,7 +6,7 @@
 // Usage: node tools/gear_sheets.mjs
 import fs from 'node:fs';
 
-const COMMIT = '8298ab833f0249a0f6ca89d567103f26c219ea2f';
+const COMMIT = '2547239a5920c90d6ca291bfddd9b0522dbc7a86';
 const RAW = `https://raw.githubusercontent.com/wowsims/forever/${COMMIT}/`;
 const SPECS = 'ui/specs/';
 
@@ -36,7 +36,7 @@ const RACES = {
   undead: { agi: -2, str: -1, int: -2, spi: 5, sta: 1 },
   tauren: { agi: -5, str: 5, int: -5, spi: 2, sta: 2, healthMult: 1.05 },
   troll: { agi: 2, str: 1, int: -4, spi: 1, sta: 1 },
-  windshaper: { agi: 1, str: -1, int: 1, sta: -1 },
+  windshaper: { agi: 3, str: -4, int: -1, spi: 3, sta: 0 },   // its own offsets since WoWSims #881 (Nov 6 sheets)
 };
 // Rogues and hunters get Agility's dodge twice over (sim/core/base_stats.go).
 const dodgePerAgi = (c, cls) => (cls === 'rogue' || cls === 'hunter' ? 2 : 1) * c.agiCrit;

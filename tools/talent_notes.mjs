@@ -67,6 +67,7 @@ const NOVEMBER = {
     spearingStrike: '75% normalized weapon damage.',
     recklessSwings: '25% of base health: the next 4 white swings add 5 rage each. 15 s cooldown.',
     improvedWhirlwind: '2 points: 1/2 s off the cooldown and 15/30% more to the closest enemy.',
+    defiance: '7/13/20% more threat in Defensive Stance with a shield (Defensive Stance itself 80% since November).',
   },
   shaman: {
     flurry: '6%/point (30% max); requires Mental Dexterity.',

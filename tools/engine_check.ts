@@ -1004,7 +1004,8 @@ for (const sp of [shamanElemental, shamanEnhancement, shamanTank]) {
   if (elemental.ability('elementalMastery')!.name !== 'Lightning Mastery') failures.push('Elemental Mastery was not renamed');
   // Mental Dexterity 3/3 turns 150% of the sheet's Intellect into attack power; the older sheets already count it.
   const enh = play(shamanEnhancement, { build: 'enhancement', seconds: 0 }).c;
-  if (Math.abs(enh.mod.attackPower - 382.5) > 1) failures.push(`Mental Dexterity gave ${enh.mod.attackPower} attack power, want 382.5`);
+  const enhInt = (Number(enh.options.mana) - 1240) / 15;
+  if (Math.abs(enh.mod.attackPower - 1.5 * enhInt) > 1) failures.push(`Mental Dexterity gave ${enh.mod.attackPower} attack power, want ${1.5 * enhInt}`);
   if (play(shamanEnhancement, { build: 'enhancement-fs', seconds: 0 }).c.mod.attackPower !== 0) failures.push('Mental Dexterity counted twice on an older sheet');
   // Poised: the first cat ability costs 10 Energy less, then it is spent.
   const cat = play(druidCat, { build: 'cat', seconds: 0 }).c;

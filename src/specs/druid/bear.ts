@@ -87,7 +87,8 @@ const abilities: Ability[] = [
       const u = t!;
       useClearcasting(c);
       const before = lacerateStacks(c, u);
-      const outcome = strike(c, u, 'lacerate', c.weaponDamage('main') * D.lacerate.hitPerStack * Math.max(1, before));
+      // The hit counts the stack it adds: 1:2:3:4:5 (WoWSims, from logs).
+      const outcome = strike(c, u, 'lacerate', c.weaponDamage('main') * D.lacerate.hitPerStack * Math.min(D.lacerate.stacks, before + 1));
       if (!landed(outcome)) return;
       const stacks = Math.min(D.lacerate.stacks, before + 1);
       bleed(c, u, 'lacerate', 'Lacerate', D.lacerate.duration / D.lacerate.period, D.lacerate.period, (_cc, n) => D.lacerate.tick * n, { genesis: T(c).genesis, stacks });

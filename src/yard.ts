@@ -94,7 +94,7 @@ function loadPrefs(): Prefs {
 let refillRows = !load(PREFS_KEY);
 let prefs = loadPrefs();
 const persist = () => save(PREFS_KEY, prefs);
-const PATCH = '2026-11-04.3';
+const PATCH = '2026-11-07.1';
 // The builds' gear follows WoWSims Forever: a sheet nobody edited moves to its build's new one, a sheet of your own stays.
 if (prefs.patch !== PATCH && isOldSheet(prefs.stats)) {
   const build = spec.builds?.find((b) => b.id === prefs.options.build);
