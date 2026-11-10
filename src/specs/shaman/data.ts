@@ -83,11 +83,11 @@ export const DATA = {
   mentalDexterity: [0, 0.5, 1, 1.5],                   // Intellect into attack power, by points
   mentalQuickness: [0, 0.15, 0.3],                     // Intellect into spell power, by points
   improvedStormstrike: { duration: 15, regen: 0.5 },
-  // WoWSims reads the copies from their own rows, which now state less than half of the cast. Its TODO: check in game.
+  // WoWSims reads the copies from their own rows (raised in the Nov 9 data).
   lightningOverload: {
     chance: [0, 10, 20, 30],
-    lightningBolt: { min: 95, max: 106, coeff: 0.357 },
-    chainLightning: { min: 63, max: 71, coeff: 0.2855 },
+    lightningBolt: { min: 171, max: 191, coeff: 0.357 },
+    chainLightning: { min: 247, max: 277, coeff: 0.357 },
   },
   weaponMastery: 1.1,       // disputed: off by default
   manaPotion: { min: 1350, max: 2250, cooldown: 120 },

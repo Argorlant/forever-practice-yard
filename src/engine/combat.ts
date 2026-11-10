@@ -170,6 +170,16 @@ const SOURCE_NAMES: Record<string, string> = {
 };
 const SOURCE_ICONS: Record<string, string> = { melee_mh: 'melee', melee_oh: 'melee' };
 
+/**
+ * The abilities Windfury Totem can proc from, besides main-hand swings: their game rows require a main-hand weapon or
+ * go off in place of the next swing (WoWSims #910, from Forever logs: Bloodthirst, Whirlwind, Overpower, Holy Strike and
+ * the cat's attacks never proc it).
+ */
+const WINDFURY_TOTEM_FROM = new Set([
+  'heroicStrike', 'cleave', 'execute', 'hamstring', 'mortalStrike', 'rend', 'revenge', 'slam', 'spearingStrike', 'sunderArmor', 'concussionBlow',
+  'sinisterStrike', 'backstab', 'ambush', 'eviscerate', 'exposeArmor', 'ghostlyStrike', 'gouge', 'hemorrhage', 'kidneyShot', 'mutilate', 'rupture',
+  'raptorStrike', 'mongooseBite', 'wingClip', 'maul',
+]);
 export class Combat {
   t = 0;
   readonly spec: Spec;
@@ -1314,8 +1324,10 @@ export class Combat {
    * A shaman's own Windfury Weapon replaces it: the same chance and cooldown, two extra attacks.
    */
   private windfuryCheck(h: Hit): void {
-    if ((h.hand ?? 'main') !== 'main' || h.ranged || this.bonusAp) return;
+    if ((h.hand ?? 'main') !== 'main' || h.ranged || h.periodic || this.bonusAp) return;
     const weapon = this.mod.windfuryWeapon;
+    // The totem rolls off main-hand swings and the abilities whose row needs the main hand or replaces the next swing.
+    if (!weapon && !h.white && !WINDFURY_TOTEM_FROM.has(h.source)) return;
     if (!weapon && ![...this.player.auras.values()].some((a) => a.windfury)) return;
     if (this.t - this.lastWindfury < WINDFURY.icd || this.random() * 100 >= WINDFURY.chance) return;
     this.lastWindfury = this.t;

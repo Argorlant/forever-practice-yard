@@ -250,7 +250,8 @@ export const ABILITIES: Ability[] = [
     use: (c, t) => {
       const u = t!;
       const near = c.targets.filter((x) => x !== u && x.health > 0 && Math.hypot(x.x - u.x, x.z - u.z) <= 8 * 0.9144).slice(0, D.multiShot.targets - 1);
-      for (const x of [u, ...near]) weaponShot(c, x, 'multiShot', 0, { normalized: true, refund: x === u });
+      // +9 a hit (WoWSims, from logs: a flat 9 or a share of ranged attack power).
+      for (const x of [u, ...near]) weaponShot(c, x, 'multiShot', 9, { normalized: true, refund: x === u });
     },
   },
   {

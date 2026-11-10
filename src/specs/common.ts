@@ -27,7 +27,7 @@ export const BOSS_RULES: AttackRules = {
  * armor and health play no part.
  */
 export function rageFromDamageTaken(raw: number, attackerLevel = 63): number {
-  const points: [number, number][] = [[42, 0.2], [44, 0.3], [46, 0.36], [50, 0.38], [63, 0.4]];
+  const points: [number, number][] = [[38, 0.218], [42, 0.239], [44, 0.31], [46, 0.36], [50, 0.38], [63, 0.4]];   // WoWSims #932, from logs
   let armor = points[points.length - 1][1];
   if (attackerLevel <= points[0][0]) armor = points[0][1];
   else {

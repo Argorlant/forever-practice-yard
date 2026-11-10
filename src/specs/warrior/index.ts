@@ -250,10 +250,11 @@ const abilities: Ability[] = [
     requirements: (c) => talent('shieldSlam', 'Shield Slam').requirements(c) ?? needsShield(c),
     usable: (c) => T(c).shieldSlam > 0 && hasShield(c),
     learned: (c) => T(c).shieldSlam > 0,
-    description: (c) => `Slams the target with your shield for ${D.shieldSlam.min}-${D.shieldSlam.max} plus your block value (${c.stats.tank?.blockValue ?? 0}).`,
+    description: (c) => `Slams the target with your shield for ${D.shieldSlam.min}-${D.shieldSlam.max} plus twice your block value (${2 * (c.stats.tank?.blockValue ?? 0)}).`,
     use: (c, t) => {
       const s = D.shieldSlam;
-      const base = s.min + c.random() * (s.max - s.min) + (c.stats.tank?.blockValue ?? 0);
+      // Twice the block value (WoWSims, from logs).
+      const base = s.min + c.random() * (s.max - s.min) + 2 * (c.stats.tank?.blockValue ?? 0);
       if (landed(strike(c, t!, 'shieldSlam', base))) c.addThreat(s.threat);
     },
   },
@@ -688,7 +689,7 @@ function prepare(c: Combat): void {
       }
     }
     if ((i.outcome === 'dodge' || i.outcome === 'parry') && hasShield(c) && t.masterOfDefense && roll(c, 50 * t.masterOfDefense)) {
-      gainRage(c, 5);
+      gainRage(c, 5, 'unscaled');
       note(c, '+5 Rage', 'resource');
     }
   });

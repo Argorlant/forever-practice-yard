@@ -200,7 +200,8 @@ const abilities: Ability[] = [
         return;
       }
       c.applyAura(u, { id: 'pounceStun', name: 'Pounce', icon: 'pounce', duration: D.pounce.stun });
-      bleed(c, u, 'pounce', 'Pounce', D.pounce.ticks, D.pounce.period, () => D.pounce.total / D.pounce.ticks, { genesis: T(c).genesis });
+      const ap = c.attackPower();
+      bleed(c, u, 'pounce', 'Pounce', D.pounce.ticks, D.pounce.period, () => D.pounce.total / D.pounce.ticks + D.pounce.apTick * ap, { genesis: T(c).genesis });
       c.addComboPoints(u, 1);
     },
   },

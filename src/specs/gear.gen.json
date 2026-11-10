@@ -1,11 +1,11 @@
 {
  "warrior-fury": {
   "stats": {
-   "attackPower": 712,
-   "crit": 18.1,
-   "hit": 10.9,
-   "spellCrit": 6,
-   "expertise": 2,
+   "attackPower": 708,
+   "crit": 17.5,
+   "hit": 9.9,
+   "spellCrit": 5,
+   "expertise": 1.1,
    "mainHand": {
     "name": "Persuader",
     "type": "mace",
@@ -25,11 +25,11 @@
  },
  "warrior-arms": {
   "stats": {
-   "attackPower": 776,
-   "crit": 18.3,
-   "hit": 7.9,
-   "spellCrit": 6,
-   "expertise": 2,
+   "attackPower": 772,
+   "crit": 17.7,
+   "hit": 6.9,
+   "spellCrit": 5,
+   "expertise": 1.1,
    "mainHand": {
     "name": "Premier High Warlord's Greatsword",
     "type": "sword",
@@ -44,7 +44,7 @@
  },
  "warrior-prot": {
   "stats": {
-   "attackPower": 562,
+   "attackPower": 550,
    "crit": 8.9,
    "hit": 3.3,
    "spellCrit": 1,
@@ -58,24 +58,24 @@
    "offHand": null,
    "shield": true,
    "tank": {
-    "health": 3449,
-    "armor": 5475,
-    "defense": 414.7,
-    "dodge": 12.5,
-    "parry": 9.6,
-    "block": 9.6,
-    "blockValue": 47
+    "health": 3429,
+    "armor": 5431,
+    "defense": 407.7,
+    "dodge": 12.3,
+    "parry": 9.3,
+    "block": 9.3,
+    "blockValue": 46
    }
   },
   "options": {}
  },
  "rogue-combat": {
   "stats": {
-   "attackPower": 657,
-   "crit": 19,
-   "hit": 11.7,
-   "spellCrit": 6,
-   "expertise": 2,
+   "attackPower": 608,
+   "crit": 20,
+   "hit": 9.7,
+   "spellCrit": 10,
+   "expertise": 1.1,
    "mainHand": {
     "name": "Persuader",
     "type": "mace",
@@ -95,11 +95,11 @@
  },
  "rogue-backstab": {
   "stats": {
-   "attackPower": 657,
-   "crit": 18,
-   "hit": 10.7,
-   "spellCrit": 5,
-   "expertise": 2,
+   "attackPower": 608,
+   "crit": 19,
+   "hit": 8.7,
+   "spellCrit": 9,
+   "expertise": 1.1,
    "mainHand": {
     "name": "The Lobotomizer",
     "type": "dagger",
@@ -119,11 +119,11 @@
  },
  "rogue-mutilate": {
   "stats": {
-   "attackPower": 647,
-   "crit": 18,
-   "hit": 10.7,
-   "spellCrit": 5,
-   "expertise": 2,
+   "attackPower": 598,
+   "crit": 19,
+   "hit": 8.7,
+   "spellCrit": 9,
+   "expertise": 1.1,
    "mainHand": {
     "name": "The Lobotomizer",
     "type": "dagger",
@@ -143,11 +143,11 @@
  },
  "rogue-sub-backstab": {
   "stats": {
-   "attackPower": 657,
-   "crit": 18,
-   "hit": 10.7,
-   "spellCrit": 5,
-   "expertise": 2,
+   "attackPower": 608,
+   "crit": 19,
+   "hit": 8.7,
+   "spellCrit": 9,
+   "expertise": 1.1,
    "mainHand": {
     "name": "The Lobotomizer",
     "type": "dagger",
@@ -171,7 +171,7 @@
    "crit": 7.6,
    "hit": 3.7,
    "spellCrit": 5.9,
-   "expertise": 2,
+   "expertise": 1.1,
    "mainHand": {
     "name": "Legionite Glaive",
     "type": "polearm",
@@ -181,7 +181,7 @@
     "speed": 3.2
    },
    "offHand": null,
-   "rangedAttackPower": 972,
+   "rangedAttackPower": 1026,
    "ranged": {
     "name": "Fahrad's Reloading Repeater",
     "type": "crossbow",
@@ -204,7 +204,7 @@
    "crit": 8.5,
    "hit": 2.7,
    "spellCrit": 6.9,
-   "expertise": 2,
+   "expertise": 1.1,
    "mainHand": {
     "name": "Annihilator",
     "type": "axe",
@@ -219,7 +219,7 @@
     "max": 102,
     "speed": 1.9
    },
-   "rangedAttackPower": 958,
+   "rangedAttackPower": 972,
    "ranged": {
     "name": "Fahrad's Reloading Repeater",
     "type": "crossbow",
@@ -239,10 +239,10 @@
  "mage": {
   "stats": {
    "attackPower": 20,
-   "crit": 11,
+   "crit": 12,
    "hit": 2,
-   "spellCrit": 11.7,
-   "spellPower": 342,
+   "spellCrit": 12.6,
+   "spellPower": 367,
    "mainHand": {
     "name": "Grand Marshal's Mageblade",
     "type": "dagger",
@@ -251,12 +251,12 @@
     "speed": 2
    },
    "offHand": null,
-   "health": 3210
+   "health": 3070
   },
   "options": {
-   "mana": 5883,
-   "spirit": 227,
-   "mp5": 8
+   "mana": 5718,
+   "spirit": 190,
+   "mp5": 0
   }
  },
  "warlock-affliction": {
@@ -265,7 +265,7 @@
    "crit": 6,
    "hit": 1,
    "spellCrit": 7.2,
-   "spellPower": 290,
+   "spellPower": 286,
    "mainHand": {
     "name": "Shivsprocket's Shiv",
     "type": "dagger",
@@ -288,7 +288,7 @@
    "crit": 4.9,
    "hit": 1,
    "spellCrit": 6.2,
-   "spellPower": 290,
+   "spellPower": 286,
    "mainHand": {
     "name": "Shivsprocket's Shiv",
     "type": "dagger",
@@ -311,7 +311,7 @@
    "crit": 6,
    "hit": 1,
    "spellCrit": 7.2,
-   "spellPower": 290,
+   "spellPower": 286,
    "mainHand": {
     "name": "Shivsprocket's Shiv",
     "type": "dagger",
@@ -334,7 +334,7 @@
    "crit": 9.5,
    "hit": 1,
    "spellCrit": 8.1,
-   "spellPower": 206,
+   "spellPower": 202,
    "spellPowerBySchool": {
     "frost": 40,
     "shadow": 251
@@ -385,12 +385,12 @@
  },
  "paladin-ret": {
   "stats": {
-   "attackPower": 718,
-   "crit": 14.5,
-   "hit": 7,
-   "spellCrit": 14.9,
-   "expertise": 2,
-   "spellPower": 100,
+   "attackPower": 832,
+   "crit": 17.2,
+   "hit": 7.6,
+   "spellCrit": 12.9,
+   "expertise": 1.1,
+   "spellPower": 8,
    "spellPowerBySchool": {
     "shadow": 15
    },
@@ -405,9 +405,9 @@
    "offHand": null
   },
   "options": {
-   "mana": 3392,
-   "spirit": 111,
-   "mp5": 20
+   "mana": 2492,
+   "spirit": 86,
+   "mp5": 0
   }
  },
  "paladin-shock": {
@@ -416,7 +416,7 @@
    "crit": 6.3,
    "hit": 5.2,
    "spellCrit": 8.8,
-   "expertise": 2,
+   "expertise": 1.1,
    "spellPower": 236,
    "spellPowerBySchool": {
     "holy": 33
@@ -439,11 +439,11 @@
  },
  "paladin-prot": {
   "stats": {
-   "attackPower": 598,
+   "attackPower": 604,
    "crit": 5.2,
    "hit": 3.3,
-   "spellCrit": 6.1,
-   "spellPower": 92,
+   "spellCrit": 5.9,
+   "spellPower": 80,
    "mainHand": {
     "name": "Dark Iron Destroyer",
     "type": "axe",
@@ -454,19 +454,19 @@
    "offHand": null,
    "shield": true,
    "tank": {
-    "health": 3811,
-    "armor": 6918,
-    "defense": 361,
-    "dodge": 7.7,
-    "parry": 7.4,
-    "block": 7.4,
-    "blockValue": 69
+    "health": 3841,
+    "armor": 6862,
+    "defense": 371,
+    "dodge": 8.1,
+    "parry": 7.8,
+    "block": 7.8,
+    "blockValue": 68
    }
   },
   "options": {
-   "mana": 2627,
+   "mana": 2462,
    "spirit": 82,
-   "mp5": 4
+   "mp5": 0
   }
  },
  "shaman-elemental": {
@@ -475,7 +475,7 @@
    "crit": 8.2,
    "hit": 2,
    "spellCrit": 9.3,
-   "spellPower": 368,
+   "spellPower": 364,
    "spellPowerBySchool": {
     "arcane": 15,
     "fire": 15,
@@ -499,11 +499,11 @@
  },
  "shaman-enhancement": {
   "stats": {
-   "attackPower": 364,
+   "attackPower": 316,
    "crit": 8.8,
-   "hit": 4.9,
-   "spellCrit": 10.6,
-   "spellPower": 286,
+   "hit": 5.9,
+   "spellCrit": 10.3,
+   "spellPower": 314,
    "spellPowerBySchool": {
     "arcane": 15,
     "fire": 15,
@@ -518,12 +518,12 @@
     "speed": 3.6
    },
    "offHand": null,
-   "health": 3070
+   "health": 2840
   },
   "options": {
-   "mana": 5035,
-   "spirit": 160,
-   "mp5": 12
+   "mana": 4795,
+   "spirit": 125,
+   "mp5": 0
   }
  },
  "druid-balance": {
@@ -532,7 +532,7 @@
    "crit": 6.2,
    "hit": 2,
    "spellCrit": 6.9,
-   "spellPower": 454,
+   "spellPower": 443,
    "spellPowerBySchool": {
     "arcane": 20
    },

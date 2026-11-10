@@ -58,14 +58,14 @@ export const DATA = {
   shred: { cost: 60, bonus: 80, percent: 2 },
   claw: { cost: 45, bonus: 115, percent: 1.4 },
   // Attack power shares: gs's fit to beta logs (provisional); foreversim uses 5 % on both.
-  rake: { cost: 40, initial: 76, tick: 42, ticks: 3, period: 3, apInitial: 0, apTick: 0.06875 },   // WoWSims: only the ticks scale
-  rip: { cost: 30, tick: 19, tickPerCp: 31.9, apPerCp: 0.0125, ticks: 6, period: 2 },
+  rake: { cost: 40, initial: 76, tick: 42, ticks: 3, period: 3, apInitial: 0.065, apTick: 0.065 },   // WoWSims, from Nov 7-8 logs
+  rip: { cost: 30, tick: 19, tickPerCp: 31.9, apPerCp: 0.0114, ticks: 6, period: 2 },
   // Rank 4 (gs Oct 21): rank 5 is an Ahn'Qiraj book, and raids open on 9 December.
-  ferociousBite: { cost: 35, min: 56, max: 118, perCp: 160, apPerCp: 0.0375, perEnergy: 3.1 },
+  ferociousBite: { cost: 35, min: 56, max: 118, perCp: 160, apPerCp: 0.037, perEnergy: 3.1 },
   shiftingPower: { mana: 684, energy: 40, cooldown: 8 },   // 8 s since the Oct 30 hotfix (16 s, 8 with Improved Shifting Power 2/2)
   faerieFire: { cooldown: 6, armor: 505, duration: 40, mana: 115 },
   ravage: { cost: 60, bonus: 98, percent: 4.35 },
-  pounce: { cost: 50, total: 186, ticks: 6, period: 3, stun: 2 },
+  pounce: { cost: 50, total: 186, apTick: 0.025, ticks: 6, period: 3, stun: 2 },
   prowl: { cooldown: 10, speed: 0.7 },
   cower: { cost: 20, cooldown: 10, threat: -1200 },
   dash: { cooldown: 300, duration: 15, speed: 1.6 },

@@ -7,7 +7,7 @@
 // Usage: node tools/wowsims_trees.mjs
 import fs from 'node:fs';
 
-const COMMIT = '2547239a5920c90d6ca291bfddd9b0522dbc7a86';
+const COMMIT = '9216929148d869d0ddd930ecb380aa94a36fc19e';
 const TREES = `https://raw.githubusercontent.com/wowsims/forever/${COMMIT}/ui/sim/talents/trees`;
 const FILE = 'src/ui/talent-layout.json';
 

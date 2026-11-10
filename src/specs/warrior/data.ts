@@ -54,13 +54,13 @@ export const DATA = {
     tacticalMastery: 10,    // baseline: rage kept on a stance swap
   },
   // Trainer ranks (gs Oct 21): Heroic Strike 9, Revenge 6 and Battle Shout 7 are Ahn'Qiraj books, and raids open on 9 December.
-  // Heroic Strike rank 8: threat 2.54 per spell level (56); Cleave rank 5: 1.53 per spell level (60), split between the targets it lands on.
-  heroicStrike: { cost: 15, bonus: 138, threat: 142 },
-  cleave: { cost: 20, bonus: 50, threat: 92, targets: 2 },
+  // Heroic Strike rank 8: threat 2.5 per spell level (56); Cleave rank 5 and Slam 1.5 per spell level (WoWSims, Nov 8 logs), split between the targets it lands on.
+  heroicStrike: { cost: 15, bonus: 138, threat: 140 },
+  cleave: { cost: 20, bonus: 50, threat: 90, targets: 2 },
   bloodthirst: { cost: 30, cooldown: 6, apRatio: 0.45, bonus: 48, haste: 0.1, duration: 10 },
   mortalStrike: { cost: 30, cooldown: 6, bonus: 160 },
   whirlwind: { cost: 25, cooldown: 10, targets: 4, improvedCooldown: 1, improvedClosest: 0.15 },   // Improved Whirlwind, per point
-  slam: { cost: 15, cooldown: 15, cast: 1.5, bonus: 87, threat: 140, improvedCooldown: 2.5 },   // Improved Slam, per point
+  slam: { cost: 15, cooldown: 15, cast: 1.5, bonus: 87, threat: 81, improvedCooldown: 2.5 },   // Improved Slam, per point
   execute: { cost: 15, base: 600, perRage: 15, threshold: 0.2 },
   overpower: { cost: 5, cooldown: 5, bonus: 35, window: 5 },
   revenge: { cost: 5, cooldown: 5, min: 109, max: 133, ap: 0.25, window: 5 },   // rank 5, +25 % of attack power (Oct 30 hotfix); threat 2.25x its damage

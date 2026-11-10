@@ -55,7 +55,7 @@ export const DATA = {
   normalizedOneHand: 2.4,
   normalizedTwoHand: 3.3,
   refund: 0.8,                 // provisional: an avoided shot refunds 80 % of its mana
-  aimedShot: { mana: 310, cast: 2, cooldown: 6, bonus: 350 },
+  aimedShot: { mana: 310, cast: 2, cooldown: 6, bonus: 359 },   // +9 a hit, as Multi-Shot (WoWSims, from logs)
   multiShot: { mana: Math.round(BASE_MANA * 0.139), cast: 0, cooldown: 6, targets: 3 },   // instant since client 70425 (gs; testers fire it on the move)
   arcaneShot: { mana: 190, cooldown: 6, damage: 280, rap: 0.15 },          // rank 8; RAP share: WoWSims, from Blizzard's notes (no row states it)
   // Rank 8 (gs Oct 21): rank 9 is an Ahn'Qiraj book, and raids open on 9 December. RAP: 3 % a tick (both sims since Oct 28).

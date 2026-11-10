@@ -6,7 +6,7 @@
 // Usage: node tools/gear_sheets.mjs
 import fs from 'node:fs';
 
-const COMMIT = '2547239a5920c90d6ca291bfddd9b0522dbc7a86';
+const COMMIT = '9216929148d869d0ddd930ecb380aa94a36fc19e';
 const RAW = `https://raw.githubusercontent.com/wowsims/forever/${COMMIT}/`;
 const SPECS = 'ui/specs/';
 
@@ -231,7 +231,8 @@ function compute(id, cls, raceId, gear, opts) {
       dodge: round1((c.dodge ?? 0) + (r.dodge ?? 0) + agi * dodgePerAgi(c, cls) + g('dodge') / RATING.dodge + defenseShare),
       parry: cat ? 0 : round1(5 + g('parry') / RATING.parry + defenseShare),
       block: shield ? round1(5 + g('block') / RATING.block + defenseShare) : 0,
-      blockValue: shield ? Math.round(g('bv') + str * 0.05) : 0,
+      // The sheet floors it, one below (WoWSims #906, from logs).
+      blockValue: shield ? Math.floor(g('bv') + str * 0.05 - 1) : 0,
     };
   }
   const options = c.mana ? { mana: c.mana - 280 + int * 15, spirit, mp5: Math.round(g('mp5')) } : {};
