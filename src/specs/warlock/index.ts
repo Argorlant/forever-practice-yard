@@ -49,7 +49,9 @@ function rotationSuggest(c: Combat): string | null {
     return id;
   };
 
-  const doom = ready('baneOfDoom') && afford('baneOfDoom') && !c.aura(t, 'baneOfDoom');
+  // The Wrack list keeps Bane of Agony on one target, which the channel speeds up, and Doom for more (WoWSims, Nov 12).
+  const doomList = rotation !== 'wrack' || c.targets.filter((u) => u.health > 0).length > 1;
+  const doom = doomList && ready('baneOfDoom') && afford('baneOfDoom') && !c.aura(t, 'baneOfDoom');
   if (doom) return 'baneOfDoom';
   if (rotation === 'wrack') {
     const bane = !baneOn(c, t) ? agony() : null;
@@ -191,7 +193,7 @@ export const warlockAffliction: Spec = specFor('affliction', {
   help: `${CONTROLS}
     ${PET_HELP}
     ${HELP_COMMON}
-    Affliction in WoW Forever: Pandemic makes your DoTs and drains crit for 2.0x, Malevolence adds Shadow crit; Shadow Mastery gives +2% Shadow damage a point since Oct 15 (Malediction's slot is now Grim Reach, range only). Nightfall gives each Corruption and Drain Life tick a chance for Shadow Trance (instant Shadow Bolt). Improved Shadow Bolt is personal: a Shadow Bolt crit gives +20% to your Shadow damage for 12 sec. Amplify Curse only helps Bane of Agony. Wrack is on the bar; no sim casts it yet.
+    Affliction in WoW Forever: Pandemic makes your DoTs and drains crit for 2.0x, Malevolence adds Shadow crit; Shadow Mastery gives +2% Shadow damage a point since Oct 15 (Malediction's slot is now Grim Reach, range only). Nightfall gives each Corruption and Drain Life tick a chance for Shadow Trance (instant Shadow Bolt). Improved Shadow Bolt is personal: a Shadow Bolt crit gives +20% to your Shadow damage for 12 sec. Amplify Curse only helps Bane of Agony. Wrack, a 6 sec channel, makes your Corruption, Siphon Life and Bane of Agony on the target tick twice as fast while it runs.
     This is a practice tool: hit, crit and proc chances follow WoW Forever; damage numbers are an approximation.`,
   look: { clothColor: 0x4a2a6a, leatherColor: 0x2a1a30, hood: true, robe: true },
 });

@@ -1,11 +1,10 @@
 {
  "warrior-fury": {
   "stats": {
-   "attackPower": 708,
-   "crit": 17.5,
-   "hit": 9.9,
-   "spellCrit": 5,
-   "expertise": 1.1,
+   "attackPower": 682,
+   "crit": 19.5,
+   "hit": 12.4,
+   "spellCrit": 9,
    "mainHand": {
     "name": "Persuader",
     "type": "mace",
@@ -26,10 +25,9 @@
  "warrior-arms": {
   "stats": {
    "attackPower": 772,
-   "crit": 17.7,
-   "hit": 6.9,
-   "spellCrit": 5,
-   "expertise": 1.1,
+   "crit": 20,
+   "hit": 8,
+   "spellCrit": 9,
    "mainHand": {
     "name": "Premier High Warlord's Greatsword",
     "type": "sword",

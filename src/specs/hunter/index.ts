@@ -166,8 +166,8 @@ function bmSuggest(c: Combat): string | null {
   if (p.inCombat && ready('rapidFire')) return 'rapidFire';
   if (p.inCombat && tl.intimidation && ready('intimidation') && mana > 0.5) return 'intimidation';
   if (!c.aura(t, 'serpentSting') && afford('serpentSting')) return 'serpentSting';
-  // WoWSims Forever's Beast Mastery list dropped the hawks with the November shot buffs; BM Weave keeps them.
-  const hawkNext = tl.summonHawk && c.options.build !== 'bm' && (c.counters.hawksInARow ?? 0) < 2;
+  // Hawk, hawk, Arcane Shot: WoWSims Forever's Beast Mastery lists keep the hawks since the Nov 10 hotfix.
+  const hawkNext = tl.summonHawk && (c.counters.hawksInARow ?? 0) < 2;
   if (hawkNext && ready('summonHawk') && afford('summonHawk')) return 'summonHawk';
   if (!hawkNext && ready('arcaneShot') && afford('arcaneShot')) return 'arcaneShot';
   if (weaveAdvised(c)) {

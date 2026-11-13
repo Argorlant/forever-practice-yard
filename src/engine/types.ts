@@ -83,7 +83,11 @@ export interface Aura {
   value?: number;
   period?: number;
   nextTick?: number;
+  /** When the first tick lands, if not one period in (Searing Totem: its first attack at 2.2 s, then one every 2.425 s). */
+  firstTick?: number;
   onTick?: (c: Combat, a: Aura) => void;
+  /** When Combat.setTickPeriod last re-timed it, so a channel recast at that instant does not tick the same point twice. */
+  retimedAt?: number;
   onRemove?: (c: Combat, a: Aura, expired: boolean) => void;
   /** Armor removed from the target while active. */
   armor?: number;
@@ -266,6 +270,8 @@ export interface Ability {
     ticks: number;
     onTick: (c: Combat, t: Unit | null, tick: number) => void;
     onStart?: (c: Combat, t: Unit | null) => boolean;
+    /** When the channel ends, its ticks done or cut short (Wrack puts the DoTs it sped up back on their period). */
+    onEnd?: (c: Combat, t: Unit | null) => void;
     tickAtStart?: boolean;
     hasted?: boolean;
   };

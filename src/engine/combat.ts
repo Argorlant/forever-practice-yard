@@ -207,7 +207,7 @@ export class Combat {
   /** The cast in progress (Slam). */
   casting: { id: string; start: number; end: number; ev: Scheduled } | null = null;
   /** The channel in progress (Mind Flay): ticks left and their events. */
-  channeling: { id: string; start: number; end: number; ticks: number; done: number; events: Scheduled[] } | null = null;
+  channeling: { id: string; start: number; end: number; ticks: number; done: number; events: Scheduled[]; onEnd?: () => void } | null = null;
   /** Incoming swings from the attacking dummy (tank practice). */
   enemyAttacks = { on: false, speed: 2, damage: 3000, ap: 805, healing: 1500 };
   /** Who swings at you: an encounter's boss, whatever you target; null for your target (the dummy). */
@@ -247,6 +247,7 @@ export class Combat {
   /** True while the Windfury Totem's extra swing lands (procs that this swing does not bring). */
   windfurySwing = false;
   private lastWindfury = -Infinity;
+  private lastWindfuryWeapon = -Infinity;
   /** Runs for every swing of the attacking dummy (rage from damage, Revenge…). Rebuilt on prepare. */
   onIncoming: Array<(i: Incoming) => void> = [];
   /** Cost paid for the ability being used, for refunds. */
@@ -416,6 +417,7 @@ export class Combat {
     this.spec.prepare(this);
     this.mod.expertise += this.stats.expertise ?? 0;
     this.lastWindfury = -Infinity;
+    this.lastWindfuryWeapon = -Infinity;
     this.applyRaid();
     // prepare sets the cap (e.g. Vigor). Energy starts full, rage empty.
     this.player.resource = this.spec.resource === 'rage' ? 0 : this.player.maxResource;
@@ -733,7 +735,7 @@ export class Combat {
     if (ch.onStart && !ch.onStart(this, u)) return;
     // Ticks spread evenly; with tickAtStart the first one lands at once (Penance: 0, 1, 2 s).
     const step = ch.tickAtStart ? duration / Math.max(1, ch.ticks - 1) : duration / ch.ticks;
-    const channel = { id: a.id, start: this.t, end: this.t + duration, ticks: ch.ticks, done: 0, events: [] as Scheduled[] };
+    const channel = { id: a.id, start: this.t, end: this.t + duration, ticks: ch.ticks, done: 0, events: [] as Scheduled[], onEnd: ch.onEnd && (() => ch.onEnd!(this, u)) };
     this.channeling = channel;
     for (let i = 1; i <= ch.ticks; i++) {
       const at = this.t + step * (ch.tickAtStart ? i - 1 : i);
@@ -742,7 +744,7 @@ export class Combat {
         channel.done = i;
         if (u && u.health <= 0) { this.stopChannel(); return; }
         ch.onTick(this, u, i);
-        if (i === ch.ticks) { this.channeling = null; this.emit('cast', { id: a.id, done: true }); }
+        if (i === ch.ticks) { this.channeling = null; channel.onEnd?.(); this.emit('cast', { id: a.id, done: true }); }
       }));
     }
     this.emit('cast', { id: a.id, done: false });
@@ -754,6 +756,7 @@ export class Combat {
     if (!ch) return;
     for (const ev of ch.events) ev.cancel();
     this.channeling = null;
+    ch.onEnd?.();
     if (ch.done < ch.ticks) this.count(`clipped:${ch.id}`);
     this.emit('cast', { id: ch.id, done: true });
     if (reason) this.emit('error', reason);
@@ -797,20 +800,48 @@ export class Combat {
     if (Number.isFinite(aura.end)) {
       this.expirations.set(aura, this.schedule(aura.end, () => this.removeAura(u, aura.id, true)));
     }
-    if (aura.period && aura.onTick) this.scheduleTick(u, aura);
+    if (aura.period && aura.onTick) this.scheduleTick(u, aura, aura.firstTick);
     if (u === this.player) this.rescaleSwings(hasteBefore);
     return aura;
   }
 
-  private scheduleTick(u: Unit | Player, aura: Aura): void {
-    aura.nextTick = this.t + aura.period!;
+  private scheduleTick(u: Unit | Player, aura: Aura, after = aura.period!): void {
+    this.tickAt(u, aura, this.t + after);
+  }
+
+  private tickAt(u: Unit | Player, aura: Aura, due: number): void {
+    aura.nextTick = due;
     // A tick that lands exactly on the expiry still happens (see removeAura).
-    if (aura.nextTick > aura.end + 1e-6) return;
-    this.ticks.set(aura, this.schedule(aura.nextTick, () => {
+    if (due > aura.end + 1e-6) return;
+    this.ticks.set(aura, this.schedule(due, () => {
       if (u.auras.get(aura.id) !== aura) return;
       aura.onTick!(this, aura);
       this.scheduleTick(u, aura);
     }));
+  }
+
+  /**
+   * Ticks a running periodic aura every `period` from now on, on the grid that ends at its expiry (Wrack, as WoWSims'
+   * retimeOnGrid): a period that divides the normal one keeps the normal ticks and adds the points between, and the
+   * normal period puts it back on them. Every tick is full. A point only the new period has that falls now ticks at
+   * once, unless the aura was re-timed at this instant already; a tick due now deals here.
+   */
+  setTickPeriod(u: Unit | Player, id: string, period: number): void {
+    const a = u.auras.get(id);
+    if (!a?.period || !a.onTick || Math.abs(period - a.period) < 1e-9) return;
+    const left = a.end - this.t;
+    if (left < 1e-6) return;
+    const onGrid = (x: number, p: number) => Math.abs(x / p - Math.round(x / p)) < 1e-6;
+    const again = a.retimedAt !== undefined && Math.abs(a.retimedAt - this.t) < 1e-6;
+    a.retimedAt = this.t;
+    const dueNow = a.nextTick !== undefined && Math.abs(a.nextTick - this.t) < 1e-6;
+    const tickNow = dueNow || (onGrid(left, period) && !onGrid(left, a.period) && !again);
+    a.period = period;
+    this.ticks.get(a)?.cancel();
+    this.ticks.delete(a);
+    const count = Math.ceil(left / period - 1e-6);
+    this.tickAt(u, a, this.t + left - (count - 1) * period);
+    if (tickNow) a.onTick(this, a);
   }
 
   private cancelAuraEvents(a: Aura): void {
@@ -846,6 +877,11 @@ export class Combat {
     a.end = end;
     a.duration = end - a.start;
     this.expirations.set(a, this.schedule(a.end, () => this.removeAura(u, a.id, true)));
+    // A periodic aura keeps its tick grid up to the new end (a Lacerate dose).
+    if (a.period && a.onTick && a.nextTick !== undefined && a.nextTick >= this.t - 1e-9) {
+      this.ticks.get(a)?.cancel();
+      this.tickAt(u, a, a.nextTick);
+    }
   }
 
   // ---------------------------------------------------------------- stealth
@@ -1326,14 +1362,12 @@ export class Combat {
   private windfuryCheck(h: Hit): void {
     if ((h.hand ?? 'main') !== 'main' || h.ranged || h.periodic || this.bonusAp) return;
     const weapon = this.mod.windfuryWeapon;
-    // The totem rolls off main-hand swings and the abilities whose row needs the main hand or replaces the next swing.
-    if (!weapon && !h.white && !WINDFURY_TOTEM_FROM.has(h.source)) return;
-    if (!weapon && ![...this.player.auras.values()].some((a) => a.windfury)) return;
-    if (this.t - this.lastWindfury < WINDFURY.icd || this.random() * 100 >= WINDFURY.chance) return;
-    this.lastWindfury = this.t;
-    this.count('windfury');
-    this.emit('note', { text: 'Windfury!', kind: 'proc' });
-    if (weapon) {
+    // Windfury Weapon and Windfury Totem each roll on their own since build 70888 (WoWSims): the imbue no longer turns the totem off.
+    if (weapon && this.t - this.lastWindfuryWeapon >= WINDFURY.icd && this.random() * 100 < WINDFURY.chance) {
+      this.lastWindfuryWeapon = this.t;
+      this.count('windfury');
+      this.count('windfuryWeapon');
+      this.emit('note', { text: 'Windfury!', kind: 'proc' });
       // gs: two attacks on the special table (no glancing) that keep the swing timer.
       this.bonusAp = weapon.ap;
       for (let i = 0; i < 2; i++) {
@@ -1342,8 +1376,14 @@ export class Combat {
         this.deal({ target: h.target, source: weapon.source, outcome, school: 'physical', amount, white: false, hand: 'main', weaponStrike: true });
       }
       this.bonusAp = 0;
-      return;
     }
+    // The totem rolls off main-hand swings and the abilities whose row needs the main hand or replaces the next swing.
+    if (!h.white && !WINDFURY_TOTEM_FROM.has(h.source)) return;
+    if (![...this.player.auras.values()].some((a) => a.windfury)) return;
+    if (this.t - this.lastWindfury < WINDFURY.icd || this.random() * 100 >= WINDFURY.chance) return;
+    this.lastWindfury = this.t;
+    this.count('windfury');
+    this.emit('note', { text: 'Windfury!', kind: 'proc' });
     this.bonusAp = WINDFURY.ap;
     this.windfurySwing = true;
     this.extraAttack(h.target);

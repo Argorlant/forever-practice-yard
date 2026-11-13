@@ -109,8 +109,8 @@ function enhancementSuggest(c: Combat): string | null {
   if (!t || t.health <= 0) return null;
   const tl = T(c);
   const { p, can } = ctx(c);
-  // WoWSims Forever's Enhancement lists. With Flametongue and no raid Windfury Totem, your own Windfury Totem.
-  const ownWindfury = imbue(c) !== 'windfury' && !c.raid.has('windfury');
+  // WoWSims Forever's Enhancement lists. With no raid Windfury Totem, your own: Windfury Weapon no longer turns it off.
+  const ownWindfury = !c.raid.has('windfury');
   const totem = totems(c, [...(ownWindfury ? ['windfuryTotem'] : []), 'strengthOfEarthTotem', 'manaSpringTotem', 'magmaTotem']);
   if (totem) return totem;
   const close = c.inRange(t);

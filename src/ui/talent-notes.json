@@ -1034,7 +1034,7 @@
    },
    "wrack": {
     "new": true,
-    "change": "New: 86 damage per second at level 60, coefficient doubled in November."
+    "change": "New: 60 damage per second at level 60. Since build 70888 it makes your Corruption, Siphon Life and Bane of Agony tick twice as fast in place of 10% more damage."
    },
    "improvedHealthFunnel": {
     "change": "Row 1; usable at any demon health."

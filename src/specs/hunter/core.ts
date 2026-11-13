@@ -162,7 +162,7 @@ function petSwing(c: Combat): void {
   s.petSwing = c.schedule(s.petNext, () => petSwing(c));
 }
 
-/** The pet's mind, every 0.1 s: Focus, and once it reached its target, Bite on cooldown and Claw with spare Focus. */
+/** The pet's mind, every 0.1 s: Focus, and once it reached its target, Bite on cooldown and Claw with the Focus there is. */
 function petThink(c: Combat): void {
   const s = state(c);
   const P = D.pet;
@@ -177,8 +177,8 @@ function petThink(c: Combat): void {
   }
   if (!s.petSwing) s.petSwing = c.schedule(Math.max(c.t, s.petNext), () => petSwing(c));
   if (c.t - s.lastPetAction < P.actionInterval) return;
-  if (c.t >= s.biteReady) {
-    if (s.focus < P.bite.focus) return; // wait for Bite
+  // Autocast never waits: a Bite short of Focus passes to Claw (WoWSims, from logs).
+  if (c.t >= s.biteReady && s.focus >= P.bite.focus) {
     s.focus -= P.bite.focus;
     s.biteReady = c.t + P.bite.cooldown;
     s.lastPetAction = c.t;
@@ -204,10 +204,13 @@ function hawkHit(c: Combat, u: Unit, base: number, source: string): void {
   const amount = Math.max(1, Math.round(base * hawkMult(c) * (crit ? c.rules.critMultiplier : 1) * (1 - c.armorReduction(u))));
   c.deal({ target: u, source, outcome: crit ? 'crit' : 'hit', school: 'physical', amount, white: false });
 }
-/** A hawk's swing: its own damage plus 80 % of your RAP, on the white melee table with your hit. */
+/** A hawk's swing: its own damage plus 80 % of your RAP and what the bow adds to it, on the white melee table with your hit. */
 function hawkSwing(c: Combat, u: Unit): void {
   const h = D.summonHawk;
-  const base = between(c, h.swingMin, h.swingMax) + ((h.apShare * c.rangedAttackPower(u)) / h.apPerDps) * h.swing;
+  const bow = c.stats.ranged;
+  const bowDps = bow ? (bow.min + bow.max) / 2 / bow.speed : 0;
+  const ap = h.apShare * (c.rangedAttackPower(u) + h.weaponAp + h.weaponApPerDps * bowDps);
+  const base = between(c, h.swingMin, h.swingMax) + (ap / h.apPerDps) * h.swing;
   let x = c.random() * 100;
   let outcome: Outcome = 'hit';
   if ((x -= Math.max(0, c.rules.specialMiss - c.totalHit())) < 0) outcome = 'miss';

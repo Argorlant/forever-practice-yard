@@ -41,7 +41,7 @@ export const DATA = {
   curseOfTheElements: { mana: 200, duration: 300 },
   siphonLife: { mana: 365, ticks: 10, period: 3, tick: 41, coeff: 0.05 },
   drainLife: { mana: 300, duration: 5, ticks: 5, tick: 51, coeff: 0.1 },
-  wrack: { mana: 200, duration: 6, ticks: 6, tick: 86, coeff: 0.286, bonus: 0.1 },   // November: 36 + 2.5 per level, coefficient doubled
+  wrack: { mana: 200, duration: 6, ticks: 6, tick: 60.2, coeff: 0.2002, speedup: 1 },   // build 70888: 25.2 + 1.75 per level; the DoTs tick 100% faster
   searingPain: { mana: 168, cast: 1.5, min: 107, max: 126, coeff: 0.429 },
   soulFire: { mana: 335, cast: 6, cooldown: 60, min: 390, max: 487, coeff: 1 },
   incinerate: { mana: 325, cast: 2.5, min: 201, max: 233, coeff: 0.714, immolateBonus: 0.25 },

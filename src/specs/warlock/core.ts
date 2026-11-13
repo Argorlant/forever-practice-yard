@@ -88,7 +88,6 @@ function damageMult(c: Combat, t: Unit, id: string, school: School, _periodic: b
   if (DESTRUCTION.includes(id)) m *= 1 + [0, 0.03, 0.07, 0.1][tl.agonizingFlames];
   if (id === 'corruption') m *= 1 + 0.02 * tl.improvedCorruption;
   if (id === 'drainLife') m *= 1 + [0, 0.07, 0.13, 0.2][tl.improvedDrains];
-  if ((id === 'corruption' || id === 'baneOfAgony') && c.channeling?.id === 'wrack') m *= 1 + D.wrack.bonus;
   if (c.aura(p, 'soulLink')) m *= D.soulLink;
   return m;
 }
@@ -106,7 +105,7 @@ function directSpell(c: Combat, t: Unit, id: string, school: School, base: numbe
 }
 
 /** A DoT: hit rolled when applied, ticks crit and use your current stats; Nightfall can proc from Corruption ticks. */
-function dot(c: Combat, t: Unit, id: string, name: string, school: School, ticks: number, period: number, perTick: (cc: Combat, n: number) => number,
+function dot(c: Combat, t: Unit, id: string, name: string, school: School, ticks: number, period: number, perTick: (cc: Combat, n: number, a: Aura) => number,
   opts: { heal?: boolean; nightfall?: boolean } = {}): boolean {
   if (roll(c, Math.max(0, D.spellMiss - c.totalHit()))) {
     c.deal({ target: t, source: id, outcome: 'resist', school, amount: 0, white: false });
@@ -115,10 +114,10 @@ function dot(c: Combat, t: Unit, id: string, name: string, school: School, ticks
   let n = 0;
   c.applyAura(t, {
     id, name, icon: id, duration: ticks * period, period, bleed: false,
-    onTick: (cc) => {
+    onTick: (cc, a) => {
       n++;
       const crit = roll(cc, critChance(cc, id, school));
-      const amount = Math.max(1, Math.round(perTick(cc, n) * damageMult(cc, t, id, school, true) * (crit ? critMultiplier(cc, id) : 1)
+      const amount = Math.max(1, Math.round(perTick(cc, n, a) * damageMult(cc, t, id, school, true) * (crit ? critMultiplier(cc, id) : 1)
        ));
       cc.deal({ target: t, source: id, outcome: crit ? 'crit' : 'hit', school, amount, white: false, periodic: true });
       if (opts.heal) healPlayer(cc, amount);
@@ -126,6 +125,15 @@ function dot(c: Combat, t: Unit, id: string, name: string, school: School, ticks
     },
   });
   return true;
+}
+
+/**
+ * Wrack's channel: the warlock's Corruption, Siphon Life and Bane of Agony on its target tick `speed` times as often, on their
+ * own grid: the normal ticks stay and the half points between tick too, from the channel's start to its end (1 puts them back).
+ */
+function wrackSpeed(c: Combat, t: Unit | null, speed: number): void {
+  if (!t) return;
+  for (const id of ['corruption', 'siphonLife', 'baneOfAgony'] as const) c.setTickPeriod(t, id, D[id].period / speed);
 }
 
 /** Nightfall: 2 % per point per tick of Corruption, Drain Life and Wrack for an instant Shadow Bolt. */
@@ -303,7 +311,7 @@ export const ABILITIES: Ability[] = [
   spell({
     id: 'baneOfAgony', name: 'Bane of Agony', icon: 'baneOfAgony',
     cost: cost('baneOfAgony', D.baneOfAgony.mana),
-    description: () => `${D.baneOfAgony.ticks} ticks over ${D.baneOfAgony.ticks * D.baneOfAgony.period} sec that grow stronger. A Bane: one per target (Agony or Doom). Amplify Curse adds 50%.`,
+    description: () => `${D.baneOfAgony.ticks} ticks over ${D.baneOfAgony.ticks * D.baneOfAgony.period} sec that grow stronger each third of it. A Bane: one per target (Agony or Doom). Amplify Curse adds 50%.`,
     use: (c, t) => {
       const u = t!;
       const a = D.baneOfAgony;
@@ -311,7 +319,9 @@ export const ABILITIES: Ability[] = [
       c.removeAura(c.player, 'amplifyCurse');
       const improved = 1 + 0.05 * T(c).improvedBaneOfAgony;
       bane(c, u, 'baneOfAgony');
-      dot(c, u, 'baneOfAgony', 'Bane of Agony', 'shadow', a.ticks, a.period, (cc, n) => (a.blocks[Math.min(2, Math.floor((n - 1) / 4))] * improved + a.coeff * cc.spellPowerFor('shadow')) * amp);
+      // The base ramps by the third of the duration the tick lands in, so Wrack's faster ticks reach the stronger thirds sooner.
+      const third = (cc: Combat, x: Aura) => { const run = 3 * (cc.t - x.start), length = x.end - x.start; return run <= length + 1e-6 ? 0 : run <= 2 * length + 1e-6 ? 1 : 2; };
+      dot(c, u, 'baneOfAgony', 'Bane of Agony', 'shadow', a.ticks, a.period, (cc, _n, x) => (a.blocks[third(cc, x)] * improved + a.coeff * cc.spellPowerFor('shadow')) * amp);
     },
   }),
   spell({
@@ -376,11 +386,13 @@ export const ABILITIES: Ability[] = [
       id: 'wrack', name: 'Wrack', icon: 'wrack',
       cost: () => D.wrack.mana,
       ...talent('wrack', 'Wrack'),
-      description: () => `A ${D.wrack.duration} sec channel: ${D.wrack.ticks} ticks of ${D.wrack.tick} Shadow damage plus spell power; your Corruption and Bane of Agony deal ${D.wrack.bonus * 100}% more while it runs. No sim casts it yet.`,
+      description: () => `A ${D.wrack.duration} sec channel: ${D.wrack.ticks} ticks of ${Math.round(D.wrack.tick)} Shadow damage plus spell power. While it runs, your Corruption, Siphon Life and Bane of Agony on the target tick ${D.wrack.speedup * 100}% faster and still end when they would, so they deal more ticks.`,
       use: () => {},
     }),
     channel: {
       duration: D.wrack.duration, ticks: D.wrack.ticks,
+      onStart: (c, t) => { wrackSpeed(c, t, 1 + D.wrack.speedup); return true; },
+      onEnd: (c, t) => wrackSpeed(c, t, 1),
       onTick: (c, t) => {
         const u = t!;
         const crit = roll(c, critChance(c, 'wrack', 'shadow'));

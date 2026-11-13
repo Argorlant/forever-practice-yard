@@ -201,7 +201,8 @@ const abilities: Ability[] = [
       }
       c.applyAura(u, { id: 'pounceStun', name: 'Pounce', icon: 'pounce', duration: D.pounce.stun });
       const ap = c.attackPower();
-      bleed(c, u, 'pounce', 'Pounce', D.pounce.ticks, D.pounce.period, () => D.pounce.total / D.pounce.ticks + D.pounce.apTick * ap, { genesis: T(c).genesis });
+      // Rend and Tear raises the ticks; Genesis does not reach the bleed, whose flags lie outside it (WoWSims).
+      bleed(c, u, 'pounce', 'Pounce', D.pounce.ticks, D.pounce.period, () => D.pounce.total / D.pounce.ticks + D.pounce.apTick * ap);
       c.addComboPoints(u, 1);
     },
   },

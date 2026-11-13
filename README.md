@@ -17,7 +17,7 @@ and Paladin trees (and moved or renamed a Hunter and a Priest talent); the site'
 from Wowhead's WoW Forever calculator (`tools/wowhead_trees.mjs`, data in `research/wowhead/`), and they match WoWSims
 Forever's talent order. The hotfixes of early November changed the Warrior, Shaman and Rogue trees again; those follow WoWSims
 Forever (`tools/wowsims_trees.mjs`), with its numbers and rotations for Warrior, Shaman, Hunter, Rogue and Warlock, and
-Druid's new numbers, its attack power scaling and the bear's threat (WoWSims at `9216929`, with its measurements from Forever combat logs). Builds marked **community** have no equivalent there: they come from older sims, re-spent where the
+Druid's new numbers, its attack power scaling and the bear's threat (WoWSims at `e855db5`, with its measurements from Forever combat logs). Builds marked **community** have no equivalent there: they come from older sims, re-spent where the
 trees changed, and stay for whoever practises them.
 > **Speculative, built on the sims.** This site was made before WoW Forever's launch on 4 November 2026. The talents,
 > builds, rotations and numbers here follow the community sims ([WoWSims Forever](https://www.wowsims.com/forever/), our main source; the

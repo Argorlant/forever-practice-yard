@@ -57,7 +57,7 @@ export const DATA = {
   refund: 0.8,                 // provisional: an avoided shot refunds 80 % of its mana
   aimedShot: { mana: 310, cast: 2, cooldown: 6, bonus: 359 },   // +9 a hit, as Multi-Shot (WoWSims, from logs)
   multiShot: { mana: Math.round(BASE_MANA * 0.139), cast: 0, cooldown: 6, targets: 3 },   // instant since client 70425 (gs; testers fire it on the move)
-  arcaneShot: { mana: 190, cooldown: 6, damage: 280, rap: 0.15 },          // rank 8; RAP share: WoWSims, from Blizzard's notes (no row states it)
+  arcaneShot: { mana: Math.round(BASE_MANA * 0.11), cooldown: 6, damage: 280, rap: 0.15 },          // rank 8; RAP share: WoWSims, from Blizzard's notes (no row states it)
   // Rank 8 (gs Oct 21): rank 9 is an Ahn'Qiraj book, and raids open on 9 December. RAP: 3 % a tick (both sims since Oct 28).
   serpentSting: { mana: 230, ticks: 5, period: 3, tick: 100, rap: 0.05 },
   sniperShot: { mana: 365, cast: 4, cooldown: 15, bonus: 590, range: 45 },
@@ -70,7 +70,10 @@ export const DATA = {
   intimidation: { mana: Math.round(BASE_MANA * 0.08), cooldown: 60, window: 15 },
   // Hawks from combat logs (gs Oct 27): 80 % of your RAP as attack power (128.8 per DPS), a swing of 7.1-14.3 before Unleashed
   // Fury, half your crit plus Ferocity's, your hit, on the white melee table.
-  summonHawk: { mana: 190, cooldown: 6, dive: 108, diveRap: 0.05, duration: 18, max: 2, swing: 2.5, swingMin: 7.14, swingMax: 14.28, apShare: 0.8, apPerDps: 128.8, critShare: 0.5 },
+  // Since the Nov 10 hotfix (WoWSims, from level 48 logs): 80% of your ranged attack power plus 7 and 14 a point of the
+  // bow's dps; a swing of 0.185 of the creature dps over 2.5 sec, 22% either side, 60 attack power a point of dps, both
+  // before Unleashed Fury 5/5 and Focused Fire 2/2. Arcane Shot and Summon Hawk cost 11% of base mana (build 70888).
+  summonHawk: { mana: Math.round(BASE_MANA * 0.11), cooldown: 6, dive: 108, diveRap: 0.05, duration: 18, max: 2, swing: 2.5, swingMin: 18.59, swingMax: 29.08, apShare: 0.8, weaponAp: 7, weaponApPerDps: 14, apPerDps: 70.38, critShare: 0.5 },
   raptorStrike: { mana: 100, cooldown: 6, bonus: 70 },
   mongooseBite: { mana: 65, cooldown: 5, bonus: 57, window: 10, dodgeWindow: 5 },
   striderKick: { mana: Math.round(BASE_MANA * 0.0581), cooldown: 8 },

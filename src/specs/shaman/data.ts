@@ -57,7 +57,7 @@ export const DATA = {
   flameShock: { mana: 410, direct: 292, coeff: 0.214, tick: 80, tickCoeff: 0.1, ticks: 4, period: 3, range: 20 },
   frostShock: { mana: 430, min: 495, max: 524, coeff: 0.386, range: 20 },
   // Oct 15: 8% of base mana (1520 at 60, gs base_stats.go), was 125. Hotfix of November: 150% of normalized weapon damage, 6 s.
-  stormstrike: { mana: 121, cooldown: 6, weapon: 1.5, bonus: 0.2, duration: 12 },
+  stormstrike: { mana: 121, cooldown: 8, weapon: 1, bonus: 0.2, duration: 12 },   // hotfix push 114027: 100% weapon damage, 8 sec
   // Oct 15: rank 5 much weaker and cheaper (gs fire_totems.go: 232-258, 375 mana, coefficient 0.143; was 397-443, 520, 0.214).
   fireNova: { mana: 375, cooldown: 10, min: 232, max: 258, coeff: 0.143, radius: 10 },
   lightningShield: { mana: 370, orbs: 3, damage: 178, coeff: 0.267, icd: 3.5, duration: 600 },
@@ -65,7 +65,7 @@ export const DATA = {
   windfuryWeapon: { ap: 333 },                       // 20 %, 1.5 s cooldown (engine/raid.ts WINDFURY)
   flametongueWeapon: { perSpeed: 28.1, coeff: 0.1 },
   rockbiterWeapon: { ap: 653, threat: 72 },
-  searingTotem: { mana: 170, duration: 55, period: 2.5, min: 40, max: 54, coeff: 0.017, range: 20 },   // gs 2.5 s, fs 2.2 s
+  searingTotem: { mana: 170, duration: 55, first: 2.2, period: 2.425, min: 40, max: 54, coeff: 0.017, range: 20 },   // its 2.2 s cast, then 0.225 s between casts (WoWSims, from logs)
   magmaTotem: { mana: 650, duration: 20, period: 2, damage: 73, coeff: 0.033, radius: 8 },
   windfuryTotem: { mana: 250, duration: 300 },
   graceOfAirTotem: { mana: 250, duration: 300, crit: 77 / 19.7 },   // rank 2, +77 Agility (rank 3 is an Ahn'Qiraj book)
@@ -78,7 +78,7 @@ export const DATA = {
   // 15 s of Lightning Bolt 0.5 s faster and Chain Lightning off cooldown; 3 min.
   elementalMastery: { cooldown: 180, duration: 15, castCut: 0.5 },
   // Blizzard's notes double the chance and no row states it, so WoWSims doubles its measured 10 per minute.
-  maelstromWeapon: { ppm: 20, max: 5, duration: 30 },
+  maelstromWeapon: { ppm: [6, 7, 8, 9, 10], cut: 0.2, max: 5, duration: 30 },   // the talent's own rate a minute and 20% a stack at every rank (build 70888)
   flurry: { charges: 3, duration: 15, haste: 0.06 },   // per point
   mentalDexterity: [0, 0.5, 1, 1.5],                   // Intellect into attack power, by points
   mentalQuickness: [0, 0.15, 0.3],                     // Intellect into spell power, by points

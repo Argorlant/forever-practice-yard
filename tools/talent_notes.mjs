@@ -30,7 +30,7 @@ function clean(note, row) {
 // What the hotfixes of November changed since the research sheets were written (WoWSims Forever's spell table).
 const NOVEMBER = {
   warlock: {
-    wrack: 'New: 86 damage per second at level 60, coefficient doubled in November.',
+    wrack: 'New: 60 damage per second at level 60. Since build 70888 it makes your Corruption, Siphon Life and Bane of Agony tick twice as fast in place of 10% more damage.',
     shadowAndFlame: 'Conflagrate: more Shadow, Shadowburn: more Fire, 4-20%, for 20 s; 20-100% to keep Immolate or refund the Soul Shard.',
     improvedDrains: 'No longer raises Wrack; raises Drain Mana instead.',
   },

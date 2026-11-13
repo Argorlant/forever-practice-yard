@@ -81,7 +81,7 @@ export const DATA = {
   bearCritFactor: 2,                   // +100 % since 8 Oct
   maul: { cost: 15, bonus: 128, threat: 1.75 },
   primalBite: { cost: 20, cooldown: 6, bonus: 77, threat: 3 },
-  lacerate: { cost: 15, tick: 15, period: 3, duration: 15, stacks: 5, hitPerStack: 0.1, threat: 3.33 },
+  lacerate: { cost: 15, tick: 15, period: 3, duration: 15, stacks: 5, hitPerStack: 0.1, threat: 10 / 3 },   // hit and ticks (WoWSims, from logs)
   swipe: { cost: 20, base: 83, apRatio: 0.03, targets: 3, threat: 1.75 },
   demoralizingRoar: { cost: 10, apReduction: 204, duration: 30, threat: 100 },
   enrage: { now: 10, perSecond: 2, duration: 10, cooldown: 60 },

@@ -549,7 +549,8 @@ for (const sp of [hunterMm, hunterBm, hunterSv]) {
   const claws = (rows.get('petClaw')?.hits ?? 0) + (rows.get('petClaw')?.misses ?? 0);
   const pet = ['petMelee', 'petClaw', 'petBite', 'hawk', 'hawkDive'].reduce((a, id) => a + (rows.get(id)?.total ?? 0), 0);
   console.log(`BM with locked mana: ${r.c.dps().toFixed(0)} DPS, pet and hawks ${((pet / r.c.meter.total) * 100).toFixed(0)}%, ${bites} Bites and ${claws} Claws in 5 min`);
-  if (bites < 25 || bites > 31) failures.push(`pet used Bite ${bites} times in 5 min, expected about 29`);
+  // Autocast never waits for Bite's Focus (WoWSims, from logs): Claw takes the Focus as it comes, about one every 2.5 sec.
+  if (bites > 10 || claws < 110) failures.push(`pet used ${bites} Bites and ${claws} Claws in 5 min, expected Claw about every 2.5 sec`);
   if (claws < 60) failures.push(`pet used Claw only ${claws} times in 5 min`);
 }
 // Melee weaving: a scripted hunter follows the cues (step in, Raptor Strike, step out) at running speed.
@@ -842,7 +843,7 @@ for (const sp of [mageArcane, mageFire, mageFrost]) {
 console.log('Warlock builds (5 min, own gear, priority list, default raid buffs):');
 const WARLOCK_MUST_USE: Record<string, string[]> = {
   affliction: ['shadowBolt', 'corruption', 'immolate', 'baneOfDoom', 'curseOfTheElements', 'lifeTap'],
-  'affliction-deep': ['corruption', 'siphonLife', 'baneOfDoom', 'wrack', 'lifeTap'],
+  'affliction-deep': ['corruption', 'siphonLife', 'baneOfAgony', 'amplifyCurse', 'wrack', 'lifeTap'],
   'pact-fire': ['searingPain', 'corruption', 'immolate', 'baneOfDoom', 'lifeTap'],
   pact: ['shadowBolt', 'searingPain', 'corruption', 'immolate', 'baneOfDoom', 'lifeTap'],
   fire: ['incinerate', 'immolate', 'conflagrate', 'shadowburn', 'corruption', 'baneOfDoom', 'lifeTap'],
@@ -931,14 +932,15 @@ for (const sp of [shamanElemental, shamanEnhancement, shamanTank]) {
     if (!(r.c.dps() > 100)) failures.push(`${b.label}: ${r.c.dps().toFixed(0)} DPS`);
   }
 }
-// Enhancement: Windfury Weapon replaces the raid totem, two attacks per proc; Maelstrom bolts; Stormstrike charges get spent.
+// Enhancement: Windfury Weapon, two attacks per proc, rolls beside the raid totem since build 70888; Maelstrom bolts; Stormstrike charges get spent.
 {
   const r = play(shamanEnhancement, { build: 'enhancement', options: { lockMana: true, imbue: 'windfury' }, raid: ['windfury'] });
   const k = r.c.counters;
   const wf = r.c.meter.rows.get('windfuryWeapon');
   const totemSwings = r.c.meter.rows.get('melee_mh');
   console.log(`Enhancement with locked mana: ${r.c.dps().toFixed(0)} DPS, ${k.windfury ?? 0} Windfury procs (${(wf?.hits ?? 0) + (wf?.misses ?? 0)} attacks), ${k.maelstromBolts ?? 0} 5-stack Lightning Bolts, ${k.stormstrikeCharges ?? 0} Stormstrike charges spent and ${k.stormstrikeShocks ?? 0} Earth Shocks with the bonus, ${k.clearcasting ?? 0} Clearcasting`);
-  if ((wf?.hits ?? 0) + (wf?.misses ?? 0) !== 2 * (k.windfury ?? 0)) failures.push('Windfury Weapon did not give two attacks per proc');
+  if ((wf?.hits ?? 0) + (wf?.misses ?? 0) !== 2 * (k.windfuryWeapon ?? 0)) failures.push('Windfury Weapon did not give two attacks per proc');
+  if (!((k.windfury ?? 0) > (k.windfuryWeapon ?? 0))) failures.push('the raid Windfury Totem never procced beside Windfury Weapon');
   if (!(k.windfury > 20)) failures.push('Windfury Weapon barely procced');
   if (!(k.maelstromBolts > 10)) failures.push('Enhancement cast few 5-stack Lightning Bolts');
   // Since Oct 21 Earth Shock takes the bonus without spending the charge: bolts spend it.
@@ -972,7 +974,27 @@ for (const sp of [shamanElemental, shamanEnhancement, shamanTank]) {
   const wrack = play(warlockAffliction, { build: 'affliction-deep', options: { lockMana: true } });
   const wrackRow = wrack.c.meter.rows.get('wrack');
   if (!((wrackRow?.hits ?? 0) > 60)) failures.push(`Wrack ticked ${wrackRow?.hits ?? 0} times in 5 min`);
-  if (!wrack.used.baneOfDoom) failures.push('Affliction with Wrack never used Bane of Doom');
+  if (wrack.used.baneOfDoom || !wrack.used.baneOfAgony || !wrack.used.amplifyCurse) failures.push('Affliction with Wrack did not keep Bane of Agony with Amplify Curse on one target');
+  // Since build 70888 the channel makes Corruption tick twice as fast: more ticks than one every 3 sec.
+  const corruptionTicks = wrack.c.meter.rows.get('corruption')?.hits ?? 0;
+  console.log(`Affliction with Wrack: ${wrackRow?.hits ?? 0} Wrack ticks, ${corruptionTicks} Corruption ticks in 5 min`);
+  if (!(corruptionTicks > 115)) failures.push(`Corruption ticked ${corruptionTicks} times in 5 min under Wrack`);
+  // Re-timing on the DoT's grid (WoWSims' retimeOnGrid): the normal ticks stay, the half points from the start to the
+  // end of the channel tick too, both ends included, and every tick is full.
+  const retime = (changes: [number, number][]) => {
+    const r = play(warlockAffliction, { seconds: 0 });
+    const ticks: [number, number][] = [];
+    r.c.applyAura(r.dummy, { id: 'probe', name: 'Probe', icon: 'corruption', duration: 18, period: 3, onTick: (cc) => ticks.push([cc.t, 1]) });
+    for (let i = 0; i < 400; i++) {
+      for (const [at, period] of changes) if (Math.abs(r.c.t - at) < 1e-6) r.c.setTickPeriod(r.dummy, 'probe', period);
+      r.c.update(0.05);
+    }
+    return ticks;
+  };
+  const sped = retime([[4.5, 1.5], [10.5, 3]]).map(([t]) => t.toFixed(2)).join(' ');
+  if (sped !== '3.00 4.50 6.00 7.50 9.00 10.50 12.00 15.00 18.00') failures.push(`a sped-up DoT ticked at ${sped}`);
+  const late = retime([[16.5, 1.5]]).map(([t, share]) => `${t.toFixed(2)}${share < 1 ? 'x' : ''}`).join(' ');
+  if (late !== '3.00 6.00 9.00 12.00 15.00 16.50 18.00') failures.push(`a DoT sped up near its end ticked at ${late}`);
   // Cat: the November strikes.
   if (D_DRUID.shred.percent !== 2 || D_DRUID.claw.percent !== 1.4 || D_DRUID.ravage.percent !== 4.35) failures.push('Shred, Claw or Ravage kept its old weapon share');
 }

@@ -7,7 +7,7 @@
 // Usage: node tools/wowsims_trees.mjs
 import fs from 'node:fs';
 
-const COMMIT = '9216929148d869d0ddd930ecb380aa94a36fc19e';
+const COMMIT = 'e855db5cfdc3a0d8262136fe6a7ea92e8c70578b';
 const TREES = `https://raw.githubusercontent.com/wowsims/forever/${COMMIT}/ui/sim/talents/trees`;
 const FILE = 'src/ui/talent-layout.json';
 
@@ -122,9 +122,11 @@ const REWORKED = {
       lightningOverload: [[10], [20], [30]],
       mentalDexterity: [[50], [100], [150]],
       flurry: [[6], [12], [18], [24], [30]],
+      maelstromWeapon: [[20, 5, 30, 6], [20, 5, 30, 7], [20, 5, 30, 8], [20, 5, 30, 9], [20, 5, 30, 10]],
     },
     text: {
-      stormstrike: 'Instantly strike for 150% of normal weapon damage and increase Nature damage you deal to the target by {0}% for {1} sec.',
+      stormstrike: 'Instantly strike for 100% of normal weapon damage and increase Nature damage you deal to the target by {0}% for {1} sec.',
+      maelstromWeapon: 'When you deal damage with a melee attack, you have a chance ({3} times a minute at your main hand\'s speed) to reduce the cast time and Mana cost of your next Lightning Bolt spell by {0}%. Stacks up to {1} times. Lasts {2} sec.',
     },
   },
 };
@@ -132,7 +134,7 @@ const REWORKED = {
 const NEW_RANKS = {
   hunter: { lightningReflexes: [[3], [6], [9], [12], [15]], barrage: [[5], [10], [15]] },
   warlock: {
-    wrack: [[86, 1, 10, 6]],
+    wrack: [[60, 1, 100, 6]],
     shadowAndFlame: [[4, 20, 4, 20, 20, 20], [8, 20, 8, 20, 40, 40], [12, 20, 12, 20, 60, 60], [16, 20, 16, 20, 80, 80], [20, 20, 20, 20, 100, 100]],
   },
   druid: { rendAndTear: [[3], [6], [9], [12], [15]] },
@@ -143,6 +145,8 @@ NEW_RANKS.warrior = { defiance: [[7], [13], [20]] };
 const NEW_TEXT = {
   warlock: {
     improvedDrains: 'Increases health drained or damage done by your Drain Life and Drain Soul spells, and the Mana drained by your Drain Mana spell, by {0}%.',
+    // Build 70888 (WoWSims): the debuff that raised two DoTs' damage became a dummy that speeds the DoTs up.
+    wrack: 'Tears the target apart from within, dealing {0} Shadow damage every {1} sec. While it lasts, your Corruption, Siphon Life and Bane of Agony on the target tick {2}% faster, ending when they would. Lasts {3} sec.',
   },
   paladin: {
     twoHandedWeaponSpecialization: 'Increases the Physical and Holy damage you deal by {0}%, and reduces all threat you generate by {1}% while a two-handed melee weapon is equipped.',

@@ -206,11 +206,13 @@ const abilities: Ability[] = [
     requirements: (c) => needsStance(c, 'battle', 'berserker') ?? (executePhase(c) ? null : 'The target must be below 20% health'),
     usable: (c) => executePhase(c) && stanceOf(c) !== 'defensive',
     highlight: executePhase,
-    description: () => `Deals ${D.execute.base} damage plus ${D.execute.perRage} per extra rage; uses all your rage. Only below 20% health.`,
+    description: () => `Deals ${D.execute.base} damage plus ${D.execute.perRage} per extra rage; uses all your rage, but a miss, dodge or parry keeps the extra. Only below 20% health.`,
     use: (c, t) => {
       const extra = c.player.resource;
-      c.player.resource = 0;
-      strike(c, t!, 'execute', D.execute.base + D.execute.perRage * extra);
+      // A miss, dodge or parry costs the base rage alone: the extra rage stays, and none of the base comes back (WoWSims).
+      if (landed(strike(c, t!, 'execute', D.execute.base + D.execute.perRage * extra, { refund: false }))) {
+        c.player.resource = Math.max(0, c.player.resource - extra);
+      }
     },
   },
   {
@@ -649,9 +651,9 @@ function prepare(c: Combat): void {
         onTick: (cc) => cc.deal({ target, source: 'deepWounds', outcome: 'hit', school: 'physical', amount: Math.round(total / dw.ticks), white: false, periodic: true }),
       });
     }
-    // Sweeping Strikes copies landed hits to a second nearby dummy.
+    // Sweeping Strikes copies landed hits to a second nearby dummy; Thunder Clap, a magic hit, spends no charge (WoWSims).
     const ss = c.aura(c.player, 'sweepingStrikes');
-    if (ss && hit.amount > 0 && hit.target === c.target) {
+    if (ss && hit.amount > 0 && hit.target === c.target && hit.source !== 'thunderClap') {
       const other = others(c, hit.target)[0];
       if (other) {
         c.deal({ target: other, source: 'sweepingStrikesCopy', outcome: hit.outcome, school: 'physical', amount: hit.amount, white: false });

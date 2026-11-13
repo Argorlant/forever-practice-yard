@@ -64,7 +64,7 @@ export const DATA = {
   execute: { cost: 15, base: 600, perRage: 15, threshold: 0.2 },
   overpower: { cost: 5, cooldown: 5, bonus: 35, window: 5 },
   revenge: { cost: 5, cooldown: 5, min: 109, max: 133, ap: 0.25, window: 5 },   // rank 5, +25 % of attack power (Oct 30 hotfix); threat 2.25x its damage
-  shieldSlam: { cost: 20, cooldown: 6, min: 640, max: 670, threat: 508 },
+  shieldSlam: { cost: 20, cooldown: 6, min: 640, max: 670, threat: 267 },   // rank 4's flat threat, in the game data since build 70888
   shieldBlock: { cost: 10, cooldown: 5, block: 75, duration: 7, charges: 2 },
   sunderArmor: { cost: 15, armor: 450, stacks: 5, duration: 30, threat: 206, threatAp: 0.05 },   // threat 206 + 5 % of attack power
   thunderClap: { cost: 20, cooldown: 6, damage: 103, slow: 0.2, duration: 30, targets: 4 },

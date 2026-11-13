@@ -20,9 +20,9 @@ const THREAT_PER_RAGE = 5;
 
 // ------------------------------------------------------------------- rage
 /** Rage from abilities and talents also makes threat: 5 per rage, times Bear Form's threat when it arrives (gs Oct 21). */
-function gainRage(c: Combat, n: number): void {
+function gainRage(c: Combat, n: number, unscaled = false): void {
   c.addResource(n);
-  c.addThreat(n * THREAT_PER_RAGE);
+  c.addThreat(n * THREAT_PER_RAGE, { ignoreStance: unscaled });
 }
 const swingRage = (crit: boolean) => D.bearRagePerSwing * (crit ? D.bearCritFactor : 1);
 /** Rage from damage taken, shared with warriors: Forever's measured rule (gs Oct 21). */
@@ -91,7 +91,12 @@ const abilities: Ability[] = [
       const outcome = strike(c, u, 'lacerate', c.weaponDamage('main') * D.lacerate.hitPerStack * Math.min(D.lacerate.stacks, before + 1));
       if (!landed(outcome)) return;
       const stacks = Math.min(D.lacerate.stacks, before + 1);
-      bleed(c, u, 'lacerate', 'Lacerate', D.lacerate.duration / D.lacerate.period, D.lacerate.period, (_cc, n) => D.lacerate.tick * n, { genesis: T(c).genesis, stacks });
+      // A dose keeps the first application's tick grid and ends the bleed its duration after the latest (WoWSims).
+      const on = c.aura(u, 'lacerate');
+      if (on) {
+        on.stacks = stacks;
+        c.setAuraEnd(u, 'lacerate', c.t + D.lacerate.duration);
+      } else bleed(c, u, 'lacerate', 'Lacerate', D.lacerate.duration / D.lacerate.period, D.lacerate.period, (_cc, n) => D.lacerate.tick * n, { genesis: T(c).genesis, stacks });
     },
   },
   {
@@ -235,7 +240,8 @@ function prepare(c: Combat): void {
   c.afterDamage.push((hit: Hit) => {
     if (hit.periodic || hit.outcome !== 'crit' || !t.bloodFrenzy) return;
     if (roll(c, 50 * t.bloodFrenzy)) {
-      gainRage(c, 5);
+      // Its rage threatens without the form's multiplier (WoWSims).
+      gainRage(c, 5, true);
       c.count('bloodFrenzyRage', 5);
     }
   });

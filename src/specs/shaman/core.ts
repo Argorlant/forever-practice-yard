@@ -33,7 +33,8 @@ const TOTEMS = ['searingTotem', 'magmaTotem', 'strengthOfEarthTotem', 'stoneskin
 
 /** Maelstrom Weapon: each stack takes 4 % per point off Lightning Bolt's cast time and cost (5 stacks at 5/5: instant and free). */
 export const maelstromStacks = (c: Combat) => c.aura(c.player, 'maelstromWeapon')?.stacks ?? 0;
-const maelstromCut = (c: Combat) => Math.min(1, 0.04 * T(c).maelstromWeapon * maelstromStacks(c));
+const maelstromCut = (c: Combat) => (T(c).maelstromWeapon ? Math.min(1, D.maelstromWeapon.cut * maelstromStacks(c)) : 0);
+const maelstromPpm = (c: Combat) => D.maelstromWeapon.ppm[Math.max(0, T(c).maelstromWeapon - 1)];
 
 function cost(id: string, base: number) {
   return (c: Combat) => {
@@ -292,7 +293,7 @@ export const ABILITIES: Ability[] = [
     id: 'stormstrike', name: 'Stormstrike', icon: 'stormstrike', gcd: D.gcd, target: 'enemy', range: 'melee',
     cost: cost('stormstrike', D.stormstrike.mana), cooldown: D.stormstrike.cooldown,
     ...talent('stormstrike', 'Stormstrike'),
-    description: (c) => `Instant: a main-hand weapon hit. Your next Lightning Bolt or Chain Lightning within 12 sec deals 20% more (personal); Earth Shocks in the meantime get the 20% too and keep the charge, and a spell that misses keeps it.${T(c).improvedStormstrike ? ` Improved Stormstrike: ${50 * T(c).improvedStormstrike}% chance to keep 50% of your Spirit regen while casting for 15 sec.` : ''} 8 sec cooldown.`,
+    description: (c) => `Instant: a main-hand weapon hit. Your next Lightning Bolt or Chain Lightning within 12 sec deals 20% more (personal); Earth Shocks in the meantime get the 20% too and keep the charge, and a spell that misses keeps it.${T(c).improvedStormstrike ? ` Improved Stormstrike: ${50 * T(c).improvedStormstrike}% chance to keep 50% of your Spirit regen while casting for 15 sec.` : ''} ${D.stormstrike.cooldown} sec cooldown.`,
     use: (c, t) => {
       const u = t!;
       const outcome = c.rollSpecial(u, 'stormstrike');
@@ -350,7 +351,7 @@ export const ABILITIES: Ability[] = [
   totem('searingTotem', 'searingTotem', 'fire', 'Searing Totem', D.searingTotem.mana,
     () => `For ${D.searingTotem.duration} sec it hits one enemy within ${D.searingTotem.range} yards for ${D.searingTotem.min}-${D.searingTotem.max} Fire every ${D.searingTotem.period} sec.`,
     () => ({
-      duration: D.searingTotem.duration, period: D.searingTotem.period,
+      duration: D.searingTotem.duration, firstTick: D.searingTotem.first, period: D.searingTotem.period,
       onTick: (cc: Combat) => {
         const u = cc.target;
         const s = D.searingTotem;
@@ -432,17 +433,22 @@ export function prepare(c: Combat): void {
   // Spirit Weapons: -30% threat, or +30% with Rockbiter.
   if (tl.spiritWeapons) c.mod.threat *= kind === 'rockbiter' ? 1.3 : 0.7;
 
+  // Flurry's charges (WoWSims, from logs): a white swing spends one whatever its outcome, and so does a Windfury Weapon
+  // strike; 0.5 sec apart, and none in the instant the charges came.
+  c.afterDamage.push((h) => {
+    const fl = c.aura(p, 'flurry');
+    if (!fl || h.periodic || h.hand === 'off' || h.ranged || !(h.white || h.source === 'windfuryWeapon')) return;
+    if (fl.start >= c.t - 1e-9 || c.t - (fl.value ?? -Infinity) < 0.5 - 1e-9) return;
+    fl.value = c.t;
+    fl.stacks = (fl.stacks ?? 1) - 1;
+    if (fl.stacks <= 0) c.removeAura(p, 'flurry');
+  });
   c.onHit.push((h) => {
     if (h.hand === 'off' || h.ranged) return;
-    // Flurry: white swings spend the charges; a melee crit gives 3 faster swings.
-    const fl = c.aura(p, 'flurry');
-    if (fl && h.white) {
-      fl.stacks = (fl.stacks ?? 1) - 1;
-      if (fl.stacks <= 0) c.removeAura(p, 'flurry');
-    }
+    // Flurry: a melee crit gives 3 faster swings.
     if (h.outcome === 'crit' && tl.flurry) c.applyAura(p, { id: 'flurry', name: 'Flurry', icon: 'flurry', duration: D.flurry.duration, stacks: D.flurry.charges, haste: D.flurry.haste * tl.flurry });
     // Maelstrom Weapon: 10 procs per minute at any rank, from any landed melee hit.
-    if (tl.maelstromWeapon && roll(c, (100 * D.maelstromWeapon.ppm * c.stats.mainHand.speed) / 60)) {
+    if (tl.maelstromWeapon && roll(c, (100 * maelstromPpm(c) * c.stats.mainHand.speed) / 60)) {
       const before = maelstromStacks(c);
       c.addStack(p, { id: 'maelstromWeapon', name: 'Maelstrom Weapon', icon: 'maelstromWeapon', duration: D.maelstromWeapon.duration }, D.maelstromWeapon.max);
       c.count('maelstromStacks');
@@ -500,7 +506,7 @@ export function chances(c: Combat): { title: string; rows: [string, string][] }[
   if (tl.elementalDevastation) procs.push(['Elemental Devastation on a spell crit', `+${3 * tl.elementalDevastation}% melee crit, 10 s`]);
   if (melee(c)) {
     if (imbue(c) === 'windfury') procs.push(['Windfury Weapon per landed main-hand hit', `20% (1.5 s cooldown): 2 attacks with +${c.mod.windfuryWeapon?.ap ?? D.windfuryWeapon.ap} AP`]);
-    if (tl.maelstromWeapon) procs.push(['Maelstrom Weapon stack per landed hit', pct((100 * D.maelstromWeapon.ppm * c.stats.mainHand.speed) / 60)]);
+    if (tl.maelstromWeapon) procs.push(['Maelstrom Weapon stack per landed hit', pct((100 * maelstromPpm(c) * c.stats.mainHand.speed) / 60)]);
     if (tl.flurry) procs.push(['Flurry after a melee crit', `+${Math.round(100 * D.flurry.haste * tl.flurry)}% attack speed for 3 swings`]);
   }
   if (c.raid.has('judgementOfWisdom')) procs.push(['Judgement of Wisdom: +59 mana', '50% per landed hit or direct spell']);
