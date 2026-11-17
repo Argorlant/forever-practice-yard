@@ -13,11 +13,14 @@ const SAGEBLADE = { name: 'Sageblade', type: 'sword' as const, min: 58, max: 109
  * Spellstone (+21 Shadow: Shadow only since the Oct 21 database, both sims). Hit is gear only (Suppression adds 1 %
  * per point); spell crit is gear and Intellect (Malevolence adds Shadow crit).
  */
-/** WoWSims Forever's pre-raid gear, with Demonic Knowledge's +60 spell power on the Demonic Pact sheets. */
+/** WoWSims Forever's gear, one set per build, with Demonic Knowledge's +60 spell power on the Demonic Pact sheets. */
 export const AFFLICTION_STATS = sheet('warlock-affliction');
 export const WRACK_STATS = sheet('warlock-wrack');
 export const DESTRUCTION_STATS = sheet('warlock-destruction');
-export const PACT_STATS: Stats = { ...AFFLICTION_STATS, spellPower: (AFFLICTION_STATS.spellPower ?? 0) + 60 };
+const PACT_SHEET = sheet('warlock-pact');
+const PACT_FIRE_SHEET = sheet('warlock-pact-fire');
+export const PACT_STATS: Stats = { ...PACT_SHEET, spellPower: (PACT_SHEET.spellPower ?? 0) + 60 };
+export const PACT_FIRE_STATS: Stats = { ...PACT_FIRE_SHEET, spellPower: (PACT_FIRE_SHEET.spellPower ?? 0) + 60 };
 
 /** The older sims' sheet, for the community DS/Ruin builds. */
 export const RUIN_STATS: Stats = {

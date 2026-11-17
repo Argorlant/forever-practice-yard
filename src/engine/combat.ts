@@ -3,7 +3,7 @@
 // It knows nothing about the 3D scene: the scene reports positions and the
 // engine emits events (damage, errors, abilities used) to animate and draw.
 import { UI } from '../strings';
-import { RAID_EFFECTS, WINDFURY } from './raid';
+import { RAID_EFFECTS, REVELATION, WINDFURY } from './raid';
 import type {
   Ability, AttackRules, Aura, Hand, Hit, Outcome, Spec, Stats, Unit, VfxStyle,
 } from './types';
@@ -165,21 +165,18 @@ const freshModifiers = (): Modifiers => ({
 });
 
 const SOURCE_NAMES: Record<string, string> = {
+  windfuryTotem: 'Windfury Totem (Attack)',
   melee_mh: 'Melee (main hand)',
   melee_oh: 'Melee (off hand)',
 };
-const SOURCE_ICONS: Record<string, string> = { melee_mh: 'melee', melee_oh: 'melee' };
+const SOURCE_ICONS: Record<string, string> = { melee_mh: 'melee', melee_oh: 'melee', windfuryTotem: 'windfury' };
 
 /**
- * The abilities Windfury Totem can proc from, besides main-hand swings: their game rows require a main-hand weapon or
- * go off in place of the next swing (WoWSims #910, from Forever logs: Bloodthirst, Whirlwind, Overpower, Holy Strike and
- * the cat's attacks never proc it).
+ * Main-hand melee attacks that roll Windfury Totem without being weapon strikes here (WoWSims 161a620: any landed
+ * main-hand melee swing or ability does): Seal of Command's hit and Judgement of Command. Abilities that land without
+ * dealing damage (Sunder Armor, Rend, the rogue's finishers) call rollWindfuryTotem themselves.
  */
-const WINDFURY_TOTEM_FROM = new Set([
-  'heroicStrike', 'cleave', 'execute', 'hamstring', 'mortalStrike', 'rend', 'revenge', 'slam', 'spearingStrike', 'sunderArmor', 'concussionBlow',
-  'sinisterStrike', 'backstab', 'ambush', 'eviscerate', 'exposeArmor', 'ghostlyStrike', 'gouge', 'hemorrhage', 'kidneyShot', 'mutilate', 'rupture',
-  'raptorStrike', 'mongooseBite', 'wingClip', 'maul',
-]);
+const WINDFURY_TOTEM_ALSO = new Set(['sealOfCommand', 'judgementOfCommand']);
 export class Combat {
   t = 0;
   readonly spec: Spec;
@@ -242,9 +239,9 @@ export class Combat {
   private windupStartedAt = -Infinity;
   /** Raid buffs and dummy debuffs switched on in Settings (ids from engine/raid.ts). */
   raid = new Set<string>();
-  /** Attack power added to the swing in progress (Windfury's extra attack). */
+  /** Attack power added to the strike in progress (Windfury's strikes). */
   private bonusAp = 0;
-  /** True while the Windfury Totem's extra swing lands (procs that this swing does not bring). */
+  /** True while a Windfury Totem strike lands. */
   windfurySwing = false;
   private lastWindfury = -Infinity;
   private lastWindfuryWeapon = -Infinity;
@@ -415,6 +412,7 @@ export class Combat {
     this.player.maxHealth = this.player.health = tank?.health ?? this.stats.health ?? 4000;
     this.clearMeter();
     this.spec.prepare(this);
+    if (this.options.revelation) this.installRevelation();
     this.mod.expertise += this.stats.expertise ?? 0;
     this.lastWindfury = -Infinity;
     this.lastWindfuryWeapon = -Infinity;
@@ -423,6 +421,27 @@ export class Combat {
     this.player.resource = this.spec.resource === 'rage' ? 0 : this.player.maxResource;
     this.player.mana = this.player.maxMana;
     this.emit('reset', undefined);
+  }
+
+  /**
+   * Revelation (a weapon enchant, see REVELATION in specs/common.ts): a direct spell you cast that deals damage without a
+   * crit may give the charge; the next direct spell crits (the charge is spell crit, so it reaches every spell that rolls
+   * spellCritChance) and spends it. Ticks, weapon strikes and procs that are not your abilities neither roll nor spend.
+   */
+  private installRevelation(): void {
+    this.afterDamage.push((h) => {
+      if (h.periodic || h.white || h.weaponStrike || h.school === 'physical' || !(h.amount > 0) || !this.ability(h.source)) return;
+      const charge = this.player.auras.get('revelation');
+      if (charge && charge.start < this.t - 1e-9) {
+        this.removeAura(this.player, 'revelation');
+        this.count('revelationSpent');
+        return;
+      }
+      if (h.outcome !== 'crit' && this.random() < REVELATION.chance) {
+        this.applyAura(this.player, { id: 'revelation', name: 'Revelation', icon: 'cdn:inv_misc_note_01', duration: REVELATION.duration, spellCrit: 100 });
+        this.count('revelation');
+      }
+    });
   }
 
   clearMeter(): void {
@@ -1317,10 +1336,45 @@ export class Combat {
         }
       }
     }
-    if (h.weaponStrike && connected) {
-      this.windfuryCheck(h);
-      for (const fn of this.onHit) fn(h);
-    }
+    if (h.weaponStrike && connected) this.windfuryCheck(h);
+    // Windfury Totem rolls here, and its strike comes after the hit's own procs, in the same instant (WoWSims:
+    // RunAfterCurrentEvent).
+    const totem = connected && !h.periodic && !h.ranged && (h.hand ?? 'main') === 'main' && h.source !== 'windfuryTotem'
+      && (h.weaponStrike || WINDFURY_TOTEM_ALSO.has(h.source)) && this.windfuryTotemProcs();
+    if (h.weaponStrike && connected) for (const fn of this.onHit) fn(h);
+    if (totem) this.windfuryTotemStrike(h.target);
+  }
+
+  /**
+   * Windfury Totem (hotfix push 114060, WoWSims 161a620): a landed main-hand melee attack, white or special, with damage or
+   * without, has a 20% chance (0.1 sec apart) to strike at once with the main hand: its weapon damage at its own speed plus
+   * 246 attack power, on the special table (miss, dodge, parry, crit; no glancing), through armor. It leaves the swing
+   * timer alone; the strike itself never rolls the totem.
+   */
+  rollWindfuryTotem(u: Unit): void {
+    if (this.windfuryTotemProcs()) this.windfuryTotemStrike(u);
+  }
+
+  /** Whether Windfury Totem procs now: it is up, its 0.1 sec have passed, and the 20% roll succeeds. */
+  private windfuryTotemProcs(): boolean {
+    if (![...this.player.auras.values()].some((a) => a.windfury)) return false;
+    if (this.t - this.lastWindfury < WINDFURY.totemIcd || this.random() * 100 >= WINDFURY.chance) return false;
+    this.lastWindfury = this.t;
+    return true;
+  }
+
+  private windfuryTotemStrike(u: Unit): void {
+    this.count('windfury');
+    this.count('windfuryTotem');
+    this.emit('note', { text: 'Windfury!', kind: 'proc' });
+    const prevAp = this.bonusAp;
+    this.bonusAp = WINDFURY.ap;
+    this.windfurySwing = true;
+    const outcome = this.rollSpecial(u, 'windfuryTotem');
+    const amount = this.physicalDamage(u, 'windfuryTotem', this.weaponDamage('main'), outcome);
+    this.deal({ target: u, source: 'windfuryTotem', outcome, school: 'physical', amount, white: false, hand: 'main', weaponStrike: true });
+    this.windfurySwing = false;
+    this.bonusAp = prevAp;
   }
 
   /** Adds a stack to an aura (or creates it) and refreshes its duration (Shadow Weaving). */
@@ -1355,10 +1409,7 @@ export class Combat {
     else if (this.spec.resource === 'mana') this.addResource(n);
   }
 
-  /**
-   * Windfury Totem: a landed main-hand attack (white or special, never the off hand) can give an extra main-hand attack with more AP.
-   * A shaman's own Windfury Weapon replaces it: the same chance and cooldown, two extra attacks.
-   */
+  /** A shaman's own Windfury Weapon: a landed main-hand weapon strike can give two strikes with more attack power. */
   private windfuryCheck(h: Hit): void {
     if ((h.hand ?? 'main') !== 'main' || h.ranged || h.periodic || this.bonusAp) return;
     const weapon = this.mod.windfuryWeapon;
@@ -1377,18 +1428,6 @@ export class Combat {
       }
       this.bonusAp = 0;
     }
-    // The totem rolls off main-hand swings and the abilities whose row needs the main hand or replaces the next swing.
-    if (!h.white && !WINDFURY_TOTEM_FROM.has(h.source)) return;
-    if (![...this.player.auras.values()].some((a) => a.windfury)) return;
-    if (this.t - this.lastWindfury < WINDFURY.icd || this.random() * 100 >= WINDFURY.chance) return;
-    this.lastWindfury = this.t;
-    this.count('windfury');
-    this.emit('note', { text: 'Windfury!', kind: 'proc' });
-    this.bonusAp = WINDFURY.ap;
-    this.windfurySwing = true;
-    this.extraAttack(h.target);
-    this.windfurySwing = false;
-    this.bonusAp = 0;
   }
 
   /** Threat multiplier the player's auras give one school (Righteous Fury). */

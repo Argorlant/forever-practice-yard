@@ -231,7 +231,7 @@ export class SettingsDialog {
 
     // Raid buffs and dummy debuffs: what the rest of the raid would bring.
     const rd = this.section('Raid buffs and debuffs on the dummy');
-    rd.append(h('p', 'note', 'What other players would bring. Some change how the rotation plays: Windfury gives extra swings (and rage), Judgement of Wisdom gives mana back, armor debuffs change the damage.'));
+    rd.append(h('p', 'note', 'What other players would bring. Some change how the rotation plays: Windfury gives extra weapon strikes (and rage), Judgement of Wisdom gives mana back, armor debuffs change the damage.'));
     rd.append(raidPicker(p.raid, (ids) => { p.raid = ids; this.onChange('options'); }));
 
     // Tank practice: the dummy swings at you.

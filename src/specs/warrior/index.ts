@@ -14,7 +14,7 @@ const build = (c: Combat) => buildById(c.options.build);
 const landed = (o: Outcome) => o === 'hit' || o === 'crit' || o === 'glance' || o === 'block';
 const roll = (c: Combat, pct: number) => c.random() * 100 < pct;
 
-interface WarriorState { lastWeaponmaster: number; lastAoeRoll: number }
+interface WarriorState { lastWeaponmaster: number; lastAoeRoll: number; lastCleaveCharge: number }
 const states = new WeakMap<Combat, WarriorState>();
 
 // ---------------------------------------------------------------- stances
@@ -209,6 +209,9 @@ const abilities: Ability[] = [
     description: () => `Deals ${D.execute.base} damage plus ${D.execute.perRage} per extra rage; uses all your rage, but a miss, dodge or parry keeps the extra. Only below 20% health.`,
     use: (c, t) => {
       const extra = c.player.resource;
+      // Execute's cast makes an attack roll of its own before the damage; landing, it rolls Windfury Totem, and the
+      // damage can roll it again once the totem's 0.1 sec have passed (WoWSims 161a620). Nothing else hears that roll.
+      if (c.raid.has('windfury') && landed(c.rollSpecial(t!, 'execute'))) c.rollWindfuryTotem(t!);
       // A miss, dodge or parry costs the base rage alone: the extra rage stays, and none of the base comes back (WoWSims).
       if (landed(strike(c, t!, 'execute', D.execute.base + D.execute.perRage * extra, { refund: false }))) {
         c.player.resource = Math.max(0, c.player.resource - extra);
@@ -292,6 +295,7 @@ const abilities: Ability[] = [
       const stacks = Math.min(s.stacks, (c.aura(u, 'sunderArmor')?.stacks ?? 0) + 1);
       c.applyAura(u, { id: 'sunderArmor', name: 'Sunder Armor', icon: 'sunderArmor', duration: s.duration, stacks, armor: s.armor * stacks, armorSlot: 'major' });
       c.addThreat(s.threat + s.threatAp * c.attackPower());
+      c.rollWindfuryTotem(u);
     },
   },
   {
@@ -422,6 +426,7 @@ const abilities: Ability[] = [
         c.deal({ target: u, source: 'rend', outcome, school: 'physical', amount: 0, white: false });
         return;
       }
+      c.rollWindfuryTotem(u);
       const tick = D.rend.tick * (1 + [0, 0.12, 0.23, 0.35][T(c).improvedRend]);
       c.applyAura(u, {
         id: 'rend', name: 'Rend', icon: 'rend', duration: D.rend.ticks * D.rend.period, period: D.rend.period,
@@ -536,7 +541,7 @@ const ABILITY_SOURCES = ['heroicStrike', 'cleave', 'bloodthirst', 'mortalStrike'
 function prepare(c: Combat): void {
   const t = T(c);
   const p = c.player;
-  states.set(c, { lastWeaponmaster: -Infinity, lastAoeRoll: -Infinity });
+  states.set(c, { lastWeaponmaster: -Infinity, lastAoeRoll: -Infinity, lastCleaveCharge: -Infinity });
   p.maxResource = D.maxRage;
   p.regenPerSecond = 0;
   p.decayPerSecond = D.decayOutOfCombat * (t.angerManagement ? 0.7 : 1);
@@ -578,11 +583,12 @@ function prepare(c: Combat): void {
     });
   }
 
-  // Landed white swings: normalized rage, Unbridled Wrath, Weaponmaster swords, Bloodthrill.
+  // Landed white swings: normalized rage, Unbridled Wrath, Weaponmaster swords, Bloodthrill. Windfury Totem's strike
+  // counts as a main-hand swing for rage and Unbridled Wrath (WoWSims 161a620).
   let extra = false;
   c.onHit.push((hit: Hit) => {
     const hand = hit.hand ?? 'main';
-    if (hit.white) {
+    if (hit.white || hit.source === 'windfuryTotem') {
       c.addResource(swingRage(c, hand, hit.outcome === 'crit'));
       if (t.unbridledWrath && roll(c, 12 * t.unbridledWrath)) {
         c.addResource(1);
@@ -597,7 +603,7 @@ function prepare(c: Combat): void {
     const rolled = aoe && s.lastAoeRoll === c.t;
     if (aoe) s.lastAoeRoll = c.t;
     if (!extra && wm && w?.type === 'sword' && hit.source !== 'shieldSlam' && hit.source !== 'shieldBash' && hit.source !== 'sweepingStrikesCopy'
-      && !c.windfurySwing && !rolled && c.t - s.lastWeaponmaster >= D.weaponmasterIcd && roll(c, wm)) {
+      && !rolled && c.t - s.lastWeaponmaster >= D.weaponmasterIcd && roll(c, wm)) {
       extra = true;
       s.lastWeaponmaster = c.t;
       c.count('weaponmaster');
@@ -621,26 +627,33 @@ function prepare(c: Combat): void {
       c.applyAura(c.player, { id: 'overpowerReady', name: 'Overpower', icon: 'overpower', duration: D.overpower.window });
       c.count('overpowerWindows');
     }
-    // Reckless Swings: a landed white swing adds rage and spends a charge.
+    // Cleave spends a Flurry or Reckless Swings charge once a cast, however many targets it hits (WoWSims 161a620).
+    const s = states.get(c)!;
+    const firstCleave = hit.source === 'cleave' && s.lastCleaveCharge !== c.t;
+    if (firstCleave) s.lastCleaveCharge = c.t;
+    const swingLike = hit.white || hit.source === 'heroicStrike' || firstCleave;
+    // Reckless Swings: a landed white swing, Heroic Strike or Cleave adds rage and spends a charge (161a620, from logs).
     const rs = c.aura(c.player, 'recklessSwings');
-    if (rs && hit.white && hit.amount > 0) {
+    if (rs && (swingLike || hit.source === 'windfuryTotem') && hit.amount > 0) {
       gainRage(c, D.recklessSwings.rage);
       c.count('recklessSwingsRage', D.recklessSwings.rage);
       rs.stacks = (rs.stacks ?? 1) - 1;
       if (rs.stacks <= 0) c.removeAura(c.player, 'recklessSwings');
     }
-    // Flurry: each white swing (and Heroic Strike/Cleave) spends a charge; a crit refreshes it.
+    // Flurry: each white swing, Heroic Strike or Cleave cast spends a charge whatever the outcome; a melee crit refreshes
+    // it (Thunder Clap is a ranged hit and does not).
     const fl = c.aura(c.player, 'flurry');
-    if (fl && (hit.white || hit.source === 'heroicStrike' || hit.source === 'cleave')) {
+    if (fl && swingLike) {
       fl.stacks = (fl.stacks ?? 1) - 1;
       if (fl.stacks <= 0) c.removeAura(c.player, 'flurry');
     }
-    if (hit.outcome === 'crit' && t.flurry) {
+    if (hit.outcome === 'crit' && t.flurry && hit.source !== 'thunderClap') {
       c.applyAura(c.player, { id: 'flurry', name: 'Flurry', icon: 'flurry', duration: 15, stacks: D.flurryCharges, haste: 0.1 * t.flurry });
     }
-    // Deep Wounds: any physical crit bleeds for a share of average weapon damage (no AP, cannot crit).
-    if (hit.outcome === 'crit' && t.deepWounds) {
-      const w = c.stats.mainHand;
+    // Deep Wounds: a melee crit bleeds for a share of the average damage of the weapon that crit (no AP, cannot crit);
+    // Thunder Clap's crit, on the magic table, starts none (WoWSims 161a620).
+    if (hit.outcome === 'crit' && t.deepWounds && hit.source !== 'thunderClap') {
+      const w = hit.hand === 'off' && c.stats.offHand ? c.stats.offHand : c.stats.mainHand;
       const old = c.aura(hit.target, 'deepWounds');
       const unpaid = old ? (old.value ?? 0) * ((old.end - c.t) / old.duration) : 0;
       const total = 0.2 * t.deepWounds * ((w.min + w.max) / 2) + unpaid;
@@ -781,7 +794,8 @@ function suggest(c: Combat): string | null {
     if (!exec && slam >= D.gcd && swing.total - swing.left <= 0.4 && can('slam')) return 'slam';
     if (can('spearingStrike')) return 'spearingStrike';
     if (stance !== 'battle' && !whirlwindReady && ready('battleStance')) return 'battleStance';
-    if (windfury && !exec && can('hamstring')) return 'hamstring';
+    // Single target only since 161a620.
+    if (windfury && !exec && targets < 2 && can('hamstring')) return 'hamstring';
     if (exec && can('execute')) return 'execute';
     if (!hsQueued && targets > 1 && rage >= 40) return 'cleave';
     if (!hsQueued && !exec && rage >= 90 && !tl.improvedSlam) return 'heroicStrike';

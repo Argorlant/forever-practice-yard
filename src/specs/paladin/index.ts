@@ -34,7 +34,7 @@ function manaRows(c: Combat, rows: Row[]): void {
 }
 
 const HELP_COMMON = `Mana is your resource. Spirit regeneration stops for 5 sec after you spend mana (Reverence keeps some), so a paladin lives on Judgement of Wisdom, Blessing of Wisdom and Mana Spring Totem (on by default under Raid buffs and debuffs), Sanctified Judgement and Major Mana Potions; you can lock your mana in Settings.
-    Seals last 30 sec and work on your white swings. Judgement is off the global cooldown and, in WoW Forever, does not use up the seal. Seal procs, damage Judgements and Holy Strike roll on the melee table and crit for double; Holy Shock and Exorcism use the spell table.
+    Seals last 30 sec and work on your white swings. Judgement is off the global cooldown and, in WoW Forever, does not use up the seal. Seal procs, Judgement of Command and Holy Strike roll on the melee table and crit for double, Judgements of Righteousness and Fury on the ranged table (the same chances here); Holy Shock and Exorcism use the spell table.
     Exorcism only works on Undead or Demons (Settings → Options), Hammer of Wrath only below 20% health (start the dummy at 15% to practice it).`;
 
 function specFor(spec: PaladinSpec, base: Omit<Spec, 'abilities' | 'rules' | 'prepare' | 'chances' | 'regen' | 'builds' | 'bar' | 'sources' | 'className' | 'resource'>): Spec {

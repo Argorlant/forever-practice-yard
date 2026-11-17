@@ -20,7 +20,7 @@ const forever = (duration = Infinity) => ({ duration });
 export const RAID_EFFECTS: RaidEffect[] = [
   // ------------------------------------------------------------ buffs
   {
-    id: 'windfury', name: 'Windfury Totem (main-hand attacks: 20% for an extra attack, +246 AP; cats and bears too)', from: 'shaman', side: 'buff', icon: 'windfury',
+    id: 'windfury', name: 'Windfury Totem (main-hand attacks: 20% for a strike with +246 AP; cats and bears too)', from: 'shaman', side: 'buff', icon: 'windfury',
     apply: (c) => c.applyAura(c.player, { id: 'windfuryTotem', name: 'Windfury Totem', icon: 'windfury', ...forever(), windfury: true }),
   },
   {
@@ -95,5 +95,12 @@ export const RAID_EFFECTS: RaidEffect[] = [
 export const LEADER_OF_THE_PACK = { id: 'leaderOfThePack', name: 'Leader of the Pack', icon: 'leaderOfThePack', duration: Infinity, crit: 3 };
 export const MOONKIN_AURA = { id: 'moonkinAura', name: 'Moonkin Aura', icon: 'moonkinForm', duration: Infinity, spellCrit: 3 };
 
-/** Windfury Totem in the sims: 20 % per eligible landed main-hand attack, +246 AP, 1.5 s internal cooldown. */
-export const WINDFURY = { chance: 20, ap: 246, icd: 1.5 };
+/**
+ * Enchant Weapon - Revelation (WoW Forever, sold by vendors; WoWSims 161a620): a direct spell that deals damage without
+ * a crit has an 8% chance (9% before client 70938) to make your next direct spell crit, within 15 sec. WoWSims notes
+ * that the chance falls as your crit rises, by a rule no file states, and keeps it flat; so does the yard.
+ */
+export const REVELATION = { chance: 0.08, duration: 15 };
+
+/** Windfury: 20% a landed main-hand attack, +246 AP on the totem's strike; the totem 0.1 sec apart, Windfury Weapon 1.5 sec. */
+export const WINDFURY = { chance: 20, ap: 246, icd: 1.5, totemIcd: 0.1 };

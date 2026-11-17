@@ -17,7 +17,7 @@ and Paladin trees (and moved or renamed a Hunter and a Priest talent); the site'
 from Wowhead's WoW Forever calculator (`tools/wowhead_trees.mjs`, data in `research/wowhead/`), and they match WoWSims
 Forever's talent order. The hotfixes of early November changed the Warrior, Shaman and Rogue trees again; those follow WoWSims
 Forever (`tools/wowsims_trees.mjs`), with its numbers and rotations for Warrior, Shaman, Hunter, Rogue and Warlock, and
-Druid's new numbers, its attack power scaling and the bear's threat (WoWSims at `e855db5`, with its measurements from Forever combat logs). Builds marked **community** have no equivalent there: they come from older sims, re-spent where the
+Druid's new numbers, its attack power scaling and the bear's threat (WoWSims at `161a620`, with its measurements from Forever combat logs). Builds marked **community** have no equivalent there: they come from older sims, re-spent where the
 trees changed, and stay for whoever practises them.
 > **Speculative, built on the sims.** This site was made before WoW Forever's launch on 4 November 2026. The talents,
 > builds, rotations and numbers here follow the community sims ([WoWSims Forever](https://www.wowsims.com/forever/), our main source; the
@@ -112,8 +112,9 @@ melee range and Auto Shot's minimum range on all of them. The weaving helper in 
 Shot and Multi-Shot at range. A
 third setting picks what a melee swing does to Auto Shot: Classic keeps the two timers separate (the default, assumed until it can be checked in the live game), the Forever
 beta restarted Auto Shot (reported as a bug), Wrath links them both ways. The review counts weaves, the Auto Shot time they cost and
-the net damage. WoWSims Forever's SV Weave and MM Weave builds, in Settings, shoot from
-12 yards and step to 5 while the next Auto Shot is more than 1.5 s away, with no pet; BM Weave keeps its pet. SV Weave carries a two-hander for this;
+the net damage. WoWSims Forever's SV Weave build, in Settings, shoots from
+12 yards and steps to 5 while the next Auto Shot is more than 1.5 s away, with no pet (WoWSims dropped its MM and BM weave builds: Beast Mastery
+deals more shooting from range). SV Weave carries a two-hander for this;
 melee Survival prefers two weapons for its white swings.
 
 The **Priest** comes as two damage specs (sources in [`research/priest_forever.md`](research/priest_forever.md)); pure healers are out of scope:

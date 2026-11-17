@@ -5,7 +5,7 @@
 // builds. Shared rules in ./core.ts, numbers in ./data.ts, builds in ./talents.ts.
 import type { Combat } from '../../engine/combat';
 import type { Spec } from '../../engine/types';
-import { BOSS_RULES, CONTROLS } from '../common';
+import { BOSS_RULES, CONTROLS, REVELATION_OPTION } from '../common';
 import { ABILITIES, D, SOURCES, T, abStacks, chances, prepare, regen, stacksOf } from './core';
 import { gearOptions } from '../gear';
 import { MAGE_STATS } from './data';
@@ -53,6 +53,7 @@ const HELP_COMMON = `Spells have a cast bar and channels drain one; moving inter
     Mana is your resource. Spirit regeneration stops for 5 sec after you spend mana, but Mage Armor and Arcane Meditation keep up to all of it while casting; Evocation is 16 times your Spirit regen for 8 sec. Judgement of Wisdom, Blessing of Wisdom and Mana Spring Totem are on by default; Mana Ruby and Major Mana Potion have separate cooldowns. You can lock your mana in Settings.`;
 const OPTIONS = [
   { key: 'lockMana', name: 'Lock your mana (spells cost nothing)', kind: 'toggle' as const },
+  REVELATION_OPTION,
   { key: 'mana', name: 'Mana pool', kind: 'number' as const, step: 100 },
   { key: 'spirit', name: 'Spirit (regeneration outside the five-second rule)', kind: 'number' as const, step: 1 },
   { key: 'mp5', name: 'Mana per 5 sec from gear', kind: 'number' as const, step: 1 },

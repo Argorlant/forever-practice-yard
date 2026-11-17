@@ -229,12 +229,13 @@ function prepare(c: Combat): void {
 
   // Landed white swings: normalized rage (a queued Maul's swing gives none). Omen at the 2.5 s form speed.
   c.onHit.push((hit: Hit) => {
-    if (hit.white) {
+    // Windfury Totem's strike gives a swing's rage too (WoWSims 161a620), but rolls no Omen.
+    if (hit.white || hit.source === 'windfuryTotem') {
       const rage = swingRage(hit.outcome === 'crit');
       c.addResource(rage);
       c.count('swingRage', rage);
     }
-    omen(c, 2.5);
+    if (hit.source !== 'windfuryTotem') omen(c, 2.5);
   });
   // Blood Frenzy: any crit in Bear Form can give 5 rage.
   c.afterDamage.push((hit: Hit) => {
@@ -306,7 +307,7 @@ function chances(c: Combat): { title: string; rows: [string, string][] }[] {
   ];
   if (tl.bloodFrenzy) procs.push(['Blood Frenzy: +5 rage on any crit', `${50 * tl.bloodFrenzy}%`]);
   if (tl.naturalReaction) procs.push(['Natural Reaction: +5 rage when you dodge', `${20 * tl.naturalReaction}%`]);
-  if (c.raid.has('windfury')) procs.push(['Windfury Totem: extra swing (with its rage)', '20% per landed hit, 1.5 s cooldown']);
+  if (c.raid.has('windfury')) procs.push(['Windfury Totem: a weapon strike, +246 AP, with swing rage', '20% per landed main-hand hit, 0.1 s apart']);
   return [
     {
       title: 'Your attacks',

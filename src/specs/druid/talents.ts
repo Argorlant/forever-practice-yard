@@ -70,11 +70,11 @@ const WS = 'wowsims/forever';
 /** Builds with no equivalent in WoWSims Forever: they stay, for whoever practises them, re-spent for the Oct 30 trees. */
 const COMMUNITY = 'community, from gunba/wow-forever-sim, re-spent for the Oct 30 trees';
 export const BUILDS: Build[] = [
-  { id: 'cat', spec: 'cat', name: 'Feral Cat', talentString: '050022-53200032123012124001-055', source: WS, stats: CAT_STATS, bar: CAT_BAR, options: { mana: gearOptions('druid-cat').mana } },
-  { id: 'hybrid-cat', spec: 'cat', name: 'Hybrid', talentString: '050022-50230332123110121011-055', source: WS, stats: CAT_STATS, bar: CAT_BAR, options: { mana: gearOptions('druid-cat').mana } },
+  { id: 'cat', spec: 'cat', name: 'Feral Cat', talentString: '050021-53200032123012125001-055', source: WS, stats: CAT_STATS, bar: CAT_BAR, options: { mana: gearOptions('druid-cat').mana } },
+  { id: 'hybrid-cat', spec: 'cat', name: 'Hybrid', talentString: '050012-50230302123110125011-055', source: WS, stats: CAT_STATS, bar: CAT_BAR, options: { mana: gearOptions('druid-cat').mana } },
   { id: 'cat-feral', spec: 'cat', name: 'Feral, deeper (Natural Shapeshifter)', talentString: '-55220132023012125011-05503', source: COMMUNITY, stats: GS_CAT_STATS, bar: CAT_BAR, options: { mana: 3000 } },
-  { id: 'bear', spec: 'bear', name: 'Bear tank', talentString: '050022-2322030212310212501-055', source: WS, stats: BEAR_STATS, bar: BEAR_BAR, tank: true },
-  { id: 'hybrid-bear', spec: 'bear', name: 'Hybrid', talentString: '050022-50230332123110121011-055', source: WS, stats: BEAR_STATS, bar: BEAR_BAR, tank: true },
+  { id: 'bear', spec: 'bear', name: 'Bear tank', talentString: '050022-5023030212310112501-055', source: WS, stats: BEAR_STATS, bar: BEAR_BAR, tank: true },
+  { id: 'hybrid-bear', spec: 'bear', name: 'Hybrid', talentString: '050012-50230302123110125011-055', source: WS, stats: BEAR_STATS, bar: BEAR_BAR, tank: true },
   { id: 'bear-deep', spec: 'bear', name: 'Bear tank, deeper', talentString: '01-5502233212310212551-05', source: COMMUNITY, stats: GS_BEAR_STATS, bar: BEAR_BAR, tank: true },
   { id: 'moonkin', spec: 'balance', name: 'Moonkin', talentString: '5232220115501351--5053', source: WS, stats: BALANCE_STATS, bar: BALANCE_BAR, options: { ...gearOptions('druid-balance') } },
   { id: 'balance', spec: 'balance', name: 'Balance', talentString: '5532220115001351--505203', source: COMMUNITY, stats: GS_BALANCE_STATS, bar: BALANCE_BAR, options: { mana: 4024, spirit: 123, mp5: 9 } },

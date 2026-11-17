@@ -54,9 +54,10 @@ export const DATA = {
     tacticalMastery: 10,    // baseline: rage kept on a stance swap
   },
   // Trainer ranks (gs Oct 21): Heroic Strike 9, Revenge 6 and Battle Shout 7 are Ahn'Qiraj books, and raids open on 9 December.
-  // Heroic Strike rank 8: threat 2.5 per spell level (56); Cleave rank 5 and Slam 1.5 per spell level (WoWSims, Nov 8 logs), split between the targets it lands on.
+  // Heroic Strike rank 8: threat 2.5 per spell level (56); Slam 1.5 per spell level (WoWSims, Nov 8 logs); Cleave rank 5 96, 1.6 per spell
+  // level (client 70938), split between the targets it lands on.
   heroicStrike: { cost: 15, bonus: 138, threat: 140 },
-  cleave: { cost: 20, bonus: 50, threat: 90, targets: 2 },
+  cleave: { cost: 20, bonus: 50, threat: 96, targets: 2 },
   bloodthirst: { cost: 30, cooldown: 6, apRatio: 0.45, bonus: 48, haste: 0.1, duration: 10 },
   mortalStrike: { cost: 30, cooldown: 6, bonus: 160 },
   whirlwind: { cost: 25, cooldown: 10, targets: 4, improvedCooldown: 1, improvedClosest: 0.15 },   // Improved Whirlwind, per point
@@ -64,7 +65,7 @@ export const DATA = {
   execute: { cost: 15, base: 600, perRage: 15, threshold: 0.2 },
   overpower: { cost: 5, cooldown: 5, bonus: 35, window: 5 },
   revenge: { cost: 5, cooldown: 5, min: 109, max: 133, ap: 0.25, window: 5 },   // rank 5, +25 % of attack power (Oct 30 hotfix); threat 2.25x its damage
-  shieldSlam: { cost: 20, cooldown: 6, min: 640, max: 670, threat: 267 },   // rank 4's flat threat, in the game data since build 70888
+  shieldSlam: { cost: 20, cooldown: 6, min: 640, max: 670, threat: 255 },   // rank 4's flat threat (267 in build 70888, 255 in 70938)
   shieldBlock: { cost: 10, cooldown: 5, block: 75, duration: 7, charges: 2 },
   sunderArmor: { cost: 15, armor: 450, stacks: 5, duration: 30, threat: 206, threatAp: 0.05 },   // threat 206 + 5 % of attack power
   thunderClap: { cost: 20, cooldown: 6, damage: 103, slow: 0.2, duration: 30, targets: 4 },

@@ -102,11 +102,13 @@ const MUST_USE: Record<string, string[]> = {
   backstab: ['backstab', 'shank', 'eviscerate', 'sliceAndDice'],
   mutilate: ['mutilate', 'shank', 'eviscerate', 'sliceAndDice'],
   hemorrhage: ['hemorrhage', 'shank', 'deathMark', 'ghostlyStrike', 'garrote', 'rupture', 'sliceAndDice', 'premeditation'],
+  // WoWSims' Hemo Seal Fate (161a620): Seal Fate and Cold Blood instead of Death Mark, so Eviscerate finishes.
+  hemoSealFate: ['hemorrhage', 'ghostlyStrike', 'rupture', 'eviscerate', 'sliceAndDice', 'premeditation', 'coldBlood'],
 };
 for (const b of spec.builds ?? []) {
   const options = { ...(spec.defaultOptions ?? {}), build: b.id, ...(b.options ?? {}) };
   const r = run(spec, 300, 4242, b.stats, options);
-  const rotation = b.id === 'combat-venom' ? 'combatVenom' : rogueTalents.buildById(b.id).rotation;
+  const rotation = b.id === 'combat-venom' ? 'combatVenom' : b.id === 'hemo-sf' ? 'hemoSealFate' : rogueTalents.buildById(b.id).rotation;
   const missing = MUST_USE[rotation].filter((id) => !r.used[id]);
   const review = (spec.review?.(r.c) ?? []).map((x) => `${x.label}: ${x.value}`).join(' | ');
   console.log(`  ${b.label.padEnd(48)} ${r.dps.toFixed(0).padStart(4)} DPS  ${review}`);
@@ -299,7 +301,8 @@ const DRUID_MUST_USE: Record<string, string[]> = {
   cat: ['prowl', 'ravage', 'shred', 'rip', 'ferociousBite', 'shiftingPower', 'faerieFire'],
   'cat-feral': ['shred', 'rip', 'ferociousBite', 'shiftingPower'],
   bear: ['primalBite', 'lacerate', 'maul', 'demoralizingRoar', 'faerieFire', 'druidEnrage'],
-  'hybrid-cat': ['shred', 'rip', 'rake', 'shiftingPower'],
+  // The Hybrid Claws when it pays (WoWSims 161a620), and Shreds only on Clearcasting.
+  'hybrid-cat': ['claw', 'shred', 'rip', 'rake', 'shiftingPower'],
   'hybrid-bear': ['primalBite', 'lacerate', 'demoralizingRoar'],
   moonkin: ['wrath', 'starfire', 'moonfire', 'insectSwarm'],
   balance: ['wrath', 'starfire', 'moonfire', 'insectSwarm'],
@@ -342,8 +345,12 @@ for (const sp of [druidCat, druidBear, druidBalance]) {
     return c.player.resource - before;
   };
   const [h, cr, d] = [hit('hit'), hit('crit'), hit('dodge')];
-  // The bear build has Blood Frenzy 2/2: every crit also gives 5 rage.
-  if (Math.abs(h - 11.245) > 0.01 || Math.abs(cr - (22.49 + 5)) > 0.02 || d !== 0) failures.push(`bear rage per swing ${h.toFixed(2)} / crit ${cr.toFixed(2)} / dodge ${d}, expected 11.25 / 27.5 (22.5 + Blood Frenzy) / 0`);
+  // WoWSims' bear build (161a620) has Blood Frenzy 1/2: half of its crits also give 5 rage.
+  c.random = () => 0.01;
+  const crProc = hit('crit');
+  if (Math.abs(h - 11.245) > 0.01 || Math.abs(cr - 22.49) > 0.02 || Math.abs(crProc - (22.49 + 5)) > 0.02 || d !== 0) {
+    failures.push(`bear rage per swing ${h.toFixed(2)} / crit ${cr.toFixed(2)} or ${crProc.toFixed(2)} / dodge ${d}, expected 11.25 / 22.5 or 27.5 with Blood Frenzy / 0`);
+  }
 }
 // Rage from hits taken: unmitigated damage (crit x2, crushing x1.5, armor and Barkskin ignored); a dodge gives none.
 {
@@ -483,7 +490,6 @@ const HUNTER_MUST_USE: Record<string, string[]> = {
   'mm-p1': ['autoShot', 'aimedShot', 'serpentSting'],
   'sv-ranged': ['autoShot', 'aimedShot', 'serpentSting'],
   bm: ['autoShot', 'aimedShot', 'serpentSting', 'arcaneShot', 'bestialWrath', 'intimidation', 'rapidFire'],
-  'bm-weave': ['autoShot', 'serpentSting', 'summonHawk', 'arcaneShot', 'multiShot'],
   'bm-fs': ['autoShot', 'aimedShot', 'serpentSting', 'bestialWrath'],
   sv: ['attack', 'raptorStrike', 'mongooseBite', 'striderKick', 'immolationTrap', 'huntersMark'],
   'sv-pet': ['attack', 'raptorStrike', 'mongooseBite', 'striderKick', 'summonHawk', 'wingClip'],
@@ -555,7 +561,8 @@ for (const sp of [hunterMm, hunterBm, hunterSv]) {
 }
 // Melee weaving: a scripted hunter follows the cues (step in, Raptor Strike, step out) at running speed.
 {
-  const weaveRun = (weave: boolean, rule: string, build = 'mm') => {
+  // WoWSims' weave build and set (a 3.3 sec crossbow); its turret set's 1.8 sec bow leaves no time to step in.
+  const weaveRun = (weave: boolean, rule: string, build = 'sv-weave') => {
     const r = play(hunterMm, { build, seconds: 0, options: { lockMana: true, meleeWeaving: weave, autoShotReset: rule } });
     const c = r.c;
     for (let t = 0; t < 180; t += 0.05) {
@@ -576,7 +583,7 @@ for (const sp of [hunterMm, hunterBm, hunterSv]) {
   };
   const classic = weaveRun(true, 'classic');
   const beta = weaveRun(true, 'beta');
-  console.log(`Melee weaving, MM Lone Wolf, 3 min, locked mana: no weaving ${still.dps().toFixed(0)} DPS | ${line('Classic rule', classic)} | ${line('beta rule', beta)}`);
+  console.log(`Melee weaving, SV Weave, 3 min, locked mana: no weaving ${still.dps().toFixed(0)} DPS | ${line('Classic rule', classic)} | ${line('beta rule', beta)}`);
   // The rotation keeps casting, so windows are rare (Aimed, Quick Shots and Rapid Fire close them), as the research expects.
   if (!((classic.counters.weaveRaptor ?? 0) >= 5)) failures.push('the weaving cues led to few Raptor Strikes under the Classic rule');
   if ((classic.counters.autoShotHeld ?? 0) > 2) failures.push(`Classic weaving held Auto Shot ${(classic.counters.autoShotHeld ?? 0).toFixed(1)} s`);
@@ -889,6 +896,19 @@ for (const sp of [warlockAffliction, warlockDemonology, warlockDestruction]) {
   console.log(`Shadow and Flame with locked mana: ${f.c.dps().toFixed(0)} DPS, Immolate ${Math.round((k['uptime:target:immolate'] ?? 0) / time * 100)}%, Flame buff ${Math.round((k['uptime:shadowFlameFire'] ?? 0) / time * 100)}%, Shadow buff ${Math.round((k['uptime:shadowFlameShadow'] ?? 0) / time * 100)}%`);
   if ((k['uptime:target:immolate'] ?? 0) / time < 0.85) failures.push('Shadow and Flame let Immolate drop');
 }
+
+// Revelation (WoWSims 161a620): on in the builds whose set carries it; a direct spell that does not crit gives the
+// charge 8% of the time, and the next direct spell crits and spends it.
+{
+  const on = play(warlockDestruction, { build: 'fire', options: { lockMana: true } });
+  const off = play(warlockDestruction, { build: 'fire', options: { lockMana: true, revelation: false } });
+  const gained = on.c.counters.revelation ?? 0;
+  const spent = on.c.counters.revelationSpent ?? 0;
+  console.log(`Revelation, Shadow and Flame, 5 min: ${gained} charges, ${spent} spent | off: ${off.c.counters.revelation ?? 0}`);
+  if (!(gained >= 3 && spent >= gained - 1)) failures.push(`Revelation gave ${gained} charges and spent ${spent}`);
+  if (off.c.counters.revelation) failures.push('Revelation fired with the option off');
+  if (play(warlockAffliction, { build: 'affliction-deep', seconds: 30 }).c.options.revelation) failures.push('the Wrack build has Revelation on, its set has none');
+}
 // Demonic Sacrifice: without Demonic Pact it leaves no demon; with it the buff stays beside another demon,
 // unless you summon the one you sacrificed. The Imp at your side throws Firebolts.
 {
@@ -1011,7 +1031,7 @@ for (const sp of [shamanElemental, shamanEnhancement, shamanTank]) {
   const venom = play(rogue, { build: 'combat-venom' });
   if (!venom.used.shank) failures.push('Combat Venom never used Shank');
   if (venom.c.ability('venom')) failures.push('Venom is still a finisher');
-  if (spec.builds!.length !== 5) failures.push(`${spec.builds!.length} Rogue builds, WoWSims has 5`);
+  if (spec.builds!.length !== 6) failures.push(`${spec.builds!.length} Rogue builds, WoWSims has 6`);
 }
 {
   const fury = play(warrior, { build: 'fury-dw', seconds: 0 }).c;
@@ -1064,7 +1084,7 @@ for (const sp of [shamanElemental, shamanEnhancement, shamanTank]) {
   c.deal({ target: dummy, source: 'melee_mh', outcome: 'hit', school: 'physical', amount: 1000, white: true, hand: 'main' });
   if (seen[0] !== 1100 || seen[1] !== 1000) failures.push(`Curse of the Elements: nature ${seen[0]}, physical ${seen[1]}, expected 1100 and 1000`);
 }
-// Windfury Totem: main-hand attacks only, 1.5 s cooldown; the extra swing gives a warrior rage.
+// Windfury Totem (WoWSims 161a620): main-hand attacks only, 0.1 s apart; its strike gives a warrior a swing's rage.
 {
   const c = new Combat(warrior, { ...(warrior.defaultOptions ?? {}) });
   c.stats = structuredClone(warrior.stats);
@@ -1085,14 +1105,19 @@ for (const sp of [shamanElemental, shamanEnhancement, shamanTank]) {
   const before = c.player.resource;
   white('main');
   if (c.counters.windfury !== 1) failures.push(`Windfury procs after a main-hand hit: ${c.counters.windfury ?? 0}, expected 1`);
-  if (!(c.player.resource - before > 3.46 * c.stats.mainHand.speed * 1.5)) failures.push('the Windfury swing gave no rage');
+  if (!(c.player.resource - before > 3.46 * c.stats.mainHand.speed * 1.5)) failures.push('the Windfury strike gave no rage');
+  if (!c.meter.rows.get('windfuryTotem')?.hits) failures.push('the Windfury strike is not a row of its own');
   white('main');
-  if (c.counters.windfury !== 1) failures.push('Windfury procced again inside its 1.5 s cooldown');
+  if (c.counters.windfury !== 1) failures.push('Windfury procced again inside its 0.1 s cooldown');
+  c.update(0.2);
+  white('main');
+  if (c.counters.windfury !== 2) failures.push(`Windfury did not proc 0.2 s later: ${c.counters.windfury ?? 0} procs`);
   const fury = play(warrior, { build: 'fury-dw', raid: ['windfury', 'battleShout'] });
   const base = play(warrior, { build: 'fury-dw', raid: [] });
-  // Since Oct 28 Fury spends rage on Hamstring for the extra procs, so the check is on white damage, not the total.
-  const whiteMh = (r: typeof fury) => r.c.meter.rows.get('melee_mh')?.total ?? 0;
-  console.log(`Fury with Windfury Totem: ${fury.c.dps().toFixed(0)} DPS (${fury.c.counters.windfury ?? 0} procs, ${fury.used.hamstring ?? 0} Hamstrings), main-hand white ${Math.round(whiteMh(fury))} vs ${Math.round(whiteMh(base))} without`);
+  // Since Oct 28 Fury spends rage on Hamstring for the extra procs, so the check is on main-hand damage (white swings and
+  // the totem's strikes), not the total.
+  const whiteMh = (r: typeof fury) => (r.c.meter.rows.get('melee_mh')?.total ?? 0) + (r.c.meter.rows.get('windfuryTotem')?.total ?? 0);
+  console.log(`Fury with Windfury Totem: ${fury.c.dps().toFixed(0)} DPS (${fury.c.counters.windfury ?? 0} procs, ${fury.used.hamstring ?? 0} Hamstrings), main-hand white and strikes ${Math.round(whiteMh(fury))} vs ${Math.round(whiteMh(base))} without`);
   if (!(whiteMh(fury) > whiteMh(base) * 1.1)) failures.push('Windfury Totem did not raise Fury main-hand damage');
   const cat = play(druidCat, { build: 'cat', raid: ['windfury', 'judgementOfWisdom'] });
   if (!((cat.c.counters.windfury ?? 0) > 20)) failures.push('Windfury Totem barely procced for a cat');

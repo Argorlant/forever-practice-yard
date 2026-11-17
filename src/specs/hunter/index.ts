@@ -56,7 +56,7 @@ const HELP_COMMON = `Auto Shot fires on its own every weapon swing (faster with 
     WoW Forever: Aimed Shot is baseline (2 sec cast, 6 sec cooldown shared with Multi-Shot, which is instant since the Oct 15 client), Arcane Shot and Serpent Sting scale with ranged attack power, and Auto Shot keeps firing while you cast (Settings has the Classic rule as an option). You cannot cast while moving; Arcane Shot and Serpent Sting are instant.
     Mana is your resource: shots drain it fast. Judgement of Wisdom, Blessing of Wisdom and Mana Spring Totem are on by default under Raid buffs and debuffs, and Major Mana Potions are on your bar; you can lock your mana in Settings.`;
 
-const WEAVE_HELP = `Melee weaving, really ranged weaving: on any build you can step in and out, because Auto Shot and your melee swing (the two-handed glaive) run on separate timers and the distance decides which one fires. The rings on the ground show it: inside the red one you hit in melee, outside the green one you shoot, and between them nothing fires. The weaving helper in Settings (on in gunba's SV Weave and MM Weave, which play this way from 12 yards) plans the trips: use your ranged cooldowns at range, step in, press what you can (Raptor Strike first, it goes on your next swing and off the global cooldown, then Immolation Trap, Mongoose Bite and Strider Kick), and step back out before the next windup; the cue above your bar says when. Without the helper nothing asks you to step in, but in melee it still shows what to press and when to step out. We assume separate timers, as in Classic, until this can be checked in the live game; on the beta a melee swing restarted the Auto Shot timer (reported as bug #14), and you can pick that rule in Settings to practice it.`;
+const WEAVE_HELP = `Melee weaving, really ranged weaving: on any build you can step in and out, because Auto Shot and your melee swing (the two-handed glaive) run on separate timers and the distance decides which one fires. The rings on the ground show it: inside the red one you hit in melee, outside the green one you shoot, and between them nothing fires. The weaving helper in Settings (on in WoWSims' SV Weave, which plays this way from 12 yards) plans the trips: use your ranged cooldowns at range, step in, press what you can (Raptor Strike first, it goes on your next swing and off the global cooldown, then Immolation Trap, Mongoose Bite and Strider Kick), and step back out before the next windup; the cue above your bar says when. Without the helper nothing asks you to step in, but in melee it still shows what to press and when to step out. We assume separate timers, as in Classic, until this can be checked in the live game; on the beta a melee swing restarted the Auto Shot timer (reported as bug #14), and you can pick that rule in Settings to practice it.`;
 
 const OPTIONS = [
   { key: 'classicAutoShot', name: 'Classic Auto Shot rule: a cast started in the windup clips the shot', kind: 'toggle' as const },
@@ -234,9 +234,10 @@ function svSuggest(c: Combat): string | null {
   if (!p.autoAttacking) return 'attack';
   if (p.inCombat && ready('rapidFire')) return 'rapidFire';
   if (ready('raptorStrike') && c.queuedSwing !== 'raptorStrike' && afford('raptorStrike')) return 'raptorStrike';
+  // Immolation Trap comes ahead of Mongoose Bite and Strider Kick since 161a620.
+  if (!c.aura(t, 'immolationTrap') && ready('immolationTrap') && afford('immolationTrap')) return 'immolationTrap';
   if (ready('mongooseBite') && afford('mongooseBite')) return 'mongooseBite';
   if (tl.striderKick && ready('striderKick') && afford('striderKick')) return 'striderKick';
-  if (!c.aura(t, 'immolationTrap') && ready('immolationTrap') && afford('immolationTrap')) return 'immolationTrap';
   if (tl.summonHawk && ready('summonHawk') && afford('summonHawk')) return 'summonHawk';
   if (ready('wingClip') && afford('wingClip')) return 'wingClip';
   if (potion) return 'manaPotion';

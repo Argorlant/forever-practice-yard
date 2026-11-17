@@ -122,6 +122,8 @@ const petAp = (c: Combat) => D.pet.apBase + D.pet.apShare * Math.max(c.attackPow
 const petSpeed = (c: Combat) => Number(c.options.petSpeed ?? 1.2);
 /** Your crit (gear, talents and buffs, minus the boss's suppression) plus Ferocity: pets inherit it since Oct 15. */
 const petCrit = (c: Combat) => D.pet.baseCrit + c.critChance('petAttack') + 2 * T(c).ferocity;
+/** The white swing inherits none of your crit since 161a620: only Ferocity, against the boss's suppression. */
+const petWhiteCrit = (c: Combat) => Math.max(0, D.pet.baseCrit + 2 * T(c).ferocity - c.rules.critSuppression);
 const petMult = (c: Combat) => {
   const t = T(c);
   const wrath = c.aura(c.player, 'bestialWrath') ? D.bestialWrath.damage : 1;
@@ -137,7 +139,7 @@ function petAttack(c: Combat, u: Unit, source: string, base: number, white: bool
   if ((x -= missChance) < 0) outcome = 'miss';
   else if ((x -= c.rules.dodge) < 0) outcome = 'dodge';
   else if (white && (x -= c.rules.glanceChance) < 0) outcome = 'glance';
-  else if (intimidation || c.random() * 100 < petCrit(c)) outcome = 'crit';
+  else if (intimidation || c.random() * 100 < (white ? petWhiteCrit(c) : petCrit(c))) outcome = 'crit';
   if (intimidation && outcome === 'crit') { c.removeAura(c.player, 'intimidation'); c.count('intimidationCrits'); }
   let amount = 0;
   if (landed(outcome)) {
@@ -204,12 +206,12 @@ function hawkHit(c: Combat, u: Unit, base: number, source: string): void {
   const amount = Math.max(1, Math.round(base * hawkMult(c) * (crit ? c.rules.critMultiplier : 1) * (1 - c.armorReduction(u))));
   c.deal({ target: u, source, outcome: crit ? 'crit' : 'hit', school: 'physical', amount, white: false });
 }
-/** A hawk's swing: its own damage plus 80 % of your RAP and what the bow adds to it, on the white melee table with your hit. */
+/** A hawk's swing: its own damage plus 80 % of your RAP and what your main hand adds to it, on the white melee table with your hit. */
 function hawkSwing(c: Combat, u: Unit): void {
   const h = D.summonHawk;
-  const bow = c.stats.ranged;
-  const bowDps = bow ? (bow.min + bow.max) / 2 / bow.speed : 0;
-  const ap = h.apShare * (c.rangedAttackPower(u) + h.weaponAp + h.weaponApPerDps * bowDps);
+  const mh = c.stats.mainHand;
+  const weapon = mh ? h.weaponApPerDps * ((mh.min + mh.max) / 2 / mh.speed) : h.weaponAp;
+  const ap = h.apShare * (c.rangedAttackPower(u) + weapon);
   const base = between(c, h.swingMin, h.swingMax) + (ap / h.apPerDps) * h.swing;
   let x = c.random() * 100;
   let outcome: Outcome = 'hit';
@@ -372,16 +374,22 @@ export const ABILITIES: Ability[] = [
       const u = t!;
       const h = D.summonHawk;
       c.count('hawksInARow');
-      hawkHit(c, u, h.dive + h.diveRap * c.rangedAttackPower(u), 'hawkDive');
-      // Two at most: a third replaces the oldest.
-      let slot = ['hawkA', 'hawkB'].find((id) => !c.aura(c.player, id));
-      if (!slot) slot = (c.aura(c.player, 'hawkA')!.end <= c.aura(c.player, 'hawkB')!.end) ? 'hawkA' : 'hawkB';
-      c.applyAura(c.player, {
-        id: slot, name: 'Hawk', icon: 'summonHawk', duration: h.duration, period: h.swing / c.rangedHaste(),
-        // Oct 15: the hawk sticks to the target you summoned it on.
-        onTick: (cc) => { if (u.health > 0) hawkSwing(cc, u); },
-      });
       c.count('hawks');
+      // The dive flies 1 sec (WoWSims 161a620): it lands, the hawk appears and swings at once, and its 18 sec start then.
+      c.schedule(c.t + h.flight, () => {
+        if (u.health <= 0) return;
+        hawkHit(c, u, h.dive + h.diveRap * c.rangedAttackPower(u), 'hawkDive');
+        // Two at most: a third replaces the oldest, with a fresh swing timer.
+        let slot = ['hawkA', 'hawkB'].find((id) => !c.aura(c.player, id));
+        if (!slot) slot = (c.aura(c.player, 'hawkA')!.end <= c.aura(c.player, 'hawkB')!.end) ? 'hawkA' : 'hawkB';
+        c.removeAura(c.player, slot);
+        c.applyAura(c.player, {
+          id: slot, name: 'Hawk', icon: 'summonHawk', duration: h.duration, period: h.swing / c.rangedHaste(),
+          // Oct 15: the hawk sticks to the target you summoned it on.
+          onTick: (cc) => { if (u.health > 0) hawkSwing(cc, u); },
+        });
+        hawkSwing(c, u);
+      });
     },
   },
   {
@@ -399,7 +407,7 @@ export const ABILITIES: Ability[] = [
     usable: (c) => !!c.aura(c.player, 'mongooseReady'),
     waitsOnBar: true,
     highlight: (c) => !!c.aura(c.player, 'mongooseReady'),
-    description: (c) => `Normalized weapon damage plus ${D.mongooseBite.bonus}. Usable ${D.mongooseBite.dodgeWindow} sec after the target dodges${T(c).exposePrey ? `, or ${D.mongooseBite.window} sec after Expose Prey (${5 * T(c).exposePrey}% per landed hit on your marked target)` : ''}.${T(c).laceratingStrikes ? ' Lacerating Strikes: it also bleeds for 40% of its damage over 21 sec, plus what the last bleed had left.' : ''}`,
+    description: (c) => `Normalized weapon damage plus ${D.mongooseBite.bonus}. Usable ${D.mongooseBite.dodgeWindow} sec after the target dodges${T(c).exposePrey ? `, or ${D.mongooseBite.window} sec after Expose Prey (${5 * T(c).exposePrey}% per landed hit on your marked target)` : ''}.${T(c).laceratingStrikes ? ' Lacerating Strikes: it also bleeds for 40% of its damage over 21 sec, replacing the last bleed.' : ''}`,
     use: (c, t) => {
       const u = t!;
       c.removeAura(c.player, 'mongooseReady');
@@ -408,9 +416,9 @@ export const ABILITIES: Ability[] = [
       if (!landed(outcome) || !T(c).laceratingStrikes) return;
       // The running bleed's unticked damage rolls into the new one (MythicSim in game, gs Oct 21).
       const l = D.laceratingStrikes;
-      const old = c.aura(u, 'laceratingStrikes');
-      const unpaid = old ? (old.value ?? 0) * ((old.end - c.t) / old.duration) : 0;
-      const total = (normalizedMelee(c) + D.mongooseBite.bonus) * (1 - c.armorReduction(u)) * l.share + unpaid;
+      // A new bite replaces the running bleed and loses what it had left (WoWSims 161a620).
+      c.removeAura(u, 'laceratingStrikes');
+      const total = (normalizedMelee(c) + D.mongooseBite.bonus) * (1 - c.armorReduction(u)) * l.share;
       c.applyAura(u, {
         id: 'laceratingStrikes', name: 'Lacerating Strikes', icon: 'laceratingStrikes', duration: l.ticks * l.period, period: l.period, bleed: true, value: total,
         onTick: (cc) => {
@@ -504,6 +512,8 @@ export function prepare(c: Combat): void {
     c.mod.critMultiplierFor[id] = c.rules.critMultiplier + 0.06 * t.predatorsEdge;
     c.mod.critFor[id] = 2 * t.savageStrikes;
   }
+  // Raptor Strike takes Predator's Edge twice on its crit bonus: 2.69x at 5/5 (WoWSims 161a620).
+  c.mod.critMultiplierFor.raptorStrike = 1 + (c.rules.critMultiplier - 1) * (1 + 0.06 * t.predatorsEdge) ** 2;
   c.mod.offHand = 1 + 0.1 * t.predatorsEdge;
 
   if (!b.pet && t.loneWolf) c.applyAura(p, { id: 'loneWolf', name: 'Lone Wolf', icon: 'loneWolf', duration: Infinity, damageDone: 1.2 });
@@ -534,7 +544,7 @@ export function prepare(c: Combat): void {
       c.applyAura(p, { id: 'quickShots', name: 'Quick Shots', icon: 'quickShots', duration: D.quickShots.duration, rangedHaste: D.quickShots.haste });
       c.count('quickShots');
     }
-    if (da && hit.white && !hit.ranged && c.aura(p, 'aspectOfTheBeast') && roll(c, 2 * da)) {
+    if (da && (hit.white || hit.source === 'windfuryTotem') && !hit.ranged && c.aura(p, 'aspectOfTheBeast') && roll(c, 2 * da)) {
       c.applyAura(p, { id: 'quickStrikes', name: 'Quick Strikes', icon: 'quickStrikes', duration: D.quickShots.duration, haste: D.quickShots.haste });
     }
     // Expose Prey: landed hits on your marked target can open Mongoose Bite for 10 s.

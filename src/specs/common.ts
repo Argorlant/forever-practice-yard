@@ -1,8 +1,15 @@
 // Shared by every class: the attack table against a level 63 boss and the
 // talent string decoder used by the sims' builds.
+import { REVELATION } from '../engine/raid';
 import type { AttackRules } from '../engine/types';
 
 /** Attack table against a level 63 boss. Measured on the beta (magey) unless noted. */
+/** The Revelation weapon enchant as an option of the casters (its numbers are in engine/raid.ts). */
+export const REVELATION_OPTION = {
+  key: 'revelation', kind: 'toggle' as const,
+  name: `Revelation on your weapon: a spell that lands without a crit has an ${REVELATION.chance * 100}% chance to make your next spell crit (${REVELATION.duration} sec)`,
+};
+
 export const BOSS_RULES: AttackRules = {
   specialMiss: 8,           // confirmed: measured 7.63 %; hit suppression is gone in Forever
   spellMiss: 17,            // classic: spells and poisons vs +3
@@ -27,7 +34,7 @@ export const BOSS_RULES: AttackRules = {
  * armor and health play no part.
  */
 export function rageFromDamageTaken(raw: number, attackerLevel = 63): number {
-  const points: [number, number][] = [[38, 0.218], [42, 0.239], [44, 0.31], [46, 0.36], [47, 0.377], [50, 0.38], [55, 0.381], [63, 0.4]];   // WoWSims, from logs
+  const points: [number, number][] = [[38, 0.218], [42, 0.239], [44, 0.31], [46, 0.36], [47, 0.377], [50, 0.38], [55, 0.381], [59, 0.38], [63, 0.4]];   // WoWSims, from logs
   let armor = points[points.length - 1][1];
   if (attackerLevel <= points[0][0]) armor = points[0][1];
   else {

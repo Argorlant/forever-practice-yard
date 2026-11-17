@@ -125,6 +125,7 @@ const abilities: Ability[] = [
       const done = finisher(c, u, 'rip');
       if (!done) return;
       const cp = done.cp;
+      c.rollWindfuryTotem(u);
       bleed(c, u, 'rip', 'Rip', ripTicks(c), D.rip.period, (cc) => ripTick(cc, cp), { genesis: T(c).genesis });
       c.count('rips');
       if (cp >= 5) c.count('ripsAt5');
@@ -200,9 +201,10 @@ const abilities: Ability[] = [
         return;
       }
       c.applyAura(u, { id: 'pounceStun', name: 'Pounce', icon: 'pounce', duration: D.pounce.stun });
+      c.rollWindfuryTotem(u);
       const ap = c.attackPower();
-      // Rend and Tear raises the ticks; Genesis does not reach the bleed, whose flags lie outside it (WoWSims).
-      bleed(c, u, 'pounce', 'Pounce', D.pounce.ticks, D.pounce.period, () => D.pounce.total / D.pounce.ticks + D.pounce.apTick * ap);
+      // Rend and Tear raises the ticks, and Genesis reaches the bleed since client 70938 (WoWSims 161a620).
+      bleed(c, u, 'pounce', 'Pounce', D.pounce.ticks, D.pounce.period, () => D.pounce.total / D.pounce.ticks + D.pounce.apTick * ap, { genesis: T(c).genesis });
       c.addComboPoints(u, 1);
     },
   },
@@ -270,7 +272,7 @@ function prepare(c: Combat): void {
   c.trackedAuras.push('clearcasting');
 
   // Omen of Clarity on any landed cat hit, white or special (1.0 s form speed).
-  c.onHit.push((_hit: Hit) => omen(c, 1));
+  c.onHit.push((hit: Hit) => { if (hit.source !== 'windfuryTotem') omen(c, 1); });
 }
 
 // ------------------------------------------------------------- rotation
@@ -286,26 +288,35 @@ function suggest(c: Combat): string | null {
   if (c.stealthed()) return 'ravage';
   if (!p.inCombat && ready('prowl')) return 'prowl';
   if (c.options.faerieFire && faerieFireLeft(c, t) <= 0 && ready('faerieFire')) return 'faerieFire';
-  // WoWSims Forever's Cat list. With Predatory Discipline, a bite at 4 points or more with Rip up pools energy first.
+  // WoWSims Forever's Cat list (161a620): its numbers follow the build. The Shred build (Shredding Attacks, Blood Frenzy)
+  // and the Claw build (the Hybrid, with neither) bite, shift, drink and build at their own energy. With Predatory
+  // Discipline, a bite at 4 points or more with Rip up pools energy first.
   const rip = c.aura(t, 'rip');
   const ripLeft = rip ? rip.end - c.t : 0;
   const cc = clearcasting(c);
-  const biteWindow = !!tl.predatoryDiscipline && cp >= 4 && ripLeft >= 2;
-  const bite = biteWindow && (energy >= (cc ? 60 : 85) || (cp >= 5 && energy >= (cc ? 50 : 70)));
+  const shredBuild = tl.shreddingAttacks > 0;
+  const biteWindow = !!tl.predatoryDiscipline && cp >= 4 && ripLeft >= (shredBuild ? 3 : 4);
+  const bite = biteWindow && (shredBuild
+    ? energy >= (cc ? 45 : 75) || (cp >= 5 && energy >= (cc ? 40 : 70))
+    : energy >= 90 || (cp >= 5 && energy >= (cc ? 35 : 70)));
   if (bite) return 'ferociousBite';
   const enoughMana = c.manaLocked || p.mana >= shiftingPowerMana(c);
-  if (tl.shiftingPower && energy <= 57 && ready('shiftingPower') && enoughMana) return 'shiftingPower';
-  if (c.options.thistleTea !== false && p.inCombat && energy <= (tl.bloodFrenzy ? 20 : 25) && ready('thistleTea')) return 'thistleTea';
+  if (tl.shiftingPower && energy <= (shredBuild ? 50 : 53) && ready('shiftingPower') && enoughMana) return 'shiftingPower';
+  if (c.options.thistleTea !== false && p.inCombat && energy <= (shredBuild ? 20 : 15) && ready('thistleTea')) return 'thistleTea';
   if (!c.manaLocked && p.inCombat && p.mana < shiftingPowerMana(c) && ready('manaPotion')) return 'manaPotion';
   const pool = biteWindow && !bite;
-  const builder = c.behind(t) ? 'shred' : 'claw';
-  if (cc && !pool) return builder;
-  // Rip at 4 points, at 5 when one more Shred still pays for it (no Blood Frenzy, or two points of it with Shifting Power).
+  // On Clearcasting, Shred from behind; paid, the Claw build always Claws.
+  const free = c.behind(t) ? 'shred' : 'claw';
+  const paid = shredBuild && c.behind(t) ? 'shred' : 'claw';
+  if (cc && !pool) return free;
+  // Rip at 4 points, at 5 when one more builder still pays for it (no Blood Frenzy, or two points of it with Shifting Power).
   const fifth = !tl.bloodFrenzy || (tl.bloodFrenzy >= 2 && !!tl.shiftingPower);
-  const oneMore = c.behind(t) && energy + 10 >= c.cost(c.ability('shred')!) + c.cost(c.ability('rip')!);
+  const oneMore = (paid === 'claw' || c.behind(t)) && energy + 10 >= c.cost(c.ability(paid)!) + c.cost(c.ability('rip')!);
   if (!rip && cp >= 4 && (!fifth || cp >= 5 || !oneMore)) return 'rip';
   if (!c.aura(t, 'rake')) return 'rake';
-  return pool ? null : builder;
+  // A paid builder only when it fits the pool: 60 energy, or few points.
+  if (pool || !(energy >= 60 || cp < (shredBuild ? 3 : 4))) return null;
+  return paid;
 }
 
 // ------------------------------------------------------- practice helpers
@@ -320,7 +331,7 @@ function chances(c: Combat): { title: string; rows: [string, string][] }[] {
   ];
   if (tl.bloodFrenzy) procs.push(['Blood Frenzy: +1 combo point on a builder crit', `${50 * tl.bloodFrenzy}%`]);
   if (c.raid.has('judgementOfWisdom')) procs.push(['Judgement of Wisdom: +59 mana', '50% per landed hit']);
-  if (c.raid.has('windfury')) procs.push(['Windfury Totem: extra attack', '20% per landed hit, 1.5 s cooldown']);
+  if (c.raid.has('windfury')) procs.push(['Windfury Totem: a weapon strike, +246 AP', '20% per landed main-hand hit, 0.1 s apart']);
   return [
     {
       title: 'Your attacks',

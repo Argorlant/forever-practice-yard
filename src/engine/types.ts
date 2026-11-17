@@ -133,7 +133,7 @@ export interface Aura {
   manaPerSecond?: number;
   /** Multiplies mana regeneration, whichever pool mana is (Energized). */
   manaRegen?: number;
-  /** On the player: Windfury Totem's extra attacks. */
+  /** On the player: Windfury Totem's strikes. */
   windfury?: boolean;
   /** On the player: extra spell power (Blood Fury). */
   spellPower?: number;

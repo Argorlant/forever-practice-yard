@@ -57,7 +57,7 @@ export const DATA = {
   flameShock: { mana: 410, direct: 292, coeff: 0.214, tick: 80, tickCoeff: 0.1, ticks: 4, period: 3, range: 20 },
   frostShock: { mana: 430, min: 495, max: 524, coeff: 0.386, range: 20 },
   // Oct 15: 8% of base mana (1520 at 60, gs base_stats.go), was 125. Hotfix of November: 150% of normalized weapon damage, 6 s.
-  stormstrike: { mana: 121, cooldown: 8, weapon: 1, bonus: 0.2, duration: 12 },   // hotfix push 114027: 100% weapon damage, 8 sec
+  stormstrike: { mana: Math.round(1520 * 0.08), cooldown: 8, weapon: 1, bonus: 0.2, duration: 12 },   // hotfix push 114027: 100% weapon damage, 8 sec; 8% of base mana, rounded (122)
   // Oct 15: rank 5 much weaker and cheaper (gs fire_totems.go: 232-258, 375 mana, coefficient 0.143; was 397-443, 520, 0.214).
   fireNova: { mana: 375, cooldown: 10, min: 232, max: 258, coeff: 0.143, radius: 10 },
   lightningShield: { mana: 370, orbs: 3, damage: 178, coeff: 0.267, icd: 3.5, duration: 600 },

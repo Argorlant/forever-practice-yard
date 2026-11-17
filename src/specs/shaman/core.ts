@@ -104,14 +104,19 @@ function spellHit(c: Combat, t: Unit, id: string, school: School, base: number, 
   return { outcome, amount };
 }
 
-/** After a damage spell is cast: it spends Clearcasting, then may give a new one (10 %, hit or miss). */
-function afterCast(c: Combat, id: string): void {
+/** A damage spell spends the Clearcasting it was cast with. */
+function spendClearcasting(c: Combat, id: string): void {
   const p = c.player;
   if (CLEARCASTING.includes(id) && c.aura(p, 'clearcasting')) {
     c.removeAura(p, 'clearcasting');
     c.count('clearcastingUsed');
     c.count(`clearcasting:${id}`);
   }
+}
+
+/** Elemental Focus: a cast, and each Overload copy, may give Clearcasting (10 %, hit or miss). */
+function rollClearcasting(c: Combat): void {
+  const p = c.player;
   if (T(c).elementalFocus && roll(c, D.clearcasting.chance)) {
     c.applyAura(p, { id: 'clearcasting', name: 'Clearcasting', icon: 'clearcasting', duration: D.clearcasting.duration });
     c.count('clearcasting');
@@ -119,7 +124,16 @@ function afterCast(c: Combat, id: string): void {
   }
 }
 
-/** Lightning Overload: 10/20/30 % for a free copy from its own row, no threat. `scale` is what a Chain Lightning jump keeps. */
+/** After a damage spell is cast: it spends Clearcasting, then may give a new one. */
+function afterCast(c: Combat, id: string): void {
+  spendClearcasting(c, id);
+  rollClearcasting(c);
+}
+
+/**
+ * Lightning Overload: 10/20/30 % for a free copy from its own row, no threat, when the spell lands. `scale` is what a Chain
+ * Lightning jump keeps. Each copy rolls Elemental Focus (WoWSims 161a620): its Clearcasting is for the next spell.
+ */
 function overload(c: Combat, t: Unit, spell: 'lightningBolt' | 'chainLightning', scale = 1): void {
   const lo = T(c).lightningOverload;
   if (!lo || !roll(c, D.lightningOverload.chance[lo])) return;
@@ -127,7 +141,9 @@ function overload(c: Combat, t: Unit, spell: 'lightningBolt' | 'chainLightning',
   c.emit('bolt', { target: t, color: 0x9ad8ff, speed: D.lightningBolt.speed, style: 'lightning' });
   const row = D.lightningOverload[spell];
   spellHit(c, t, 'lightningOverload', 'nature', between(c, row.min, row.max), row.coeff, { scale, direct: false });
+  rollClearcasting(c);
 }
+const hits = (o: string) => o !== 'resist' && o !== 'miss';
 
 /** Spells start your melee swing when you stand next to the dummy (Enhancement). */
 const swingIn = (c: Combat, t: Unit) => { if (melee(c) && c.inRange(t)) c.startAutoAttack(); };
@@ -212,10 +228,10 @@ export const ABILITIES: Ability[] = [
         if (maelstromStacks(c) >= D.maelstromWeapon.max) c.count('maelstromBolts');
         c.removeAura(c.player, 'maelstromWeapon');
       }
+      spendClearcasting(c, 'lightningBolt');
       const base = between(c, l.min, l.max);
-      spellHit(c, u, 'lightningBolt', 'nature', base, l.coeff, { charge: true });
-      overload(c, u, 'lightningBolt');
-      afterCast(c, 'lightningBolt');
+      if (hits(spellHit(c, u, 'lightningBolt', 'nature', base, l.coeff, { charge: true }).outcome)) overload(c, u, 'lightningBolt');
+      rollClearcasting(c);
     },
   }),
   spell({
@@ -231,13 +247,14 @@ export const ABILITIES: Ability[] = [
       const u = t!;
       const k = D.chainLightning;
       const others = c.targets.filter((x) => x !== u && x.health > 0 && c.inRange(x, 30));
+      spendClearcasting(c, 'chainLightning');
       [u, ...others].slice(0, k.targets).forEach((x, i) => {
         const base = between(c, k.min, k.max);
-        spellHit(c, x, 'chainLightning', 'nature', base, k.coeff, { charge: i === 0, scale: k.jump ** i });
+        const hit = spellHit(c, x, 'chainLightning', 'nature', base, k.coeff, { charge: i === 0, scale: k.jump ** i });
         if (i > 0) c.emit('bolt', { target: x, color: 0x9ad8ff, speed: 30, style: 'lightning' });
-        overload(c, x, 'chainLightning', k.jump ** i);
+        if (hits(hit.outcome)) overload(c, x, 'chainLightning', k.jump ** i);
       });
-      afterCast(c, 'chainLightning');
+      rollClearcasting(c);
     },
   }),
   spell({
@@ -379,7 +396,7 @@ export const ABILITIES: Ability[] = [
     () => `+77 Agility (+${D.graceOfAirTotem.crit.toFixed(1)}% melee crit) for 5 min. Since Oct 15 it stacks with another shaman's Windfury Totem; you still drop one Air totem, so with your own Windfury Weapon this is yours.`,
     () => ({ crit: D.graceOfAirTotem.crit })),
   totem('windfuryTotem', 'windfuryTotemOwn', 'air', 'Windfury Totem', D.windfuryTotem.mana,
-    () => 'Main-hand attacks: 20% for an extra attack with +246 AP, for 5 min. Your own Windfury Weapon turns it off for you: then use Grace of Air.',
+    () => 'Main-hand attacks: 20% for a strike with your weapon and +246 AP, 0.1 sec apart, for 5 min. It rolls beside your own Windfury Weapon.',
     () => ({ windfury: true })),
   totem('manaSpringTotem', 'manaSpringTotem', 'water', 'Mana Spring Totem', D.manaSpringTotem.mana,
     () => '10 mana every 2 sec for 5 min. It does not stack with a raid Mana Spring Totem.', () => ({ manaPerSecond: D.manaSpringTotem.perSecond }),
@@ -433,11 +450,11 @@ export function prepare(c: Combat): void {
   // Spirit Weapons: -30% threat, or +30% with Rockbiter.
   if (tl.spiritWeapons) c.mod.threat *= kind === 'rockbiter' ? 1.3 : 0.7;
 
-  // Flurry's charges (WoWSims, from logs): a white swing spends one whatever its outcome, and so does a Windfury Weapon
-  // strike; 0.5 sec apart, and none in the instant the charges came.
+  // Flurry's charges (WoWSims, from logs): a white swing spends one whatever its outcome, and so does a Windfury Weapon or
+  // Windfury Totem strike; 0.5 sec apart, and none in the instant the charges came.
   c.afterDamage.push((h) => {
     const fl = c.aura(p, 'flurry');
-    if (!fl || h.periodic || h.hand === 'off' || h.ranged || !(h.white || h.source === 'windfuryWeapon')) return;
+    if (!fl || h.periodic || h.hand === 'off' || h.ranged || !(h.white || h.source === 'windfuryWeapon' || h.source === 'windfuryTotem')) return;
     if (fl.start >= c.t - 1e-9 || c.t - (fl.value ?? -Infinity) < 0.5 - 1e-9) return;
     fl.value = c.t;
     fl.stacks = (fl.stacks ?? 1) - 1;
@@ -448,7 +465,8 @@ export function prepare(c: Combat): void {
     // Flurry: a melee crit gives 3 faster swings.
     if (h.outcome === 'crit' && tl.flurry) c.applyAura(p, { id: 'flurry', name: 'Flurry', icon: 'flurry', duration: D.flurry.duration, stacks: D.flurry.charges, haste: D.flurry.haste * tl.flurry });
     // Maelstrom Weapon: 10 procs per minute at any rank, from any landed melee hit.
-    if (tl.maelstromWeapon && roll(c, (100 * maelstromPpm(c) * c.stats.mainHand.speed) / 60)) {
+    // Windfury Totem's strike gives no stack (WoWSims 161a620).
+    if (tl.maelstromWeapon && h.source !== 'windfuryTotem' && roll(c, (100 * maelstromPpm(c) * c.stats.mainHand.speed) / 60)) {
       const before = maelstromStacks(c);
       c.addStack(p, { id: 'maelstromWeapon', name: 'Maelstrom Weapon', icon: 'maelstromWeapon', duration: D.maelstromWeapon.duration }, D.maelstromWeapon.max);
       c.count('maelstromStacks');
@@ -502,7 +520,7 @@ export function chances(c: Combat): { title: string; rows: [string, string][] }[
   const pct = (n: number) => `${Math.max(0, Math.min(100, n)).toFixed(1)}%`;
   const procs: [string, string][] = [];
   if (tl.elementalFocus) procs.push(['Clearcasting after a damage spell', `${D.clearcasting.chance}%: next damage spell free`]);
-  if (tl.lightningOverload) procs.push(['Lightning Overload per Lightning Bolt or Chain Lightning', `${[0, 3, 7, 10][tl.lightningOverload]}%: a free copy at half damage`]);
+  if (tl.lightningOverload) procs.push(['Lightning Overload per Lightning Bolt or Chain Lightning', `${D.lightningOverload.chance[tl.lightningOverload]}% when the spell lands: a free copy at half damage`]);
   if (tl.elementalDevastation) procs.push(['Elemental Devastation on a spell crit', `+${3 * tl.elementalDevastation}% melee crit, 10 s`]);
   if (melee(c)) {
     if (imbue(c) === 'windfury') procs.push(['Windfury Weapon per landed main-hand hit', `20% (1.5 s cooldown): 2 attacks with +${c.mod.windfuryWeapon?.ap ?? D.windfuryWeapon.ap} AP`]);

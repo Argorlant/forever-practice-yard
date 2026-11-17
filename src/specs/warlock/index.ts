@@ -6,7 +6,7 @@
 // builds in ./talents.ts.
 import type { Combat } from '../../engine/combat';
 import type { MinionLook, Spec } from '../../engine/types';
-import { BOSS_RULES, CONTROLS } from '../common';
+import { BOSS_RULES, CONTROLS, REVELATION_OPTION } from '../common';
 import { PET_HELP, PET_MODE } from '../pet';
 import { ABILITIES, D, SOURCES, T, baneOn, build, chances, demons, left, lifeTapAmount, prepare, regen } from './core';
 import { gearOptions } from '../gear';
@@ -135,6 +135,7 @@ const HELP_COMMON = `Spells have a cast bar and channels drain one; moving inter
     One Curse and one Bane per target: Curse of the Elements (+10% magic damage; skip it when a raid warlock provides it under Raid buffs and debuffs) and Bane of Doom (one hit for 1742 + 4x spell power after 60 sec, on cooldown) or Bane of Agony when Doom is out. Refresh a DoT when it has no more time left than its cast.`;
 const OPTIONS = [
   { key: 'lockMana', name: 'Lock your mana (spells cost nothing)', kind: 'toggle' as const },
+  REVELATION_OPTION,
   { key: 'mana', name: 'Mana pool', kind: 'number' as const, step: 100 },
   { key: 'spirit', name: 'Spirit (regeneration and Life Tap)', kind: 'number' as const, step: 1 },
   { key: 'mp5', name: 'Mana per 5 sec from gear', kind: 'number' as const, step: 1 },
@@ -180,7 +181,7 @@ function specFor(spec: WarlockSpec, base: Omit<Spec, 'className' | 'resource' | 
   };
 }
 
-const opts = (build: string, gear: 'warlock-affliction' | 'warlock-destruction') => ({ build, ...gearOptions(gear), sacrifice: 'imp', healingShare: D.healingShare, lockMana: false, demon: 'succubus', petMode: 'assist' });
+const opts = (build: string, gear: 'warlock-affliction' | 'warlock-destruction' | 'warlock-pact') => ({ build, ...gearOptions(gear), sacrifice: 'imp', healingShare: D.healingShare, lockMana: false, demon: 'succubus', petMode: 'assist' });
 
 export const warlockAffliction: Spec = specFor('affliction', {
   id: 'warlock-affliction',
@@ -204,7 +205,7 @@ export const warlockDemonology: Spec = specFor('demonology', {
   prefsRevision: 2,
   specName: 'Demonology',
   stats: PACT_STATS,
-  defaultOptions: opts('pact', 'warlock-affliction'),
+  defaultOptions: opts('pact', 'warlock-pact'),
   welcome: 'Welcome to Demonology practice (Demonic Pact). Your Succubus fights with you; Searing Pain brands the target so her next attacks add Shadow damage. Keep the Brand up, Bane of Doom on cooldown, Corruption and Immolate ticking, and fill with Shadow Bolt. Below 35% health, Decimation makes Soul Fire fast. The Fire Brand build fights with the Imp, fills with Searing Pain and casts Soul Fire on Decimation.',
   help: `${CONTROLS}
     ${PET_HELP}

@@ -5,7 +5,7 @@
 // off-tank. Shared rules in ./core.ts, numbers in ./data.ts, builds in ./talents.ts.
 import type { Combat } from '../../engine/combat';
 import type { Spec } from '../../engine/types';
-import { BOSS_RULES, CONTROLS } from '../common';
+import { BOSS_RULES, CONTROLS, REVELATION_OPTION } from '../common';
 import { ABILITIES, D, SOURCES, T, chances, fireTotem, imbue, maelstromStacks, nearFireTotem, prepare, regen } from './core';
 import { gearOptions } from '../gear';
 import { ELEMENTAL_STATS, ENHANCEMENT_STATS, OFFTANK_STATS } from './data';
@@ -70,14 +70,15 @@ function elementalSuggest(c: Combat): string | null {
   const drink = potion(c);
   if (drink) return drink;
   const flame = !!c.aura(t, 'flameShock');
+  // On several targets Fire Nova comes first (WoWSims 161a620).
+  if (many && fireTotem(c) && nearFireTotem(c, t, D.fireNova.radius) && can('fireNova')) return 'fireNova';
   // Lightning Mastery on your Flame Shock: instant and off the global cooldown.
   if (tl.lightningMastery && p.inCombat && flame && can('elementalMastery')) return 'elementalMastery';
   // On the move, only instants: Flame Shock when it is down, otherwise Earth Shock.
   if (p.moving) return !flame && can('flameShock') ? 'flameShock' : can('earthShock') ? 'earthShock' : null;
-  // On one target Chain Lightning waits while Lightning Mastery lasts, and below 40% mana.
+  // Chain Lightning waits while Lightning Mastery lasts, and at 40% mana or less, on one target or several (161a620).
   const mana = p.resource / p.maxResource;
-  if ((many || (mana >= 0.4 && !has('elementalMastery'))) && can('chainLightning')) return 'chainLightning';
-  if (many && fireTotem(c) && nearFireTotem(c, t, D.fireNova.radius) && can('fireNova')) return 'fireNova';
+  if (mana > 0.4 && !has('elementalMastery') && can('chainLightning')) return 'chainLightning';
   if (!flame && can('flameShock')) return 'flameShock';
   const flameLeft = (c.aura(t, 'flameShock')?.end ?? c.t) - c.t;
   if (String(c.options.build ?? '').startsWith('stormcaller') && has('clearcasting') && flameLeft > 2 && can('earthShock')) return 'earthShock';
@@ -187,6 +188,7 @@ function tankReview(c: Combat): Row[] {
 // ------------------------------------------------------------------- specs
 const OPTIONS = [
   { key: 'lockMana', name: 'Lock your mana (spells cost nothing)', kind: 'toggle' as const },
+  REVELATION_OPTION,
   { key: 'mana', name: 'Mana pool', kind: 'number' as const, step: 100 },
   { key: 'spirit', name: 'Spirit (regeneration outside the five-second rule)', kind: 'number' as const, step: 1 },
   { key: 'mp5', name: 'Mana per 5 sec from gear', kind: 'number' as const, step: 1 },
@@ -249,7 +251,7 @@ export const shamanEnhancement: Spec = specFor('enhancement', {
   welcome: 'Welcome to Enhancement practice. One two-hander with Flametongue Weapon: drop Windfury, Strength of Earth, Mana Spring and Magma Totem, keep Flame Shock up, then Stormstrike, a 5-stack Lightning Bolt (instant and free), Earth Shock (it takes the Stormstrike bonus) and Fire Nova around your Magma Totem.',
   help: `${CONTROLS}
     ${HELP_COMMON}
-    Enhancement in WoW Forever: no dual wield. Windfury Weapon: 20% per landed main-hand hit (1.5 sec cooldown) for two extra attacks with +466 AP (Elemental Weapons 3/3); it turns a Windfury Totem off for you, so your Air totem is Grace of Air. Stormstrike (8 sec): a weapon hit, and your next Lightning Bolt or Chain Lightning within 12 sec deals 20% more; Earth Shock gets the 20% without spending the charge (since Oct 21). Maelstrom Weapon: melee hits stack it (10 per minute at any rank); at 5 stacks Lightning Bolt is instant and free. Never hardcast Lightning Bolt below 5 stacks: it restarts your swing. Fire Nova is much weaker since Oct 15 (232-258, 0.143); Stormstrike costs 8% of base mana, and a spell that misses keeps its charge. Rage of the Farseer gives +30% attack speed.
+    Enhancement in WoW Forever: no dual wield. Windfury Weapon: 20% per landed main-hand hit (1.5 sec cooldown) for two extra attacks with +466 AP (Elemental Weapons 3/3); a Windfury Totem rolls beside it, for a strike of its own. Stormstrike (8 sec): a weapon hit, and your next Lightning Bolt or Chain Lightning within 12 sec deals 20% more; Earth Shock gets the 20% without spending the charge (since Oct 21). Maelstrom Weapon: melee hits stack it (10 per minute at any rank); at 5 stacks Lightning Bolt is instant and free. Never hardcast Lightning Bolt below 5 stacks: it restarts your swing. Fire Nova is much weaker since Oct 15 (232-258, 0.143); Stormstrike costs 8% of base mana, and a spell that misses keeps its charge. Rage of the Farseer gives +30% attack speed.
     This is a practice tool: hit, crit and proc chances follow WoW Forever; damage numbers are an approximation.`,
   look: { clothColor: 0x3a6a8a, leatherColor: 0x5a4020, hood: false, plate: false },
   suggest: enhancementSuggest,

@@ -3,7 +3,7 @@
 // '-'; the order is WoWSims Forever's (proto/rogue.proto).
 // See research/rogue_forever.json → talents and builds.
 import type { Binding, Stats } from '../../engine/types';
-import { BACKSTAB_STATS, COMBAT_STATS, MUTILATE_STATS, SUB_BACKSTAB_STATS } from './data';
+import { BACKSTAB_STATS, COMBAT_STATS, HEMO_STATS, MUTILATE_STATS } from './data';
 
 const TREES = [
   // Assassination
@@ -106,10 +106,11 @@ const HEMO_BAR = bar(['hemorrhage', 'shank', 'deathMark', 'sliceAndDice', 'ruptu
 const WS = 'wowsims/forever';
 export const BUILDS: Build[] = [
   { id: 'combat-gs', name: 'Combat Sinister Strike', source: WS, talentString: '00530320201-3200132202012321551', rotation: 'combat', stats: COMBAT_STATS, bar: COMBAT_BAR },
-  { id: 'combat-backstab', name: 'Combat Backstab', source: WS, talentString: '005203002-3203130202012321351-005', rotation: 'backstab', stats: BACKSTAB_STATS, bar: BACKSTAB_BAR },
-  { id: 'combat-venom', name: 'Combat Venom', source: WS, talentString: '00530320241001-320013220201232115', rotation: 'combat', stats: SUB_BACKSTAB_STATS, bar: VENOM_BAR },
+  { id: 'combat-backstab', name: 'Combat Backstab', source: WS, talentString: '005303002-3203030202012321351-005', rotation: 'backstab', stats: BACKSTAB_STATS, bar: BACKSTAB_BAR },
+  { id: 'combat-venom', name: 'Combat Venom', source: WS, talentString: '00530320241001-320013220201232115', rotation: 'combat', stats: COMBAT_STATS, bar: VENOM_BAR },
   { id: 'mutilate-gs', name: 'Mutilate, Assassination', source: WS, talentString: '00530311231251031-32030302020103-001', rotation: 'mutilate', stats: MUTILATE_STATS, bar: MUTILATE_BAR },
-  { id: 'hemo-gs', name: 'Subtlety Hemorrhage', source: WS, talentString: '00530301-320003-305230031321001151', rotation: 'hemorrhage', stats: COMBAT_STATS, bar: HEMO_BAR },
+  { id: 'hemo-gs', name: 'Subtlety Hemorrhage', source: WS, talentString: '00530301-320003-305230031321001151', rotation: 'hemorrhage', stats: HEMO_STATS, bar: HEMO_BAR },
+  { id: 'hemo-sf', name: 'Hemorrhage, Seal Fate', source: WS, talentString: '0053031121135102-02-0352000313210001', rotation: 'hemorrhage', stats: HEMO_STATS, bar: HEMO_BAR },
 ];
 
 export const buildLabel = (b: Build) => `${b.name} ${split(b.talentString)} (${b.source})`;

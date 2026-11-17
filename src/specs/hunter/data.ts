@@ -9,6 +9,7 @@ import { sheet } from '../gear';
 /** WoWSims Forever's P1 gear: a two-hander to shoot and weave with, and two weapons for melee Survival. */
 export const RANGED_STATS = sheet('hunter-ranged');
 export const MELEE_STATS = sheet('hunter-melee');
+export const WEAVE_STATS = sheet('hunter-weave');
 
 const RIFLE: Weapon = { name: 'Core Marksman Rifle', type: 'gun', min: 107, max: 200, speed: 2.5 };
 const GLAIVE: Weapon = { name: 'Legionite Glaive', type: 'polearm', min: 138, max: 207, speed: 3.2, twoHand: true };
@@ -73,7 +74,9 @@ export const DATA = {
   // Since the Nov 10 hotfix (WoWSims, from level 48 logs): 80% of your ranged attack power plus 7 and 14 a point of the
   // bow's dps; a swing of 0.185 of the creature dps over 2.5 sec, 22% either side, 60 attack power a point of dps, both
   // before Unleashed Fury 5/5 and Focused Fire 2/2. Arcane Shot and Summon Hawk cost 11% of base mana (build 70888).
-  summonHawk: { mana: Math.round(BASE_MANA * 0.11), cooldown: 6, dive: 108, diveRap: 0.05, duration: 18, max: 2, swing: 2.5, swingMin: 18.59, swingMax: 29.08, apShare: 0.8, weaponAp: 7, weaponApPerDps: 14, apPerDps: 70.38, critShare: 0.5 },
+  // 161a620: the dive flies 1 sec and the hawk comes with it; its swing is 0.153 of the creature DPS (15.37-24.05) and its
+  // AP is 80% of (RAP + 14 x your main hand's DPS), or + 7 with no main hand: the bow no longer counts.
+  summonHawk: { mana: Math.round(BASE_MANA * 0.11), cooldown: 6, dive: 108, diveRap: 0.05, flight: 1, duration: 18, max: 2, swing: 2.5, swingMin: 15.37, swingMax: 24.05, apShare: 0.8, weaponAp: 7, weaponApPerDps: 14, apPerDps: 70.38, critShare: 0.5 },
   raptorStrike: { mana: 100, cooldown: 6, bonus: 70 },
   mongooseBite: { mana: 65, cooldown: 5, bonus: 57, window: 10, dodgeWindow: 5 },
   striderKick: { mana: Math.round(BASE_MANA * 0.0581), cooldown: 8 },

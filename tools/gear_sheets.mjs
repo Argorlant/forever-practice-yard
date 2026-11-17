@@ -6,7 +6,7 @@
 // Usage: node tools/gear_sheets.mjs
 import fs from 'node:fs';
 
-const COMMIT = 'e855db5cfdc3a0d8262136fe6a7ea92e8c70578b';
+const COMMIT = '161a62003af48b186f2c18acc9d381c3dea97dd7';
 const RAW = `https://raw.githubusercontent.com/wowsims/forever/${COMMIT}/`;
 const SPECS = 'ui/specs/';
 
@@ -63,22 +63,28 @@ const SHEETS = [
   ['warrior-fury', 'warrior', 'orc', 'warrior/dps/gear_sets/prebis_fury.gear.json'],
   ['warrior-arms', 'warrior', 'orc', 'warrior/dps/gear_sets/prebis_arms.gear.json'],
   ['warrior-prot', 'warrior', 'orc', 'warrior/protection/gear_sets/prebis.gear.json', { tank: true }],
-  ['rogue-combat', 'rogue', 'human', 'rogue/dps/gear_sets/p1_slowmh.gear.json'],
-  ['rogue-backstab', 'rogue', 'human', 'rogue/dps/gear_sets/p1_bscombat.gear.json'],
-  ['rogue-mutilate', 'rogue', 'human', 'rogue/dps/gear_sets/p1_muti.gear.json'],
-  ['rogue-sub-backstab', 'rogue', 'human', 'rogue/dps/gear_sets/p1_bssub.gear.json'],
-  ['hunter-ranged', 'hunter', 'orc', 'hunter/dps/gear_sets/p1.gear.siml', { hunter: true }],
-  ['hunter-melee', 'hunter', 'orc', 'hunter/dps/gear_sets/p1_melee.gear.siml', { hunter: true }],
-  ['mage', 'mage', 'human', 'mage/dps/gear_sets/p1Arcane.gear.json', { health: true }],
-  ['warlock-affliction', 'warlock', 'human', 'warlock/dps/gear_sets/preraid.gear.json', { health: true }],
-  ['warlock-wrack', 'warlock', 'orc', 'warlock/dps/gear_sets/preraid.gear.json', { health: true }],
-  ['warlock-destruction', 'warlock', 'human', 'warlock/dps/gear_sets/preraid.gear.json', { health: true }],
+  // Since 161a620 each rogue build has its own set: Sinister Strike (Combat SS and Venom), Backstab, Mutilate, Hemorrhage.
+  ['rogue-combat', 'rogue', 'human', 'rogue/dps/gear_sets/sinister.gear.json'],
+  ['rogue-backstab', 'rogue', 'human', 'rogue/dps/gear_sets/backstab.gear.json'],
+  ['rogue-mutilate', 'rogue', 'human', 'rogue/dps/gear_sets/muti.gear.json'],
+  ['rogue-hemo', 'rogue', 'human', 'rogue/dps/gear_sets/hemo.gear.json'],
+  // Hunters: one Pre-BiS set per playstyle (turret for MM, BM and SV ranged; weave; melee).
+  ['hunter-ranged', 'hunter', 'orc', 'hunter/dps/gear_sets/prebis_turret.gear.siml', { hunter: true }],
+  ['hunter-weave', 'hunter', 'orc', 'hunter/dps/gear_sets/prebis_weave.gear.siml', { hunter: true }],
+  ['hunter-melee', 'hunter', 'orc', 'hunter/dps/gear_sets/prebis_melee.gear.siml', { hunter: true }],
+  ['mage', 'mage', 'human', 'mage/dps/gear_sets/preraid.gear.json', { health: true }],
+  // Warlocks: one set per build, every build an Orc.
+  ['warlock-affliction', 'warlock', 'orc', 'warlock/dps/gear_sets/sm_ruin.gear.json', { health: true }],
+  ['warlock-wrack', 'warlock', 'orc', 'warlock/dps/gear_sets/aff_wrack.gear.json', { health: true }],
+  ['warlock-destruction', 'warlock', 'orc', 'warlock/dps/gear_sets/destro.gear.json', { health: true }],
+  ['warlock-pact', 'warlock', 'orc', 'warlock/dps/gear_sets/demo_shadow_brand.gear.json', { health: true }],
+  ['warlock-pact-fire', 'warlock', 'orc', 'warlock/dps/gear_sets/demo_fire_brand.gear.json', { health: true }],
   ['priest-shadow', 'priest', 'human', 'priest/dps/builds/testing.build.json', { health: true }],
   ['priest-smite', 'priest', 'undead', 'priest/dps/builds/smite_testing.build.json', { health: true }],
   ['paladin-ret', 'paladin', 'human', 'paladin/retribution/gear_sets/default.gear.siml'],
   ['paladin-shock', 'paladin', 'human', 'paladin/retribution/gear_sets/holy_shock.gear.siml'],
   ['paladin-prot', 'paladin', 'human', 'paladin/protection/gear_sets/default.gear.siml', { tank: true }],
-  ['shaman-elemental', 'shaman', 'windshaper', 'shaman/elemental/builds/testing.build.json', { health: true }],
+  ['shaman-elemental', 'shaman', 'windshaper', 'shaman/elemental/builds/default.build.json', { health: true }],
   // It opens with a Manual Crowd Pummeler and swaps to this two-hander for the fight.
   ['shaman-enhancement', 'shaman', 'windshaper', 'shaman/enhancement/builds/testing.build.json', { health: true, mainHand: 'Stormcarver' }],
   ['druid-balance', 'druid', 'nightelf', 'druid/balance/gear_sets/prebis.gear.json'],
@@ -236,6 +242,9 @@ function compute(id, cls, raceId, gear, opts) {
     };
   }
   const options = c.mana ? { mana: c.mana - 280 + int * 15, spirit, mp5: Math.round(g('mp5')) } : {};
+  // Enchant Weapon - Revelation (effect 8217) on a caster's weapon: the yard's Revelation option (src/engine/combat.ts).
+  // Off (0) on the other casters' sheets, so picking such a build turns it off.
+  if (c.mana) options.revelation = worn.some((x) => x.enchant === 8217) ? 1 : 0;
   return { stats, options, names, sets, raw: { str, agi, sta, int, spirit } };
 }
 

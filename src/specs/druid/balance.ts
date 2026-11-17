@@ -6,7 +6,7 @@ import type { Combat } from '../../engine/combat';
 import type { Ability, Outcome, School, Spec, Unit } from '../../engine/types';
 import { MOONKIN_AURA } from '../../engine/raid';
 import { ENERGIZED } from '../racials';
-import { BOSS_RULES } from '../common';
+import { BOSS_RULES, REVELATION_OPTION } from '../common';
 import { gearOptions } from '../gear';
 import { BALANCE_STATS } from './data';
 import { CONTROLS, D, SOURCES, YARD, barkskin, clearcasting, faerieFire, manaPotion, omen, resetState, roll, useClearcasting } from './shared';
@@ -29,9 +29,9 @@ function regen(c: Combat): number {
   const casting = c.t - c.lastSpend < 5;
   const innervate = !!c.aura(c.player, 'innervate');
   const reflection = [0, 0.17, 0.33, 0.5][T(c).reflection];
-  // Innervate: 5 times the Spirit regeneration, all of it while casting.
+  // Innervate: 5 times the Spirit regeneration, all of it while casting, and since 161a620 5 times your gear's MP5 too.
   const share = innervate ? 1 : casting ? reflection : 1;
-  return spirit * (innervate ? D.innervate.regen : 1) * share + mp5;
+  return (spirit * share + mp5) * (innervate ? D.innervate.regen : 1);
 }
 
 // ----------------------------------------------------------------- spells
@@ -180,11 +180,12 @@ const abilities: Ability[] = [
     id: 'innervate', name: 'Innervate', icon: 'innervate', gcd: D.spellGcd, target: 'self', hastedGcd: true,
     animation: 'cast',
     cost: () => D.innervate.mana, cooldown: D.innervate.cooldown,
-    description: () => `For ${D.innervate.duration} sec your Spirit regeneration is 5 times faster and continues fully while casting.`,
+    description: () => `For ${D.innervate.duration} sec your Spirit regeneration and your gear's mana per 5 sec are 5 times faster, and Spirit regeneration continues fully while casting.`,
     use: (c) => {
       c.removeAura(c.player, ENERGIZED);
       c.applyAura(c.player, { id: 'innervate', name: 'Innervate', icon: 'innervate', duration: D.innervate.duration });
-      afterCast(c, 0);
+      // Innervate rolls Omen of Clarity only in Moonkin Form (WoWSims 161a620).
+      if (c.aura(c.player, 'moonkinForm')) afterCast(c, 0);
     },
   },
   {
@@ -327,6 +328,7 @@ export const druidBalance: Spec = {
   lowMana: (c) => Math.round(D.starfire.mana * (1 - moonglow(c))),
   options: [
     { key: 'lockMana', name: 'Lock your mana (spells cost nothing)', kind: 'toggle' },
+    REVELATION_OPTION,
     { key: 'mana', name: 'Mana pool', kind: 'number', step: 100 },
     { key: 'spirit', name: 'Spirit (regeneration outside the five-second rule)', kind: 'number', step: 1 },
     { key: 'mp5', name: 'Mana per 5 sec from gear', kind: 'number', step: 1 },

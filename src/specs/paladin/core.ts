@@ -52,12 +52,15 @@ const spellPower = (c: Combat) => c.stats.spellPower ?? 0;
  * it (both sims). Holy damage ignores armor, and a boss without resistances
  * resists none of it (Oct 21).
  */
+/** Two-Handed Weapon Specialization's Holy part reaches only melee-defense spells (WoWSims 161a620) and Consecration. */
+const TWO_HAND_HOLY = new Set(['sealOfRighteousness', 'sealOfCommand', 'sealOfFury', 'holyStrike', 'judgementOfCommand', 'consecration']);
+
 export function holyDamage(c: Combat, t: Unit, id: string, base: number, coeff: number, outcome: Outcome,
   opts: { spellTable?: boolean } = {}): number {
   if (!landed(outcome)) return 0;
   const crit = outcome === 'crit' ? (opts.spellTable ? c.rules.spellCritMultiplier : c.rules.critMultiplier) : 1;
   const ground = c.aura(t, 'consecratedGround') ? 1 + D.consecratedGround.perPoint * T(c).consecratedGround : 1;
-  const twoHand = twoHanded(c) ? 1 + 0.02 * T(c).twoHandedWeaponSpecialization : 1;
+  const twoHand = twoHanded(c) && TWO_HAND_HOLY.has(id) ? 1 + 0.02 * T(c).twoHandedWeaponSpecialization : 1;
   const d = ((base + coeff * spellPower(c)) * c.auraProduct('damageDone') * (c.mod.damageFor[id] ?? 1) * ground * twoHand
     + coeff * c.bonusTaken(t, 'holy')) * crit;
   return Math.max(1, Math.round(d));
@@ -230,7 +233,7 @@ export const ABILITIES: Ability[] = [
     cooldown: (c) => D.judgement.cooldown - T(c).improvedJudgement,
     requirements: (c) => (currentSeal(c) ? null : 'You have no seal to judge'),
     usable: (c) => !!currentSeal(c),
-    description: (c) => `Unleashes your seal on the target; in WoW Forever the seal stays up. Off the global cooldown. Righteousness and Command deal Holy damage on the melee table (it can miss and crit for double, never dodged or parried); Fury also taunts.${T(c).sanctifiedJudgement ? ` Sanctified Judgement gives back ${20 * T(c).sanctifiedJudgement}% of your seal's cost.` : ''}`,
+    description: (c) => `Unleashes your seal on the target; in WoW Forever the seal stays up. Off the global cooldown. They deal Holy damage: Command on the melee table, Righteousness and Fury on the ranged table since client 70938 (the same miss and crit in the yard: never dodged or parried, crits for double); Fury also taunts.${T(c).sanctifiedJudgement ? ` Sanctified Judgement gives back ${20 * T(c).sanctifiedJudgement}% of your seal's cost.` : ''}`,
     use: (c, t) => {
       judge(c, t!);
       c.count('judgements');
@@ -476,11 +479,13 @@ export function prepare(c: Combat): void {
         c.applyAura(hit.target, { id: 'vindication', name: 'Vindication', icon: 'vindication', duration: v.duration, apReduction: v.apPerRank * t.vindication });
       }
     }
-    if (!hit.white) return;
-    c.count('whiteLanded');
+    // Windfury Totem's strike carries the seal, but Unsealed Wrath does not hear it (WoWSims 161a620).
+    const totem = hit.source === 'windfuryTotem';
+    if (!hit.white && !totem) return;
+    if (!totem) c.count('whiteLanded');
     const now = currentSeal(c);
     if (now) sealProc(c, hit.target, now);
-    if (!t.unsealedWrath || !now) return;
+    if (totem || !t.unsealedWrath || !now) return;
     // Unsealed Wrath (Oct 30): a swing with another seal releases the stored copies, each with its seal's normal chance
     // (the yard's reading: Seal of Command's 1 s cooldown does not stop them); then the swing stores a copy of the seal it carried.
     const s = state(c);
@@ -506,7 +511,8 @@ export function prepare(c: Combat): void {
   // The attacking dummy: Holy Shield, Redoubt, Reckoning and Shield Specialization.
   c.onIncoming.push((i: Incoming) => {
     const s = state(c);
-    if (i.raw > 0 && t.redoubt && roll(c, D.redoubt.chance)) {
+    // Every melee attack taken rolls it, avoided ones too (WoWSims 161a620, from logs).
+    if (t.redoubt && roll(c, D.redoubt.chance)) {
       const r = D.redoubt;
       c.removeAura(p, 'redoubt');
       c.mod.block += r.block * t.redoubt;
@@ -539,6 +545,8 @@ export function prepare(c: Combat): void {
   // The stored Reckoning charges go off right after your next main-hand swing, hit or miss, without resetting the swing timer.
   c.afterDamage.push((hit: Hit) => {
     const s = state(c);
+    // Windfury Totem's strike, landed or not, takes the charges and swings none of them (WoWSims 161a620).
+    if (hit.source === 'windfuryTotem' && c.aura(p, 'reckoning')) { c.removeAura(p, 'reckoning'); c.count('reckoningLost'); return; }
     if (s.releasing || !hit.white || hit.source !== 'melee_mh') return;
     const n = c.aura(p, 'reckoning')?.stacks ?? 0;
     if (!n) return;

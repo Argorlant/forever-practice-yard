@@ -122,6 +122,7 @@ function attackFinisher(c: Combat, t: Unit, id: string, opts: { forceCrit?: bool
     return null;
   }
   keepPremeditation(c);
+  c.rollWindfuryTotem(t);
   return { cp: c.spendComboPoints(), outcome };
 }
 
@@ -720,7 +721,7 @@ function deadlyPoison(c: Combat, t: Unit): void {
 
 // ------------------------------------------------------------- rotations
 /** Combo points the build's priority list waits for before Eviscerate. */
-const evisceratePoints = (c: Combat) => (T(c).mutilate ? 4 : 5);
+const evisceratePoints = (c: Combat) => (T(c).mutilate || buildById(c.options.build).rotation === 'backstab' ? 4 : 5);
 
 /**
  * The sims' priority lists, one per build (research/rogue_forever.md →
@@ -734,7 +735,6 @@ function suggest(c: Combat): string | null {
   const rotation = buildById(c.options.build).rotation;
   const cp = c.comboPointsOn(t);
   const snd = c.aura(p, 'sliceAndDice');
-  const sndLeft = snd ? snd.end - c.t : 0;
   const ready = (id: string) => c.cooldownLeft(id).left === 0;
   // WoWSims Forever's list, the same for every rogue: the build only decides what makes the points.
   const energy = p.resource;
@@ -743,6 +743,9 @@ function suggest(c: Combat): string | null {
   const exposeLow = !!c.options.exposeArmorDuty && (!ea || ea.end - c.t <= 16);
   const garrote = c.aura(t, 'garrote');
   const garroteLeft = garrote ? garrote.end - c.t : 0;
+  const rupture = c.aura(t, 'rupture');
+  const ruptureLeft = rupture ? rupture.end - c.t : 0;
+  const backstab = rotation === 'backstab' && mhDagger(c);
 
   if (!inCombat && !c.stealthed() && ready('stealth')) return 'stealth';
   if (exposeLow && cp === 5) return 'exposeArmor';
@@ -761,16 +764,17 @@ function suggest(c: Combat): string | null {
     if (cp >= 1 && !snd) return 'sliceAndDice';
     const eviscerate = c.cost(c.ability('eviscerate')!);
     if (cp === 5 && energy >= eviscerate && tl.coldBlood && ready('coldBlood') && !c.aura(p, 'coldBlood') && !c.aura(p, 'elunesLight')) return 'coldBlood';
-    if (!tl.deathMark && (cp >= 5 || (cp === 4 && tl.mutilate) || (cp >= 4 && sndLeft <= 6))) return 'eviscerate';
+    // Since 161a620: at 4 points with Mutilate or Backstab (no longer before Slice and Dice drops), and with Serrated
+    // Blades only while Rupture has 3 sec or more.
+    if (!tl.deathMark && (cp >= 5 || (cp === 4 && (tl.mutilate || backstab))) && (!tl.serratedBlades || ruptureLeft >= 3)) return 'eviscerate';
   }
   if (cp >= 5) return null;
   if (tl.ghostlyStrike && ready('ghostlyStrike') && (c.behind(t) || tl.dirtyDeeds) && garroteLeft <= 4) return 'ghostlyStrike';
-  const backstab = rotation === 'backstab' && mhDagger(c);
   if (backstab && tl.hemorrhage && !c.aura(t, 'hemorrhage')) return 'hemorrhage';
   if (backstab) return c.aura(p, 'ghostlyStrikeNext') ? null : 'backstab';
   if (tl.mutilate) return 'mutilate';
-  // Hemorrhage saves its energy for Ghostly Strike and Garrote when Garrote is about to fall.
-  if (tl.hemorrhage) return garroteLeft >= 8 || !tl.ghostlyStrike ? 'hemorrhage' : null;
+  // Hemorrhage saves its energy for Ghostly Strike and Garrote when Garrote is about to fall, unless energy would cap (75).
+  if (tl.hemorrhage) return garroteLeft >= 8 || !tl.ghostlyStrike || energy >= 75 ? 'hemorrhage' : null;
   return 'sinisterStrike';
 }
 
