@@ -96,9 +96,11 @@ export const LEADER_OF_THE_PACK = { id: 'leaderOfThePack', name: 'Leader of the 
 export const MOONKIN_AURA = { id: 'moonkinAura', name: 'Moonkin Aura', icon: 'moonkinForm', duration: Infinity, spellCrit: 3 };
 
 /**
- * Enchant Weapon - Revelation (WoW Forever, sold by vendors; WoWSims 161a620): a direct spell that deals damage without
- * a crit has an 8% chance (9% before client 70938) to make your next direct spell crit, within 15 sec. WoWSims notes
- * that the chance falls as your crit rises, by a rule no file states, and keeps it flat; so does the yard.
+ * Enchant Weapon - Revelation (WoW Forever, sold by vendors; WoWSims c5b3805): a direct spell that deals damage without
+ * a crit has an 8% chance (9% before client 70938) to make your next direct spell crit, within 15 sec. Only spells roll
+ * it, and the charge goes with the next spell's cast, landed or not (from 1,356 Warcraft Logs reports). WoWSims notes
+ * that the chance falls as your crit rises, by a rule no file states, and keeps it flat; so does the yard. A spell far
+ * under your level rolls less; every spell the builds cast is within 12 levels, so the yard leaves that out.
  */
 export const REVELATION = { chance: 0.08, duration: 15 };
 

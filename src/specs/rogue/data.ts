@@ -79,7 +79,8 @@ export const DATA = {
   preparation: { cooldown: 600 },
   // A passive since November: your Shank raises poison damage and the chance to apply them.
   venom: { duration: 6, damage: 0.3, chance: 20 },
-  // Rank 2. Always hits; the weapon share is of the off-hand's damage at half, and Dual Wield Specialization does not reach it.
+  // Rank 2. Always hits; the weapon share is of the off-hand's damage at half. An off-hand strike since WoWSims c5b3805:
+  // Dual Wield Specialization, Hack and Slash and the off hand's poison reach it.
   shank: { cost: 5, cooldown: 10, weapon: 0.5, energy: 25, flashEnergy: 3, flashCooldown: 0.4, bootKnifeChance: 20, bootKnifePoints: 2 },
   // Rank 4. WoWSims reads the rates from the tooltip: no row states them.
   deathMark: { cost: 25, cooldown: 10, duration: 6, perPoint: 0.12, capBase: 156, capPerPoint: 245, capAp: 0.04 },

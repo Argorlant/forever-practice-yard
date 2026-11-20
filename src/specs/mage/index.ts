@@ -8,7 +8,7 @@ import type { Spec } from '../../engine/types';
 import { BOSS_RULES, CONTROLS, REVELATION_OPTION } from '../common';
 import { ABILITIES, D, SOURCES, T, abStacks, chances, prepare, regen, stacksOf } from './core';
 import { gearOptions } from '../gear';
-import { MAGE_STATS } from './data';
+import { MAGE_FIRE_STATS, MAGE_FROST_STATS, MAGE_STATS } from './data';
 import { buildLabel, buildsFor, summary, talentsFor, type MageSpec } from './talents';
 
 type Row = { label: string; value: string; good?: boolean };
@@ -211,8 +211,8 @@ function fireReview(c: Combat): Row[] {
 export const mageFire: Spec = specFor('fire', {
   id: 'mage-fire',
   specName: 'Fire',
-  stats: MAGE_STATS,
-  defaultOptions: { build: 'fire', ...gearOptions('mage'), lockMana: false, fireFiller: 'scorch' },
+  stats: MAGE_FIRE_STATS,
+  defaultOptions: { build: 'fire', ...gearOptions('mage-fire'), lockMana: false, fireFiller: 'scorch' },
   options: [...OPTIONS, {
     key: 'fireFiller', name: 'Filler spell', kind: 'choice',
     choices: [{ value: 'scorch', label: 'Scorch (gunba: fast crits for Heating Up)' }, { value: 'fireball', label: 'Fireball (foreversim)' }, { value: 'frostfire', label: 'Frostfire Bolt (Fire/Frost builds)' }],
@@ -279,8 +279,8 @@ function frostReview(c: Combat): Row[] {
 export const mageFrost: Spec = specFor('frost', {
   id: 'mage-frost',
   specName: 'Frost',
-  stats: MAGE_STATS,
-  defaultOptions: { build: 'frost', ...gearOptions('mage'), lockMana: false },
+  stats: MAGE_FROST_STATS,
+  defaultOptions: { build: 'frost', ...gearOptions('mage-frost'), lockMana: false },
   options: OPTIONS,
   lowMana: (c) => c.cost(c.ability('frostbolt')!),
   welcome: 'Welcome to Frost practice. Frostbolt is your spell; Fingers of Frost (15% per Frostbolt) gives two charges that make Ice Lance hit four times as hard and crit far more (8 sec cooldown since Oct 30). Winter\'s Chill stacks from Frostbolt and Fingers of Frost Ice Lances for Cone of Cold: stand within 10 yards and cast it at full stacks. Keep Ice Barrier up: Frigid Power +15% Frost damage, and +5% more while the shield holds. The Arcane-Frost build also fires Arcane Missiles on Missile Barrage and keeps Arcane Blast\'s stacks up.',

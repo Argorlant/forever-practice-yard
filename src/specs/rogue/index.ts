@@ -366,8 +366,9 @@ const abilities: Ability[] = [
       const u = t!;
       const tl = T(c);
       const outcome: Outcome = roll(c, c.critChance('shank')) ? 'crit' : 'hit';
-      const amount = c.physicalDamage(u, 'shank', (c.weaponDamage('off') / c.mod.offHand) * D.shank.weapon, outcome);
-      c.deal({ target: u, source: 'shank', outcome, school: 'physical', amount, white: false });
+      // An off-hand strike: the off hand's poison, Hack and Slash and Dual Wield Specialization reach it (WoWSims c5b3805).
+      const amount = c.physicalDamage(u, 'shank', c.weaponDamage('off') * D.shank.weapon, outcome);
+      c.deal({ target: u, source: 'shank', outcome, school: 'physical', amount, white: false, hand: 'off', weaponStrike: true });
       c.addResource(shankEnergy(c));
       if (tl.venom) c.applyAura(c.player, { id: 'venom', name: 'Venom', icon: 'venom', duration: D.venom.duration });
       if (tl.bootKnife && roll(c, D.shank.bootKnifeChance * tl.bootKnife)) {
@@ -634,7 +635,7 @@ function prepare(c: Combat): void {
   for (const hand of ['main', 'off'] as Hand[]) {
     const w = weaponOf(c, hand);
     if (!w || !hs) continue;
-    const sources = hand === 'main' ? ['melee_mh', ...MAIN_HAND_STRIKES] : ['melee_oh', 'mutilateOH'];
+    const sources = hand === 'main' ? ['melee_mh', ...MAIN_HAND_STRIKES] : ['melee_oh', 'mutilateOH', 'shank'];
     for (const s of sources) {
       if (w.type === 'dagger' || w.type === 'fist') crit(s, hs);
       if (w.type === 'mace') c.mod.armorIgnoreFor[s] = 0.03 * hs;

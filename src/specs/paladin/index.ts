@@ -89,9 +89,9 @@ function retSuggest(c: Combat): string | null {
   const swing = c.swingLeft('main').left;
   if (sealLeft(c) <= Math.max(1, swing)) return seal;
   if (potion) return 'manaPotion';
-  // With the next swing far enough off, and mana to spare.
-  if (swing > 1.5 && mana >= 0.1 && ready('consecration')) return 'consecration';
-  if (swing > 1.5 && mana >= 0.1 && undeadDummy(c) && ready('exorcism')) return 'exorcism';
+  // With mana to spare: no longer held for the next swing (WoWSims c5b3805).
+  if (mana >= 0.1 && ready('consecration')) return 'consecration';
+  if (mana >= 0.1 && undeadDummy(c) && ready('exorcism')) return 'exorcism';
   if (seal !== primary && !(twist && kept?.seal === 'sealOfCommand')) return primary;
   return null;
 }

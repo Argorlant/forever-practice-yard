@@ -75,6 +75,9 @@ function normalized(c: Combat, hand: Hand = 'main'): number {
 }
 
 /** A weapon attack with the main hand: avoided attacks refund 80 % of the cost. */
+/** The dummy is a Giant or Dragonkin (Settings), or the fight is Onyxia's, where she and her whelps are Dragonkin. */
+export const giantOrDragonkin = (c: Combat) => !!c.options.giantDummy || c.encounter;
+
 function strike(c: Combat, t: Unit, id: string, base: number, opts: { noDodge?: boolean; refund?: boolean; hand?: Hand; noCrit?: boolean } = {}): Outcome {
   let outcome = c.rollSpecial(t, id, { noDodge: opts.noDodge });
   if (opts.noCrit && outcome === 'crit') outcome = 'hit';
@@ -529,7 +532,7 @@ const abilities: Ability[] = [
     usable: (c) => T(c).spearingStrike > 0 && stanceOf(c) === 'battle',
     learned: (c) => T(c).spearingStrike > 0,
     description: () => `${D.spearingStrike.percent * 100}% normalized weapon damage; more against Giants, Dragonkin and mounted enemies.`,
-    use: (c, t) => { strike(c, t!, 'spearingStrike', normalized(c) * D.spearingStrike.percent); },
+    use: (c, t) => { strike(c, t!, 'spearingStrike', normalized(c) * D.spearingStrike.percent * (giantOrDragonkin(c) ? D.spearingStrike.versus : 1)); },
   },
 ];
 
@@ -584,16 +587,16 @@ function prepare(c: Combat): void {
   }
 
   // Landed white swings: normalized rage, Unbridled Wrath, Weaponmaster swords, Bloodthrill. Windfury Totem's strike
-  // counts as a main-hand swing for rage and Unbridled Wrath (WoWSims 161a620).
+  // counts as a main-hand swing for rage and Unbridled Wrath (WoWSims 161a620). Heroic Strike and each target a Cleave
+  // hits roll Unbridled Wrath too, and no other ability does (WoWSims c5b3805, from logs).
   let extra = false;
   c.onHit.push((hit: Hit) => {
     const hand = hit.hand ?? 'main';
-    if (hit.white || hit.source === 'windfuryTotem') {
-      c.addResource(swingRage(c, hand, hit.outcome === 'crit'));
-      if (t.unbridledWrath && roll(c, 12 * t.unbridledWrath)) {
-        c.addResource(1);
-        c.count('unbridledWrath');
-      }
+    const swingHit = hit.white || hit.source === 'windfuryTotem';
+    if (swingHit) c.addResource(swingRage(c, hand, hit.outcome === 'crit'));
+    if ((swingHit || hit.source === 'heroicStrike' || hit.source === 'cleave') && t.unbridledWrath && roll(c, 12 * t.unbridledWrath)) {
+      c.addResource(1);
+      c.count('unbridledWrath');
     }
     const w = weaponOf(c, hand);
     const s = states.get(c)!;
@@ -730,8 +733,8 @@ function suggest(c: Combat): string | null {
   const cost = (id: string) => c.cost(c.ability(id)!);
 
   if (!p.inCombat && c.cooldownLeft('charge').left === 0 && c.distance(t) > 8 * 0.9144 && c.distance(t) < 25 * 0.9144 && stance === 'battle') return 'charge';
-  // WoWSims' Fury casts Reckless Swings just before the pull.
-  if (!p.inCombat && b.rotation === 'fury' && tl.recklessSwings && ready('recklessSwings')) return 'recklessSwings';
+  // WoWSims' Fury and Arms cast Reckless Swings just before the pull.
+  if (!p.inCombat && (b.rotation === 'fury' || b.rotation === 'arms') && tl.recklessSwings && ready('recklessSwings')) return 'recklessSwings';
   // A fight starts with the auto attack: rage comes from landed swings.
   if (!p.autoAttacking && c.inRange(t)) return 'attack';
 
@@ -784,7 +787,7 @@ function suggest(c: Combat): string | null {
     const whirlwindReady = targets >= 2 && c.cooldownLeft('whirlwind').left === 0;
     if (targets > 1 && can('sweepingStrikes')) return 'sweepingStrikes';
     if (can('overpower')) return 'overpower';
-    if (whirlwindReady && rage >= 25 && stance !== 'berserker' && ready('berserkerStance')) return 'berserkerStance';
+    if (whirlwindReady && rage >= 25 && rage <= 40 && stance !== 'berserker' && ready('berserkerStance')) return 'berserkerStance';
     if (targets >= 2 && can('whirlwind')) return 'whirlwind';
     if (can('mortalStrike')) return 'mortalStrike';
     const slam = (c.ability('slam')!.castTime as (cc: Combat) => number)(c);
@@ -801,6 +804,7 @@ function suggest(c: Combat): string | null {
     if (!hsQueued && !exec && rage >= 90 && !tl.improvedSlam) return 'heroicStrike';
     if (whirlwindReady && stance !== 'berserker' && ready('berserkerStance')) return 'berserkerStance';
     if (p.inCombat && rage < 90 && ready('bloodrage')) return 'bloodrage';
+    if (p.inCombat && tl.recklessSwings && ready('recklessSwings') && c.swingLeft('main').left <= 1 && rage < 50) return 'recklessSwings';
     if (bs && bs.end - c.t <= 10 && rage >= 10 && c.cooldownLeft('mortalStrike').left >= D.gcd) return 'battleShout';
     return null;
   }
@@ -834,9 +838,16 @@ function suggest(c: Combat): string | null {
   if (p.inCombat && tl.deathWish && can('deathWish')) return 'deathWish';
   if (targets > 1 && can('sweepingStrikes')) return 'sweepingStrikes';
   if (targets > 1 && can('whirlwind')) return 'whirlwind';
-  const overpowerDue = opWindow && opIn(0) && rage >= 5 && rage <= 73;
+  // The swap to Battle Stance waits for 40 rage or less (Tactical Mastery keeps 25); in Battle Stance there is no cap.
+  const overpowerDue = opWindow && opIn(0) && rage >= 5;
   if (overpowerDue && stance === 'battle') return 'overpower';
-  if (overpowerDue && ready('battleStance')) return 'battleStance';
+  if (overpowerDue && rage <= 40 && ready('battleStance')) return 'battleStance';
+  // Spearing Strike (the Dragonkin/Giant build): a swap to Battle Stance for it against a Giant or Dragonkin, with
+  // Bloodthirst and Whirlwind a global cooldown away; in Battle Stance it goes on cooldown whatever the target.
+  const delayCheck = c.cooldownLeft('bloodthirst').left >= D.gcd && c.cooldownLeft('whirlwind').left >= D.gcd;
+  if (tl.spearingStrike && stance !== 'battle' && c.cooldownLeft('spearingStrike').left === 0 && rage >= 15 && !exec && delayCheck
+    && giantOrDragonkin(c) && ready('battleStance')) return 'battleStance';
+  if (tl.spearingStrike && stance === 'battle' && can('spearingStrike')) return 'spearingStrike';
   if (exec && can('execute')) return 'execute';
   if (can('whirlwind')) return 'whirlwind';
   if (!hsQueued && targets > 1 && rage >= 25) return 'cleave';
@@ -845,7 +856,7 @@ function suggest(c: Combat): string | null {
   if (!hsQueued && ((targets === 1 && !exec && rage >= 40) || (spare && rage > 60))) return 'heroicStrike';
   const rendDue = targets === 1 && !exec && !rend && rage >= 10;
   if (rendDue && stance === 'battle') return 'rend';
-  if (rendDue && ready('battleStance')) return 'battleStance';
+  if (rendDue && rage <= 40 && ready('battleStance')) return 'battleStance';
   if (stance === 'battle' && !overpowerDue && !rendDue && ready('berserkerStance')) return 'berserkerStance';
   if (windfury && spare && !exec && targets < 2 && can('hamstring')) return 'hamstring';
   if (p.inCombat && tl.recklessSwings && ready('recklessSwings')) return 'recklessSwings';
@@ -968,9 +979,10 @@ export const warrior: Spec = {
     { name: 'Protection: axe and shield', stats: PROT_STATS },
   ],
   builds: BUILDS.map((b) => ({ id: b.id, label: buildLabel(b), name: b.name, source: b.source, talentString: b.talentString, stats: b.stats, bar: b.bar, options: b.options, tank: b.tank, trees: summary(talentsFor(b.id)) })),
-  defaultOptions: { build: BUILDS[0].id, sunderDuty: false },
+  defaultOptions: { build: BUILDS[0].id, sunderDuty: false, giantDummy: false },
   options: [
     { key: 'sunderDuty', name: 'You keep 5 Sunder Armors up', kind: 'toggle' },
+    { key: 'giantDummy', name: 'The dummy is a Dragonkin or a Giant (Spearing Strike deals double)', kind: 'toggle' },
   ],
   bar: BUILDS[0].bar,
   welcome: 'Welcome to warrior practice. Pick a Fury, Arms or Protection build from the WoW Forever sims in Settings. For Protection the dummy hits back, so blocks, Revenge and rage from damage taken work as in the game.',

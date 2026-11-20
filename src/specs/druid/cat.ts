@@ -288,35 +288,42 @@ function suggest(c: Combat): string | null {
   if (c.stealthed()) return 'ravage';
   if (!p.inCombat && ready('prowl')) return 'prowl';
   if (c.options.faerieFire && faerieFireLeft(c, t) <= 0 && ready('faerieFire')) return 'faerieFire';
-  // WoWSims Forever's Cat list (161a620): its numbers follow the build. The Shred build (Shredding Attacks, Blood Frenzy)
-  // and the Claw build (the Hybrid, with neither) bite, shift, drink and build at their own energy. With Predatory
-  // Discipline, a bite at 4 points or more with Rip up pools energy first.
+  // WoWSims Forever's single-target Cat list (c5b3805). The dummy does not die, so its fight-end Bites never come, and
+  // the fight is long: no short-fight Bite window. No Idol of Ferocity in the gear, so none of its tuning.
   const rip = c.aura(t, 'rip');
   const ripLeft = rip ? rip.end - c.t : 0;
   const cc = clearcasting(c);
-  const shredBuild = tl.shreddingAttacks > 0;
-  const biteWindow = !!tl.predatoryDiscipline && cp >= 4 && ripLeft >= (shredBuild ? 3 : 4);
-  const bite = biteWindow && (shredBuild
-    ? energy >= (cc ? 45 : 75) || (cp >= 5 && energy >= (cc ? 40 : 70))
-    : energy >= 90 || (cp >= 5 && energy >= (cc ? 35 : 70)));
-  if (bite) return 'ferociousBite';
+  const bf = tl.bloodFrenzy;
+  const shredding = tl.shreddingAttacks > 0;
+  const behind = c.behind(t);
+  const cost = (id: string) => c.cost(c.ability(id)!);
+  // A mid-fight Ferocious Bite (Predatory Discipline): 4 points with Blood Frenzy and 5 without, with Rip's 3 or 4 s
+  // left; it waits for 75 energy (45 on Clearcasting, 60 at 5 points or with two Blood Frenzy points and no Shredding
+  // Attacks), and builders pool for it meanwhile.
+  const biteWindow = !!tl.predatoryDiscipline && cp >= (bf ? 4 : 5) && ripLeft >= (bf ? 3 : 4);
+  const funded = cc ? energy >= 45 : energy >= 75 || ((cp >= 5 || (bf >= 2 && !shredding)) && energy >= 60);
+  if (biteWindow && funded) return 'ferociousBite';
   const enoughMana = c.manaLocked || p.mana >= shiftingPowerMana(c);
-  if (tl.shiftingPower && energy <= (shredBuild ? 50 : 53) && ready('shiftingPower') && enoughMana) return 'shiftingPower';
-  if (c.options.thistleTea !== false && p.inCombat && energy <= (shredBuild ? 20 : 15) && ready('thistleTea')) return 'thistleTea';
+  if (tl.shiftingPower && energy <= 53 && ready('shiftingPower') && enoughMana) return 'shiftingPower';
+  if (c.options.thistleTea !== false && p.inCombat && energy <= 15 && ready('thistleTea')) return 'thistleTea';
   if (!c.manaLocked && p.inCombat && p.mana < shiftingPowerMana(c) && ready('manaPotion')) return 'manaPotion';
-  const pool = biteWindow && !bite;
-  // On Clearcasting, Shred from behind; paid, the Claw build always Claws.
-  const free = c.behind(t) ? 'shred' : 'claw';
-  const paid = shredBuild && c.behind(t) ? 'shred' : 'claw';
-  if (cc && !pool) return free;
+  // On Clearcasting, Shred from behind, Claw from the front.
+  if (cc) return behind ? 'shred' : 'claw';
   // Rip at 4 points, at 5 when one more builder still pays for it (no Blood Frenzy, or two points of it with Shifting Power).
-  const fifth = !tl.bloodFrenzy || (tl.bloodFrenzy >= 2 && !!tl.shiftingPower);
-  const oneMore = (paid === 'claw' || c.behind(t)) && energy + 10 >= c.cost(c.ability(paid)!) + c.cost(c.ability('rip')!);
+  const builder = shredding ? 'shred' : 'claw';
+  const fifth = !bf || (bf >= 2 && !!tl.shiftingPower);
+  const oneMore = (!shredding || behind) && energy >= cost(builder) && energy + 10 >= cost(builder) + cost('rip');
   if (!rip && cp >= 4 && (!fifth || cp >= 5 || !oneMore)) return 'rip';
   if (!c.aura(t, 'rake')) return 'rake';
-  // A paid builder only when it fits the pool: 60 energy, or few points.
-  if (pool || !(energy >= 60 || cp < (shredBuild ? 3 : 4))) return null;
-  return paid;
+  // A paid builder when it fits the pool: 60 energy, few points (under 4 without Blood Frenzy, under 3 with two of it),
+  // or one point of Blood Frenzy; never while pooling for a Bite.
+  const pool = biteWindow && !funded;
+  const fits = !pool && (bf === 1 || energy >= 60 || (!bf && cp < 4) || (bf >= 2 && cp < 3));
+  if (shredding && behind && energy >= cost('shred') && fits) return 'shred';
+  if (!shredding && energy >= cost('claw') && fits) return 'claw';
+  // Claw stands in for a Shred that cannot go (from the front), at Shred's energy, unless pooling for a Bite.
+  if (!behind && energy >= cost('shred') && !pool) return 'claw';
+  return null;
 }
 
 // ------------------------------------------------------- practice helpers

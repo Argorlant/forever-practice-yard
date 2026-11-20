@@ -85,7 +85,8 @@ export const DATA = {
   concussionBlow: { cost: 10, cooldown: 45, duration: 5 },
   charge: { rage: 15, cooldown: 15, minRange: 8, maxRange: 25 },
   intercept: { cost: 10, cooldown: 30, damage: 65, minRange: 8, maxRange: 25 },
-  spearingStrike: { cost: 15, cooldown: 20, percent: 0.75 },
+  // Double damage to Giants and Dragonkin (its third effect, +1).
+  spearingStrike: { cost: 15, cooldown: 20, percent: 0.75, versus: 2 },
   // 25 % of base health (1689 at 60); each of the next 4 white swings adds 5 rage.
   recklessSwings: { cooldown: 15, gcd: 1, duration: 8, charges: 4, rage: 5, health: 422 },
   stanceCooldown: 1,

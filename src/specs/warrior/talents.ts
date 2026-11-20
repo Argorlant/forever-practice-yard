@@ -70,6 +70,9 @@ const FURY_BAR = bar(['bloodthirst', 'whirlwind', 'heroicStrike', 'execute', 'ov
   'attack', 'berserkerRage', 'bloodrage', 'battleShout', 'pummel', 'hamstring', 'deathWish', 'recklessness']);
 const TWO_HAND_BAR = bar(['bloodthirst', 'whirlwind', 'heroicStrike', 'execute', 'overpower', 'slam', 'sunderArmor', 'recklessSwings',
   'attack', 'berserkerRage', 'bloodrage', 'battleShout', 'pummel', 'hamstring', 'deathWish', 'recklessness']);
+// The Dragonkin/Giant build presses Spearing Strike where the others have Pummel.
+const FURY_DRAGON_BAR = bar(['bloodthirst', 'whirlwind', 'heroicStrike', 'execute', 'overpower', 'recklessSwings', 'sunderArmor', 'cleave',
+  'attack', 'berserkerRage', 'bloodrage', 'battleShout', 'spearingStrike', 'hamstring', 'deathWish', 'recklessness']);
 const ARMS_BAR = bar(['mortalStrike', 'overpower', 'heroicStrike', 'execute', 'rend', 'slam', 'sunderArmor', 'spearingStrike',
   'attack', 'charge', 'bloodrage', 'battleShout', 'sweepingStrikes', 'whirlwind', 'hamstring', 'recklessness']);
 const PROT_BAR = bar(['shieldSlam', 'revenge', 'sunderArmor', 'heroicStrike', 'shieldBlock', 'thunderClap', 'demoralizingShout', 'battleShout',
@@ -81,8 +84,12 @@ const COMMUNITY = 'community, from gunba/wow-forever-sim';
 /** The same build on the November tree: Improved Tactical Mastery, Raging Blows and Flurry freed 5 points, which went to Reckless Swings, Improved Whirlwind, Improved Heroic Strike and Anger Management. */
 const MOVED = `${COMMUNITY}, moved to the November tree`;
 export const BUILDS: Build[] = [
-  { id: 'fury-dw', name: 'Fury, dual wield', talentString: '30303213002-350530005122100231-1', source: WS, rotation: 'fury', stance: 'berserker', stats: FURY_STATS, bar: FURY_BAR },
-  { id: 'fury-sunder', name: 'Fury, keeps Sunder Armor up', talentString: '30303213002-350530005122100231-1', source: WS, rotation: 'fury', stance: 'berserker', stats: FURY_STATS, bar: FURY_BAR, options: { sunderDuty: true } },
+  // WoWSims c5b3805's Fury talents: Enrage instead of Booming Voice and Improved Bloodrage.
+  { id: 'fury-dw', name: 'Fury, dual wield', talentString: '30303213002-050530045122100231', source: WS, rotation: 'fury', stance: 'berserker', stats: FURY_STATS, bar: FURY_BAR },
+  { id: 'fury-sunder', name: 'Fury, keeps Sunder Armor up', talentString: '30303213002-050530045122100231', source: WS, rotation: 'fury', stance: 'berserker', stats: FURY_STATS, bar: FURY_BAR, options: { sunderDuty: true } },
+  // Against a Giant or Dragonkin boss (Onyxia): an Enrage point goes to Spearing Strike, which deals double to both, and
+  // the rotation swaps to Battle Stance for it. The dummy starts as one; on another kind it does less than Fury.
+  { id: 'fury-dragonkin', name: 'Fury, Dragonkin or Giant boss', talentString: '30303213102-050530035122100231', source: WS, rotation: 'fury', stance: 'berserker', stats: FURY_STATS, bar: FURY_DRAGON_BAR, options: { giantDummy: true } },
   { id: 'arms-2h', name: 'Arms, two-hander', talentString: '30303213132215201-55050000002-2', source: WS, rotation: 'arms', stance: 'battle', stats: ARMS_STATS, bar: ARMS_BAR },
   { id: 'fury-2h', name: 'Two-hand Bloodthirst', talentString: '30303213032-450500250120100231', source: MOVED, rotation: 'twoHandBloodthirst', stance: 'berserker', stats: GS_ARMS_STATS, bar: TWO_HAND_BAR },
   { id: 'prot', name: 'Protection', talentString: '05-05050005-150531120300001351', source: WS, rotation: 'protection', stance: 'defensive', stats: PROT_STATS, bar: PROT_BAR, tank: true },

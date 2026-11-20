@@ -1,9 +1,9 @@
 {
  "warrior-fury": {
   "stats": {
-   "attackPower": 752,
-   "crit": 18.4,
-   "hit": 10.9,
+   "attackPower": 786,
+   "crit": 17.5,
+   "hit": 8.9,
    "spellCrit": 9,
    "mainHand": {
     "name": "Persuader",
@@ -24,17 +24,17 @@
  },
  "warrior-arms": {
   "stats": {
-   "attackPower": 800,
-   "crit": 17.8,
+   "attackPower": 858,
+   "crit": 16.4,
    "hit": 8,
-   "spellCrit": 8,
+   "spellCrit": 9,
    "mainHand": {
-    "name": "Arcanite Champion",
+    "name": "Destiny",
     "type": "sword",
     "twoHand": true,
-    "min": 146,
-    "max": 220,
-    "speed": 3.4
+    "min": 155,
+    "max": 233,
+    "speed": 3.6
    },
    "offHand": null
   },
@@ -271,23 +271,84 @@
  "mage": {
   "stats": {
    "attackPower": 20,
-   "crit": 9.5,
-   "hit": 7,
-   "spellCrit": 9.5,
-   "spellPower": 320,
+   "crit": 10,
+   "hit": 6,
+   "spellCrit": 10.4,
+   "spellPower": 400,
+   "spellPowerBySchool": {
+    "arcane": 20
+   },
    "mainHand": {
-    "name": "Witchblade",
-    "type": "dagger",
-    "min": 30,
-    "max": 57,
-    "speed": 1.6
+    "name": "Sageblade",
+    "type": "sword",
+    "min": 39,
+    "max": 73,
+    "speed": 1.8
    },
    "offHand": null,
-   "health": 2240
+   "health": 2620
   },
   "options": {
-   "mana": 5178,
-   "spirit": 168,
+   "mana": 5553,
+   "spirit": 166,
+   "mp5": 8,
+   "revelation": 1
+  }
+ },
+ "mage-fire": {
+  "stats": {
+   "attackPower": 20,
+   "crit": 10,
+   "hit": 6,
+   "spellCrit": 10.4,
+   "spellPower": 367,
+   "spellPowerBySchool": {
+    "fire": 100,
+    "frost": 100
+   },
+   "mainHand": {
+    "name": "Elemental Mage Staff",
+    "type": "staff",
+    "twoHand": true,
+    "min": 109,
+    "max": 164,
+    "speed": 3.2
+   },
+   "offHand": null,
+   "health": 2550
+  },
+  "options": {
+   "mana": 5598,
+   "spirit": 166,
+   "mp5": 8,
+   "revelation": 0
+  }
+ },
+ "mage-frost": {
+  "stats": {
+   "attackPower": 20,
+   "crit": 10,
+   "hit": 6,
+   "spellCrit": 10.3,
+   "spellPower": 350,
+   "spellPowerBySchool": {
+    "fire": 100,
+    "frost": 136
+   },
+   "mainHand": {
+    "name": "Elemental Mage Staff",
+    "type": "staff",
+    "twoHand": true,
+    "min": 109,
+    "max": 164,
+    "speed": 3.2
+   },
+   "offHand": null,
+   "health": 2550
+  },
+  "options": {
+   "mana": 5523,
+   "spirit": 166,
    "mp5": 8,
    "revelation": 0
   }
@@ -324,11 +385,11 @@
    "attackPower": 38,
    "crit": 6.9,
    "hit": 2,
-   "spellCrit": 8.1,
-   "spellPower": 240,
+   "spellCrit": 8.2,
+   "spellPower": 210,
    "spellPowerBySchool": {
     "frost": 40,
-    "shadow": 214
+    "shadow": 248
    },
    "mainHand": {
     "name": "Blade of the New Moon",
@@ -338,10 +399,10 @@
     "speed": 1.4
    },
    "offHand": null,
-   "health": 2704
+   "health": 2754
   },
   "options": {
-   "mana": 4663,
+   "mana": 4723,
    "spirit": 137,
    "mp5": 0,
    "revelation": 0
@@ -574,26 +635,25 @@
   "stats": {
    "attackPower": 262,
    "crit": 8.6,
-   "hit": 6.8,
-   "spellCrit": 10.4,
-   "spellPower": 363,
+   "hit": 7.8,
+   "spellCrit": 10.2,
+   "spellPower": 406,
    "spellPowerBySchool": {
     "nature": 20
    },
    "mainHand": {
-    "name": "Witchblade",
+    "name": "Mindfang",
     "type": "dagger",
-    "min": 30,
-    "max": 57,
-    "speed": 1.6
+    "min": 34,
+    "max": 64,
+    "speed": 1.7
    },
    "offHand": null,
-   "shield": true,
-   "health": 2910
+   "health": 3060
   },
   "options": {
-   "mana": 4840,
-   "spirit": 114,
+   "mana": 4675,
+   "spirit": 123,
    "mp5": 8,
    "revelation": 1
   }
@@ -657,8 +717,8 @@
  },
  "druid-cat": {
   "stats": {
-   "attackPower": 795,
-   "crit": 20.5,
+   "attackPower": 789,
+   "crit": 20.6,
    "hit": 3.4,
    "spellCrit": 8.5,
    "mainHand": {
@@ -679,10 +739,11 @@
  },
  "druid-bear": {
   "stats": {
-   "attackPower": 468,
-   "crit": 18.9,
+   "attackPower": 486,
+   "crit": 18.5,
    "hit": 2.7,
-   "spellCrit": 7.4,
+   "spellCrit": 7.6,
+   "spellPower": 16,
    "mainHand": {
     "name": "Bear attack (Premier Grand Marshal's Battle Hammer, 61.5 DPS)",
     "type": "mace",
@@ -692,18 +753,18 @@
    },
    "offHand": null,
    "tank": {
-    "health": 4896,
-    "armor": 6522,
+    "health": 4938,
+    "armor": 6759,
     "defense": 305,
-    "dodge": 17.2,
+    "dodge": 16.8,
     "parry": 0,
     "block": 0,
     "blockValue": 0
    }
   },
   "options": {
-   "mana": 2389,
-   "spirit": 112,
+   "mana": 2539,
+   "spirit": 122,
    "mp5": 0,
    "revelation": 0
   }

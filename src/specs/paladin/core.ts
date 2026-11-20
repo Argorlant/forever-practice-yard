@@ -52,15 +52,17 @@ const spellPower = (c: Combat) => c.stats.spellPower ?? 0;
  * it (both sims). Holy damage ignores armor, and a boss without resistances
  * resists none of it (Oct 21).
  */
-/** Two-Handed Weapon Specialization's Holy part reaches only melee-defense spells (WoWSims 161a620) and Consecration. */
-const TWO_HAND_HOLY = new Set(['sealOfRighteousness', 'sealOfCommand', 'sealOfFury', 'holyStrike', 'judgementOfCommand', 'consecration']);
+/**
+ * Two-Handed Weapon Specialization raises all the paladin's Holy damage while a two-hander is equipped: the seals, Holy
+ * Strike and the judgements, and Exorcism, Hammer of Wrath, Consecration and Holy Shock too (WoWSims c5b3805).
+ */
 
 export function holyDamage(c: Combat, t: Unit, id: string, base: number, coeff: number, outcome: Outcome,
   opts: { spellTable?: boolean } = {}): number {
   if (!landed(outcome)) return 0;
   const crit = outcome === 'crit' ? (opts.spellTable ? c.rules.spellCritMultiplier : c.rules.critMultiplier) : 1;
   const ground = c.aura(t, 'consecratedGround') ? 1 + D.consecratedGround.perPoint * T(c).consecratedGround : 1;
-  const twoHand = twoHanded(c) && TWO_HAND_HOLY.has(id) ? 1 + 0.02 * T(c).twoHandedWeaponSpecialization : 1;
+  const twoHand = twoHanded(c) ? 1 + 0.02 * T(c).twoHandedWeaponSpecialization : 1;
   const d = ((base + coeff * spellPower(c)) * c.auraProduct('damageDone') * (c.mod.damageFor[id] ?? 1) * ground * twoHand
     + coeff * c.bonusTaken(t, 'holy')) * crit;
   return Math.max(1, Math.round(d));

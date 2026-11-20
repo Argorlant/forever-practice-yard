@@ -6,7 +6,7 @@
 // Usage: node tools/gear_sheets.mjs
 import fs from 'node:fs';
 
-const COMMIT = '161a62003af48b186f2c18acc9d381c3dea97dd7';
+const COMMIT = 'c5b38054d64305eb3b8eaf9fa43dceedcd40c067';
 const RAW = `https://raw.githubusercontent.com/wowsims/forever/${COMMIT}/`;
 const SPECS = 'ui/specs/';
 
@@ -72,7 +72,10 @@ const SHEETS = [
   ['hunter-ranged', 'hunter', 'orc', 'hunter/dps/gear_sets/prebis_turret.gear.siml', { hunter: true }],
   ['hunter-weave', 'hunter', 'orc', 'hunter/dps/gear_sets/prebis_weave.gear.siml', { hunter: true }],
   ['hunter-melee', 'hunter', 'orc', 'hunter/dps/gear_sets/prebis_melee.gear.siml', { hunter: true }],
+  // Since c5b3805 one pre-raid set per tree: Arcane (also Arcane Fire and FFB), Fire, Frost.
   ['mage', 'mage', 'human', 'mage/dps/gear_sets/preraid.gear.json', { health: true }],
+  ['mage-fire', 'mage', 'human', 'mage/dps/gear_sets/preraidFire.gear.json', { health: true }],
+  ['mage-frost', 'mage', 'human', 'mage/dps/gear_sets/preraidFrost.gear.json', { health: true }],
   // Warlocks: one set per build, every build an Orc.
   ['warlock-affliction', 'warlock', 'orc', 'warlock/dps/gear_sets/sm_ruin.gear.json', { health: true }],
   ['warlock-wrack', 'warlock', 'orc', 'warlock/dps/gear_sets/aff_wrack.gear.json', { health: true }],

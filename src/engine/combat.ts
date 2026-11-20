@@ -196,6 +196,8 @@ export class Combat {
   onHit: Array<(h: Hit) => void> = [];
   /** Runs after every damage event, landed or not (e.g. Blade Flurry). Rebuilt on prepare. */
   afterDamage: Array<(h: Hit) => void> = [];
+  /** Runs when a channel ends, its ticks done or cut short (Revelation's charge). Rebuilt on prepare. */
+  afterChannel: Array<(id: string, start: number) => void> = [];
   meter = { start: null as number | null, end: 0, total: 0, threat: 0, rows: new Map<string, MeterRow>() };
   /** Ability waiting in the queue for the GCD to end. */
   queued: string | null = null;
@@ -405,6 +407,7 @@ export class Combat {
     this.mod = freshModifiers();
     this.onHit = [];
     this.afterDamage = [];
+    this.afterChannel = [];
     this.onIncoming = [];
     this.trackedAuras = [];
     this.trackedTargetAuras = [];
@@ -426,18 +429,38 @@ export class Combat {
   /**
    * Revelation (a weapon enchant, see REVELATION in specs/common.ts): a direct spell you cast that deals damage without a
    * crit may give the charge; the next direct spell crits (the charge is spell crit, so it reaches every spell that rolls
-   * spellCritChance) and spends it. Ticks, weapon strikes and procs that are not your abilities neither roll nor spend.
+   * spellCritChance) and spends it, landed or not: the charge goes with the cast (WoWSims c5b3805, EV-0149). A channel
+   * keeps it to its end, so each of its ticks crits (Arcane Missiles). Ticks, weapon strikes, melee and ranged attacks
+   * and procs that are not your abilities neither roll nor spend.
    */
   private installRevelation(): void {
+    const spend = () => { this.removeAura(this.player, 'revelation'); this.count('revelationSpent'); };
+    // The channel whose direct ticks met the charge (by its start); a channel of periodic ticks (Mind Flay) never does.
+    let ticked: number | null = null;
+    this.afterChannel.push((_id, start) => {
+      if (ticked !== start) return;
+      ticked = null;
+      if (this.player.auras.has('revelation')) spend();
+    });
     this.afterDamage.push((h) => {
-      if (h.periodic || h.white || h.weaponStrike || h.school === 'physical' || !(h.amount > 0) || !this.ability(h.source)) return;
+      if (h.periodic || h.white || h.weaponStrike || h.ranged || h.school === 'physical' || !this.ability(h.source)) return;
+      const a = this.ability(h.source)!;
+      if (a.range === 'melee') return;
       const charge = this.player.auras.get('revelation');
-      if (charge && charge.start < this.t - 1e-9) {
-        this.removeAura(this.player, 'revelation');
-        this.count('revelationSpent');
+      if (a.channel && this.channeling?.id === a.id) {
+        // A channel's tick: it crits with the charge, which goes as the channel ends; with none up it may give one.
+        ticked = this.channeling.start;
+        if (!charge && h.amount > 0 && h.outcome !== 'crit' && this.random() < REVELATION.chance) {
+          this.applyAura(this.player, { id: 'revelation', name: 'Revelation', icon: 'cdn:inv_misc_note_01', duration: REVELATION.duration, spellCrit: 100 });
+          this.count('revelation');
+        }
         return;
       }
-      if (h.outcome !== 'crit' && this.random() < REVELATION.chance) {
+      if (charge && charge.start < this.t - 1e-9) {
+        spend();
+        return;
+      }
+      if (h.amount > 0 && h.outcome !== 'crit' && this.random() < REVELATION.chance) {
         this.applyAura(this.player, { id: 'revelation', name: 'Revelation', icon: 'cdn:inv_misc_note_01', duration: REVELATION.duration, spellCrit: 100 });
         this.count('revelation');
       }
@@ -763,7 +786,12 @@ export class Combat {
         channel.done = i;
         if (u && u.health <= 0) { this.stopChannel(); return; }
         ch.onTick(this, u, i);
-        if (i === ch.ticks) { this.channeling = null; channel.onEnd?.(); this.emit('cast', { id: a.id, done: true }); }
+        if (i === ch.ticks) {
+          this.channeling = null;
+          channel.onEnd?.();
+          for (const fn of this.afterChannel) fn(a.id, channel.start);
+          this.emit('cast', { id: a.id, done: true });
+        }
       }));
     }
     this.emit('cast', { id: a.id, done: false });
@@ -776,6 +804,7 @@ export class Combat {
     for (const ev of ch.events) ev.cancel();
     this.channeling = null;
     ch.onEnd?.();
+    for (const fn of this.afterChannel) fn(ch.id, ch.start);
     if (ch.done < ch.ticks) this.count(`clipped:${ch.id}`);
     this.emit('cast', { id: ch.id, done: true });
     if (reason) this.emit('error', reason);

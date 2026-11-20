@@ -23,6 +23,7 @@ import {
 } from '../src/ui/talent-rules';
 import { animKey } from '../src/scene/custom-model';
 import { CRACKS, OnyxiaFight, ROOM } from '../src/encounters/onyxia';
+import { holyDamage } from '../src/specs/paladin/core';
 import { DATA as D_DRUID } from '../src/specs/druid/data';
 import * as druidTalents from '../src/specs/druid/talents';
 import * as hunterTalents from '../src/specs/hunter/talents';
@@ -1121,6 +1122,61 @@ for (const sp of [shamanElemental, shamanEnhancement, shamanTank]) {
   if (!(whiteMh(fury) > whiteMh(base) * 1.1)) failures.push('Windfury Totem did not raise Fury main-hand damage');
   const cat = play(druidCat, { build: 'cat', raid: ['windfury', 'judgementOfWisdom'] });
   if (!((cat.c.counters.windfury ?? 0) > 20)) failures.push('Windfury Totem barely procced for a cat');
+}
+
+// WoWSims c5b3805.
+{
+  // Unbridled Wrath: Heroic Strike rolls it, Bloodthirst does not.
+  const c = new Combat(warrior, { ...(warrior.defaultOptions ?? {}), build: 'fury-dw' });
+  c.stats = structuredClone(warrior.stats);
+  const dummy: Unit = { id: 0, name: 'Dummy', level: 63, health: 1e9, maxHealth: 1e9, armor: 3731, auras: new Map(), x: 0, z: 0, facing: 0, radius: 0.5 };
+  c.targets = [dummy];
+  c.target = dummy;
+  c.player.z = -2;
+  c.reset();
+  c.random = () => 0;
+  c.deal({ target: dummy, source: 'heroicStrike', outcome: 'hit', school: 'physical', amount: 100, white: false, hand: 'main', weaponStrike: true });
+  c.deal({ target: dummy, source: 'bloodthirst', outcome: 'hit', school: 'physical', amount: 100, white: false, hand: 'main', weaponStrike: true });
+  if (c.counters.unbridledWrath !== 1) failures.push(`Unbridled Wrath from Heroic Strike and Bloodthirst: ${c.counters.unbridledWrath ?? 0}, expected 1`);
+
+  // Fury goes to Battle Stance for Overpower or Rend only at 40 rage or less.
+  let high = 0;
+  play(warrior, { build: 'fury-dw', onSuggest: (id, cc) => { if (id === 'battleStance' && cc.player.resource > 40) high++; } });
+  if (high) failures.push(`Fury went to Battle Stance above 40 rage ${high} times`);
+
+  // The Dragonkin/Giant build: Spearing Strike deals double to a Dragonkin, and Fury swaps to Battle Stance for it.
+  const dragon = play(warrior, { build: 'fury-dragonkin' });
+  const plain = play(warrior, { build: 'fury-dragonkin', options: { giantDummy: false } });
+  const perHit = (r: typeof dragon) => { const row = r.c.meter.rows.get('spearingStrike'); return row && row.hits ? row.total / row.hits : 0; };
+  console.log(`Fury Dragonkin/Giant: ${dragon.c.dps().toFixed(0)} DPS, ${dragon.used.spearingStrike ?? 0} Spearing Strikes (${(dragon.used.spearingStrike ?? 0) > 0 ? Math.round(perHit(dragon)) : '-'} each) | not a Dragonkin: ${plain.c.dps().toFixed(0)} DPS, ${plain.used.spearingStrike ?? 0} (${Math.round(perHit(plain))} each)`);
+  if (!((dragon.used.spearingStrike ?? 0) > 5)) failures.push('the Dragonkin/Giant build barely used Spearing Strike');
+  if ((plain.used.spearingStrike ?? 0) && !(perHit(dragon) > perHit(plain) * 1.6)) failures.push('Spearing Strike did not deal double to a Dragonkin');
+
+  // Shank strikes with the off hand: the off hand's poison rolls on it.
+  const r = new Combat(rogue, { ...(rogue.defaultOptions ?? {}), build: 'combat-gs', poisonMH: 'none', poisonOH: 'instant' });
+  r.stats = structuredClone(rogue.builds!.find((b) => b.id === 'combat-gs')!.stats);
+  const d2: Unit = { ...dummy, auras: new Map() };
+  r.targets = [d2];
+  r.target = d2;
+  r.player.z = -2;
+  r.reset();
+  r.random = () => 0.01;
+  r.use('shank');
+  // The poison rolls (at this random number its own hit is resisted, which still shows as a row).
+  if (!r.meter.rows.has('instantPoison')) failures.push("Shank did not roll the off hand's poison");
+
+  // Two-Handed Weapon Specialization raises all Holy damage with a two-hander: Exorcism as much as Holy Strike.
+  const p = play(paladinRet, { build: 'ret', seconds: 1 });
+  const withTwoHander = holyDamage(p.c, p.dummy, 'exorcism', 1000, 0, 'hit');
+  p.c.stats.mainHand = { ...p.c.stats.mainHand, twoHand: false };
+  const withOneHander = holyDamage(p.c, p.dummy, 'exorcism', 1000, 0, 'hit');
+  if (!(withTwoHander > withOneHander)) failures.push(`Two-Handed Weapon Specialization left Exorcism out: ${withTwoHander} with a two-hander, ${withOneHander} without`);
+
+  // Revelation on the Arcane set: Arcane Missiles keeps the charge to its end.
+  const arcane = play(mageArcane, { build: 'arcane', options: { lockMana: true } });
+  const ak = arcane.c.counters;
+  console.log(`Revelation, Arcane: ${ak.revelation ?? 0} charges, ${ak.revelationSpent ?? 0} spent`);
+  if (!((ak.revelation ?? 0) > 3 && (ak.revelationSpent ?? 0) > 0)) failures.push('Revelation barely played on the Arcane set');
 }
 
 // The talent trees drawn in the UI (gunba's layout) read every build's talent string the same way the specs do.

@@ -275,12 +275,13 @@ function suggest(c: Combat): string | null {
   if (!p.autoAttacking && c.inRange(t)) return 'attack';
   const health = c.playerHealthLocked ? 1 : p.health / p.maxHealth;
   if (health <= 0.6 && ready('barkskin')) return 'barkskin';
-  if (health < 0.25 && rage >= 10 && ready('frenziedRegeneration')) return 'frenziedRegeneration';
+  // WoWSims Forever's single-target Bear list (c5b3805).
+  if (health < 0.25 && ready('frenziedRegeneration')) return 'frenziedRegeneration';
   const bite = tl.primalBite && ready('primalBite');
-  if (p.inCombat && ready('druidEnrage') && rage < cost(bite ? 'primalBite' : 'lacerate')) return 'druidEnrage';
+  // Enrage when the global cooldown is up and Lacerate is short of rage.
+  if (p.inCombat && tl.lacerate && p.gcdEnd <= c.t && ready('druidEnrage') && rage < cost('lacerate')) return 'druidEnrage';
   if (faerieFireLeft(c, t) <= 0 && ready('faerieFire')) return 'faerieFire';
   const lac = c.aura(t, 'lacerate');
-  if (tl.lacerate && lac && (lac.stacks ?? 0) >= 5 && lac.end - c.t <= 3 && rage >= cost('lacerate')) return 'lacerate';
   // Demoralizing Shout from the raid does the same job.
   let demoLeft = 0;
   for (const a of t.auras.values()) if (a.apReduction) demoLeft = Math.max(demoLeft, a.end - c.t);

@@ -6,8 +6,13 @@
 import type { Stats } from '../../engine/types';
 import { sheet } from '../gear';
 
-/** WoWSims Forever's one mage set, for every tree. The sheets below are the older sims', for the community builds. */
+/**
+ * WoWSims Forever's pre-raid sets, one per tree since c5b3805: Arcane (worn by its Arcane, Arcane Fire and FFB builds),
+ * Fire and Frost. The sheets below are the older sims', for the community builds.
+ */
 export const MAGE_STATS = sheet('mage');
+export const MAGE_FIRE_STATS = sheet('mage-fire');
+export const MAGE_FROST_STATS = sheet('mage-frost');
 
 const SAGEBLADE = { name: 'Sageblade', type: 'sword' as const, min: 58, max: 109, speed: 1.8 };
 
