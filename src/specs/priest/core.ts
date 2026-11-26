@@ -44,9 +44,9 @@ function useInnerFocus(c: Combat): number {
 
 /** Mana per second: Spirit regen outside the five-second rule (Meditation keeps 17/33/50 % while casting), MP5 always. */
 export function regen(c: Combat): number {
-  // Dark Inspiration: +3% Spirit per point for 10 sec after Mind Blast or a full Mind Flay.
-  const inspired = c.aura(c.player, 'darkInspiration') ? 1 + D.darkInspiration.spirit * T(c).darkInspiration : 1;
-  const spirit = 6.25 + (Number(c.options.spirit ?? D.spirit) * inspired) / 8;
+  // Dark Inspiration: +3% Spirit per point for 10 sec after Mind Blast or a full Mind Flay; a party member's counts
+  // once with it.
+  const spirit = 6.25 + (Number(c.options.spirit ?? D.spirit) * c.spiritFactor()) / 8;
   const mp5 = Number(c.options.mp5 ?? D.mp5) / 5;
   const casting = c.t - c.lastSpend < 5;
   return spirit * (casting ? [0, 0.17, 0.33, 0.5][T(c).meditation] : 1) + mp5;
@@ -116,7 +116,7 @@ const powerInLight = (c: Combat, t: Unit) => (c.aura(t, 'holyFire') || c.aura(t,
 
 /** Dark Inspiration (Oct 15): Mind Blast and a full Mind Flay raise your Spirit for 10 sec. */
 function inspire(c: Combat): void {
-  if (T(c).darkInspiration) c.applyAura(c.player, { id: 'darkInspiration', name: 'Dark Inspiration', icon: 'darkInspiration', duration: D.darkInspiration.duration });
+  if (T(c).darkInspiration) c.applyAura(c.player, { id: 'darkInspiration', name: 'Dark Inspiration', icon: 'darkInspiration', duration: D.darkInspiration.duration, spiritPct: D.darkInspiration.spirit * T(c).darkInspiration });
 }
 
 const talent = (key: keyof Talents, name: string) => ({
@@ -320,7 +320,7 @@ export const ABILITIES: Ability[] = [
     usable: (c) => T(c).penance > 0 && !shadowform(c),
     learned: (c) => T(c).penance > 0,
     channel: {
-      duration: D.penance.duration, ticks: D.penance.bolts, tickAtStart: true,
+      duration: D.penance.duration, ticks: D.penance.bolts, tickAtStart: true, spellTicks: true,
       onStart: (c) => {
         const crit = useInnerFocus(c);
         if (crit) c.applyAura(c.player, { id: 'penanceFocus', name: 'Inner Focus', icon: 'innerFocus', duration: D.penance.duration + 0.1, hidden: true });

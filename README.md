@@ -17,7 +17,7 @@ and Paladin trees (and moved or renamed a Hunter and a Priest talent); the site'
 from Wowhead's WoW Forever calculator (`tools/wowhead_trees.mjs`, data in `research/wowhead/`), and they match WoWSims
 Forever's talent order. The hotfixes of early November changed the Warrior, Shaman and Rogue trees again; those follow WoWSims
 Forever (`tools/wowsims_trees.mjs`), with its numbers and rotations for Warrior, Shaman, Hunter, Rogue and Warlock, and
-Druid's new numbers, its attack power scaling and the bear's threat (WoWSims at `c5b3805`, with its measurements from Forever combat logs). Builds marked **community** have no equivalent there: they come from older sims, re-spent where the
+Druid's new numbers, its attack power scaling and the bear's threat (WoWSims at `4269136`, with its measurements from Forever combat logs). The Balance tree follows hotfix push 114344 of 25 November (Starlight Wrath, Moon and Stars, Dreamstate; Moonfury went into Moonkin Form). Builds marked **community** have no equivalent there: they come from older sims, re-spent where the
 trees changed, and stay for whoever practises them.
 > **Speculative, built on the sims.** This site was made before WoW Forever's launch on 4 November 2026. The talents,
 > builds, rotations and numbers here follow the community sims ([WoWSims Forever](https://www.wowsims.com/forever/), our main source; the
@@ -70,7 +70,8 @@ The **Druid** comes as three specs (sources in [`research/druid_forever.md`](res
   Starfire faster; Nature's Grace gives haste on spell crits. Moonfire and Insect Swarm ticks can
   crit. Spells show visible projectiles. Mana follows the five-second rule (Spirit, Reflection, MP5,
   Innervate) and runs out, as it does in Forever. Judgement of Wisdom, Blessing of Wisdom and Mana
-  Spring Totem are on by default; when Starfire is out of reach, the hint falls back to Wrath.
+  Spring Totem are on by default; when Starfire is out of reach, the hint falls back to Wrath. The fight opens with
+  two Wraths for Eclipse, and a Revelation charge goes on Starfire.
 
 The **Paladin** comes as three specs (sources in [`research/paladin_forever.md`](research/paladin_forever.md)).
 In WoW Forever, Judgement is off the global cooldown and keeps the seal; damage Judgements, seal procs and the new
@@ -189,7 +190,8 @@ plays. Pick them on the welcome screen or later in Settings:
 
 - Buffs: Windfury Totem (20 % on main-hand attacks for an extra attack with +246 AP, 1.5 s
   cooldown; cats and bears too), Battle Shout, Blessing of Might, Leader of the Pack (melee and ranged crit), Moonkin Aura (spell crit),
-  Blessing of Wisdom and Mana Spring Totem (in Forever both factions get paladin and shaman buffs).
+  Blessing of Wisdom and Mana Spring Totem (in Forever both factions get paladin and shaman buffs), and a Shadow Priest's
+  Dark Inspiration (+15% Spirit, on by default for Mage).
 - Dummy debuffs: Judgement of Wisdom (mana back on your hits and direct spells), Sunder Armor, Faerie Fire, Curse of Recklessness, Curse of the Elements (in Forever +10% to every magic school),
   Demoralizing Shout and Thunder Clap.
 - Cats and Balance start with Judgement of Wisdom, Blessing of Wisdom and Mana Spring Totem on:

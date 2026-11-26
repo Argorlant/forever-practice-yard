@@ -10,19 +10,11 @@ import { sheet } from '../gear';
 export const FURY_STATS = sheet('warrior-fury');
 export const ARMS_STATS = sheet('warrior-arms');
 export const PROT_STATS = sheet('warrior-prot');
-
-/** The older sims' sheets, for the community builds. Arms: gunba's UI default (Human), a two-handed polearm, unbuffed. */
-export const GS_ARMS_STATS: Stats = {
-  attackPower: 838,
-  crit: 15.2,   // Agility 7.15 + gear 7 + Human Ruthless 1 (launch racials, Oct 26; Weaponmaster adds the polearm crit)
-  hit: 7.9,
-  spellCrit: 0,
-  mainHand: { name: 'Blackfury', type: 'polearm', min: 105, max: 158, speed: 2.1, twoHand: true },
-  offHand: null,
-};
+export const FURY_2H_STATS = sheet('warrior-fury-2h');
+export const PROT_OFFENSIVE_STATS = sheet('warrior-prot-offensive');
 
 /**
- * Protection: gunba's ranked tank weapons with the research's suggested
+ * The older sims' sheet, for the community build. Protection: gunba's ranked tank weapons with the research's suggested
  * sheet for the dummy demo (hypothetical gear). Crit and hit are an
  * assumption: the sims publish none for an unbuffed tank.
  */
@@ -56,7 +48,7 @@ export const DATA = {
   // Trainer ranks (gs Oct 21): Heroic Strike 9, Revenge 6 and Battle Shout 7 are Ahn'Qiraj books, and raids open on 9 December.
   // Heroic Strike rank 8: threat 2.5 per spell level (56); Slam 1.5 per spell level (WoWSims, Nov 8 logs); Cleave rank 5 96, 1.6 per spell
   // level (client 70938), split between the targets it lands on.
-  heroicStrike: { cost: 15, bonus: 138, threat: 140 },
+  heroicStrike: { cost: 15, bonus: 138, threat: 145 },  // Rank 8, the trainer's top rank: its flat threat (WoWSims 4269136)
   cleave: { cost: 20, bonus: 50, threat: 96, targets: 2 },
   bloodthirst: { cost: 30, cooldown: 6, apRatio: 0.45, bonus: 48, haste: 0.1, duration: 10 },
   mortalStrike: { cost: 30, cooldown: 6, bonus: 160 },

@@ -53,7 +53,7 @@ function cost(id: string, base: number) {
 /** Mana per second: Spirit regen outside the five-second rule (Mindfulness and Improved Stormstrike keep some while casting), MP5 always. */
 export function regen(c: Combat): number {
   const elemental = specOf(c) === 'elemental';
-  const spirit = 6.25 + Number(c.options.spirit ?? (elemental ? D.spirit.elemental : D.spirit.enhancement)) / 8;
+  const spirit = 6.25 + Number(c.options.spirit ?? (elemental ? D.spirit.elemental : D.spirit.enhancement)) * c.spiritFactor() / 8;
   const mp5 = Number(c.options.mp5 ?? (elemental ? D.mp5.elemental : D.mp5.enhancement)) / 5;
   let keep = [0, 0.17, 0.33, 0.5][T(c).mindfulness];
   if (c.aura(c.player, 'improvedStormstrike')) keep += D.improvedStormstrike.regen;
@@ -224,11 +224,13 @@ export const ABILITIES: Ability[] = [
     use: (c, t) => {
       const u = t!;
       const l = D.lightningBolt;
+      // A bolt that consumes five Maelstrom Weapon stacks keeps Clearcasting (WoWSims 4269136).
+      const keep = maelstromStacks(c) >= D.maelstromWeapon.max;
       if (maelstromStacks(c)) {
-        if (maelstromStacks(c) >= D.maelstromWeapon.max) c.count('maelstromBolts');
+        if (keep) c.count('maelstromBolts');
         c.removeAura(c.player, 'maelstromWeapon');
       }
-      spendClearcasting(c, 'lightningBolt');
+      if (!keep) spendClearcasting(c, 'lightningBolt');
       const base = between(c, l.min, l.max);
       if (hits(spellHit(c, u, 'lightningBolt', 'nature', base, l.coeff, { charge: true }).outcome)) overload(c, u, 'lightningBolt');
       rollClearcasting(c);
@@ -247,7 +249,10 @@ export const ABILITIES: Ability[] = [
       const u = t!;
       const k = D.chainLightning;
       const others = c.targets.filter((x) => x !== u && x.health > 0 && c.inRange(x, 30));
-      spendClearcasting(c, 'chainLightning');
+      // Cast while Maelstrom Ready! is up it keeps Clearcasting, and takes the aura off (WoWSims 4269136).
+      const keep = !!c.aura(c.player, 'maelstromReady');
+      c.removeAura(c.player, 'maelstromReady');
+      if (!keep) spendClearcasting(c, 'chainLightning');
       [u, ...others].slice(0, k.targets).forEach((x, i) => {
         const base = between(c, k.min, k.max);
         const hit = spellHit(c, x, 'chainLightning', 'nature', base, k.coeff, { charge: i === 0, scale: k.jump ** i });
@@ -450,27 +455,43 @@ export function prepare(c: Combat): void {
   // Spirit Weapons: -30% threat, or +30% with Rockbiter.
   if (tl.spiritWeapons) c.mod.threat *= kind === 'rockbiter' ? 1.3 : 0.7;
 
-  // Flurry's charges (WoWSims, from logs): a white swing spends one whatever its outcome, and so does a Windfury Weapon or
-  // Windfury Totem strike; 0.5 sec apart, and none in the instant the charges came.
+  // Flurry (WoWSims 4269136, from logs), one listener for every melee attack whatever its outcome, as the game reads it: any
+  // melee crit sets 3 charges (Stormstrike's, a Windfury Weapon hit's and a Windfury Totem hit's too) and spends none. A white
+  // swing or a Windfury Weapon hit spends one, 0.5 sec apart; a Windfury Totem hit, Stormstrike and spells spend none. In the
+  // instant of a gain a white swing spends none, and a Windfury Weapon hit spends one unless a Windfury Weapon hit's own crit
+  // gave the charges: a white crit and its two Windfury Weapon hits leave two charges.
+  let gainedByImbue = false;
+  let lastFlurrySpend = -Infinity;
   c.afterDamage.push((h) => {
+    if (!tl.flurry || h.periodic || h.hand === 'off' || h.ranged || !(h.white || h.weaponStrike)) return;
+    const imbueHit = h.source === 'windfuryWeapon';
+    if (h.outcome === 'crit') {
+      c.applyAura(p, { id: 'flurry', name: 'Flurry', icon: 'flurry', duration: D.flurry.duration, stacks: D.flurry.charges, haste: D.flurry.haste * tl.flurry });
+      gainedByImbue = imbueHit;
+      return;
+    }
     const fl = c.aura(p, 'flurry');
-    if (!fl || h.periodic || h.hand === 'off' || h.ranged || !(h.white || h.source === 'windfuryWeapon' || h.source === 'windfuryTotem')) return;
-    if (fl.start >= c.t - 1e-9 || c.t - (fl.value ?? -Infinity) < 0.5 - 1e-9) return;
-    fl.value = c.t;
+    if (!fl || !(h.white || imbueHit)) return;
+    const blocked = fl.start >= c.t - 1e-9 && (!imbueHit || gainedByImbue);
+    if (blocked || c.t - lastFlurrySpend < D.flurry.icd - 1e-9) return;
+    lastFlurrySpend = c.t;
     fl.stacks = (fl.stacks ?? 1) - 1;
     if (fl.stacks <= 0) c.removeAura(p, 'flurry');
   });
   c.onHit.push((h) => {
     if (h.hand === 'off' || h.ranged) return;
-    // Flurry: a melee crit gives 3 faster swings.
-    if (h.outcome === 'crit' && tl.flurry) c.applyAura(p, { id: 'flurry', name: 'Flurry', icon: 'flurry', duration: D.flurry.duration, stacks: D.flurry.charges, haste: D.flurry.haste * tl.flurry });
     // Maelstrom Weapon: 10 procs per minute at any rank, from any landed melee hit.
     // Windfury Totem's strike gives no stack (WoWSims 161a620).
     if (tl.maelstromWeapon && h.source !== 'windfuryTotem' && roll(c, (100 * maelstromPpm(c) * c.stats.mainHand.speed) / 60)) {
       const before = maelstromStacks(c);
-      c.addStack(p, { id: 'maelstromWeapon', name: 'Maelstrom Weapon', icon: 'maelstromWeapon', duration: D.maelstromWeapon.duration }, D.maelstromWeapon.max);
+      // Maelstrom Ready! (408501) comes off with the stacks.
+      c.addStack(p, { id: 'maelstromWeapon', name: 'Maelstrom Weapon', icon: 'maelstromWeapon', duration: D.maelstromWeapon.duration, onRemove: (cc) => cc.removeAura(p, 'maelstromReady') }, D.maelstromWeapon.max);
       c.count('maelstromStacks');
-      if (before === D.maelstromWeapon.max - 1) note(c, 'Maelstrom Weapon: instant Lightning Bolt');
+      if (before === D.maelstromWeapon.max - 1) {
+        note(c, 'Maelstrom Weapon: instant Lightning Bolt');
+        // Up as the stacks reach five, off with them or at the next Chain Lightning, which keeps Clearcasting meanwhile (WoWSims 4269136).
+        c.applyAura(p, { id: 'maelstromReady', name: 'Maelstrom Ready!', icon: 'maelstromWeapon', duration: Infinity });
+      }
     }
     // Flametongue Weapon: Fire damage on every landed hit, scaled by weapon speed.
     if (kind === 'flametongue') {

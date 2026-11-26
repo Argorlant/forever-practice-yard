@@ -6,8 +6,10 @@
 // Usage: node tools/gear_sheets.mjs
 import fs from 'node:fs';
 
-const COMMIT = 'c5b38054d64305eb3b8eaf9fa43dceedcd40c067';
+const COMMIT = '4269136e8fb36bbcce0073e4ba0000f6c2813e7f';
 const RAW = `https://raw.githubusercontent.com/wowsims/forever/${COMMIT}/`;
+// A sheet WoWSims has since dropped is read at the last commit that had it.
+const rawAt = (commit) => `https://raw.githubusercontent.com/wowsims/forever/${commit}/`;
 const SPECS = 'ui/specs/';
 
 const STAT = { str: 0, agi: 1, sta: 2, int: 3, sp: 5, arcane: 6, fire: 7, frost: 8, holy: 9, nature: 10, shadow: 11, spi: 13, ap: 14, rap: 15, fap: 16,
@@ -23,7 +25,8 @@ const CLASSES = {
   hunter: { hp: 1467, agi: 125, str: 55, int: 65, spi: 70, sta: 90, ap: 100, rap: 110, strAp: 1, agiAp: 1, agiRap: 2, agiCrit: 0.0189, intCrit: 0.0165, spellCrit: 3.6, mana: 1720 },
   rogue: { hp: 1523, agi: 130, str: 80, int: 35, spi: 50, sta: 75, ap: 100, strAp: 1, agiAp: 1, agiCrit: 0.0345 },
   priest: { hp: 1397, agi: 40, str: 35, int: 120, spi: 125, sta: 50, ap: -10, strAp: 1, agiCrit: 0.05, intCrit: 0.0168, crit: 3, spellCrit: 0.8, mana: 1376, dodge: 3 },
-  shaman: { hp: 1280, agi: 55, str: 85, int: 90, spi: 100, sta: 95, ap: 100, strAp: 2, agiCrit: 0.0508, intCrit: 0.0169, crit: 1.7, spellCrit: 2.3, mana: 1520, dodge: 1.7 },
+  // Since 4269136: a level 60 Dwarf shaman's sheet less the Dwarf offset (WoWSims EV-0181).
+  shaman: { hp: 1280, agi: 52, str: 88, int: 87, spi: 100, sta: 95, ap: 100, strAp: 2, agiCrit: 0.0508, intCrit: 0.0169, crit: 1.7, spellCrit: 2.3, mana: 1520, dodge: 1.7 },
   mage: { hp: 1370, agi: 35, str: 30, int: 125, spi: 120, sta: 45, ap: -10, strAp: 1, agiCrit: 0.0514, intCrit: 0.0168, crit: 3.2, spellCrit: 0.2, mana: 1213 },
   warlock: { hp: 1414, agi: 50, str: 45, int: 110, spi: 115, sta: 65, ap: -10, strAp: 1, agiCrit: 0.05, intCrit: 0.0165, crit: 2, spellCrit: 1.7, mana: 1373 },
   druid: { hp: 1483, agi: 60, str: 65, int: 100, spi: 110, sta: 70, ap: -20, strAp: 2, agiCrit: 0.05, intCrit: 0.0167, crit: 0.9, spellCrit: 1.8, mana: 1244 },
@@ -62,7 +65,10 @@ const RANGED = { 1: 'bow', 2: 'crossbow', 3: 'gun' };
 const SHEETS = [
   ['warrior-fury', 'warrior', 'orc', 'warrior/dps/gear_sets/prebis_fury.gear.json'],
   ['warrior-arms', 'warrior', 'orc', 'warrior/dps/gear_sets/prebis_arms.gear.json'],
-  ['warrior-prot', 'warrior', 'orc', 'warrior/protection/gear_sets/prebis.gear.json', { tank: true }],
+  // Protection's Pre-BiS comes in two groups since 4269136: Balanced (the default, the prot build) and Offensive.
+  ['warrior-prot', 'warrior', 'orc', 'warrior/protection/gear_sets/prebis_balanced.gear.json', { tank: true }],
+  ['warrior-prot-offensive', 'warrior', 'orc', 'warrior/protection/gear_sets/prebis_offensive.gear.json', { tank: true }],
+  ['warrior-fury-2h', 'warrior', 'orc', 'warrior/dps/gear_sets/prebis_fury_2h.gear.json'],
   // Since 161a620 each rogue build has its own set: Sinister Strike (Combat SS and Venom), Backstab, Mutilate, Hemorrhage.
   ['rogue-combat', 'rogue', 'human', 'rogue/dps/gear_sets/sinister.gear.json'],
   ['rogue-backstab', 'rogue', 'human', 'rogue/dps/gear_sets/backstab.gear.json'],
@@ -82,21 +88,23 @@ const SHEETS = [
   ['warlock-destruction', 'warlock', 'orc', 'warlock/dps/gear_sets/destro.gear.json', { health: true }],
   ['warlock-pact', 'warlock', 'orc', 'warlock/dps/gear_sets/demo_shadow_brand.gear.json', { health: true }],
   ['warlock-pact-fire', 'warlock', 'orc', 'warlock/dps/gear_sets/demo_fire_brand.gear.json', { health: true }],
-  ['priest-shadow', 'priest', 'human', 'priest/dps/builds/testing.build.json', { health: true }],
-  ['priest-smite', 'priest', 'undead', 'priest/dps/builds/smite_testing.build.json', { health: true }],
+  // Shadow's gear lives in its defaults.siml since 4269136; WoWSims dropped the Smite build, so its sheet stays the last one.
+  ['priest-shadow', 'priest', 'human', 'priest/dps/defaults.siml', { health: true }],
+  ['priest-smite', 'priest', 'undead', 'priest/dps/builds/smite_testing.build.json', { health: true, commit: '57df2a7a5a2bb085bfce15890a33d655bb7fd66f' }],
   ['paladin-ret', 'paladin', 'human', 'paladin/retribution/gear_sets/default.gear.siml'],
   ['paladin-shock', 'paladin', 'human', 'paladin/retribution/gear_sets/holy_shock.gear.siml'],
   ['paladin-prot', 'paladin', 'human', 'paladin/protection/gear_sets/default.gear.siml', { tank: true }],
   ['shaman-elemental', 'shaman', 'windshaper', 'shaman/elemental/builds/default.build.json', { health: true }],
-  // It opens with a Manual Crowd Pummeler and swaps to this two-hander for the fight.
-  ['shaman-enhancement', 'shaman', 'windshaper', 'shaman/enhancement/builds/testing.build.json', { health: true, mainHand: 'Stormcarver' }],
-  ['druid-balance', 'druid', 'nightelf', 'druid/balance/gear_sets/prebis.gear.json'],
+  // The Default build since 4269136: a Dwarf with The Blackrock Slicer, no Manual Crowd Pummeler opener.
+  ['shaman-enhancement', 'shaman', 'dwarf', 'shaman/enhancement/builds/default.build.json', { health: true }],
+  // Balance's gear lives in its defaults.siml since 4269136, on a Windshaper Skyborne.
+  ['druid-balance', 'druid', 'windshaper', 'druid/balance/defaults.siml'],
   ['druid-cat', 'druid', 'tauren', 'druid/feralcat/gear_sets/pre_raid.gear.json', { form: 'cat' }],
   ['druid-bear', 'druid', 'tauren', 'druid/feralbear/gear_sets/default.gear.json', { form: 'bear', tank: true }],
 ];
 
-const get = async (path) => {
-  const r = await fetch(RAW + path);
+const get = async (path, base = RAW) => {
+  const r = await fetch(base + path);
   if (!r.ok) throw new Error(`${path}: ${r.status}`);
   return r.text();
 };
@@ -127,7 +135,9 @@ function parseSiml(text) {
     if (!item) throw new Error(`No item ${name}`);
     const rec = { id: item.id };
     if (suffix.length) {
-      const s = SUFFIX_NAMED.get(norm(suffix.join(' ')));
+      // By name ("of the Tiger"), or with its id at the end ("of_shadow_wrath_13062").
+      const byId = suffix.join(' ').match(/_(\d+)$/);
+      const s = (byId && SUFFIX.get(Number(byId[1]))) ?? SUFFIX_NAMED.get(norm(suffix.join(' ')));
       if (!s) throw new Error(`No suffix ${suffix}`);
       rec.randomSuffix = s.id;
     }
@@ -141,8 +151,8 @@ function parseSiml(text) {
   return items;
 }
 
-async function gearOf(path) {
-  const text = await get(SPECS + path);
+async function gearOf(path, commit) {
+  const text = await get(SPECS + path, commit ? rawAt(commit) : RAW);
   if (path.endsWith('.siml')) return parseSiml(text);
   const data = JSON.parse(text);
   return (data.player?.equipment ?? data).items;
@@ -256,7 +266,7 @@ const notes = [`# Gear sheets from WoWSims Forever`, '', `Generated by \`tools/g
   `would show unbuffed: gear, class and race base and plain set bonuses, with no talents, raid buffs, consumables, procs or on-use effects.`,
   `The builds marked community keep the sheets of the sims they came from.`, ''];
 for (const [id, cls, race, path, opts = {}] of SHEETS) {
-  const s = compute(id, cls, race, await gearOf(path), opts);
+  const s = compute(id, cls, race, await gearOf(path, opts.commit), opts);
   out[id] = { stats: s.stats, options: s.options };
   notes.push(`## ${id}`, '', `\`${path}\`, ${race}. Str ${s.raw.str}, Agi ${s.raw.agi}, Sta ${s.raw.sta}, Int ${s.raw.int}, Spi ${s.raw.spirit}.`, '', s.names.join(', ') + '.', '');
   if (Object.keys(s.sets).length) notes.push(`Sets: ${Object.entries(s.sets).map(([k, v]) => `${k} (${v})`).join(', ')}.`, '');

@@ -102,9 +102,10 @@ const MUST_USE: Record<string, string[]> = {
   combatVenom: ['sinisterStrike', 'shank', 'eviscerate', 'sliceAndDice', 'bladeFlurry'],
   backstab: ['backstab', 'shank', 'eviscerate', 'sliceAndDice'],
   mutilate: ['mutilate', 'shank', 'eviscerate', 'sliceAndDice'],
-  hemorrhage: ['hemorrhage', 'shank', 'deathMark', 'ghostlyStrike', 'garrote', 'rupture', 'sliceAndDice', 'premeditation'],
+  // Both take Improved Ambush since WoWSims 4269136.
+  hemorrhage: ['hemorrhage', 'shank', 'deathMark', 'ghostlyStrike', 'garrote', 'rupture', 'sliceAndDice', 'premeditation', 'ambush'],
   // WoWSims' Hemo Seal Fate (161a620): Seal Fate and Cold Blood instead of Death Mark, so Eviscerate finishes.
-  hemoSealFate: ['hemorrhage', 'ghostlyStrike', 'rupture', 'eviscerate', 'sliceAndDice', 'premeditation', 'coldBlood'],
+  hemoSealFate: ['hemorrhage', 'ghostlyStrike', 'rupture', 'eviscerate', 'sliceAndDice', 'premeditation', 'coldBlood', 'ambush'],
 };
 for (const b of spec.builds ?? []) {
   const options = { ...(spec.defaultOptions ?? {}), build: b.id, ...(b.options ?? {}) };
@@ -159,8 +160,9 @@ const WARRIOR_MUST_USE: Record<string, string[]> = {
   'fury-dw': ['bloodthirst', 'whirlwind', 'heroicStrike', 'battleShout', 'recklessSwings'],
   'fury-sunder': ['bloodthirst', 'sunderArmor'],
   'arms-2h': ['mortalStrike', 'overpower', 'rend', 'slam'],
-  'fury-2h': ['bloodthirst', 'whirlwind'],
+  'fury-2h': ['bloodthirst', 'whirlwind', 'heroicStrike', 'overpower'],
   prot: ['shieldSlam', 'revenge', 'shieldBlock', 'sunderArmor', 'thunderClap'],
+  'prot-offensive': ['shieldSlam', 'revenge', 'shieldBlock', 'sunderArmor', 'recklessSwings'],
   'prot-deep': ['shieldSlam', 'revenge', 'shieldBlock'],
 };
 for (const b of warrior.builds ?? []) {
@@ -267,7 +269,7 @@ for (const b of warrior.builds ?? []) {
 
 // ------------------------------------------------------------------ druid
 /** Plays a spec's priority list; tanks stand in front of an attacking dummy, the others behind it. */
-function play(sp: Spec, opts: { build?: string; seconds?: number; seed?: number; raid?: string[]; options?: Record<string, number | boolean | string>; distance?: number; targets?: number; executeAfter?: number; onSuggest?: (id: string, c: Combat) => void } = {}) {
+function play(sp: Spec, opts: { build?: string; seconds?: number; seed?: number; raid?: string[]; options?: Record<string, number | boolean | string>; distance?: number; targets?: number; executeAfter?: number; onSuggest?: (id: string, c: Combat) => void; onStart?: (c: Combat) => void } = {}) {
   let s = opts.seed ?? 4242;
   const b = sp.builds?.find((x) => x.id === opts.build);
   const c = new Combat(sp, { ...(sp.defaultOptions ?? {}), ...(opts.build ? { build: opts.build } : {}), ...(b?.options ?? {}), ...(opts.options ?? {}) });
@@ -285,6 +287,7 @@ function play(sp: Spec, opts: { build?: string; seconds?: number; seed?: number;
   if (tank) c.enemyAttacks = { ...c.enemyAttacks, on: true, damage: sp.tankDamage ?? 3000 };
   const used: Record<string, number> = {};
   c.on('ability', ({ id }) => { used[id] = (used[id] ?? 0) + 1; });
+  opts.onStart?.(c);
   const seconds = opts.seconds ?? 300;
   for (let t = 0; t < seconds; t += 0.05) {
     // A player who presses the glow when the cast ends (pressing during a cast would queue a stale choice).
@@ -306,7 +309,6 @@ const DRUID_MUST_USE: Record<string, string[]> = {
   'hybrid-cat': ['claw', 'shred', 'rip', 'rake', 'shiftingPower'],
   'hybrid-bear': ['primalBite', 'lacerate', 'demoralizingRoar'],
   moonkin: ['wrath', 'starfire', 'moonfire', 'insectSwarm'],
-  balance: ['wrath', 'starfire', 'moonfire', 'insectSwarm'],
 };
 for (const sp of [druidCat, druidBear, druidBalance]) {
   for (const b of sp.builds ?? []) {
@@ -387,7 +389,7 @@ for (const sp of [druidCat, druidBear, druidBalance]) {
 }
 // Balance: Wrath 1.5 s, Starfire 3.0 s and 2.5 s with an Eclipse charge; most Starfires use one.
 {
-  const form = new Combat(druidBalance, { ...druidBalance.defaultOptions, build: 'balance' });
+  const form = new Combat(druidBalance, { ...druidBalance.defaultOptions, build: 'moonkin' });
   if (druidBalance.form?.(form) !== 'moonkin') failures.push('The Moonkin talent starts in its visible form');
   form.use('moonkinForm');
   if (druidBalance.form?.(form) !== null) failures.push('Leaving Moonkin returns to the humanoid');
@@ -424,7 +426,8 @@ const PALADIN_MUST_USE: Record<string, string[]> = {
   // Righteous Fury is on before the pull.
   prot: ['sealOfFury', 'judgement', 'holyShield', 'consecration', 'holyStrike', 'swiftJudgement'],
   'prot-shieldsworn': ['sealOfFury', 'judgement', 'holyShield', 'consecration', 'holyStrike', 'swiftJudgement'],
-  shockadin: ['sealOfRighteousness', 'judgement', 'holyShock', 'divineFavor', 'holyStrike', 'consecration'],
+  // Seal of Command is the Shockadin's own seal since WoWSims 4269136.
+  shockadin: ['sealOfCommand', 'judgement', 'holyShock', 'divineFavor', 'holyStrike', 'consecration'],
 };
 for (const sp of [paladinRet, paladinProt, paladinShock]) {
   for (const b of sp.builds ?? []) {
@@ -981,7 +984,8 @@ for (const sp of [shamanElemental, shamanEnhancement, shamanTank]) {
   const time = k.combatTime ?? 1;
   console.log(`Elemental with locked mana: ${r.c.dps().toFixed(0)} DPS, Flame Shock ${Math.round((k['uptime:target:flameShock'] ?? 0) / time * 100)}%, Searing ${Math.round((k['uptime:searingTotem'] ?? 0) / time * 100)}%, ${r.c.meter.rows.get('chainLightning')?.hits ?? 0} Chain Lightning hits, ${k.overloads ?? 0} Overloads`);
   if ((k['uptime:searingTotem'] ?? 0) / time < 0.9) failures.push('Searing Totem was not kept up');
-  if (!((r.c.meter.rows.get('chainLightning')?.hits ?? 0) > 20)) failures.push('few Chain Lightnings');
+  // Since WoWSims 4269136 Elemental casts Chain Lightning on one target only on Clearcasting without Lightning Mastery up.
+  if (!((r.c.meter.rows.get('chainLightning')?.hits ?? 0) > 5)) failures.push('few Chain Lightnings');
   if (!((k.overloads ?? 0) > 20)) failures.push('Lightning Overload at 30% barely fired');
   if (r.c.ability('lavaBurst')) failures.push('Lava Burst is still a spell');
   const tank = play(shamanTank, { build: 'tank' });
@@ -1172,7 +1176,7 @@ for (const sp of [shamanElemental, shamanEnhancement, shamanTank]) {
   const withOneHander = holyDamage(p.c, p.dummy, 'exorcism', 1000, 0, 'hit');
   if (!(withTwoHander > withOneHander)) failures.push(`Two-Handed Weapon Specialization left Exorcism out: ${withTwoHander} with a two-hander, ${withOneHander} without`);
 
-  // Revelation on the Arcane set: Arcane Missiles keeps the charge to its end.
+  // Revelation on the Arcane set: the first missile of Arcane Missiles that crits spends the charge.
   const arcane = play(mageArcane, { build: 'arcane', options: { lockMana: true } });
   const ak = arcane.c.counters;
   console.log(`Revelation, Arcane: ${ak.revelation ?? 0} charges, ${ak.revelationSpent ?? 0} spent`);
@@ -1563,7 +1567,7 @@ console.log(`Talent layouts checked for ${SPECS.reduce((n, s) => n + (s.builds?.
     for (let t = 0; t < 2; t += 0.1) c.update(0.1);
     c.use('direBearForm');
     if (went !== 'druid-bear') failures.push('Dire Bear Form does not lead to the bear page');
-    const balance = yard(druidBalance, 'highorder', 'balance').c;
+    const balance = yard(druidBalance, 'highorder', 'moonkin').c;
     if (druidBalance.form!(balance) !== 'moonkin') failures.push('The Balance build does not start in Moonkin Form');
     if (balance.blocker(balance.ability('healingTouch')!) !== "Can't do that while shapeshifted") failures.push('A Moonkin casts Healing Touch');
     if (balance.blocker(balance.ability('hurricane')!) === "Can't do that while shapeshifted") failures.push('A Moonkin cannot cast Hurricane');
@@ -1600,8 +1604,8 @@ console.log(`Talent layouts checked for ${SPECS.reduce((n, s) => n + (s.builds?.
   }
   if (!dropped) failures.push('No build lost a button: the talent check does nothing');
   {
-    // WoWSims Forever's Moonkin preset, with Moonkin Form's point back on Genesis.
-    const NO_FORM = '533222011550135--5053';
+    // WoWSims Forever's Moonkin preset without its Moonkin Form point.
+    const NO_FORM = '553222011500135--505302';
     const has = (build: string, talents = '') => {
       const { c } = yard(druidBalance, 'nightelf-f', build);
       c.options.talents = talents;
@@ -1611,8 +1615,7 @@ console.log(`Talent layouts checked for ${SPECS.reduce((n, s) => n + (s.builds?.
     };
     if (has('moonkin', NO_FORM)) failures.push('Talents without Moonkin Form have its button');
     if (!has('moonkin')) failures.push('The Moonkin build lost its Moonkin Form button');
-    if (!has('balance')) failures.push('The Balance build lost its Moonkin Form button');
-    if (druidBalance.builds!.find((b) => b.id === 'moonkin')!.talentString !== '5232220115501351--5053') failures.push("The Moonkin build is not WoWSims Forever's preset");
+    if (druidBalance.builds!.find((b) => b.id === 'moonkin')!.talentString !== '5532220115001351--505302') failures.push("The Moonkin build is not WoWSims Forever's preset");
     if (druidBalance.form!(yard(druidBalance, 'nightelf-f', 'moonkin').c) !== 'moonkin') failures.push('The default Balance build does not start in Moonkin Form');
     // A moment's refusal is not a missing talent: Combustion while it burns.
     const { c } = yard(mageFire, 'human-m', 'fire');
@@ -1694,7 +1697,8 @@ for (const spec of SPECS) {
   for (const b of spec.builds ?? []) {
     const label = `${spec.id}/${b.id}`;
     if (b.source === 'wowsims/forever' && isOldSheet(b.stats)) failures.push(`${label}: still on an older sim's sheet`);
-    if (b.source?.startsWith('community') && !isOldSheet(b.stats)) failures.push(`${label}: lost its sim's sheet`);
+    // A build WoWSims dropped keeps the sheet of the last commit that had it, which the gear tool still works out.
+    if (b.source?.startsWith('community') && !b.source.includes('wowsims/forever') && !isOldSheet(b.stats)) failures.push(`${label}: lost its sim's sheet`);
     const w = b.stats.mainHand;
     if (!(w.min > 0 && w.max >= w.min && w.speed > 0) || !w.type) failures.push(`${label}: its weapon is broken: ${JSON.stringify(w)}`);
     if (b.stats.ranged && !(b.stats.ranged.speed > 0 && b.stats.rangedAttackPower! > 0)) failures.push(`${label}: its ranged weapon is broken`);
@@ -1712,6 +1716,284 @@ for (const spec of SPECS) {
   c.stats = { ...structuredClone(fury), expertise: 0 };
   c.reset();
   if (Math.abs(c.dodgeChance() - withGear - (fury.expertise ?? 0)) > 1e-9) failures.push('Expertise from gear does not lower the dodge chance');
+}
+// WoWSims 4269136: Warrior.
+{
+  const setup = (build: string) => {
+    const c = new Combat(warrior, { ...(warrior.defaultOptions ?? {}), build });
+    c.stats = structuredClone(warrior.builds!.find((x) => x.id === build)!.stats);
+    const a: Unit = { id: 0, name: 'A', level: 63, health: 1e9, maxHealth: 1e9, armor: 0, auras: new Map(), x: 0, z: 0, facing: 0, radius: 0.5 };
+    const b: Unit = { ...a, id: 1, name: 'B', x: 1.5, auras: new Map() };
+    c.targets = [a, b];
+    c.target = a;
+    c.player.z = -2;
+    c.raid = new Set();
+    c.reset();
+    c.random = () => 0.99;
+    c.applyAura(c.player, { id: 'sweepingStrikes', name: 'Sweeping Strikes', icon: 'sweepingStrikes', duration: 20, stacks: 5 });
+    const rows: { source: string; target: Unit; outcome: string; amount: number }[] = [];
+    c.on('damage', (h) => rows.push({ source: h.source, target: h.target, outcome: h.outcome, amount: h.amount }));
+    return { c, a, b, rows };
+  };
+  // Sweeping Strikes' copy: the hit before armor with your damage bonuses once more, Two-Handed Weapon Specialization
+  // only once, never a crit.
+  {
+    const { c, a, b, rows } = setup('arms-2h');
+    c.applyAura(c.player, { id: 'deathWish', name: 'Death Wish', icon: 'deathWish', duration: 30, damageDone: 1.2 });
+    const expected = 1000 * (c.mod.physicalDamage / 1.06) * c.auraProduct('damageDone');
+    c.deal({ target: a, source: 'mortalStrike', outcome: 'crit', school: 'physical', amount: 1000, white: false, hand: 'main' });
+    const copy = rows.find((h) => h.source === 'sweepingStrikesCopy');
+    if (Math.abs(c.mod.physicalDamage - 1.06) > 1e-9) failures.push(`Arms with a two-hander: physical damage x${c.mod.physicalDamage}, expected x1.06`);
+    if (!copy || copy.target !== b || copy.outcome !== 'hit' || Math.abs(copy.amount - expected) > 1) {
+      failures.push(`Sweeping Strikes copy of a 1000 crit with Death Wish, no armor: ${copy ? `${copy.outcome} ${copy.amount} on ${copy.target.name}` : 'none'}, expected a ${expected.toFixed(0)} hit on B`);
+    }
+    if (c.aura(c.player, 'sweepingStrikes')?.stacks !== 4) failures.push('A Sweeping Strikes copy did not spend one charge');
+    // A hit on the second dummy copies back to the first.
+    c.deal({ target: b, source: 'mortalStrike', outcome: 'hit', school: 'physical', amount: 1000, white: false, hand: 'main' });
+    if (!rows.some((h) => h.source === 'sweepingStrikesCopy' && h.target === a)) failures.push('A hit on the second dummy brought no Sweeping Strikes copy on the first');
+  }
+  // An Execute below 20% brings the normalized strike, which rolls its own crit and starts Deep Wounds.
+  {
+    const { c, a, b, rows } = setup('arms-2h');
+    a.health = 0.1 * a.maxHealth;
+    c.random = () => 0;
+    c.deal({ target: a, source: 'execute', outcome: 'hit', school: 'physical', amount: 500, white: false, hand: 'main' });
+    const strike = rows.find((h) => h.source === 'sweepingStrikesStrike');
+    if (rows.some((h) => h.source === 'sweepingStrikesCopy')) failures.push('An Execute below 20% brought a Sweeping Strikes copy');
+    if (!strike || strike.target !== b || strike.outcome !== 'crit') failures.push(`An Execute below 20% brought ${strike ? `a ${strike.outcome} strike` : 'no Sweeping Strikes strike'}, expected one that rolls its own crit`);
+    if (!c.aura(b, 'deepWounds')) failures.push('The Sweeping Strikes strike crit and started no Deep Wounds');
+  }
+  // Whirlwind brings one strike a cast and no copies.
+  {
+    const { c, rows } = setup('fury-dw');
+    c.player.resource = 100;
+    c.use('whirlwind');
+    const n = (s: string) => rows.filter((h) => h.source === s).length;
+    if (n('whirlwind') !== 2 || n('sweepingStrikesStrike') !== 1 || n('sweepingStrikesCopy') !== 0) {
+      failures.push(`Whirlwind on two dummies with Sweeping Strikes: ${n('whirlwind')} main-hand hits, ${n('sweepingStrikesStrike')} strikes, ${n('sweepingStrikesCopy')} copies; expected 2, 1, 0`);
+    }
+    if (c.aura(c.player, 'sweepingStrikes')?.stacks !== 4) failures.push('A Whirlwind spent more than one Sweeping Strikes charge');
+  }
+  // Unbridled Wrath's rage makes 5 threat that Defensive Stance does not scale.
+  {
+    const threatOf = (r: number) => {
+      const c = new Combat(warrior, { ...(warrior.defaultOptions ?? {}), build: 'prot-offensive' });
+      c.stats = structuredClone(warrior.builds!.find((x) => x.id === 'prot-offensive')!.stats);
+      const dummy: Unit = { id: 0, name: 'Dummy', level: 63, health: 1e9, maxHealth: 1e9, armor: 0, auras: new Map(), x: 0, z: 0, facing: 0, radius: 0.5 };
+      c.targets = [dummy];
+      c.target = dummy;
+      c.raid = new Set();
+      c.reset();
+      c.player.inCombat = true;
+      c.random = () => r;
+      c.deal({ target: dummy, source: 'melee_mh', outcome: 'hit', school: 'physical', amount: 100, white: true, hand: 'main', weaponStrike: true });
+      return { threat: c.meter.threat, procs: c.counters.unbridledWrath ?? 0 };
+    };
+    const proc = threatOf(0), none = threatOf(0.99);
+    if (proc.procs !== 1 || none.procs !== 0 || Math.abs(proc.threat - none.threat - 5) > 1e-6) {
+      failures.push(`Unbridled Wrath in Defensive Stance: ${(proc.threat - none.threat).toFixed(2)} threat (${proc.procs}/${none.procs} procs), expected 5`);
+    }
+  }
+  // Arms' Stance Dance: from Berserker Stance back to Battle Stance for an Overpower, outside the execute phase.
+  {
+    const { c, a } = setup('arms-2h');
+    c.removeAura(c.player, 'sweepingStrikes');
+    c.player.inCombat = true;
+    c.player.autoAttacking = true;
+    c.applyAura(c.player, { id: 'battleShout', name: 'Battle Shout', icon: 'battleShout', duration: 120, attackPower: 0 });
+    c.player.resource = 30;
+    c.use('berserkerStance');
+    c.update(1.6);
+    c.player.resource = 30;
+    c.applyAura(c.player, { id: 'overpowerReady', name: 'Overpower', icon: 'overpower', duration: 5 });
+    const pick = warrior.suggest?.(c);
+    if (pick !== 'battleStance') failures.push(`Arms in Berserker Stance with Overpower open: suggests ${pick}, expected Battle Stance`);
+    a.health = 0.1 * a.maxHealth;
+    if (warrior.suggest?.(c) === 'battleStance') failures.push('Arms swaps back to Battle Stance for Overpower in the execute phase');
+  }
+  // Fury with a two-hander: Heroic Strike from 70 rage and stance swaps up to 70.
+  {
+    let hs = 0, swap = 0;
+    const r = play(warrior, {
+      build: 'fury-2h',
+      onSuggest: (id, cc) => {
+        if (id === 'heroicStrike' && cc.player.resource < 70) hs++;
+        if (id === 'battleStance' && cc.player.resource > 70) swap++;
+      },
+    });
+    if (hs) failures.push(`Fury with a two-hander queued Heroic Strike under 70 rage ${hs} times`);
+    if (swap) failures.push(`Fury with a two-hander went to Battle Stance above 70 rage ${swap} times`);
+    if (!r.used.heroicStrike || !r.used.overpower) failures.push('Fury with a two-hander never used Heroic Strike or Overpower');
+  }
+}
+// WoWSims 4269136: Balance.
+{
+  const m = new Combat(druidBalance, { ...druidBalance.defaultOptions, build: 'moonkin' });
+  m.reset();
+  if (m.cost(m.ability('wrath')!) !== 45) failures.push(`Starlight Wrath and Moonglow do not multiply: Wrath costs ${m.cost(m.ability('wrath')!)} mana, expected 45`);
+  const o = play(druidBalance, { build: 'moonkin', seconds: 5 });
+  if (o.used.wrath !== 2 || o.used.moonfire !== 1 || o.used.insectSwarm !== 1 || o.used.starfire || o.c.aura(o.c.player, 'eclipse')?.stacks !== 4) {
+    failures.push('Balance does not open Wrath, Wrath, Moonfire, Insect Swarm with 4 Eclipse charges');
+  }
+  let bad = 0;
+  play(druidBalance, {
+    build: 'moonkin',
+    onSuggest: (id, cc) => {
+      if (cc.aura(cc.player, 'revelation') && cc.aura(cc.target!, 'moonfire') && cc.aura(cc.target!, 'insectSwarm')
+        && cc.cost(cc.ability('starfire')!) <= cc.player.resource && id !== 'starfire') bad++;
+    },
+  });
+  if (bad) failures.push(`Revelation was not spent on Starfire ${bad} times`);
+}
+// WoWSims 4269136: Revelation.
+{
+  const make = (sp: Spec, build: string) => {
+    const b = sp.builds!.find((x) => x.id === build)!;
+    const c = new Combat(sp, { ...(sp.defaultOptions ?? {}), build, ...(b.options ?? {}), revelation: true, lockMana: true });
+    c.stats = structuredClone(b.stats);
+    const dummy: Unit = { id: 0, name: 'Dummy', level: 63, health: 1e9, maxHealth: 1e9, armor: 0, auras: new Map(), x: 0, z: 0, facing: 0, radius: 0.5 };
+    const other: Unit = { ...dummy, id: 1, name: 'Other', x: 1.5, auras: new Map() };
+    c.targets = [dummy, other];
+    c.target = dummy;
+    c.player.z = -5;
+    c.raid = new Set();
+    c.reset();
+    return { c, dummy, other };
+  };
+  const charge = (c: Combat) => c.applyAura(c.player, { id: 'revelation', name: 'Revelation', icon: 'cdn:inv_misc_note_01', duration: 15, directSpellCrit: 100 });
+  // The charge makes a direct hit crit, never a DoT's tick.
+  {
+    const { c, dummy } = make(shamanElemental, 'elemental-fs');
+    charge(c);
+    const direct = c.spellCritChance();
+    let ticked = -1;
+    c.applyAura(dummy, { id: 'testDot', name: 'Test DoT', icon: 'flameShock', duration: 3, period: 1, onTick: (cc) => { ticked = cc.spellCritChance(); } });
+    c.update(1.05);
+    if (!(direct >= 100) || !(ticked >= 0 && ticked < 100)) failures.push(`Revelation's charge: direct crit ${direct.toFixed(0)}%, a DoT tick's ${ticked.toFixed(0)}%; expected 100+ and the usual`);
+  }
+  // One roll per hit event: Chain Lightning's two targets roll once, Lightning Overload's copy rolls apart.
+  {
+    const { c, dummy, other } = make(shamanElemental, 'elemental-fs');
+    c.random = () => 0;
+    for (const [u, source] of [[dummy, 'chainLightning'], [other, 'chainLightning'], [dummy, 'lightningOverload']] as [Unit, string][]) {
+      c.deal({ target: u, source, outcome: 'hit', school: 'nature', amount: 500, white: false, spell: true });
+    }
+    if (c.counters.revelation !== 2) failures.push(`Revelation rolls on a two-target Chain Lightning and its copy: ${c.counters.revelation ?? 0} charges, expected 2`);
+    c.update(0.5);
+    c.deal({ target: dummy, source: 'lightningBolt', outcome: 'crit', school: 'nature', amount: 900, white: false, spell: true });
+    if (c.counters.revelationSpent !== 1 || c.aura(c.player, 'revelation')) failures.push('The next Lightning Bolt did not spend the charge');
+  }
+  // A channel: Mind Flay's first tick crits and spends the charge; Arcane Missiles' first missile does.
+  for (const [sp, build, id] of [[priestShadow, 'shadow', 'mindFlay'], [mageArcane, 'arcane', 'arcaneMissiles']] as [Spec, string, string][]) {
+    const { c } = make(sp, build);
+    c.random = () => 0.5;
+    charge(c);
+    c.update(0.1);
+    c.player.mana = c.player.maxMana;
+    if (!c.use(id)) { failures.push(`Revelation check: could not cast ${id}`); continue; }
+    for (let t = 0; t < 6; t += 0.1) c.update(0.1);
+    const row = c.meter.rows.get(id);
+    if (row?.crits !== 1 || c.counters.revelationSpent !== 1) failures.push(`${id} with a charge: ${row?.crits ?? 0} crits of ${row?.hits ?? 0}, ${c.counters.revelationSpent ?? 0} spent; expected the first tick alone`);
+  }
+}
+// WoWSims 4269136: Rogue.
+{
+  // Death Mark stores physical damage only, and stops at its limit as it stores.
+  const c = new Combat(rogue, { ...(rogue.defaultOptions ?? {}), build: 'hemo-gs' });
+  c.stats = structuredClone(rogue.builds!.find((x) => x.id === 'hemo-gs')!.stats);
+  const dummy: Unit = { id: 0, name: 'Dummy', level: 63, health: 1e9, maxHealth: 1e9, armor: 0, auras: new Map(), x: 0, z: 0, facing: 0, radius: 0.5 };
+  c.targets = [dummy];
+  c.target = dummy;
+  c.player.z = -2;
+  c.raid = new Set();
+  c.reset();
+  c.random = () => 0.5;
+  c.player.resource = 100;
+  c.addComboPoints(dummy, 5);
+  c.use('deathMark');
+  const mark = c.aura(dummy, 'deathMark');
+  if (!mark) failures.push('Death Mark did not land in the Rogue check');
+  else {
+    const value = () => mark.value ?? 0;
+    c.deal({ target: dummy, source: 'deadlyPoison', outcome: 'hit', school: 'nature', amount: 500, white: false, periodic: true });
+    if (value() !== 0) failures.push(`Death Mark stored ${value()} from Deadly Poison`);
+    c.deal({ target: dummy, source: 'sinisterStrike', outcome: 'hit', school: 'physical', amount: 1000, white: false });
+    if (Math.abs(value() - 1000 * 0.12 * 5 * 1.2) > 1e-6) failures.push(`Death Mark stored ${value()} of a 1000 hit at 5 points with Coup de Grace 3/3, expected 720`);
+    c.deal({ target: dummy, source: 'sinisterStrike', outcome: 'hit', school: 'physical', amount: 1e6, white: false });
+    const full = value();
+    c.deal({ target: dummy, source: 'sinisterStrike', outcome: 'hit', school: 'physical', amount: 1000, white: false });
+    if (!(full > 720 && full < 1e5) || value() !== full) failures.push(`Death Mark's limit: ${full} stored after a huge hit, ${value()} after one more`);
+    let paid = -1;
+    c.on('damage', (h) => { if (h.source === 'deathMark') paid = h.amount; });
+    for (let t = 0; t < 7; t += 0.1) c.update(0.1);
+    if (paid !== Math.round(full)) failures.push(`Death Mark paid ${paid}, it stored ${Math.round(full)}`);
+  }
+  // Mutilate: Eviscerate from 3 points and Cold Blood from 4.
+  let early = 0, at3 = 0;
+  play(rogue, {
+    build: 'mutilate-gs',
+    onSuggest: (id, cc) => {
+      const cp = cc.comboPointsOn(cc.target);
+      if (id === 'eviscerate' && cp < 3) early++;
+      if (id === 'eviscerate' && cp === 3) at3++;
+    },
+  });
+  if (early || !at3) failures.push(`Mutilate: ${early} Eviscerates under 3 points, ${at3} at 3`);
+  // A build with neither Improved Ambush nor Premeditation keeps its Vanish while Garrote is up.
+  let idle = 0;
+  play(rogue, { build: 'combat-gs', onSuggest: (id, cc) => { if (id === 'vanish' && cc.aura(cc.target!, 'garrote')) idle++; } });
+  if (idle) failures.push(`Combat vanished ${idle} times with Garrote up and nothing to open`);
+}
+// WoWSims 4269136: Hunter, Shaman, Paladin.
+{
+  // The pet: a Raptor at 2.0 sec whose swings crit, deciding every 0.8 sec and waiting two steps after a cast.
+  const casts: number[] = [];
+  const pet = play(hunterBm, {
+    build: 'bm', options: { lockMana: true },
+    onStart: (c) => c.on('damage', (h) => { if (h.source === 'petBite' || h.source === 'petClaw') casts.push(c.t); }),
+  });
+  if (pet.c.options.petSpeed !== '2' || !pet.c.meter.rows.get('petMelee')?.crits) failures.push('The BM pet is not the 2.0 sec Raptor, or its swings never crit');
+  const gaps = casts.slice(1).map((t, i) => t - casts[i]);
+  const offGrid = gaps.filter((g) => g < 1.6 - 1e-6 || Math.abs(g / 0.8 - Math.round(g / 0.8)) > 1e-6);
+  if (casts.length < 50 || offGrid.length) failures.push(`Pet casts: ${casts.length}, ${offGrid.length} gaps off the 0.8 sec grid or under 1.6 sec (${offGrid.slice(0, 3).map((g) => g.toFixed(2)).join(', ')})`);
+  // Immolation Trap arms 0.8-1.6 sec after it is placed; its first tick comes 3 sec later.
+  let placed = -1, burned = -1;
+  play(hunterSv, {
+    build: 'sv-pet',
+    onStart: (c) => {
+      c.on('ability', ({ id }) => { if (id === 'immolationTrap' && placed < 0) placed = c.t; });
+      c.on('damage', (h) => { if (h.source === 'immolationTrap' && burned < 0) burned = c.t; });
+    },
+  });
+  if (placed < 0 || !(burned - placed >= 3.8 - 1e-6 && burned - placed <= 4.6 + 1e-6)) failures.push(`Immolation Trap: first tick ${(burned - placed).toFixed(2)} sec after it was placed, expected 3.8-4.6`);
+  // Holy Shield's block damage never crits; the Shieldsworn strike rolls its own.
+  const pr = play(paladinProt, { build: 'prot-shieldsworn' });
+  if (pr.c.meter.rows.get('holyShield')?.crits !== 0 || !((pr.c.meter.rows.get('shieldswornStrike')?.crits ?? 0) > 0)) {
+    failures.push(`Holy Shield crits: ${pr.c.meter.rows.get('holyShield')?.crits}, Shieldsworn strike crits: ${pr.c.meter.rows.get('shieldswornStrike')?.crits}; expected 0 and some`);
+  }
+  // Ret's Seal of Fury twist: Judgement waits under Seal of Fury.
+  let judgedFury = 0;
+  const fury = play(paladinRet, {
+    build: 'ret', options: { uwTwist: 'fury', lockMana: true },
+    onSuggest: (id, cc) => { if (id === 'judgement' && cc.aura(cc.player, 'sealOfFury')) judgedFury++; },
+  });
+  if (judgedFury || !((fury.used.sealOfFury ?? 0) > 10) || !((fury.c.counters.storedSeals ?? 0) > 50)) {
+    failures.push(`Ret Seal of Fury twist: ${judgedFury} Judgements under Fury, ${fury.used.sealOfFury ?? 0} Seals of Fury, ${fury.c.counters.storedSeals ?? 0} stored seals`);
+  }
+  // Shaman Flurry: a white crit and its two Windfury Weapon hits in the same instant leave two charges.
+  {
+    const c = new Combat(shamanEnhancement, { ...(shamanEnhancement.defaultOptions ?? {}) });
+    c.stats = structuredClone(shamanEnhancement.builds!.find((x) => x.id === 'enhancement')!.stats);
+    const dummy: Unit = { id: 0, name: 'Dummy', level: 63, health: 1e9, maxHealth: 1e9, armor: 0, auras: new Map(), x: 0, z: 0, facing: 0, radius: 0.5 };
+    c.targets = [dummy];
+    c.target = dummy;
+    c.reset();
+    c.random = () => 0.99;
+    c.mod.windfuryWeapon = null;
+    c.deal({ target: dummy, source: 'melee_mh', outcome: 'crit', school: 'physical', amount: 100, white: true, hand: 'main', weaponStrike: true });
+    for (let i = 0; i < 2; i++) c.deal({ target: dummy, source: 'windfuryWeapon', outcome: 'hit', school: 'physical', amount: 100, white: false, hand: 'main', weaponStrike: true });
+    if (c.aura(c.player, 'flurry')?.stacks !== 2) failures.push(`Shaman Flurry after a white crit and two Windfury Weapon hits: ${c.aura(c.player, 'flurry')?.stacks ?? 0} charges, expected 2`);
+  }
 }
 // A fresh visitor never picks the default build, so the spec's defaults must already be what that build asks for.
 for (const spec of SPECS) {

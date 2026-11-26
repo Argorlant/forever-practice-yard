@@ -50,7 +50,7 @@ function manaRows(c: Combat, rows: Row[]): void {
 }
 
 const HELP_COMMON = `Spells have a cast bar and channels drain one; moving interrupts both. The global cooldown is 1.5 sec, shorter with casting haste (1.0 sec floor).
-    Mana is your resource. Spirit regeneration stops for 5 sec after you spend mana, but Mage Armor and Arcane Meditation keep up to all of it while casting; Evocation is 16 times your Spirit regen for 8 sec. Judgement of Wisdom, Blessing of Wisdom and Mana Spring Totem are on by default; Mana Ruby and Major Mana Potion have separate cooldowns. You can lock your mana in Settings.`;
+    Mana is your resource. Spirit regeneration stops for 5 sec after you spend mana, but Mage Armor and Arcane Meditation keep up to all of it while casting; Evocation is 16 times your Spirit regen for 8 sec. Judgement of Wisdom, Blessing of Wisdom, Mana Spring Totem and a Shadow Priest's Dark Inspiration are on by default; Mana Ruby and Major Mana Potion have separate cooldowns. You can lock your mana in Settings.`;
 const OPTIONS = [
   { key: 'lockMana', name: 'Lock your mana (spells cost nothing)', kind: 'toggle' as const },
   REVELATION_OPTION,
@@ -71,7 +71,8 @@ function specFor(spec: MageSpec, base: Omit<Spec, 'className' | 'resource' | 'ab
     prepare,
     chances,
     regen,
-    defaultRaid: ['judgementOfWisdom', 'blessingOfWisdom', 'manaSpring'],
+    // WoWSims 4269136 adds a Shadow Priest's Dark Inspiration to the Mage's party.
+    defaultRaid: ['judgementOfWisdom', 'blessingOfWisdom', 'manaSpring', 'darkInspiration'],
     sheet: { attackPower: false, crit: false, spellCrit: 'Spell crit (gear + Intellect)', spellPower: 'Spell damage (every school)', mainHand: false, offHand: false },
     ...base,
   };

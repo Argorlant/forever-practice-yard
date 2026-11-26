@@ -70,7 +70,7 @@ export const DATA = {
   coldBlood: { cooldown: 180 },
   thistleTea: { energy: 100, cooldown: 300 },
   instantPoison: { chance: 20, min: 76, max: 100, ap: 0.01 },
-  deadlyPoison: { chance: 30, tick: 18, ap: 0.009, ticks: 4, period: 3, duration: 12, maxStacks: 5 },   // Deadly Poison IV; ap over all its ticks, per stack
+  deadlyPoison: { chance: 30, tick: 18, ap: 0.009, ticks: 4, period: 3, duration: 12, maxStacks: 5 },   // Deadly Poison IV; ap per tick and stack (WoWSims 4269136, from logs)
   hackAndSlashIcd: 0.2,
   mutilate: { cost: 60, bonus: 88, percent: 0.9, poisonedBonus: 0.2 },
   hemorrhage: { cost: 35, percent: 1, daggerPercent: 1.45, duration: 15, bleedBonus: 0.15 },

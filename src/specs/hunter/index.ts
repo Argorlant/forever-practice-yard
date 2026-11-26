@@ -65,7 +65,8 @@ const OPTIONS = [
   { key: 'mana', name: 'Mana pool', kind: 'number' as const, step: 100 },
   { key: 'spirit', name: 'Spirit (regeneration outside the five-second rule)', kind: 'number' as const, step: 1 },
 ];
-const PET_OPTION = { key: 'petSpeed', name: 'Pet', kind: 'choice' as const, choices: [{ value: '1.2', label: 'Fast cat (1.2 sec swings, the sims\' choice)' }, { value: '2', label: 'Normal pet (2.0 sec swings)' }] };
+// WoWSims 4269136: only a Cat carries Faster Attack; its Beast Mastery and SV Melee builds take a Raptor, which swings every 2 s.
+const PET_OPTION = { key: 'petSpeed', name: 'Pet', kind: 'choice' as const, choices: [{ value: '2', label: 'Raptor (2.0 sec swings, the sims\' choice)' }, { value: '1.2', label: 'Cat with Faster Attack (1.2 sec swings)' }] };
 
 function specFor(spec: HunterSpec, base: Omit<Spec, 'className' | 'resource' | 'abilities' | 'rules' | 'prepare' | 'chances' | 'regen' | 'builds' | 'bar' | 'sources'>): Spec {
   return {
@@ -198,15 +199,15 @@ export const hunterBm: Spec = specFor('bm', {
   specName: 'Beast Mastery',
   stats: RANGED_STATS,
   startDistance: 12,
-  defaultOptions: { build: 'bm', ...gearOptions('hunter-ranged'), lockMana: false, classicAutoShot: false, trackable: true, petSpeed: '1.2', petMode: 'assist', meleeWeaving: false, autoShotReset: 'classic' },
+  defaultOptions: { build: 'bm', ...gearOptions('hunter-ranged'), lockMana: false, classicAutoShot: false, trackable: true, petSpeed: '2', petMode: 'assist', meleeWeaving: false, autoShotReset: 'classic' },
   options: [...OPTIONS, PET_OPTION, PET_MODE, ...WEAVE_OPTIONS],
   sheet: { attackPower: 'Melee attack power', spellCrit: false, offHand: false },
   lowMana: (c) => c.cost(c.ability('aimedShot')!),
-  welcome: 'Welcome to Beast Mastery practice. Your cat fights at the dummy while you shoot from 12 yards: Serpent Sting up, then hawk, hawk, Arcane Shot on their shared cooldown, Bestial Wrath and Rapid Fire together, and Aimed Shot when that waits.',
+  welcome: 'Welcome to Beast Mastery practice. Your raptor fights at the dummy while you shoot from 12 yards: Serpent Sting up, then hawk, hawk, Arcane Shot on their shared cooldown, Bestial Wrath and Rapid Fire together, and Aimed Shot when that waits.',
   help: `${CONTROLS}
     ${PET_HELP}
     ${HELP_COMMON}
-    Beast Mastery: your pet attacks when you do (one swing timer, Focus at 10 per second for Bite and Claw). Summon Hawk sends up to two hawks for 18 sec each and shares its cooldown with Arcane Shot. Bestial Wrath gives the pet +50% damage; Intimidation makes its next attack crit; Frenzy speeds it up after its crits.
+    Beast Mastery: your pet attacks when you do (one swing timer, Focus at 10 per second; every 0.8 sec it casts Bite or Claw, whichever it can, at random). The sims take a Raptor, 2.0 sec swings; a Cat with Faster Attack swings every 1.2 sec. Summon Hawk sends up to two hawks for 18 sec each and shares its cooldown with Arcane Shot. Bestial Wrath gives the pet +50% damage; Intimidation makes its next attack crit; Frenzy speeds it up after its crits.
     ${WEAVE_HELP}
     This is a practice tool: hit, crit and proc chances follow WoW Forever; damage numbers are an approximation.`,
   look: { clothColor: 0x5a3a20, leatherColor: 0x4a3a28, hood: true },
@@ -268,7 +269,7 @@ export const hunterSv: Spec = specFor('sv', {
   prefsRevision: 2,
   specName: 'Survival',
   stats: MELEE_STATS,
-  defaultOptions: { build: 'sv-pet', ...gearOptions('hunter-melee'), lockMana: false, classicAutoShot: false, trackable: true, petSpeed: '1.2', petMode: 'assist' },
+  defaultOptions: { build: 'sv-pet', ...gearOptions('hunter-melee'), lockMana: false, classicAutoShot: false, trackable: true, petSpeed: '2', petMode: 'assist' },
   options: [...OPTIONS.filter((o) => o.key !== 'classicAutoShot'), PET_OPTION, PET_MODE],
   sheet: { attackPower: 'Melee attack power', spellCrit: false },
   lowMana: (c) => c.cost(c.ability('raptorStrike')!),

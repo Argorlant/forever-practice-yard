@@ -60,7 +60,7 @@ const castTime = (base: (c: Combat) => number) => (c: Combat) => (pom(c) ? 0 : b
  * 16 times the Spirit regen, all of it while channelling. MP5 always.
  */
 export function regen(c: Combat): number {
-  const spirit = 6.25 + Number(c.options.spirit ?? D.spirit) / 8;
+  const spirit = 6.25 + Number(c.options.spirit ?? D.spirit) * c.spiritFactor() / 8;
   const mp5 = Number(c.options.mp5 ?? D.mp5) / 5;
   if (c.channeling?.id === 'evocation') return spirit * D.evocation.regen + mp5;
   if (c.t - c.lastSpend >= 5) return spirit + mp5;
@@ -330,6 +330,7 @@ export const ABILITIES: Ability[] = [
     channel: {
       duration: (c) => (c.aura(c.player, 'missileBarrage') ? D.arcaneMissiles.duration / 2 : D.arcaneMissiles.duration),
       ticks: D.arcaneMissiles.missiles,
+      spellTicks: true,
       onStart: (c) => {
         // A Missile Barrage pays for the channel, so Clearcasting stays up for the next spell (WoWSims, Nov 3).
         if (c.aura(c.player, 'missileBarrage')) { c.removeAura(c.player, 'missileBarrage'); c.count('barrageUsed'); } else spend(c, 0);
@@ -354,12 +355,13 @@ export const ABILITIES: Ability[] = [
     use: (c, t) => {
       spend(c, D.arcaneBlast.cast);
       const a = D.arcaneBlast;
-      resolve(c, t!, 'arcaneBlast', 'arcane', between(c, a.min, a.max), a.coeff);
-      // A new stack keeps the first one's timer (Oct 15).
+      // The cast adds its charge before its damage, so the hit counts that charge's spell damage; the cost read the
+      // charges held before it (WoWSims 4269136, from logs). A new stack keeps the first one's timer (Oct 15).
       const old = c.aura(c.player, 'arcaneBlast');
       if (old) old.stacks = Math.min(a.stacks, (old.stacks ?? 1) + 1);
       else c.applyAura(c.player, { id: 'arcaneBlast', name: 'Arcane Blast', icon: 'arcaneBlast', duration: a.duration, stacks: 1 });
       if ((old?.stacks ?? 1) === a.stacks) c.count('fourStacks');
+      resolve(c, t!, 'arcaneBlast', 'arcane', between(c, a.min, a.max), a.coeff);
     },
   }),
   spell({

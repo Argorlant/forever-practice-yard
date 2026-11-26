@@ -45,6 +45,11 @@ export const RAID_EFFECTS: RaidEffect[] = [
   },
   {
     // In Forever both factions get paladin and shaman buffs (gs: canReceivePaladinBuffs / canReceiveShamanBuffs).
+    // A Shadow Priest with 5/5 Dark Inspiration in your party keeps it up (WoWSims 4269136, on by default for Mage).
+    id: 'darkInspiration', name: 'Dark Inspiration (+15% Spirit, from a Shadow Priest in your party)', from: 'priest', side: 'buff', icon: 'darkInspiration',
+    apply: (c) => c.applyAura(c.player, { id: 'raidDarkInspiration', name: 'Dark Inspiration', icon: 'darkInspiration', ...forever(), spiritPct: 0.15 }),
+  },
+  {
     id: 'manaSpring', name: 'Mana Spring Totem (25 MP5: +5 mana per second)', from: 'shaman', side: 'buff', icon: 'manaSpring',
     apply: (c) => c.applyAura(c.player, { id: 'manaSpring', name: 'Mana Spring Totem', icon: 'manaSpring', ...forever(), manaPerSecond: 5 }),
   },
@@ -96,11 +101,13 @@ export const LEADER_OF_THE_PACK = { id: 'leaderOfThePack', name: 'Leader of the 
 export const MOONKIN_AURA = { id: 'moonkinAura', name: 'Moonkin Aura', icon: 'moonkinForm', duration: Infinity, spellCrit: 3 };
 
 /**
- * Enchant Weapon - Revelation (WoW Forever, sold by vendors; WoWSims c5b3805): a direct spell that deals damage without
- * a crit has an 8% chance (9% before client 70938) to make your next direct spell crit, within 15 sec. Only spells roll
- * it, and the charge goes with the next spell's cast, landed or not (from 1,356 Warcraft Logs reports). WoWSims notes
- * that the chance falls as your crit rises, by a rule no file states, and keeps it flat; so does the yard. A spell far
- * under your level rolls less; every spell the builds cast is within 12 levels, so the yard leaves that out.
+ * Enchant Weapon - Revelation (WoW Forever, sold by vendors; WoWSims 4269136): a spell hit that deals damage without a
+ * crit has an 8% chance (9% before client 70938) to make your next direct spell crit, within 15 sec; one roll per hit
+ * event. Only spells roll it, and the charge goes with the next spell's cast, landed or not; a channel spends it on its
+ * first tick that crits, and a DoT's ticks never take it (from 1,356 Warcraft Logs reports). WoWSims notes that the
+ * chance falls as your crit rises, by a rule no file states, and keeps it flat; so does the yard. A spell far under your
+ * level rolls less; every spell the builds cast is within 12 levels, so the yard leaves that out. Engine:
+ * Combat.installRevelation.
  */
 export const REVELATION = { chance: 0.08, duration: 15 };
 

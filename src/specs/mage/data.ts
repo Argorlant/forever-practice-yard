@@ -59,7 +59,7 @@ export const DATA = {
   arcaneWrath: { mana: 395, cast: 3.5, cooldown: 6, min: 406, max: 496, coeff: 1, maxManaPct: 0.05 },
   // Ice Lance vs Frozen (Fingers of Frost): +300 % (x4) and an 8 s cooldown since the Oct 30 hotfix (x3 and none before).
   // Coefficient provisional: gs 0.10, fs 0.143.
-  iceLance: { mana: 160, min: 136, max: 161, coeff: 0.1, frozen: 4, cooldown: 8 },
+  iceLance: { mana: 160, min: 136, max: 161, coeff: 0.115, frozen: 4, cooldown: 8 },  // coeff measured in game (WoWSims 4269136)
   // Rank 5 (gs frost_area.go): 10 yd; Improved Cone of Cold +12/23/35%. Winter's Chill feeds it since Oct 15.
   coneOfCold: { mana: 555, min: 328, max: 358, coeff: 0.129, cooldown: 10, range: 10, improved: [0, 0.12, 0.23, 0.35] },
   frostfireBolt: { mana: 370, cast: 3, min: 270, max: 314, coeff: 0.814, dot: 19, dotTicks: 3, dotPeriod: 3 },

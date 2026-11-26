@@ -1,13 +1,14 @@
 // Patches src/ui/talent-layout.json with the talent trees WoWSims Forever has since the
-// hotfixes of November 2026. Its tree files give the order, places, ranks and prerequisites;
-// they hold no text, so the words and each rank's values are below, the values from its spell
-// table's rank curves (sim/core/spelldata/spells_auto_gen.go). A talent keeps the key the specs
-// know it by. Run after tools/wowhead_trees.mjs, and move COMMIT to take a newer version.
+// hotfixes of November 2026 (the Druid's Balance tree since hotfix push 114344, 25 November).
+// Its tree files give the order, places, ranks and prerequisites; they hold no text, so the
+// words and each rank's values are below, the values from its spell table's rank curves
+// (sim/core/spelldata/spells_auto_gen.go). A talent keeps the key the specs know it by. Run
+// after tools/wowhead_trees.mjs, and move COMMIT to take a newer version.
 //
 // Usage: node tools/wowsims_trees.mjs
 import fs from 'node:fs';
 
-const COMMIT = '161a62003af48b186f2c18acc9d381c3dea97dd7';
+const COMMIT = '4269136e8fb36bbcce0073e4ba0000f6c2813e7f';
 const TREES = `https://raw.githubusercontent.com/wowsims/forever/${COMMIT}/ui/sim/talents/trees`;
 const FILE = 'src/ui/talent-layout.json';
 
@@ -129,6 +130,38 @@ const REWORKED = {
       maelstromWeapon: 'When you deal damage with a melee attack, you have a chance ({3} times a minute at your main hand\'s speed) to reduce the cast time and Mana cost of your next Lightning Bolt spell by {0}%. Stacks up to {1} times. Lasts {2} sec.',
     },
   },
+  // Hotfix push 114344 (WoWSims b57a61d): Improved Wrath, Improved Moonfire and Moonfury are renamed or replaced, and
+  // Improved Starfire, Eclipse and Moonkin Form changed. The specs take WoWSims' keys for the three new names.
+  druid: {
+    keys: { bloodFrenzy: 'primalFury', naturalInstinct: 'predatoryInstincts', primalBite: 'mangle' },
+    fresh: {
+      starlightWrath: {
+        icon: 'spell_nature_abolishmagic',
+        text: 'Reduces the cast time of your Wrath and Starfire spells by {0} sec and the Mana cost of your Wrath spell by {1}%.',
+        ranks: [[0.1, 10], [0.2, 20], [0.3, 30], [0.4, 40], [0.5, 50]],
+      },
+      moonAndStars: {
+        icon: 'spell_nature_starfall',
+        text: 'Increases the damage and critical strike chance of your Moonfire spell by {0}%, and gives your Starfire spell a {1}% chance to not lose casting time when you take damage.',
+        ranks: [[5, 50], [10, 100]],
+      },
+      dreamstate: {
+        icon: 'cdn:ability_druid_dreamstate',
+        text: 'When you cast Innervate on another player, you gain {0}% of its effect.',
+        ranks: [[20], [40], [60], [80], [100]],
+      },
+    },
+    ranks: {
+      improvedStarfire: [[8], [15]],
+      eclipse: [[0.17, 7], [0.33, 13], [0.5, 20]],
+      rendAndTear: [[3], [6], [9], [12], [15]],
+    },
+    text: {
+      improvedStarfire: 'Gives your Starfire spell a {0}% chance to stun the target for 3 sec.',
+      eclipse: 'Increases the critical strike chance of your Wrath spell by {1}%, and your Wrath spell reduces the cast time of your next 2 Starfire spells by {0} sec. Stores up to 4 charges. Lasts 15 sec.',
+      moonkinForm: 'Shapeshift into Moonkin Form, increasing the Arcane and Nature damage you deal by 10%, Omen of Clarity\'s chance to trigger by 100%, Armor contribution from items by 360%, and all party or raid members within 45 yards have their Critical Strike chance increased by 3%. Also protects the caster from Polymorph effects and prevents the use of healing spells.\n\nThe act of shapeshifting frees the caster of Polymorph and Movement Impairing effects.',
+    },
+  },
 };
 /** Values per rank in a tree that kept its shape. */
 const NEW_RANKS = {
@@ -137,7 +170,6 @@ const NEW_RANKS = {
     wrack: [[60, 1, 100, 6]],
     shadowAndFlame: [[4, 20, 4, 20, 20, 20], [8, 20, 8, 20, 40, 40], [12, 20, 12, 20, 60, 60], [16, 20, 16, 20, 80, 80], [20, 20, 20, 20, 100, 100]],
   },
-  druid: { rendAndTear: [[3], [6], [9], [12], [15]] },
 };
 // Warrior's Defiance: 7/13/20 % from hotfix push 113605 (WoWSims #862).
 NEW_RANKS.warrior = { defiance: [[7], [13], [20]] };

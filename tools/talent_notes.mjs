@@ -36,6 +36,13 @@ const NOVEMBER = {
   },
   druid: {
     rendAndTear: '3-15% more melee damage on bleeding targets.',
+    // Hotfix push 114344 (25 Nov), WoWSims 4269136.
+    starlightWrath: "Since hotfix push 114344 (25 Nov) it also takes 0.1 s a point off Starfire; still 10% a point off Wrath's mana.",
+    moonAndStars: '2 points for 10% Moonfire damage and crit; since push 114344 also 50/100% for Starfire not to be pushed back.',
+    improvedStarfire: '2 points since push 114344: only an 8/15% stun; its cast time cut went to Starlight Wrath.',
+    eclipse: 'New (from Season of Discovery): Wrath gives 2 Starfire charges, -0.17/0.33/0.5 s each; since push 114344 also +7/13/20% Wrath crit.',
+    dreamstate: "Replaced Moonfury in push 114344: 20-100% of an Innervate you cast on another player is yours too (the yard's Innervate is on yourself).",
+    moonkinForm: 'Aura now crit for all attacks, exclusive with Leader of the Pack; Omen chance x2; all non-healing spells castable. Since push 114344 also +10% Arcane and Nature damage in the form.',
   },
   rogue: {
     mutilate: 'New capstone of Assassination in November: 90% weapon damage per hand.',
@@ -94,6 +101,10 @@ const NOVEMBER = {
 };
 /** Listed as removed by the research sheets, but only renamed since. */
 const RENAMED = ['elemental mastery'];
+/** Renamed by the hotfixes since the research sheets: the name the sheets know them by. */
+const WAS = { druid: { starlightWrath: 'Improved Wrath', moonAndStars: 'Improved Moonfire' } };
+/** Removed by the hotfixes since the research sheets. */
+const REMOVED = { druid: ['Moonfury (into Moonkin Form, 25 Nov)'] };
 
 const out = {};
 for (const cls of Object.keys(layout)) {
@@ -108,12 +119,14 @@ for (const cls of Object.keys(layout)) {
   const talents = {};
   for (const tree of layout[cls]) {
     for (const t of tree.talents) {
-      const r = research.get(t.key);
+      const was = WAS[cls]?.[t.key];
+      const r = research.get(t.key) ?? (was ? research.get(camel(was)) : undefined);
       const note = {};
       if (fresh.has(t.key) || r?.newInForever) note.new = true;
       const change = NOVEMBER[cls]?.[t.key] ?? clean(r?.foreverChange, t.row);
       if (change) note.change = change;
-      if (r?.renamedFrom && !(change ?? '').includes(r.renamedFrom)) note.was = r.renamedFrom;
+      const from = was ?? r?.renamedFrom;
+      if (from && !(change ?? '').includes(from)) note.was = from;
       if (Object.keys(note).length) talents[t.key] = note;
     }
   }
@@ -122,7 +135,7 @@ for (const cls of Object.keys(layout)) {
   const names = layout[cls].flatMap((tree) => tree.talents.map((t) => t.name.toLowerCase()));
   const list = (Array.isArray(removed) ? removed : removed?.value ?? [])
     .filter((s) => typeof s === 'string' && !/\bremains?\b/.test(s) && ![...names, ...RENAMED].some((n) => s.toLowerCase().startsWith(n)));
-  out[cls] = { talents, removed: list };
+  out[cls] = { talents, removed: [...list, ...(REMOVED[cls] ?? [])] };
 }
 fs.writeFileSync('src/ui/talent-notes.json', `${JSON.stringify(out, null, 1)}\n`);
 for (const [cls, v] of Object.entries(out)) {

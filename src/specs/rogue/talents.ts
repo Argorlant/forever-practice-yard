@@ -100,8 +100,9 @@ const BACKSTAB_BAR = bar(['backstab', 'shank', 'eviscerate', 'sliceAndDice', 'ru
   'exposeArmor', 'kick', 'kidneyShot', 'feint', 'stealth', 'garrote', 'sprint', 'vanish']);
 const MUTILATE_BAR = bar(['mutilate', 'shank', 'eviscerate', 'sliceAndDice', 'rupture', 'coldBlood', 'thistleTea', 'exposeArmor',
   'kick', 'kidneyShot', 'gouge', 'feint', 'stealth', 'garrote', 'sprint', 'vanish']);
+// Both Hemorrhage builds take Improved Ambush since 4269136, so Ambush has Sprint's place.
 const HEMO_BAR = bar(['hemorrhage', 'shank', 'deathMark', 'sliceAndDice', 'rupture', 'ghostlyStrike', 'garrote', 'premeditation',
-  'preparation', 'kick', 'thistleTea', 'exposeArmor', 'stealth', 'eviscerate', 'sprint', 'vanish']);
+  'preparation', 'kick', 'thistleTea', 'exposeArmor', 'stealth', 'eviscerate', 'ambush', 'vanish']);
 
 const WS = 'wowsims/forever';
 export const BUILDS: Build[] = [
@@ -109,8 +110,8 @@ export const BUILDS: Build[] = [
   { id: 'combat-backstab', name: 'Combat Backstab', source: WS, talentString: '005303002-3203030202012321351-005', rotation: 'backstab', stats: BACKSTAB_STATS, bar: BACKSTAB_BAR },
   { id: 'combat-venom', name: 'Combat Venom', source: WS, talentString: '00530320241001-320013220201232115', rotation: 'combat', stats: COMBAT_STATS, bar: VENOM_BAR },
   { id: 'mutilate-gs', name: 'Mutilate, Assassination', source: WS, talentString: '00530311231251031-32030302020103-001', rotation: 'mutilate', stats: MUTILATE_STATS, bar: MUTILATE_BAR },
-  { id: 'hemo-gs', name: 'Subtlety Hemorrhage', source: WS, talentString: '00530301-320003-305230031321001151', rotation: 'hemorrhage', stats: HEMO_STATS, bar: HEMO_BAR },
-  { id: 'hemo-sf', name: 'Hemorrhage, Seal Fate', source: WS, talentString: '0053031121135102-02-0352000313210001', rotation: 'hemorrhage', stats: HEMO_STATS, bar: HEMO_BAR },
+  { id: 'hemo-gs', name: 'Subtlety Hemorrhage', source: WS, talentString: '00530301-320003-005233031321001151', rotation: 'hemorrhage', stats: HEMO_STATS, bar: HEMO_BAR },
+  { id: 'hemo-sf', name: 'Hemorrhage, Seal Fate', source: WS, talentString: '0053031121135102-02-0052030313210001', rotation: 'hemorrhage', stats: HEMO_STATS, bar: HEMO_BAR },
 ];
 
 export const buildLabel = (b: Build) => `${b.name} ${split(b.talentString)} (${b.source})`;

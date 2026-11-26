@@ -70,27 +70,31 @@ export const DATA = {
   bestialWrath: { mana: Math.round(BASE_MANA * 0.12), cooldown: 120, duration: 18, damage: 1.5 },
   intimidation: { mana: Math.round(BASE_MANA * 0.08), cooldown: 60, window: 15 },
   // Hawks from combat logs (gs Oct 27): 80 % of your RAP as attack power (128.8 per DPS), a swing of 7.1-14.3 before Unleashed
-  // Fury, half your crit plus Ferocity's, your hit, on the white melee table.
+  // Fury, your crit plus Ferocity's, your hit, on the white melee table.
   // Since the Nov 10 hotfix (WoWSims, from level 48 logs): 80% of your ranged attack power plus 7 and 14 a point of the
   // bow's dps; a swing of 0.185 of the creature dps over 2.5 sec, 22% either side, 60 attack power a point of dps, both
   // before Unleashed Fury 5/5 and Focused Fire 2/2. Arcane Shot and Summon Hawk cost 11% of base mana (build 70888).
   // 161a620: the dive flies 1 sec and the hawk comes with it; its swing is 0.153 of the creature DPS (15.37-24.05) and its
   // AP is 80% of (RAP + 14 x your main hand's DPS), or + 7 with no main hand: the bow no longer counts.
-  summonHawk: { mana: Math.round(BASE_MANA * 0.11), cooldown: 6, dive: 108, diveRap: 0.05, flight: 1, duration: 18, max: 2, swing: 2.5, swingMin: 15.37, swingMax: 24.05, apShare: 0.8, weaponAp: 7, weaponApPerDps: 14, apPerDps: 70.38, critShare: 0.5 },
+  // WoWSims 4269136: a hawk's crit is the pet's, your whole crit (the higher of melee and ranged) plus Ferocity, no longer half.
+  summonHawk: { mana: Math.round(BASE_MANA * 0.11), cooldown: 6, dive: 108, diveRap: 0.05, flight: 1, duration: 18, max: 2, swing: 2.5, swingMin: 15.37, swingMax: 24.05, apShare: 0.8, weaponAp: 7, weaponApPerDps: 14, apPerDps: 70.38, critShare: 1 },
   raptorStrike: { mana: 100, cooldown: 6, bonus: 70 },
   mongooseBite: { mana: 65, cooldown: 5, bonus: 57, window: 10, dodgeWindow: 5 },
   striderKick: { mana: Math.round(BASE_MANA * 0.0581), cooldown: 8 },
   wingClip: { mana: 80, damage: 50 },
   // Fire traps scale with 13 % of the higher of attack power and ranged attack power, fixed when placed (MythicSim in game, gs Oct 21).
-  immolationTrap: { mana: 245, cooldown: 30, total: 690, ticks: 5, period: 3, apShare: 0.13 },
+  // A trap arms 0.8 s after it is placed, then springs at a point even in the next 0.4 s; about one in four (24%)
+  // springs a 0.4 s check later (WoWSims 4269136). It takes a target within 5 yd when placed.
+  immolationTrap: { mana: 245, cooldown: 30, total: 690, ticks: 5, period: 3, apShare: 0.13, radius: 5, arming: 0.8, check: 0.4, lateCheck: 0.24 },
   laceratingStrikes: { share: 0.4, ticks: 7, period: 3 },
   quickShots: { haste: 0.3, duration: 12 },
   manaPotion: { min: 1350, max: 2250, cooldown: 120 },
   // Pet (gs model): weapon 36.34-55.32 at any speed, AP/14 x 2.0
   pet: {
-    min: 36.34, max: 55.32, apBase: 252, apShare: 0.1, happiness: 1.25, family: 1.1, // Cat
+    min: 36.34, max: 55.32, apBase: 252, apShare: 0.1, happiness: 1.25, family: 1.1, // Cat or Raptor
     // Oct 15: pets have no crit of their own; they take yours (the higher of melee and ranged) plus Ferocity.
-    focusPerSecond: 10, focusCap: 150, actionInterval: 1.6, baseCrit: 0,
+    // Autocast decides every 0.8 s, and waits two steps after a cast (WoWSims 4269136, from logs).
+    focusPerSecond: 10, focusCap: 150, autocastStep: 0.8, baseCrit: 0,
     claw: { focus: 25, min: 43, max: 59 }, bite: { focus: 35, cooldown: 10, min: 81, max: 99 },
     frenzy: { speed: 1.3, duration: 8 },
   },

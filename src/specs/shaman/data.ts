@@ -79,7 +79,7 @@ export const DATA = {
   elementalMastery: { cooldown: 180, duration: 15, castCut: 0.5 },
   // Blizzard's notes double the chance and no row states it, so WoWSims doubles its measured 10 per minute.
   maelstromWeapon: { ppm: [6, 7, 8, 9, 10], cut: 0.2, max: 5, duration: 30 },   // the talent's own rate a minute and 20% a stack at every rank (build 70888)
-  flurry: { charges: 3, duration: 15, haste: 0.06 },   // per point
+  flurry: { charges: 3, duration: 15, haste: 0.06, icd: 0.5 },   // haste per point; charges spent at least 0.5 s apart
   mentalDexterity: [0, 0.5, 1, 1.5],                   // Intellect into attack power, by points
   mentalQuickness: [0, 0.15, 0.3],                     // Intellect into spell power, by points
   improvedStormstrike: { duration: 15, regen: 0.5 },

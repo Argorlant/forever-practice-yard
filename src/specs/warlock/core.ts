@@ -44,11 +44,11 @@ function cost(id: string, base: number) {
   return (c: Combat) => Math.round(base * (DESTRUCTION.includes(id) ? 1 - [0, 0.03, 0.06, 0.1][T(c).cataclysm] : 1));
 }
 /** Life Tap: (424 + Spirit) x (1 + 10 % per Improved Life Tap point) health into the same mana. */
-export const lifeTapAmount = (c: Combat) => Math.round((D.lifeTap.base + Number(c.options.spirit ?? D.spirit)) * (1 + 0.1 * T(c).improvedLifeTap));
+export const lifeTapAmount = (c: Combat) => Math.round((D.lifeTap.base + Number(c.options.spirit ?? D.spirit) * c.spiritFactor()) * (1 + 0.1 * T(c).improvedLifeTap));
 
 /** Mana per second: Spirit regen outside the five-second rule (Life Tap does not restart it), MP5 always. */
 export function regen(c: Combat): number {
-  const spirit = 6.25 + Number(c.options.spirit ?? D.spirit) / 8;
+  const spirit = 6.25 + Number(c.options.spirit ?? D.spirit) * c.spiritFactor() / 8;
   const mp5 = Number(c.options.mp5 ?? D.mp5) / 5;
   return (c.t - c.lastSpend >= 5 ? spirit : 0) + mp5;
 }
@@ -181,7 +181,7 @@ function petHit(c: Combat, u: Unit, source: string, base: number, kind: 'melee' 
     else if (source === 'petMelee' && (x -= c.rules.glanceChance) < 0) outcome = 'glance';
     else if (roll(c, D.pet.crit + c.stats.crit - c.rules.critSuppression)) outcome = 'crit';
   } else {
-    outcome = roll(c, Math.max(0, D.spellMiss - c.totalHit())) ? 'resist' : roll(c, c.spellCritChance()) ? 'crit' : 'hit';
+    outcome = roll(c, Math.max(0, D.spellMiss - c.totalHit())) ? 'resist' : roll(c, c.spellCritChance(0, false)) ? 'crit' : 'hit';
   }
   let amount = 0;
   if (outcome === 'hit' || outcome === 'crit' || outcome === 'glance') {
@@ -195,7 +195,7 @@ function petHit(c: Combat, u: Unit, source: string, base: number, kind: 'melee' 
   if (brand && amount > 0) {
     const b = D.pet.brand;
     const fire = demons(c).out === 'imp';
-    const crit = roll(c, c.spellCritChance());
+    const crit = roll(c, c.spellCritChance(0, false));
     const extra = Math.round((between(c, b.min, b.max) + b.coeff * c.spellPowerFor(fire ? 'fire' : 'shadow')) * (crit ? 1.5 : 1));
     c.deal({ target: u, source: 'demonicBrand', outcome: crit ? 'crit' : 'hit', school: fire ? 'fire' : 'shadow', amount: extra, white: false });
     brand.stacks = (brand.stacks ?? 1) - 1;
@@ -316,12 +316,14 @@ export const ABILITIES: Ability[] = [
       const u = t!;
       const a = D.baneOfAgony;
       const amp = c.aura(c.player, 'amplifyCurse') ? 1 + D.amplifyCurse.bonus : 1;
-      c.removeAura(c.player, 'amplifyCurse');
       const improved = 1 + 0.05 * T(c).improvedBaneOfAgony;
       bane(c, u, 'baneOfAgony');
       // The base ramps by the third of the duration the tick lands in, so Wrack's faster ticks reach the stronger thirds sooner.
       const third = (cc: Combat, x: Aura) => { const run = 3 * (cc.t - x.start), length = x.end - x.start; return run <= length + 1e-6 ? 0 : run <= 2 * length + 1e-6 ? 1 : 2; };
-      dot(c, u, 'baneOfAgony', 'Bane of Agony', 'shadow', a.ticks, a.period, (cc, _n, x) => (a.blocks[third(cc, x)] * improved + a.coeff * cc.spellPowerFor('shadow')) * amp);
+      // Amplify Curse goes with a Bane that lands; one that misses leaves it up (WoWSims 4269136, from logs).
+      if (dot(c, u, 'baneOfAgony', 'Bane of Agony', 'shadow', a.ticks, a.period, (cc, _n, x) => (a.blocks[third(cc, x)] * improved + a.coeff * cc.spellPowerFor('shadow')) * amp)) {
+        c.removeAura(c.player, 'amplifyCurse');
+      }
     },
   }),
   spell({

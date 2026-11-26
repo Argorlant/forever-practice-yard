@@ -397,9 +397,7 @@ const abilities: Ability[] = [
         id: 'deathMark', name: 'Death Mark', icon: DEATH_MARK_ICON, duration: D.deathMark.duration, value: 0,
         onRemove: (cc, a, expired) => {
           if (!expired) return;
-          const m = D.deathMark;
-          const limit = (m.capBase + m.capPerPoint * cp + m.capAp * cp * cc.stats.attackPower) * (1 + (cc.stats.crit + cc.mod.crit) / 100) * (1 + D.coupDeGrace[T(cc).coupDeGrace]);
-          cc.deal({ target: u, source: 'deathMark', outcome: 'hit', school: 'physical', amount: Math.round(Math.min(a.value ?? 0, limit)), white: false, periodic: true });
+          cc.deal({ target: u, source: 'deathMark', outcome: 'hit', school: 'physical', amount: Math.round(a.value ?? 0), white: false, periodic: true });
         },
       });
       afterFinisher(c, u, cp);
@@ -674,12 +672,18 @@ function prepare(c: Combat): void {
     }
   });
 
-  // Death Mark stores a share of what you deal its target, twice that from Garrote and Rupture.
+  // Death Mark stores a share of the physical damage you deal its target, twice that from Garrote and Rupture, and none
+  // of the poisons' (WoWSims 4269136, from logs). It stops at a limit that rises with combo points, attack power and
+  // crit, worked out as each hit is stored.
   c.afterDamage.push((hit: Hit) => {
     const mark = c.aura(hit.target, 'deathMark');
-    if (!mark || hit.source === 'deathMark' || hit.amount <= 0) return;
-    const rate = D.deathMark.perPoint * state(c).deathMarkPoints * (1 + D.coupDeGrace[t.coupDeGrace]);
-    mark.value = (mark.value ?? 0) + hit.amount * rate * (hit.source === 'garrote' || hit.source === 'rupture' ? 2 : 1);
+    if (!mark || hit.source === 'deathMark' || hit.amount <= 0 || hit.school !== 'physical') return;
+    const m = D.deathMark;
+    const cp = state(c).deathMarkPoints;
+    const coup = 1 + D.coupDeGrace[t.coupDeGrace];
+    const limit = (m.capBase + m.capPerPoint * cp + m.capAp * cp * c.stats.attackPower) * (1 + (c.stats.crit + c.mod.crit) / 100) * coup;
+    const stored = mark.value ?? 0;
+    if (stored < limit) mark.value = Math.min(limit, stored + hit.amount * m.perPoint * cp * coup * (hit.source === 'garrote' || hit.source === 'rupture' ? 2 : 1));
   });
 
   // Blade Flurry copies physical damage to a second nearby dummy.
@@ -714,15 +718,15 @@ function deadlyPoison(c: Combat, t: Unit): void {
     id: 'deadlyPoison', name: 'Deadly Poison', icon: 'deadlyPoison', duration: dp.duration, period: dp.period, stacks,
     onTick: (cc, a) => {
       const crit = cc.rollTickCrit(cc.stats.spellCrit + cc.mod.crit);
-      const amount = Math.round((dp.tick + (dp.ap / dp.ticks) * cc.stats.attackPower) * (a.stacks ?? 1) * cc.mod.natureDamage * venomDamage(cc) * (crit ? cc.rules.spellCritMultiplier : 1));
+      const amount = Math.round((dp.tick + dp.ap * cc.stats.attackPower) * (a.stacks ?? 1) * cc.mod.natureDamage * venomDamage(cc) * (crit ? cc.rules.spellCritMultiplier : 1));
       cc.deal({ target: t, source: 'deadlyPoison', outcome: crit ? 'crit' : 'hit', school: 'nature', amount, white: false, periodic: true });
     },
   });
 }
 
 // ------------------------------------------------------------- rotations
-/** Combo points the build's priority list waits for before Eviscerate. */
-const evisceratePoints = (c: Combat) => (T(c).mutilate || buildById(c.options.build).rotation === 'backstab' ? 4 : 5);
+/** Combo points the build's priority list waits for before Eviscerate: 3 with Mutilate (WoWSims 4269136), 4 with Backstab. */
+const evisceratePoints = (c: Combat) => (T(c).mutilate ? 3 : buildById(c.options.build).rotation === 'backstab' ? 4 : 5);
 
 /**
  * The sims' priority lists, one per build (research/rogue_forever.md →
@@ -751,9 +755,22 @@ function suggest(c: Combat): string | null {
   if (!inCombat && !c.stealthed() && ready('stealth')) return 'stealth';
   if (exposeLow && cp === 5) return 'exposeArmor';
   if (c.stealthed() && cp <= 3 && tl.premeditation && ready('premeditation')) return 'premeditation';
+  // Since 4269136: with Improved Ambush, Ambush from Stealth or after Ghostly Strike, while Garrote has more than 7 sec
+  // to run when Ghostly Strike is talented; else Garrote when it is down.
+  const gsLeft = c.cooldownLeft('ghostlyStrike').left;
+  if (tl.improvedAmbush && unseen(c) && mhDagger(c) && (!tl.ghostlyStrike || garroteLeft > 7) && cp < 5) return 'ambush';
   if (unseen(c) && cp < 5 && !garrote) return 'garrote';
-  if (inCombat && !garrote && energy >= c.cost(c.ability('garrote')!) && cp < 5 && ready('vanish')) return 'vanish';
-  if (tl.preparation && ready('preparation') && !ready('vanish')) return 'preparation';
+  // Vanish for a Garrote that is down, or, at 3 points or fewer with an Ambush's energy, while Garrote outlasts Ghostly
+  // Strike's cooldown. WoWSims' list asks nothing more for the second; the yard asks that Stealth then opens an Ambush or
+  // a Premeditation, so that a build with neither keeps its Vanish.
+  const vanishGarrote = !garrote && energy >= c.cost(c.ability('garrote')!) && cp < 5;
+  const opensSomething = (tl.improvedAmbush > 0 && mhDagger(c)) || (tl.premeditation > 0 && ready('premeditation'));
+  const vanishAmbush = opensSomething && (!tl.ghostlyStrike || garroteLeft >= gsLeft) && energy >= c.cost(c.ability('ambush')!) && cp <= 3;
+  if (inCombat && (vanishGarrote || vanishAmbush) && ready('vanish')) return 'vanish';
+  // Preparation once Vanish and every cooldown it resets that the build has are spent, at 85 energy or less.
+  const spent = (key: keyof Talents, id: string) => !tl[key] || !ready(id);
+  if (tl.preparation && ready('preparation') && !ready('vanish') && spent('ghostlyStrike', 'ghostlyStrike') && spent('premeditation', 'premeditation')
+    && spent('coldBlood', 'coldBlood') && spent('bladeFlurry', 'bladeFlurry') && energy <= 85) return 'preparation';
   if (inCombat && tl.bladeFlurry && snd && energy >= D.bladeFlurry.cost && ready('bladeFlurry')) return 'bladeFlurry';
   if (inCombat && c.stats.offHand && ready('shank') && energy <= 80 && (!tl.bootKnife || cp <= 3)) return 'shank';
   if (inCombat && tl.adrenalineRush && energy <= 50 && snd && ready('adrenalineRush')) return 'adrenalineRush';
@@ -764,18 +781,26 @@ function suggest(c: Combat): string | null {
     if ((tl.bloodSplatter || tl.hemorrhage) && cp >= 3 && !c.aura(t, 'rupture') && !tl.flawlessExecution) return 'rupture';
     if (cp >= 1 && !snd) return 'sliceAndDice';
     const eviscerate = c.cost(c.ability('eviscerate')!);
-    if (cp === 5 && energy >= eviscerate && tl.coldBlood && ready('coldBlood') && !c.aura(p, 'coldBlood') && !c.aura(p, 'elunesLight')) return 'coldBlood';
-    // Since 161a620: at 4 points with Mutilate or Backstab (no longer before Slice and Dice drops), and with Serrated
-    // Blades only while Rupture has 3 sec or more.
-    if (!tl.deathMark && (cp >= 5 || (cp === 4 && (tl.mutilate || backstab))) && (!tl.serratedBlades || ruptureLeft >= 3)) return 'eviscerate';
+    // Cold Blood at 5 points, or 4 with Mutilate (WoWSims 4269136).
+    if ((cp === 5 || (tl.mutilate && cp >= 4)) && energy >= eviscerate && tl.coldBlood && ready('coldBlood') && !c.aura(p, 'coldBlood') && !c.aura(p, 'elunesLight')) return 'coldBlood';
+    // Eviscerate at 5 points, 4 with Backstab and 3 with Mutilate (4269136), and with Serrated Blades only while Rupture
+    // has 3 sec or more.
+    if (!tl.deathMark && (cp >= 5 || (cp >= 4 && backstab) || (cp >= 3 && tl.mutilate)) && (!tl.serratedBlades || ruptureLeft >= 3)) return 'eviscerate';
   }
   if (cp >= 5) return null;
-  if (tl.ghostlyStrike && ready('ghostlyStrike') && (c.behind(t) || tl.dirtyDeeds) && garroteLeft <= 4) return 'ghostlyStrike';
+  // Ghostly Strike while Garrote is about to fall, or, since 4269136, just after a fresh Garrote with Hemorrhage up for 2
+  // sec more.
+  const hemo = c.aura(t, 'hemorrhage');
+  const hemoLeft = hemo ? hemo.end - c.t : 0;
+  if (tl.ghostlyStrike && ready('ghostlyStrike') && (c.behind(t) || tl.dirtyDeeds) && (garroteLeft <= 4 || (garroteLeft >= 21 && hemoLeft >= 2))) return 'ghostlyStrike';
   if (backstab && tl.hemorrhage && !c.aura(t, 'hemorrhage')) return 'hemorrhage';
   if (backstab) return c.aura(p, 'ghostlyStrikeNext') ? null : 'backstab';
   if (tl.mutilate) return 'mutilate';
-  // Hemorrhage saves its energy for Ghostly Strike and Garrote when Garrote is about to fall, unless energy would cap (75).
-  if (tl.hemorrhage) return garroteLeft >= 8 || !tl.ghostlyStrike || energy >= 75 ? 'hemorrhage' : null;
+  // Hemorrhage saves its energy for Ghostly Strike and Garrote, unless energy would cap (75): it waits while Garrote has
+  // under 8 sec, while Ghostly Strike's opener is up, and while Ghostly Strike is ready with Garrote at 4 sec or less or
+  // fresh at 21 or more (4269136).
+  const timers = garroteLeft >= 8 && !c.aura(p, 'ghostlyStrikeNext') && (!ready('ghostlyStrike') || (garroteLeft > 4 && garroteLeft < 21));
+  if (tl.hemorrhage) return timers || !tl.ghostlyStrike || energy >= 75 ? 'hemorrhage' : null;
   return 'sinisterStrike';
 }
 

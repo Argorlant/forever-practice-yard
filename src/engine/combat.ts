@@ -112,8 +112,6 @@ export interface Modifiers {
   block: number;
   /** Spell crit from talents, in percentage points. */
   spellCrit: number;
-  /** Damage multiplier for arcane spells (Moonfury). */
-  arcaneDamage: number;
   /** Extra physical damage against a bleeding target (Rend and Tear), 0.1 = +10 %. */
   vsBleeding: number;
   /** Your own Windfury Weapon (shamans): it turns the totem off for you and gives two extra main-hand attacks with this much extra AP. */
@@ -160,7 +158,7 @@ interface EventMap {
 const freshModifiers = (): Modifiers => ({
   hit: 0, crit: 0, critFor: {}, damageFor: {}, critMultiplierFor: {},
   physicalDamage: 1, natureDamage: 1, offHand: 1, expertise: 0, attackPower: 0, spellPower: 0, armorIgnoreFor: {}, armorIgnore: 0,
-  threat: 1, threatFor: {}, hitOff: 0, damageTaken: 1, block: 0, spellCrit: 0, arcaneDamage: 1, vsBleeding: 0,
+  threat: 1, threatFor: {}, hitOff: 0, damageTaken: 1, block: 0, spellCrit: 0, vsBleeding: 0,
   windfuryWeapon: null,
 });
 
@@ -427,41 +425,39 @@ export class Combat {
   }
 
   /**
-   * Revelation (a weapon enchant, see REVELATION in specs/common.ts): a direct spell you cast that deals damage without a
-   * crit may give the charge; the next direct spell crits (the charge is spell crit, so it reaches every spell that rolls
-   * spellCritChance) and spends it, landed or not: the charge goes with the cast (WoWSims c5b3805, EV-0149). A channel
-   * keeps it to its end, so each of its ticks crits (Arcane Missiles). Ticks, weapon strikes, melee and ranged attacks
-   * and procs that are not your abilities neither roll nor spend.
+   * Revelation (a weapon enchant, see REVELATION in raid.ts; WoWSims 4269136, EV-0149): a spell hit of yours that deals
+   * damage without a crit may give the charge, one roll per hit event: Chain Lightning's targets roll once, Lightning
+   * Overload's copy rolls apart. The charge makes your direct spell hits crit and goes with the next spell's hit, landed
+   * or not. A channel keeps it for its ticks, which crit, and the first tick that crits spends it. A DoT's ticks never
+   * crit from it and roll nothing, nor do a channel's periodic ticks (Mind Flay, Drain Life); the missiles of Arcane
+   * Missiles and the bolts of Penance roll as spells do. Weapon strikes, melee and ranged attacks, totems and demons
+   * neither roll nor spend.
    */
   private installRevelation(): void {
-    const spend = () => { this.removeAura(this.player, 'revelation'); this.count('revelationSpent'); };
-    // The channel whose direct ticks met the charge (by its start); a channel of periodic ticks (Mind Flay) never does.
-    let ticked: number | null = null;
-    this.afterChannel.push((_id, start) => {
-      if (ticked !== start) return;
-      ticked = null;
-      if (this.player.auras.has('revelation')) spend();
-    });
+    let lastSource = '';
+    let lastAt = -1;
     this.afterDamage.push((h) => {
-      if (h.periodic || h.white || h.weaponStrike || h.ranged || h.school === 'physical' || !this.ability(h.source)) return;
-      const a = this.ability(h.source)!;
-      if (a.range === 'melee') return;
+      // Lightning Overload's copy is no ability of yours, and rolls all the same.
+      const copy = h.source === 'lightningOverload';
+      if (this.inAuraTick || h.white || h.weaponStrike || h.ranged || h.school === 'physical' || (!copy && !this.ability(h.source))) return;
+      const a = this.ability(h.source);
+      if (a?.range === 'melee') return;
+      // One roll per hit event: the first result of a spell at an instant.
+      const first = h.source !== lastSource || Math.abs(this.t - lastAt) > 1e-9;
+      lastSource = h.source;
+      lastAt = this.t;
+      const tick = !!a?.channel && this.channeling?.id === a.id;
       const charge = this.player.auras.get('revelation');
-      if (a.channel && this.channeling?.id === a.id) {
-        // A channel's tick: it crits with the charge, which goes as the channel ends; with none up it may give one.
-        ticked = this.channeling.start;
-        if (!charge && h.amount > 0 && h.outcome !== 'crit' && this.random() < REVELATION.chance) {
-          this.applyAura(this.player, { id: 'revelation', name: 'Revelation', icon: 'cdn:inv_misc_note_01', duration: REVELATION.duration, spellCrit: 100 });
-          this.count('revelation');
+      if (charge && charge.start < this.t - 1e-9) {
+        if (!tick || h.outcome === 'crit') {
+          this.removeAura(this.player, 'revelation');
+          this.count('revelationSpent');
         }
         return;
       }
-      if (charge && charge.start < this.t - 1e-9) {
-        spend();
-        return;
-      }
-      if (h.amount > 0 && h.outcome !== 'crit' && this.random() < REVELATION.chance) {
-        this.applyAura(this.player, { id: 'revelation', name: 'Revelation', icon: 'cdn:inv_misc_note_01', duration: REVELATION.duration, spellCrit: 100 });
+      if (h.periodic || (tick && !a!.channel!.spellTicks)) return;
+      if (first && h.amount > 0 && h.outcome !== 'crit' && this.random() < REVELATION.chance) {
+        this.applyAura(this.player, { id: 'revelation', name: 'Revelation', icon: 'cdn:inv_misc_note_01', duration: REVELATION.duration, directSpellCrit: 100 });
         this.count('revelation');
       }
     });
@@ -857,13 +853,24 @@ export class Combat {
     this.tickAt(u, aura, this.t + after);
   }
 
+  /** While a periodic aura ticks: its damage is periodic, or a totem's or a pet's, which Revelation's charge never reaches. */
+  private inAuraTick = false;
+
+  /** Runs a periodic aura's tick. */
+  private auraTick(a: Aura): void {
+    const was = this.inAuraTick;
+    this.inAuraTick = true;
+    a.onTick!(this, a);
+    this.inAuraTick = was;
+  }
+
   private tickAt(u: Unit | Player, aura: Aura, due: number): void {
     aura.nextTick = due;
     // A tick that lands exactly on the expiry still happens (see removeAura).
     if (due > aura.end + 1e-6) return;
     this.ticks.set(aura, this.schedule(due, () => {
       if (u.auras.get(aura.id) !== aura) return;
-      aura.onTick!(this, aura);
+      this.auraTick(aura);
       this.scheduleTick(u, aura);
     }));
   }
@@ -889,7 +896,7 @@ export class Combat {
     this.ticks.delete(a);
     const count = Math.ceil(left / period - 1e-6);
     this.tickAt(u, a, this.t + left - (count - 1) * period);
-    if (tickNow) a.onTick(this, a);
+    if (tickNow) this.auraTick(a);
   }
 
   private cancelAuraEvents(a: Aura): void {
@@ -904,7 +911,7 @@ export class Combat {
     if (!a) return;
     // The last tick can fall on the same instant as the expiry.
     if (expired && a.period && a.onTick && a.nextTick !== undefined && Math.abs(a.nextTick - this.t) < 1e-6) {
-      a.onTick(this, a);
+      this.auraTick(a);
     }
     const hasteBefore = this.haste();
     this.cancelAuraEvents(a);
@@ -1245,10 +1252,16 @@ export class Combat {
     return Math.max(1, (a.gcd / this.castHaste()) * mult);
   }
 
-  /** Spell crit chance: gear and talents plus spell crit auras (no suppression vs +3 in the sims). */
-  spellCritChance(extra = 0): number {
+  /**
+   * Spell crit chance: gear and talents plus spell crit auras (no suppression vs +3 in the sims). `own` false for a
+   * demon's spells, which Revelation's charge does not reach; nor does it reach a periodic aura's tick.
+   */
+  spellCritChance(extra = 0, own = true): number {
     let auraCrit = 0;
-    for (const a of this.player.auras.values()) if (a.spellCrit) auraCrit += a.spellCrit;
+    for (const a of this.player.auras.values()) {
+      if (a.spellCrit) auraCrit += a.spellCrit;
+      if (a.directSpellCrit && own && !this.inAuraTick) auraCrit += a.directSpellCrit;
+    }
     return this.stats.spellCrit + this.mod.spellCrit + auraCrit + extra;
   }
 
@@ -1260,6 +1273,13 @@ export class Combat {
   }
 
   /** Product of a multiplier carried by the player's auras. */
+  /** Spirit raised by auras: Dark Inspiration, a priest's own or a party member's, counts once, the strongest. */
+  spiritFactor(): number {
+    let best = 0;
+    for (const a of this.player.auras.values()) if (a.spiritPct && a.spiritPct > best) best = a.spiritPct;
+    return 1 + best;
+  }
+
   auraProduct(key: 'damageDone' | 'damageTaken' | 'physicalTaken' | 'magicTaken' | 'threat' | 'manaRegen'): number {
     let m = 1;
     for (const a of this.player.auras.values()) if (a[key] !== undefined) m *= a[key]!;

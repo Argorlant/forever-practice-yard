@@ -7,8 +7,8 @@ import { decode, treesOf } from './talents-data';
 export const MAX_POINTS = 51;
 /** The trees' version: talents saved for older trees are dropped (the Oct 15 trees moved talents, the Oct 21 hotfix the Mage's Frost tree, the Oct 30 hotfix the Druid, Mage and Paladin trees from Wowhead). */
 const TREE_VERSION = '70707';
-/** WoWSims Forever's trees since the November hotfixes moved talents of these classes (client 70755). */
-const REWORKED: Record<string, string> = { warrior: '70755', shaman: '70755', rogue: '70755' };
+/** WoWSims Forever's trees since the November hotfixes moved talents of these classes (client 70755), and since hotfix push 114344 reworked the Druid's Balance tree. */
+const REWORKED: Record<string, string> = { warrior: '70755', shaman: '70755', rogue: '70755', druid: '114344' };
 export const treeVersion = (cls: string) => REWORKED[cls] ?? TREE_VERSION;
 /** The client the trees were read from. */
 export const TREES_BUILD = '70755';

@@ -61,29 +61,48 @@ const MANA_OPTIONS = [
   { key: 'spirit', name: 'Spirit (regeneration outside the five-second rule)', kind: 'number' as const, step: 1 },
   { key: 'mp5', name: 'Mana per 5 sec from gear', kind: 'number' as const, step: 1 },
 ];
+// WoWSims 4269136's twist picker under Unsealed Wrath (uwTwist).
+const RET_OPTIONS = [...MANA_OPTIONS, {
+  key: 'uwTwist', name: 'Unsealed Wrath twist', kind: 'choice' as const,
+  choices: [
+    { value: 'command', label: 'Seal of Command with Seal of Righteousness: 3 swings, then 1 (WoWSims Forever\'s default)' },
+    { value: 'fury', label: 'Seal of Righteousness with Seal of Fury: 3 swings, then 1 (no Judgement under Fury: it taunts)' },
+  ],
+}];
 
 // ----------------------------------------------------------- Retribution
+/** Under Unsealed Wrath: twist Seal of Command with Seal of Righteousness (the default), or Seal of Righteousness with Seal of Fury. */
+const furyTwist = (c: Combat) => !!T(c).unsealedWrath && c.options.uwTwist === 'fury';
+
+/** Judgement's cooldown outlasts the next swing and the seal's global cooldown after it (WoWSims 4269136). */
+const judgementOutlastsSwap = (c: Combat) =>
+  c.cooldownLeft('judgement').left >= c.swingLeft('main').left + c.gcdOf(c.ability('sealOfRighteousness')!);
+
 /**
  * WoWSims Forever's Retribution list with its Unsealed Wrath twist: Seal of Command for three swings (three stored
  * copies), Seal of Righteousness for the swing that releases them, then Seal of Command again, whose first swing
- * releases the stored Righteousness.
+ * releases the stored Righteousness. The swap to Seal of Righteousness waits until Judgement's cooldown outlasts the next
+ * swing, so Judgement unleashes Seal of Command (WoWSims 4269136).
  */
 function retSuggest(c: Combat): string | null {
   const t = c.target;
   if (!t || t.health <= 0) return null;
+  if (furyTwist(c)) return retFurySuggest(c);
   const tl = T(c);
   const { p, ready, afford, mana, potion } = ctx(c);
   const seal = currentSeal(c);
   const primary = tl.sealOfCommand ? 'sealOfCommand' : 'sealOfRighteousness';
-  if (!seal) return primary;
-  if (!p.autoAttacking && c.inRange(t)) return 'attack';
   const twist = !!tl.unsealedWrath && !!tl.sealOfCommand;
   const kept = storedSeal(c);
+  const commandStored = kept?.seal === 'sealOfCommand' && kept.stacks >= D.unsealedWrath.stacks;
+  // With no seal up the twist goes on: Seal of Righteousness after three stored Commands, else Seal of Command (WoWSims 4269136).
+  if (!seal) return twist && commandStored ? 'sealOfRighteousness' : primary;
+  if (!p.autoAttacking && c.inRange(t)) return 'attack';
   if (ready('judgement') && c.inRange(t, D.judgement.range)) return 'judgement';
   if (executePhase(c) && ready('hammerOfWrath')) return 'hammerOfWrath';
   if (ready('holyStrike') && afford('holyStrike')) return 'holyStrike';
   if (twist) {
-    if (seal === 'sealOfCommand' && kept?.seal === 'sealOfCommand' && kept.stacks >= D.unsealedWrath.stacks) return 'sealOfRighteousness';
+    if (seal === 'sealOfCommand' && commandStored && judgementOutlastsSwap(c)) return 'sealOfRighteousness';
     if (seal === 'sealOfRighteousness' && kept?.seal === 'sealOfRighteousness') return 'sealOfCommand';
   }
   const swing = c.swingLeft('main').left;
@@ -93,6 +112,33 @@ function retSuggest(c: Combat): string | null {
   if (mana >= 0.1 && ready('consecration')) return 'consecration';
   if (mana >= 0.1 && undeadDummy(c) && ready('exorcism')) return 'exorcism';
   if (seal !== primary && !(twist && kept?.seal === 'sealOfCommand')) return primary;
+  return null;
+}
+
+/**
+ * WoWSims Forever's Unsealed Wrath twist of Seal of Righteousness with Seal of Fury (uw_sor_sof, 4269136): three stored
+ * Righteousness, then Seal of Fury for the swing that releases them, then Seal of Righteousness again. Judgement of
+ * Fury taunts, so Judgement waits under Seal of Fury; the swap to it waits until Judgement's cooldown outlasts the next
+ * swing, and for the mana of both swaps.
+ */
+function retFurySuggest(c: Combat): string | null {
+  const t = c.target!;
+  const { p, ready, afford, mana, potion } = ctx(c);
+  const seal = currentSeal(c);
+  if (!seal) return 'sealOfRighteousness';
+  if (!p.autoAttacking && c.inRange(t)) return 'attack';
+  const kept = storedSeal(c);
+  if (seal !== 'sealOfFury' && ready('judgement') && c.inRange(t, D.judgement.range)) return 'judgement';
+  if (executePhase(c) && ready('hammerOfWrath')) return 'hammerOfWrath';
+  if (ready('holyStrike') && afford('holyStrike')) return 'holyStrike';
+  const both = c.manaLocked || p.resource >= c.cost(c.ability('sealOfFury')!) + c.cost(c.ability('sealOfRighteousness')!);
+  const righteousStored = kept?.seal === 'sealOfRighteousness' && kept.stacks >= D.unsealedWrath.stacks;
+  if (seal !== 'sealOfFury' && righteousStored && judgementOutlastsSwap(c) && both) return 'sealOfFury';
+  if (seal !== 'sealOfRighteousness' && (seal !== 'sealOfFury' || kept?.seal === 'sealOfFury')) return 'sealOfRighteousness';
+  if (seal === 'sealOfRighteousness' && sealLeft(c) <= Math.max(1, c.swingLeft('main').left)) return seal;
+  if (potion) return 'manaPotion';
+  if (mana >= 0.1 && ready('consecration')) return 'consecration';
+  if (mana >= 0.1 && undeadDummy(c) && ready('exorcism')) return 'exorcism';
   return null;
 }
 
@@ -106,7 +152,7 @@ function retReview(c: Combat): Row[] {
     { label: 'Holy Strike on cooldown', value: pctOf(onCooldown(c, 'holyStrike', D.holyStrike.cooldown)), good: onCooldown(c, 'holyStrike', D.holyStrike.cooldown) >= 0.85 },
     { label: 'Judgement on cooldown', value: pctOf(judgementUse), good: judgementUse >= 0.85 },
   ];
-  if (tl.unsealedWrath && tl.sealOfCommand) {
+  if (tl.unsealedWrath && (tl.sealOfCommand || furyTwist(c))) {
     const swings = k.whiteLanded ?? 0;
     const stored = k.storedSeals ?? 0;
     rows.push({ label: 'Stored seals released (Unsealed Wrath)', value: swings ? `${stored} in ${swings} swings` : '-', good: swings === 0 || stored / swings >= 0.7 });
@@ -121,14 +167,14 @@ export const paladinRet: Spec = specFor('ret', {
   id: 'paladin-ret',
   specName: 'Retribution',
   stats: RET_STATS,
-  defaultOptions: { build: 'ret', ...gearOptions('paladin-ret'), lockMana: false, undeadDummy: false },
-  options: MANA_OPTIONS,
+  defaultOptions: { build: 'ret', ...gearOptions('paladin-ret'), lockMana: false, undeadDummy: false, uwTwist: 'command' },
+  options: RET_OPTIONS,
   sheet: { spellCrit: 'Spell crit (gear + Intellect)', spellPower: 'Spell power (Holy)' },
   lowMana: (c) => c.cost(c.ability('sealOfRighteousness')!),
   welcome: 'Welcome to Retribution practice. Keep a seal up, Judgement and Holy Strike on cooldown, and with Unsealed Wrath (the Oct 30 trees) swing three times with Seal of Command, once with Seal of Righteousness to release the stored copies, then back. Mana runs out, as it does in Forever.',
   help: `${CONTROLS}
     ${HELP_COMMON}
-    Retribution swings a slow two-hander: Seal of Command procs 7 times per minute (about 44% per swing at 3.8 sec) and Seal of Righteousness adds Holy damage to every swing. Twist of Light is gone since the live hotfix of Oct 30; Unsealed Wrath (the new 31-point talent) makes each landed swing store a copy of your seal for 15 sec, up to 3, and the first swing with a different seal gives every stored copy its normal chance. The yellow glow follows our provisional loop: Judgement, Holy Strike, Seal of Command for three swings, Seal of Righteousness for one, Consecration with spare mana.
+    Retribution swings a slow two-hander: Seal of Command procs 7 times per minute (about 44% per swing at 3.8 sec) and Seal of Righteousness adds Holy damage to every swing. Twist of Light is gone since the live hotfix of Oct 30; Unsealed Wrath (the new 31-point talent) makes each landed swing store a copy of your seal for 15 sec, up to 3, and the first swing with a different seal gives every stored copy its normal chance. The yellow glow follows WoWSims Forever: Judgement, Holy Strike, Seal of Command for three swings, Seal of Righteousness for one once Judgement's cooldown outlasts the next swing (so Judgement unleashes Command), Consecration with spare mana. Settings has WoWSims' other twist: three swings with Seal of Righteousness, one with Seal of Fury, and no Judgement under Fury (Judgement of Fury taunts).
     Vengeance (after any crit) raises your damage; Vindication now only lowers the dummy's attack power. Conviction gives 2% crit per point to attacks and spells, and Champion of the Light 5/5 makes Hammer of Wrath instant. The review in the rotation panel counts the stored seals your swings released.
     This is a practice tool: hit, crit and proc chances follow WoW Forever; damage numbers are an approximation.`,
   look: { clothColor: 0xb8902e, leatherColor: 0x9aa0a8, hood: false, plate: true },
@@ -206,8 +252,8 @@ export const paladinProt: Spec = specFor('prot', {
 
 // -------------------------------------------------------------- Shockadin
 /**
- * WoWSims Forever's Holy Shock list: Judgement, Consecration, Seal of Righteousness kept up, Holy Strike, then
- * Divine Favor on a Holy Shock, Hammer of Wrath and Exorcism.
+ * WoWSims Forever's Holy Shock list: Judgement, Consecration, Seal of Command kept up (Seal of Righteousness without the
+ * talent, WoWSims 4269136), Holy Strike, then Divine Favor on a Holy Shock, Hammer of Wrath and Exorcism.
  */
 function shockSuggest(c: Combat): string | null {
   const t = c.target;
@@ -215,13 +261,17 @@ function shockSuggest(c: Combat): string | null {
   const tl = T(c);
   const { p, ready, afford, potion } = ctx(c);
   const seal = currentSeal(c);
-  if (!seal) return 'sealOfRighteousness';
+  const primary = tl.sealOfCommand ? 'sealOfCommand' : 'sealOfRighteousness';
+  if (!seal) return primary;
   if (!p.autoAttacking && c.inRange(t)) return 'attack';
-  if (sealLeft(c) <= 1) return seal;
+  if (seal === primary && sealLeft(c) <= 1) return primary;
   if (ready('judgement') && c.inRange(t, D.judgement.range)) return 'judgement';
   if (ready('consecration') && afford('consecration')) return 'consecration';
-  const busy = (id: string) => c.cooldownLeft(id).left >= D.gcd;
-  if (sealLeft(c) <= 10 && busy('consecration') && busy('holyShock') && busy('holyStrike')) return seal;
+  // Recast with 10 sec or less left while Consecration, Holy Shock, Holy Strike and, on Undead, Exorcism are each a global cooldown away.
+  const gcd = c.gcdOf(c.ability(primary)!);
+  const busy = (id: string) => c.cooldownLeft(id).left >= gcd;
+  const quiet = busy('consecration') && busy('holyShock') && busy('holyStrike') && (!undeadDummy(c) || busy('exorcism'));
+  if (seal !== primary || (sealLeft(c) <= 10 && quiet)) return primary;
   if (ready('holyStrike') && afford('holyStrike')) return 'holyStrike';
   const shock = ready('holyShock') && afford('holyShock') && c.inRange(t, D.holyShock.range);
   if (shock && tl.divineFavor && ready('divineFavor')) return 'divineFavor';
@@ -256,11 +306,11 @@ export const paladinShock: Spec = specFor('shock', {
   options: MANA_OPTIONS,
   sheet: { spellCrit: 'Spell crit (gear + Intellect)', spellPower: 'Spell power (Holy)' },
   lowMana: (c) => c.cost(c.ability('holyShock')!),
-  welcome: 'Welcome to Shockadin practice: a melee paladin with Holy Shock on a 10 sec cooldown. Keep Seal of Righteousness up, Judgement and Consecration on cooldown, then Holy Strike and Holy Shock.',
+  welcome: 'Welcome to Shockadin practice: a melee paladin with Holy Shock on a 10 sec cooldown. Keep Seal of Command up, Judgement and Consecration on cooldown, then Holy Strike and Holy Shock.',
   help: `${CONTROLS}
     ${HELP_COMMON}
     Holy Shock is a 21-point Holy talent with a 10 sec cooldown in WoW Forever (30 in Classic). Divine Precision gives it 8% hit, and Divine Favor makes the next one crit. Since the live hotfix of Oct 30 Holy Power only raises healing crits and Light's Vigil only works on allies, so our Light's Vigil builds are gone. It costs a lot of mana: practice it as a burst on top of your melee.
-    WoWSims Forever's Shockadin keeps Seal of Righteousness up, judges, lays Consecration (Consecrated Ground: your Holy spells +10% on its targets), then Holy Strike and Holy Shock, with Divine Favor on a Holy Shock. Champion of the Light 3/5 is 36% of your Intellect.
+    WoWSims Forever's Shockadin keeps Seal of Command up (Seal of Righteousness without the talent), judges, lays Consecration (Consecrated Ground: your Holy spells +10% on its targets), then Holy Strike and Holy Shock, with Divine Favor on a Holy Shock. Champion of the Light 3/5 is 36% of your Intellect.
     This is a practice tool: hit, crit and proc chances follow WoW Forever; damage numbers are an approximation.`,
   look: { clothColor: 0xe8e0c8, leatherColor: 0xb8902e, hood: false, plate: true },
   suggest: shockSuggest,

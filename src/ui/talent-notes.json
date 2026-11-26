@@ -1172,8 +1172,9 @@
  },
  "druid": {
   "talents": {
-   "improvedWrath": {
-    "change": "Now also lowers Wrath's mana cost by 10% per point."
+   "starlightWrath": {
+    "change": "Since hotfix push 114344 (25 Nov) it also takes 0.1 s a point off Starfire; still 10% a point off Wrath's mana.",
+    "was": "Improved Wrath"
    },
    "genesis": {
     "new": true,
@@ -1182,8 +1183,9 @@
    "moonglow": {
     "change": "Moved to row 2; now all damaging spells, no longer heals. 8/17/25%."
    },
-   "improvedMoonfire": {
-    "change": "Now 2 points (was 5) for the same 10% damage / 10% crit."
+   "moonAndStars": {
+    "change": "2 points for 10% Moonfire damage and crit; since push 114344 also 50/100% for Starfire not to be pushed back.",
+    "was": "Improved Moonfire"
    },
    "naturesMajesty": {
     "new": true,
@@ -1205,6 +1207,9 @@
    "vengeance": {
     "change": "Now all damaging spells; +20% crit damage bonus per point."
    },
+   "improvedStarfire": {
+    "change": "2 points since push 114344: only an 8/15% stun; its cast time cut went to Starlight Wrath."
+   },
    "overgrowth": {
     "new": true,
     "change": "New: Entangling Roots on up to 3 targets."
@@ -1214,13 +1219,14 @@
    },
    "eclipse": {
     "new": true,
-    "change": "New (from Season of Discovery): Wrath gives 2 Starfire charges, -0.17/0.33/0.5 s each."
+    "change": "New (from Season of Discovery): Wrath gives 2 Starfire charges, -0.17/0.33/0.5 s each; since push 114344 also +7/13/20% Wrath crit."
    },
-   "moonfury": {
-    "change": "Now all Arcane/Nature damage; 2% per point."
+   "dreamstate": {
+    "new": true,
+    "change": "Replaced Moonfury in push 114344: 20-100% of an Innervate you cast on another player is yours too (the yard's Innervate is on yourself)."
    },
    "moonkinForm": {
-    "change": "Aura now crit for all attacks, exclusive with Leader of the Pack; Omen chance x2; all non-healing spells castable."
+    "change": "Aura now crit for all attacks, exclusive with Leader of the Pack; Omen chance x2; all non-healing spells castable. Since push 114344 also +10% Arcane and Nature damage in the form."
    },
    "ferocity": {
     "change": "Now also lowers Primal Bite's Rage cost."
@@ -1338,7 +1344,8 @@
    "Improved Enrage (baseline)",
    "Improved Healing Touch (became Naturalist)",
    "King of the Jungle (added in beta, removed 1 Oct)",
-   "Tiger's Fury spell (removed 1 Oct)"
+   "Tiger's Fury spell (removed 1 Oct)",
+   "Moonfury (into Moonkin Form, 25 Nov)"
   ]
  }
 }

@@ -48,7 +48,7 @@ export const BUILDS: Build[] = [
   { id: 'fire-fs', spec: 'fire', name: 'Fire', talentString: '0232052001001-55500001230133031-003', source: COMMUNITY(FS), stats: FIRE_STATS, bar: FIRE_BAR, options: { ...OLD(4218) } },
   { id: 'fire-ms', spec: 'fire', name: 'Fire', talentString: '023205103-55500001130133031-013', source: COMMUNITY(MS), stats: FIRE_STATS, bar: FIRE_BAR, options: { ...OLD(4218) } },
   { id: 'fire-frost', spec: 'fire', name: 'Fire/Frost (Frostfire Bolt)', talentString: '-55520201030133131-05350003', source: COMMUNITY(GS), stats: FIRE_STATS, bar: FIRE_BAR, options: { ...OLD(4218), fireFiller: 'frostfire' } },
-  { id: 'frostfire', spec: 'fire', name: 'Frostfire', talentString: '-5550000123011303-2035010311013002', source: WS, stats: MAGE_STATS, bar: FIRE_BAR, options: { ...gearOptions('mage'), fireFiller: 'frostfire' } },
+  { id: 'frostfire', spec: 'fire', name: 'Frostfire', talentString: '-5550000123011303-2035010311013002', source: WS, stats: MAGE_FIRE_STATS, bar: FIRE_BAR, options: { ...gearOptions('mage-fire'), fireFiller: 'frostfire' } },
   { id: 'frost', spec: 'frost', name: 'Frost (Incineration)', talentString: '203205-5-053500011121331251', source: WS, stats: MAGE_FROST_STATS, bar: FROST_BAR, options: { ...gearOptions('mage-frost') } },
   { id: 'arcane-frost', spec: 'frost', name: 'Arcane-Frost', talentString: '02320520310030053--0535000301003002', source: COMMUNITY(GS), stats: FROST_STATS, bar: FROST_BAR, options: { ...OLD(4203) } },
   { id: 'frost-ms', spec: 'frost', name: 'Frost with Missile Barrage', talentString: '023205103-3-053520030101301251', source: COMMUNITY(MS), stats: FROST_STATS, bar: FROST_BAR, options: { ...OLD(4203) } },

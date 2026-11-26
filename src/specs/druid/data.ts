@@ -40,17 +40,6 @@ export const GS_BEAR_STATS: Stats = {
   tank: { health: 6500, armor: 7000, defense: 300, dodge: 17, parry: 0, block: 0, blockValue: 0 },
 };
 
-/** Balance: gunba's UI default moonkin (Night Elf), unbuffed. */
-export const GS_BALANCE_STATS: Stats = {
-  attackPower: 200,
-  crit: 5,
-  hit: 7.9,          // gear (Nature's Reach adds 4 %)
-  spellCrit: 10.2,   // 1.8 base + Intellect 204 / 60 + 5 gear (Nature's Majesty and Moonkin Aura are added on top)
-  spellPower: 205,
-  mainHand: { name: 'Staff', type: 'staff', min: 60, max: 90, speed: 3, twoHand: true },
-  offHand: null,
-};
-
 export const DATA = {
   // Cat
   catGcd: 1,
@@ -97,8 +86,12 @@ export const DATA = {
   moonfire: { mana: 375, min: 128, max: 151, coeff: 0.15, tick: 60, tickCoeff: 0.13, ticks: 4, period: 3 },
   insectSwarm: { mana: 160, tick: 31, tickCoeff: 0.158, ticks: 6, period: 2 },
   innervate: { mana: 62, cooldown: 360, duration: 20, regen: 5 },
-  moonkinForm: { mana: 435, crit: 3 },
+  // Since push 114344 the form carries +10 % Arcane and Nature damage, Moonfury's old bonus (WoWSims 4269136).
+  moonkinForm: { mana: 435, crit: 3, damage: 0.1 },
   naturesGrace: { haste: 0.1, gcd: 0.9, duration: 3 },
-  eclipse: { maxCharges: 4, duration: 15 },
+  // Push 114344: Eclipse also gives Wrath +7/13/20 % crit, always on while talented (WoWSims 4269136).
+  eclipse: { maxCharges: 4, duration: 15, wrathCrit: [0, 7, 13, 20] },
+  // Starlight Wrath per point: 0.1 s off Wrath and Starfire, 10 % off Wrath's mana.
+  starlightWrath: { cast: 0.1, mana: 0.1 },
   spellMiss: 17,
 };

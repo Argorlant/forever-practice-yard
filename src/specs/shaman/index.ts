@@ -57,7 +57,7 @@ const onCooldown = (c: Combat, id: string, cd: number) => {
 };
 
 // --------------------------------------------------------------- Elemental
-/** WoWSims Forever's Elemental list: Fire totem, Lightning Mastery on your Flame Shock, Chain Lightning above 40% mana, Flame Shock, Lightning Bolt; Fire Nova and Chain Lightning on more than one target. */
+/** WoWSims Forever's Elemental list: Fire totem, Lightning Mastery on your Flame Shock, Chain Lightning on Clearcasting outside Lightning Mastery, Flame Shock, Lightning Bolt; on more than one target Lightning Mastery at once, Chain Lightning, then Fire Nova. */
 function elementalSuggest(c: Combat): string | null {
   const t = c.target;
   if (!t || t.health <= 0) return null;
@@ -70,16 +70,18 @@ function elementalSuggest(c: Combat): string | null {
   const drink = potion(c);
   if (drink) return drink;
   const flame = !!c.aura(t, 'flameShock');
-  // On several targets Fire Nova comes first (WoWSims 161a620).
-  if (many && fireTotem(c) && nearFireTotem(c, t, D.fireNova.radius) && can('fireNova')) return 'fireNova';
-  // Lightning Mastery on your Flame Shock: instant and off the global cooldown.
-  if (tl.lightningMastery && p.inCombat && flame && can('elementalMastery')) return 'elementalMastery';
-  // On the move, only instants: Flame Shock when it is down, otherwise Earth Shock.
-  if (p.moving) return !flame && can('flameShock') ? 'flameShock' : can('earthShock') ? 'earthShock' : null;
-  // Chain Lightning waits while Lightning Mastery lasts, and at 40% mana or less, on one target or several (161a620).
-  const mana = p.resource / p.maxResource;
-  if (mana > 0.4 && !has('elementalMastery') && can('chainLightning')) return 'chainLightning';
+  const nova = many && fireTotem(c) && nearFireTotem(c, t, D.fireNova.radius) && can('fireNova');
+  // Lightning Mastery on your Flame Shock, on several targets at once: instant and off the global cooldown (WoWSims 4269136).
+  if (tl.lightningMastery && p.inCombat && (many || flame) && can('elementalMastery')) return 'elementalMastery';
+  // On the move, only instants: Flame Shock when it is down, Fire Nova on several targets, otherwise Earth Shock.
+  if (p.moving) return !flame && can('flameShock') ? 'flameShock' : nova ? 'fireNova' : can('earthShock') ? 'earthShock' : null;
+  // Chain Lightning on several targets; on one, only on Clearcasting outside Lightning Mastery, at any mana (WoWSims 4269136).
+  if ((many || (has('clearcasting') && !has('elementalMastery'))) && can('chainLightning')) return 'chainLightning';
+  // Fire Nova comes after Chain Lightning since WoWSims 4269136.
+  if (nova) return 'fireNova';
   if (!flame && can('flameShock')) return 'flameShock';
+  // On one target, Earth Shock while Revelation's charge is up: it crits (WoWSims 4269136).
+  if (!many && has('revelation') && can('earthShock')) return 'earthShock';
   const flameLeft = (c.aura(t, 'flameShock')?.end ?? c.t) - c.t;
   if (String(c.options.build ?? '').startsWith('stormcaller') && has('clearcasting') && flameLeft > 2 && can('earthShock')) return 'earthShock';
   return 'lightningBolt';
@@ -96,7 +98,9 @@ function elementalReview(c: Combat): Row[] {
     { label: 'Flame Shock uptime', value: pctOf(uptime('uptime:target:flameShock')), good: uptime('uptime:target:flameShock') >= 0.85 },
     { label: 'Searing Totem uptime', value: pctOf(uptime('uptime:searingTotem')), good: uptime('uptime:searingTotem') >= 0.9 },
   ];
-  rows.push({ label: 'Chain Lightning on cooldown', value: pctOf(Math.min(1, (casts('chainLightning') * D.chainLightning.cooldown) / time)) });
+  // On one target Chain Lightning waits for Clearcasting (WoWSims 4269136); on several it goes on cooldown.
+  if (c.targets.length > 1) rows.push({ label: 'Chain Lightning on cooldown', value: pctOf(Math.min(1, (casts('chainLightning') * D.chainLightning.cooldown) / time)) });
+  else if (tl.elementalFocus) rows.push({ label: 'Chain Lightnings on Clearcasting', value: String(k['clearcasting:chainLightning'] ?? 0) });
   if (tl.elementalFocus) rows.push({ label: 'Clearcasting procs / spent on Earth Shock', value: `${k.clearcasting ?? 0} / ${k['clearcasting:earthShock'] ?? 0}` });
   if (tl.lightningOverload) rows.push({ label: 'Lightning Overloads', value: String(k.overloads ?? 0) });
   manaRows(c, rows, 'Time without mana for Lightning Bolt');
@@ -104,7 +108,7 @@ function elementalReview(c: Combat): Row[] {
 }
 
 // ------------------------------------------------------------- Enhancement
-/** WoWSims Forever's Enhancement lists: totems, Rage of the Farseer, Flame Shock, Stormstrike, a 5-stack Lightning Bolt, Earth Shock, Fire Nova. */
+/** WoWSims Forever's Enhancement lists: totems, Rage of the Farseer, Flame Shock, Stormstrike, Earth Shock, a 5-stack Lightning Bolt, Fire Nova. */
 function enhancementSuggest(c: Combat): string | null {
   const t = c.target;
   if (!t || t.health <= 0) return null;
@@ -124,10 +128,11 @@ function enhancementSuggest(c: Combat): string | null {
     if (tl.maelstromWeapon && maelstromStacks(c) >= D.maelstromWeapon.max) return 'lightningBolt';
     return can('earthShock') ? 'earthShock' : potion(c);
   }
+  // WoWSims 4269136's Default build: Earth Shock comes ahead of the 5-stack Lightning Bolt on one target.
   if (!c.aura(t, 'flameShock') && can('flameShock')) return 'flameShock';
   if (tl.stormstrike && close && can('stormstrike')) return 'stormstrike';
-  if (tl.maelstromWeapon && maelstromStacks(c) >= D.maelstromWeapon.max) return 'lightningBolt';
   if (can('earthShock')) return 'earthShock';
+  if (tl.maelstromWeapon && maelstromStacks(c) >= D.maelstromWeapon.max) return 'lightningBolt';
   if (nova) return 'fireNova';
   return potion(c);
 }
@@ -227,7 +232,7 @@ export const shamanElemental: Spec = specFor('elemental', {
   options: OPTIONS,
   sheet: { attackPower: false, crit: false, spellCrit: 'Spell crit (gear + Intellect; Thundering Strikes adds on top)', spellPower: 'Spell damage (every school)', hit: 'Hit (gear; Tidal Focus adds on top)', mainHand: false, offHand: false },
   lowMana: (c) => c.cost(c.ability('lightningBolt')!),
-  welcome: 'Welcome to Elemental practice. Drop Searing Totem and Mana Spring Totem, keep Flame Shock burning, cast Chain Lightning whenever it is ready and you have mana above 40%, Lightning Mastery with Flame Shock up, and Lightning Bolt for everything else; on more than one target, Magma Totem, Fire Nova and Chain Lightning. Mana runs out; that is part of the spec in WoW Forever.',
+  welcome: 'Welcome to Elemental practice. Drop Searing Totem and Mana Spring Totem, keep Flame Shock burning, Lightning Mastery with Flame Shock up, Chain Lightning when Clearcasting makes it free (not during Lightning Mastery), and Lightning Bolt for everything else; on more than one target, Magma Totem, Lightning Mastery at once, Chain Lightning whenever it is ready, then Fire Nova. Mana runs out; that is part of the spec in WoW Forever.',
   help: `${CONTROLS}
     ${HELP_COMMON}
     Elemental in WoW Forever: casts are faster and weaker (Lightning Bolt 2.0 sec with Elemental Alacrity). Call of Thunder (21 points) adds 5% crit to Lightning Bolt and Chain Lightning; Call of Flame keeps Flame Shock up 3/6/9 sec longer. Elemental Fury makes your spells and Searing Totem crit for 2.0x; Lightning Overload has up to 30% for a free, weaker copy. Lightning Mastery (31 points, needs Call of Thunder): for 15 sec Lightning Bolt casts 0.5 sec faster (1.5 sec with Alacrity) and Chain Lightning has no cooldown; 3 min cooldown. The Stormcaller builds trade Call of Thunder for Intellect turned into spell damage.
@@ -241,17 +246,17 @@ export const shamanEnhancement: Spec = specFor('enhancement', {
   id: 'shaman-enhancement',
   specName: 'Enhancement',
   stats: ENHANCEMENT_STATS,
-  defaultOptions: { build: 'enhancement', ...gearOptions('shaman-enhancement'), lockMana: false, imbue: 'flametongue', weaponMastery: false },
+  defaultOptions: { build: 'enhancement', ...gearOptions('shaman-enhancement'), lockMana: false, imbue: 'windfury', weaponMastery: false },
   options: [...MELEE_OPTIONS, {
     key: 'imbue', name: 'Weapon imbue', kind: 'choice',
-    choices: [{ value: 'flametongue', label: 'Flametongue Weapon (WoWSims Forever, with a Windfury Totem)' }, { value: 'windfury', label: 'Windfury Weapon (turns the raid Windfury Totem off for you)' }],
+    choices: [{ value: 'windfury', label: 'Windfury Weapon (WoWSims Forever; a Windfury Totem rolls beside it)' }, { value: 'flametongue', label: 'Flametongue Weapon' }],
   }],
   sheet: { spellCrit: 'Spell crit (gear + Intellect)', spellPower: 'Spell damage', crit: 'Melee crit (gear + Agility; Thundering Strikes adds on top)', offHand: false },
   lowMana: (c) => c.cost(c.ability('earthShock')!),
-  welcome: 'Welcome to Enhancement practice. One two-hander with Flametongue Weapon: drop Windfury, Strength of Earth, Mana Spring and Magma Totem, keep Flame Shock up, then Stormstrike, a 5-stack Lightning Bolt (instant and free), Earth Shock (it takes the Stormstrike bonus) and Fire Nova around your Magma Totem.',
+  welcome: 'Welcome to Enhancement practice. One two-hander with Windfury Weapon: drop Windfury, Strength of Earth, Mana Spring and Magma Totem, keep Flame Shock up, then Stormstrike, Earth Shock (it takes the Stormstrike bonus), a 5-stack Lightning Bolt (instant and free) and Fire Nova around your Magma Totem.',
   help: `${CONTROLS}
     ${HELP_COMMON}
-    Enhancement in WoW Forever: no dual wield. Windfury Weapon: 20% per landed main-hand hit (1.5 sec cooldown) for two extra attacks with +466 AP (Elemental Weapons 3/3); a Windfury Totem rolls beside it, for a strike of its own. Stormstrike (8 sec): a weapon hit, and your next Lightning Bolt or Chain Lightning within 12 sec deals 20% more; Earth Shock gets the 20% without spending the charge (since Oct 21). Maelstrom Weapon: melee hits stack it (10 per minute at any rank); at 5 stacks Lightning Bolt is instant and free. Never hardcast Lightning Bolt below 5 stacks: it restarts your swing. Fire Nova is much weaker since Oct 15 (232-258, 0.143); Stormstrike costs 8% of base mana, and a spell that misses keeps its charge. Rage of the Farseer gives +30% attack speed.
+    Enhancement in WoW Forever: no dual wield. Windfury Weapon: 20% per landed main-hand hit (1.5 sec cooldown) for two extra attacks with +466 AP (Elemental Weapons 3/3); a Windfury Totem rolls beside it, for a strike of its own. Stormstrike (8 sec): a weapon hit, and your next Lightning Bolt or Chain Lightning within 12 sec deals 20% more; Earth Shock gets the 20% without spending the charge (since Oct 21). Maelstrom Weapon: melee hits stack it (10 per minute at any rank); at 5 stacks Lightning Bolt is instant and free and keeps your Clearcasting, and so does a Chain Lightning while Maelstrom Ready! is up (from the fifth stack to the next Chain Lightning). Flurry: a melee crit gives 3 charges; white swings and Windfury Weapon hits spend them, Windfury Totem hits do not. Never hardcast Lightning Bolt below 5 stacks: it restarts your swing. Fire Nova is much weaker since Oct 15 (232-258, 0.143); Stormstrike costs 8% of base mana, and a spell that misses keeps its charge. Rage of the Farseer gives +30% attack speed.
     This is a practice tool: hit, crit and proc chances follow WoW Forever; damage numbers are an approximation.`,
   look: { clothColor: 0x3a6a8a, leatherColor: 0x5a4020, hood: false, plate: false },
   suggest: enhancementSuggest,

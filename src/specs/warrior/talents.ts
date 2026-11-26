@@ -3,7 +3,7 @@
 // research/warrior_forever.md → Talents and Builds.
 import type { Binding, Stats } from '../../engine/types';
 import { decodeTalents, talentSplit, talentSummary } from '../common';
-import { ARMS_STATS, FURY_STATS, GS_ARMS_STATS, GS_PROT_STATS, PROT_STATS } from './data';
+import { ARMS_STATS, FURY_2H_STATS, FURY_STATS, GS_PROT_STATS, PROT_OFFENSIVE_STATS, PROT_STATS } from './data';
 
 const TREES = [
   ['improvedHeroicStrike', 'deflection', 'improvedRend', 'improvedCharge', 'improvedTacticalMastery', 'improvedOverpower',
@@ -43,7 +43,7 @@ const NAMES: Record<TalentKey, string> = {
 const NEW_IN_FOREVER = new Set<TalentKey>(['spearingStrike', 'bloodthrill', 'weaponmaster', 'lingeringRage', 'furiousPrecision',
   'recklessSwings', 'improvedWhirlwind', 'goreDrinker', 'masterOfDefense', 'vanguard', 'bastion', 'focusedRage']);
 
-export type Rotation = 'fury' | 'twoHandBloodthirst' | 'arms' | 'protection';
+export type Rotation = 'fury' | 'arms' | 'protection';
 export type Stance = 'battle' | 'defensive' | 'berserker';
 
 export interface Build {
@@ -68,8 +68,6 @@ const bar = (ids: string[]): Binding[] => [...ids, ...STANCE_BAR].map((id, i) =>
 
 const FURY_BAR = bar(['bloodthirst', 'whirlwind', 'heroicStrike', 'execute', 'overpower', 'recklessSwings', 'sunderArmor', 'cleave',
   'attack', 'berserkerRage', 'bloodrage', 'battleShout', 'pummel', 'hamstring', 'deathWish', 'recklessness']);
-const TWO_HAND_BAR = bar(['bloodthirst', 'whirlwind', 'heroicStrike', 'execute', 'overpower', 'slam', 'sunderArmor', 'recklessSwings',
-  'attack', 'berserkerRage', 'bloodrage', 'battleShout', 'pummel', 'hamstring', 'deathWish', 'recklessness']);
 // The Dragonkin/Giant build presses Spearing Strike where the others have Pummel.
 const FURY_DRAGON_BAR = bar(['bloodthirst', 'whirlwind', 'heroicStrike', 'execute', 'overpower', 'recklessSwings', 'sunderArmor', 'cleave',
   'attack', 'berserkerRage', 'bloodrage', 'battleShout', 'spearingStrike', 'hamstring', 'deathWish', 'recklessness']);
@@ -77,12 +75,13 @@ const ARMS_BAR = bar(['mortalStrike', 'overpower', 'heroicStrike', 'execute', 'r
   'attack', 'charge', 'bloodrage', 'battleShout', 'sweepingStrikes', 'whirlwind', 'hamstring', 'recklessness']);
 const PROT_BAR = bar(['shieldSlam', 'revenge', 'sunderArmor', 'heroicStrike', 'shieldBlock', 'thunderClap', 'demoralizingShout', 'battleShout',
   'attack', 'shieldBash', 'bloodrage', 'lastStand', 'shieldWall', 'cleave', 'concussionBlow', 'charge']);
+// The Offensive build presses Reckless Swings where the others have Concussion Blow.
+const PROT_OFFENSIVE_BAR = bar(['shieldSlam', 'revenge', 'sunderArmor', 'heroicStrike', 'shieldBlock', 'thunderClap', 'demoralizingShout', 'battleShout',
+  'attack', 'shieldBash', 'bloodrage', 'lastStand', 'shieldWall', 'cleave', 'recklessSwings', 'charge']);
 
 const WS = 'wowsims/forever';
 /** Builds with no equivalent in WoWSims Forever: they stay, for whoever practises them. */
 const COMMUNITY = 'community, from gunba/wow-forever-sim';
-/** The same build on the November tree: Improved Tactical Mastery, Raging Blows and Flurry freed 5 points, which went to Reckless Swings, Improved Whirlwind, Improved Heroic Strike and Anger Management. */
-const MOVED = `${COMMUNITY}, moved to the November tree`;
 export const BUILDS: Build[] = [
   // WoWSims c5b3805's Fury talents: Enrage instead of Booming Voice and Improved Bloodrage.
   { id: 'fury-dw', name: 'Fury, dual wield', talentString: '30303213002-050530045122100231', source: WS, rotation: 'fury', stance: 'berserker', stats: FURY_STATS, bar: FURY_BAR },
@@ -91,8 +90,12 @@ export const BUILDS: Build[] = [
   // the rotation swaps to Battle Stance for it. The dummy starts as one; on another kind it does less than Fury.
   { id: 'fury-dragonkin', name: 'Fury, Dragonkin or Giant boss', talentString: '30303213102-050530035122100231', source: WS, rotation: 'fury', stance: 'berserker', stats: FURY_STATS, bar: FURY_DRAGON_BAR, options: { giantDummy: true } },
   { id: 'arms-2h', name: 'Arms, two-hander', talentString: '30303213132215201-55050000002-2', source: WS, rotation: 'arms', stance: 'battle', stats: ARMS_STATS, bar: ARMS_BAR },
-  { id: 'fury-2h', name: 'Two-hand Bloodthirst', talentString: '30303213032-450500250120100231', source: MOVED, rotation: 'twoHandBloodthirst', stance: 'berserker', stats: GS_ARMS_STATS, bar: TWO_HAND_BAR },
-  { id: 'prot', name: 'Protection', talentString: '05-05050005-150531120300001351', source: WS, rotation: 'protection', stance: 'defensive', stats: PROT_STATS, bar: PROT_BAR, tank: true },
+  // WoWSims 4269136's Fury 2H: Two-Handed Weapon Specialization, Blood Craze, a Gore Drinker point and a fifth Enrage
+  // point in place of Dual Wield Specialization and Furious Precision; the Fury list with a two-hander's thresholds.
+  { id: 'fury-2h', name: 'Fury, two-hander', talentString: '30303213032-050500350122110231', source: WS, rotation: 'fury', stance: 'berserker', stats: FURY_2H_STATS, bar: FURY_BAR },
+  // Protection comes in two groups since 4269136: Balanced, which takes less damage, and Offensive, for threat.
+  { id: 'prot', name: 'Protection, balanced', talentString: '05-05050005-150531120300001351', source: WS, rotation: 'protection', stance: 'defensive', stats: PROT_STATS, bar: PROT_BAR, tank: true },
+  { id: 'prot-offensive', name: 'Protection, offensive', talentString: '3-0505000501-050032120331021351', source: WS, rotation: 'protection', stance: 'defensive', stats: PROT_OFFENSIVE_STATS, bar: PROT_OFFENSIVE_BAR, tank: true },
   { id: 'prot-deep', name: 'Protection, deeper', talentString: '31-0501-255333120230021351', source: COMMUNITY, rotation: 'protection', stance: 'defensive', stats: GS_PROT_STATS, bar: PROT_BAR, tank: true },
 ];
 

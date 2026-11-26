@@ -68,12 +68,14 @@ const WS = 'wowsims/forever';
 /** Builds with no equivalent in WoWSims Forever: they stay, for whoever practises them. */
 const OLDER = 'community, from the older sims';
 const FS = 'community, from foreversim';
+/** WoWSims Forever dropped its Smite build after 57df2a7; the yard keeps it, with that commit's sheet and list. */
+const WS_SMITE = 'community, from wowsims/forever until 57df2a7';
 const OLD = (mana: number) => ({ mana, spirit: DATA.spirit, mp5: DATA.mp5 });
 export const BUILDS: Build[] = [
-  { id: 'shadow', spec: 'shadow', name: 'Shadow', talentString: '00530300103-3-50042201251302051', source: WS, stats: SHADOW_STATS, bar: SHADOW_BAR, options: { ...gearOptions('priest-shadow') } },
+  { id: 'shadow', spec: 'shadow', name: 'Shadow', talentString: '00530200103-3-50042201251312051', source: WS, stats: SHADOW_STATS, bar: SHADOW_BAR, options: { ...gearOptions('priest-shadow') } },
   { id: 'shadow-community', spec: 'shadow', name: 'Shadow, community build', talentString: '02530003101--55052201201302251', source: OLDER, stats: GS_SHADOW_STATS, bar: SHADOW_BAR, options: { ...OLD(4212) } },
   { id: 'shadow-fs', spec: 'shadow', name: 'Shadow', talentString: '00530320103--50052201251302051', source: FS, stats: GS_SHADOW_STATS, bar: SHADOW_BAR, options: { ...OLD(4212) } },
-  { id: 'smite', spec: 'smite', name: 'Smite', talentString: '525235031030001001-30515100002-3', source: WS, stats: SMITE_STATS, bar: SMITE_BAR, options: { ...gearOptions('priest-smite') } },
+  { id: 'smite', spec: 'smite', name: 'Smite', talentString: '525235031030001001-30515100002-3', source: WS_SMITE, stats: SMITE_STATS, bar: SMITE_BAR, options: { ...gearOptions('priest-smite') } },
   { id: 'smite-launch', spec: 'smite', name: 'Smite, launch preset', talentString: '515335031030001001-30505113002', source: OLDER, stats: GS_SMITE_STATS, bar: SMITE_BAR, options: { ...OLD(4495) } },
   { id: 'smite-hybrid', spec: 'smite', name: 'Smite with Mind Blast and Pain', talentString: '505030031030001-305051102120003-50002', source: 'our proposal', stats: GS_SMITE_STATS, bar: SMITE_BAR, options: { ...OLD(4495) } },
 ];

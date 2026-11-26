@@ -1,15 +1,16 @@
 // WoW Forever druid talents and the builds the sims use. Order: the trees after
 // the live hotfix of 30 October (Balance 16, Feral Combat 20, Restoration 16), the
-// same as WoWSims Forever's, whose presets come first. See
-// research/druid_forever.md → Talents and Builds.
+// same as WoWSims Forever's, whose presets come first; Balance's talents as hotfix
+// push 114344 reworked them (WoWSims 4269136). See research/druid_forever.md →
+// Talents and Builds.
 import type { Binding, Stats } from '../../engine/types';
 import { decodeTalents, talentSplit, talentSummary } from '../common';
 import { gearOptions } from '../gear';
-import { BALANCE_STATS, BEAR_STATS, CAT_STATS, GS_BALANCE_STATS, GS_BEAR_STATS, GS_CAT_STATS } from './data';
+import { BALANCE_STATS, BEAR_STATS, CAT_STATS, GS_BEAR_STATS, GS_CAT_STATS } from './data';
 
 const TREES = [
-  ['improvedWrath', 'genesis', 'moonglow', 'improvedMoonfire', 'naturesMajesty', 'naturesReach', 'improvedEntanglingRoots',
-    'naturesSplendor', 'insectSwarm', 'vengeance', 'improvedStarfire', 'overgrowth', 'naturesGrace', 'eclipse', 'moonfury', 'moonkinForm'],
+  ['starlightWrath', 'genesis', 'moonglow', 'moonAndStars', 'naturesMajesty', 'naturesReach', 'improvedEntanglingRoots',
+    'naturesSplendor', 'insectSwarm', 'vengeance', 'improvedStarfire', 'overgrowth', 'naturesGrace', 'eclipse', 'dreamstate', 'moonkinForm'],
   ['ferocity', 'furor', 'feralSwiftness', 'feralInstinct', 'brutalImpact', 'thickHide', 'shreddingAttacks', 'savageFury',
     'feralCharge', 'sharpenedClaws', 'predatoryStrikes', 'lacerate', 'predatoryDiscipline', 'bloodFrenzy', 'leaderOfThePack',
     'naturalInstinct', 'rendAndTear', 'naturalReaction', 'primalBite', 'shiftingPower'],
@@ -21,10 +22,10 @@ export type TalentKey = (typeof TREES)[number][number];
 export type Talents = Record<TalentKey, number>;
 
 const NAMES: Record<TalentKey, string> = {
-  improvedWrath: 'Improved Wrath', genesis: 'Genesis', moonglow: 'Moonglow', improvedMoonfire: 'Improved Moonfire',
+  starlightWrath: 'Starlight Wrath', genesis: 'Genesis', moonglow: 'Moonglow', moonAndStars: 'Moon and Stars',
   naturesMajesty: "Nature's Majesty", naturesReach: "Nature's Reach", improvedEntanglingRoots: 'Improved Entangling Roots',
   naturesSplendor: "Nature's Splendor", insectSwarm: 'Insect Swarm', vengeance: 'Vengeance', improvedStarfire: 'Improved Starfire',
-  overgrowth: 'Overgrowth', naturesGrace: "Nature's Grace", eclipse: 'Eclipse', moonfury: 'Moonfury', moonkinForm: 'Moonkin Form',
+  overgrowth: 'Overgrowth', naturesGrace: "Nature's Grace", eclipse: 'Eclipse', dreamstate: 'Dreamstate', moonkinForm: 'Moonkin Form',
   ferocity: 'Ferocity', heartOfTheWild: 'Heart of the Wild', feralSwiftness: 'Feral Swiftness', feralInstinct: 'Feral Instinct',
   brutalImpact: 'Brutal Impact', thickHide: 'Thick Hide', shreddingAttacks: 'Shredding Attacks', savageFury: 'Savage Fury',
   feralCharge: 'Feral Charge', sharpenedClaws: 'Sharpened Claws', shiftingPower: 'Shifting Power', primalBite: 'Primal Bite',
@@ -37,7 +38,7 @@ const NAMES: Record<TalentKey, string> = {
   improvedTranquility: 'Improved Tranquility', improvedRegrowth: 'Improved Regrowth', wildGrowth: 'Wild Growth',
 };
 
-const NEW_IN_FOREVER = new Set<TalentKey>(['genesis', 'naturesMajesty', 'naturesSplendor', 'overgrowth', 'eclipse', 'shiftingPower',
+const NEW_IN_FOREVER = new Set<TalentKey>(['genesis', 'naturesMajesty', 'naturesSplendor', 'overgrowth', 'eclipse', 'dreamstate', 'shiftingPower',
   'primalBite', 'lacerate', 'predatoryDiscipline', 'naturalInstinct', 'naturalReaction', 'rendAndTear', 'bloom',
   'livingSpirit', 'wildGrowth']);
 
@@ -76,8 +77,9 @@ export const BUILDS: Build[] = [
   { id: 'bear', spec: 'bear', name: 'Bear tank', talentString: '050022-5023030212310112501-055', source: WS, stats: BEAR_STATS, bar: BEAR_BAR, tank: true },
   { id: 'hybrid-bear', spec: 'bear', name: 'Hybrid', talentString: '050012-50230302123110125011-055', source: WS, stats: BEAR_STATS, bar: BEAR_BAR, tank: true },
   { id: 'bear-deep', spec: 'bear', name: 'Bear tank, deeper', talentString: '01-5502233212310212551-05', source: COMMUNITY, stats: GS_BEAR_STATS, bar: BEAR_BAR, tank: true },
-  { id: 'moonkin', spec: 'balance', name: 'Moonkin', talentString: '5232220115501351--5053', source: WS, stats: BALANCE_STATS, bar: BALANCE_BAR, options: { ...gearOptions('druid-balance') } },
-  { id: 'balance', spec: 'balance', name: 'Balance', talentString: '5532220115001351--505203', source: COMMUNITY, stats: GS_BALANCE_STATS, bar: BALANCE_BAR, options: { mana: 4024, spirit: 123, mp5: 9 } },
+  // WoWSims 4269136's default build since push 114344. The community Balance build it now nearly matches is retired:
+  // a saved choice of it opens this one.
+  { id: 'moonkin', spec: 'balance', name: 'Moonkin', talentString: '5532220115001351--505302', source: WS, stats: BALANCE_STATS, bar: BALANCE_BAR, options: { ...gearOptions('druid-balance') } },
 ];
 
 export const buildsFor = (spec: DruidSpec) => BUILDS.filter((b) => b.spec === spec);

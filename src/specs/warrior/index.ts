@@ -14,7 +14,7 @@ const build = (c: Combat) => buildById(c.options.build);
 const landed = (o: Outcome) => o === 'hit' || o === 'crit' || o === 'glance' || o === 'block';
 const roll = (c: Combat, pct: number) => c.random() * 100 < pct;
 
-interface WarriorState { lastWeaponmaster: number; lastAoeRoll: number; lastCleaveCharge: number }
+interface WarriorState { lastWeaponmaster: number; lastCleaveRoll: number; lastCleaveCharge: number }
 const states = new WeakMap<Combat, WarriorState>();
 
 // ---------------------------------------------------------------- stances
@@ -94,6 +94,26 @@ function strike(c: Combat, t: Unit, id: string, base: number, opts: { noDodge?: 
 
 /** Other dummies near the player, for cleaves and shouts. */
 const others = (c: Combat, t: Unit, yards = 8) => c.targets.filter((u) => u !== t && u.health > 0 && c.inRange(u, yards));
+
+function spendSweeping(c: Combat): void {
+  const ss = c.aura(c.player, 'sweepingStrikes');
+  if (!ss) return;
+  ss.stacks = (ss.stacks ?? 1) - 1;
+  if (ss.stacks <= 0) c.removeAura(c.player, 'sweepingStrikes');
+}
+
+/**
+ * Sweeping Strikes' normalized main-hand strike on the next nearby enemy, which Whirlwind and an Execute below 20% bring
+ * instead of a copy: never missed, dodged or parried, it rolls a crit of its own (WoWSims 4269136, from logs).
+ */
+function sweepingStrike(c: Combat, from: Unit): void {
+  const other = c.aura(c.player, 'sweepingStrikes') ? others(c, from)[0] : undefined;
+  if (!other) return;
+  const outcome: Outcome = c.random() * 100 < c.critChance('sweepingStrikesStrike') ? 'crit' : 'hit';
+  const amount = c.physicalDamage(other, 'sweepingStrikesStrike', normalized(c), outcome);
+  c.deal({ target: other, source: 'sweepingStrikesStrike', outcome, school: 'physical', amount, white: false, hand: 'main' });
+  spendSweeping(c);
+}
 const executePhase = (c: Combat) => !!c.target && c.target.health / c.target.maxHealth <= D.execute.threshold;
 const focused = (c: Combat) => T(c).focusedRage;
 const shoutCost = (c: Combat, base: number) => Math.round(base * (1 - 0.05 * T(c).boomingVoice));
@@ -182,10 +202,16 @@ const abilities: Ability[] = [
     },
     use: (c, t) => {
       const closest = 1 + D.whirlwind.improvedClosest * T(c).improvedWhirlwind;
-      for (const [i, u] of [t!, ...others(c, t!).slice(0, D.whirlwind.targets - 1)].entries()) {
-        const m = i === 0 ? closest : 1;
-        strike(c, u, 'whirlwind', normalized(c) * m, { refund: false });
-        if (c.stats.offHand) strike(c, u, 'whirlwindOH', normalized(c, 'off') * m, { refund: false, hand: 'off' });
+      const hits = [t!, ...others(c, t!).slice(0, D.whirlwind.targets - 1)];
+      // The main hand strikes every target, Sweeping Strikes brings its one strike from the first main-hand hit that
+      // lands, then the off hand strikes (WoWSims 4269136).
+      let first: Unit | null = null;
+      for (const [i, u] of hits.entries()) {
+        if (landed(strike(c, u, 'whirlwind', normalized(c) * (i === 0 ? closest : 1), { refund: false })) && !first) first = u;
+      }
+      if (first) sweepingStrike(c, first);
+      if (c.stats.offHand) {
+        for (const [i, u] of hits.entries()) strike(c, u, 'whirlwindOH', normalized(c, 'off') * (i === 0 ? closest : 1), { refund: false, hand: 'off' });
       }
     },
   },
@@ -544,7 +570,7 @@ const ABILITY_SOURCES = ['heroicStrike', 'cleave', 'bloodthirst', 'mortalStrike'
 function prepare(c: Combat): void {
   const t = T(c);
   const p = c.player;
-  states.set(c, { lastWeaponmaster: -Infinity, lastAoeRoll: -Infinity, lastCleaveCharge: -Infinity });
+  states.set(c, { lastWeaponmaster: -Infinity, lastCleaveRoll: -Infinity, lastCleaveCharge: -Infinity });
   p.maxResource = D.maxRage;
   p.regenPerSecond = 0;
   p.decayPerSecond = D.decayOutOfCombat * (t.angerManagement ? 0.7 : 1);
@@ -577,6 +603,7 @@ function prepare(c: Combat): void {
   c.registerSource('deepWounds', 'Deep Wounds', 'deepWounds');
   c.registerSource('whirlwindOH', 'Whirlwind (off hand)', 'whirlwind');
   c.registerSource('sweepingStrikesCopy', 'Sweeping Strikes', 'sweepingStrikes');
+  c.registerSource('sweepingStrikesStrike', 'Sweeping Strikes (strike)', 'sweepingStrikes');
 
   // Anger Management: 1 rage every 3 sec in combat.
   if (t.angerManagement) {
@@ -588,24 +615,26 @@ function prepare(c: Combat): void {
 
   // Landed white swings: normalized rage, Unbridled Wrath, Weaponmaster swords, Bloodthrill. Windfury Totem's strike
   // counts as a main-hand swing for rage and Unbridled Wrath (WoWSims 161a620). Heroic Strike and each target a Cleave
-  // hits roll Unbridled Wrath too, and no other ability does (WoWSims c5b3805, from logs).
+  // hits roll Unbridled Wrath too, and no other ability does (WoWSims c5b3805, from logs). Its rage makes 5 threat a
+  // rage that no stance scales (WoWSims 4269136, from logs).
   let extra = false;
   c.onHit.push((hit: Hit) => {
     const hand = hit.hand ?? 'main';
     const swingHit = hit.white || hit.source === 'windfuryTotem';
     if (swingHit) c.addResource(swingRage(c, hand, hit.outcome === 'crit'));
     if ((swingHit || hit.source === 'heroicStrike' || hit.source === 'cleave') && t.unbridledWrath && roll(c, 12 * t.unbridledWrath)) {
-      c.addResource(1);
+      gainRage(c, 1, 'unscaled');
       c.count('unbridledWrath');
     }
     const w = weaponOf(c, hand);
     const s = states.get(c)!;
-    // Shield Slam and Shield Bash cannot trigger it (Oct 15 fix); Sweeping Strikes' copies and the Windfury Totem swing
-    // never do, and Whirlwind and Cleave roll once a cast however many targets they hit (WoWSims, from logs).
-    const aoe = hit.source === 'whirlwind' || hit.source === 'whirlwindOH' || hit.source === 'cleave';
-    const rolled = aoe && s.lastAoeRoll === c.t;
-    if (aoe) s.lastAoeRoll = c.t;
-    if (!extra && wm && w?.type === 'sword' && hit.source !== 'shieldSlam' && hit.source !== 'shieldBash' && hit.source !== 'sweepingStrikesCopy'
+    // Shield Slam and Shield Bash cannot trigger it (Oct 15 fix) and Sweeping Strikes' hits never do. Every landed
+    // Whirlwind strike rolls it, either hand and every target, for one extra attack a cast at most (the 0.2 sec
+    // between procs sees to that); Cleave rolls once a cast, on its first landed hit (WoWSims 4269136, from logs).
+    const cleave = hit.source === 'cleave';
+    const rolled = cleave && s.lastCleaveRoll === c.t;
+    if (cleave) s.lastCleaveRoll = c.t;
+    if (!extra && wm && w?.type === 'sword' && hit.source !== 'shieldSlam' && hit.source !== 'shieldBash'
       && !rolled && c.t - s.lastWeaponmaster >= D.weaponmasterIcd && roll(c, wm)) {
       extra = true;
       s.lastWeaponmaster = c.t;
@@ -623,8 +652,29 @@ function prepare(c: Combat): void {
     }
   });
 
+  // Deep Wounds: a melee crit bleeds for a share of the average damage of the weapon that crit (no AP, cannot crit);
+  // Thunder Clap's crit, on the magic table, starts none (WoWSims 161a620).
+  const deepWounds = (hit: Hit) => {
+    if (hit.outcome !== 'crit' || !t.deepWounds || hit.source === 'thunderClap') return;
+    const w = hit.hand === 'off' && c.stats.offHand ? c.stats.offHand : c.stats.mainHand;
+    const old = c.aura(hit.target, 'deepWounds');
+    const unpaid = old ? (old.value ?? 0) * ((old.end - c.t) / old.duration) : 0;
+    const total = 0.2 * t.deepWounds * ((w.min + w.max) / 2) + unpaid;
+    const dw = D.deepWounds;
+    const target = hit.target;
+    c.applyAura(target, {
+      id: 'deepWounds', name: 'Deep Wounds', icon: 'deepWounds', duration: dw.ticks * dw.period, period: dw.period, value: total,
+      onTick: (cc) => cc.deal({ target, source: 'deepWounds', outcome: 'hit', school: 'physical', amount: Math.round(total / dw.ticks), white: false, periodic: true }),
+    });
+  };
+
   c.afterDamage.push((hit: Hit) => {
     if (hit.periodic || hit.school !== 'physical' || hit.source === 'deepWounds' || hit.source === 'sweepingStrikesCopy') return;
+    // Sweeping Strikes' normalized strike starts Deep Wounds with a crit, and nothing else: no Flurry (WoWSims 4269136).
+    if (hit.source === 'sweepingStrikesStrike') {
+      deepWounds(hit);
+      return;
+    }
     // Overpower opens for 5 sec after the target dodges.
     if (hit.outcome === 'dodge') {
       c.applyAura(c.player, { id: 'overpowerReady', name: 'Overpower', icon: 'overpower', duration: D.overpower.window });
@@ -653,28 +703,23 @@ function prepare(c: Combat): void {
     if (hit.outcome === 'crit' && t.flurry && hit.source !== 'thunderClap') {
       c.applyAura(c.player, { id: 'flurry', name: 'Flurry', icon: 'flurry', duration: 15, stacks: D.flurryCharges, haste: 0.1 * t.flurry });
     }
-    // Deep Wounds: a melee crit bleeds for a share of the average damage of the weapon that crit (no AP, cannot crit);
-    // Thunder Clap's crit, on the magic table, starts none (WoWSims 161a620).
-    if (hit.outcome === 'crit' && t.deepWounds && hit.source !== 'thunderClap') {
-      const w = hit.hand === 'off' && c.stats.offHand ? c.stats.offHand : c.stats.mainHand;
-      const old = c.aura(hit.target, 'deepWounds');
-      const unpaid = old ? (old.value ?? 0) * ((old.end - c.t) / old.duration) : 0;
-      const total = 0.2 * t.deepWounds * ((w.min + w.max) / 2) + unpaid;
-      const dw = D.deepWounds;
-      const target = hit.target;
-      c.applyAura(target, {
-        id: 'deepWounds', name: 'Deep Wounds', icon: 'deepWounds', duration: dw.ticks * dw.period, period: dw.period, value: total,
-        onTick: (cc) => cc.deal({ target, source: 'deepWounds', outcome: 'hit', school: 'physical', amount: Math.round(total / dw.ticks), white: false, periodic: true }),
-      });
-    }
-    // Sweeping Strikes copies landed hits to a second nearby dummy; Thunder Clap, a magic hit, spends no charge (WoWSims).
-    const ss = c.aura(c.player, 'sweepingStrikes');
-    if (ss && hit.amount > 0 && hit.target === c.target && hit.source !== 'thunderClap') {
-      const other = others(c, hit.target)[0];
-      if (other) {
-        c.deal({ target: other, source: 'sweepingStrikesCopy', outcome: hit.outcome, school: 'physical', amount: hit.amount, white: false });
-        ss.stacks = (ss.stacks ?? 1) - 1;
-        if (ss.stacks <= 0) c.removeAura(c.player, 'sweepingStrikes');
+    deepWounds(hit);
+    // Sweeping Strikes (WoWSims 4269136, from logs): a hit with damage on any target brings a hit on the next nearby
+    // enemy and spends a charge. The copy is the hit before armor with your damage bonuses applied once more, Two-Handed
+    // Weapon Specialization only once, through the second target's armor; it never misses or crits. An Execute below
+    // 20% brings the normalized strike instead; Whirlwind brings its strike from its own cast, and Thunder Clap none.
+    if (c.aura(c.player, 'sweepingStrikes') && hit.amount > 0 && hit.source !== 'thunderClap' && hit.source !== 'whirlwind' && hit.source !== 'whirlwindOH') {
+      if (hit.source === 'execute' && hit.target.health / hit.target.maxHealth <= D.execute.threshold) sweepingStrike(c, hit.target);
+      else {
+        const other = others(c, hit.target)[0];
+        if (other) {
+          const ignore = 1 - (1 - c.mod.armorIgnore) * (1 - (c.mod.armorIgnoreFor[hit.source] ?? 0));
+          const twoHand = c.stats.mainHand.twoHand ? 1 + 0.02 * t.twoHandedWeaponSpecialization : 1;
+          const before = hit.amount / (1 - c.armorReduction(hit.target, ignore));
+          const amount = Math.max(1, Math.round(before * (c.mod.physicalDamage / twoHand) * c.auraProduct('damageDone') * (1 - c.armorReduction(other, c.mod.armorIgnore))));
+          c.deal({ target: other, source: 'sweepingStrikesCopy', outcome: 'hit', school: 'physical', amount, white: false });
+          spendSweeping(c);
+        }
       }
     }
   });
@@ -786,12 +831,17 @@ function suggest(c: Combat): string | null {
     if (p.inCombat && tl.deathWish && can('deathWish')) return 'deathWish';
     const whirlwindReady = targets >= 2 && c.cooldownLeft('whirlwind').left === 0;
     if (targets > 1 && can('sweepingStrikes')) return 'sweepingStrikes';
+    // Stance Dance (on by default since 4269136): from Berserker Stance, outside the execute phase, back to Battle
+    // Stance for an Overpower or a Rend that is due.
+    const swapBack = !exec && stance === 'berserker' && ready('battleStance');
+    if (swapBack && opWindow && opIn(0) && rage >= 5) return 'battleStance';
     if (can('overpower')) return 'overpower';
     if (whirlwindReady && rage >= 25 && rage <= 40 && stance !== 'berserker' && ready('berserkerStance')) return 'berserkerStance';
     if (targets >= 2 && can('whirlwind')) return 'whirlwind';
     if (can('mortalStrike')) return 'mortalStrike';
     const slam = (c.ability('slam')!.castTime as (cc: Combat) => number)(c);
     if (slam < D.gcd && can('slam')) return 'slam';
+    if (swapBack && rendLeft <= D.gcd && rage >= 10) return 'battleStance';
     if (!exec && rendLeft <= D.gcd && can('rend')) return 'rend';
     const swing = c.swingLeft('main');
     if (!exec && slam >= D.gcd && swing.total - swing.left <= 0.4 && can('slam')) return 'slam';
@@ -809,31 +859,11 @@ function suggest(c: Combat): string | null {
     return null;
   }
 
-  if (b.rotation === 'twoHandBloodthirst') {
-    // Not in WoWSims Forever: gunba's list of 28 Oct.
-    if (sunderDue) return rage >= cost('sunderArmor') ? 'sunderArmor' : null;
-    if (p.inCombat && stance === 'berserker' && ready('recklessness')) return 'recklessness';
-    if (p.inCombat) {
-      if (tl.deathWish && can('deathWish')) return 'deathWish';
-      if (ready('bloodrage')) return 'bloodrage';
-      if (stance === 'berserker' && ready('berserkerRage')) return 'berserkerRage';
-    }
-    if (can('bloodthirst')) return 'bloodthirst';
-    if (stance === 'battle' && !rend && !exec && can('rend')) return 'rend';
-    if (can('overpower')) return 'overpower';
-    if (stance !== 'berserker' && !opWindow && ready('berserkerStance')) return 'berserkerStance';
-    if (can('whirlwind')) return 'whirlwind';
-    if (!rend && can('rend')) return 'rend';
-    if (exec && can('execute')) return 'execute';
-    if (stance !== 'battle' && opWindow && rage <= 80 && ready('battleStance')) return 'battleStance';
-    if (rage >= 50 && c.swingLeft('main').left >= 2.25 && can('slam')) return 'slam';
-    if (windfury && !exec && c.swingLeft('main').left >= 1 && can('hamstring')) return 'hamstring';
-    if (p.inCombat && tl.recklessSwings && ready('recklessSwings')) return 'recklessSwings';
-    if (!hsQueued && !exec && rage >= 95) return 'heroicStrike';
-    return null;
-  }
-
-  // Fury: WoWSims Forever's list, with its Overpower, Rend and Hamstring weaves.
+  // Fury: WoWSims Forever's list, with its Overpower, Rend and Hamstring weaves. With a two-hander it takes WoWSims'
+  // Fury 2H thresholds (4269136): Heroic Strike from 70 rage and Cleave from 30, Hamstring without the wait for
+  // Bloodthirst and Whirlwind and on up to two targets, the Overpower swap up to 70 rage and the Rend swap up to 30 on
+  // any number of targets.
+  const twoHander = !!c.stats.mainHand.twoHand;
   if (sunderDue) return rage >= cost('sunderArmor') ? 'sunderArmor' : null;
   if (p.inCombat && tl.deathWish && can('deathWish')) return 'deathWish';
   if (targets > 1 && can('sweepingStrikes')) return 'sweepingStrikes';
@@ -841,7 +871,7 @@ function suggest(c: Combat): string | null {
   // The swap to Battle Stance waits for 40 rage or less (Tactical Mastery keeps 25); in Battle Stance there is no cap.
   const overpowerDue = opWindow && opIn(0) && rage >= 5;
   if (overpowerDue && stance === 'battle') return 'overpower';
-  if (overpowerDue && rage <= 40 && ready('battleStance')) return 'battleStance';
+  if (overpowerDue && rage <= (twoHander ? 70 : 40) && ready('battleStance')) return 'battleStance';
   // Spearing Strike (the Dragonkin/Giant build): a swap to Battle Stance for it against a Giant or Dragonkin, with
   // Bloodthirst and Whirlwind a global cooldown away; in Battle Stance it goes on cooldown whatever the target.
   const delayCheck = c.cooldownLeft('bloodthirst').left >= D.gcd && c.cooldownLeft('whirlwind').left >= D.gcd;
@@ -850,15 +880,17 @@ function suggest(c: Combat): string | null {
   if (tl.spearingStrike && stance === 'battle' && can('spearingStrike')) return 'spearingStrike';
   if (exec && can('execute')) return 'execute';
   if (can('whirlwind')) return 'whirlwind';
-  if (!hsQueued && targets > 1 && rage >= 25) return 'cleave';
+  if (!hsQueued && targets > 1 && rage >= (twoHander ? 30 : 25)) return 'cleave';
   if (can('bloodthirst')) return 'bloodthirst';
   const spare = c.cooldownLeft('bloodthirst').left >= D.gcd && c.cooldownLeft('whirlwind').left >= D.gcd;
-  if (!hsQueued && ((targets === 1 && !exec && rage >= 40) || (spare && rage > 60))) return 'heroicStrike';
-  const rendDue = targets === 1 && !exec && !rend && rage >= 10;
+  const hsFrom = twoHander ? [70, 70] : [40, 60];
+  if (!hsQueued && ((targets === 1 && !exec && rage >= hsFrom[0]) || (spare && rage > hsFrom[1]))) return 'heroicStrike';
+  // Rend is cast in Battle Stance whatever the number of targets; the dual-wield list swaps for it on one target only.
+  const rendDue = !exec && !rend && rage >= 10;
   if (rendDue && stance === 'battle') return 'rend';
-  if (rendDue && rage <= 40 && ready('battleStance')) return 'battleStance';
+  if (rendDue && (twoHander ? rage <= 30 : targets === 1 && rage <= 40) && ready('battleStance')) return 'battleStance';
   if (stance === 'battle' && !overpowerDue && !rendDue && ready('berserkerStance')) return 'berserkerStance';
-  if (windfury && spare && !exec && targets < 2 && can('hamstring')) return 'hamstring';
+  if (windfury && (twoHander ? targets < 3 : spare && targets < 2) && !exec && can('hamstring')) return 'hamstring';
   if (p.inCombat && tl.recklessSwings && ready('recklessSwings')) return 'recklessSwings';
   if (p.inCombat && rage < 90 && ready('bloodrage')) return 'bloodrage';
   if (spare && tl.improvedBerserkerRage && stance === 'berserker' && ready('berserkerRage')) return 'berserkerRage';

@@ -35,7 +35,7 @@ const conduit = (base: number) => (c: Combat) => Math.round(base * benediction(c
 
 /** Mana per second: Spirit regen outside the five-second rule (Reverence keeps 15 % per point while casting since Oct 30), MP5 always. */
 export function regen(c: Combat): number {
-  const spirit = 6.25 + Number(c.options.spirit ?? D.spirit) / 8;
+  const spirit = 6.25 + Number(c.options.spirit ?? D.spirit) * c.spiritFactor() / 8;
   const mp5 = Number(c.options.mp5 ?? 0) / 5;
   const casting = c.t - c.lastSpend < 5;
   return spirit * (casting ? 0.15 * T(c).reverence : 1) + mp5;
@@ -152,12 +152,17 @@ export const undeadDummy = (c: Combat) => !!c.options.undeadDummy;
 const needsUndead = (c: Combat) => (undeadDummy(c) ? null : 'Only against Undead or Demons (Settings → Options: dummy type)');
 const needsShield = (c: Combat) => (c.stats.shield ? null : 'Requires a shield');
 
-/** Holy Shield's Holy damage on a block (or, with Shieldsworn, on a Holy Strike). */
-function holyShieldHit(c: Combat, u: Unit): void {
+/**
+ * Holy Shield's Holy damage on a block (or, with Shieldsworn, on a Holy Strike), on the spell table. A block's damage never
+ * crits; Shieldsworn's strike is a spell hit of its own that crits for 1.5x (WoWSims 4269136).
+ */
+function holyShieldHit(c: Combat, u: Unit, opts: { canCrit?: boolean } = {}): void {
   const h = D.holyShield;
-  const outcome: Outcome = roll(c, c.spellCritChance()) ? 'crit' : 'hit';
+  const outcome: Outcome = opts.canCrit ? spellRoll(c) : roll(c, Math.max(0, c.rules.spellMiss - c.totalHit())) ? 'resist' : 'hit';
+  // Shieldsworn's hit is its own spell in the game (456544), so it has its own row.
+  const source = opts.canCrit ? 'shieldswornStrike' : 'holyShield';
   const amount = holyDamage(c, u, 'holyShield', h.damage, h.coeff, outcome, { spellTable: true });
-  c.deal({ target: u, source: 'holyShield', outcome, school: 'holy', amount, white: false });
+  c.deal({ target: u, source, outcome, school: 'holy', amount, white: false });
 }
 /** Shield Specialization's mana: 50 % per point, at most once per 3 s (Shieldsworn's Holy Strike skips the cooldown). */
 function shieldSpecMana(c: Combat, opts: { free?: boolean } = {}): void {
@@ -265,7 +270,7 @@ export const ABILITIES: Ability[] = [
       }
       // Shieldsworn (Oct 30): the strike is made with your shield.
       if (T(c).shieldsworn && c.stats.shield) {
-        if (c.aura(c.player, 'holyShield')) holyShieldHit(c, u);
+        if (c.aura(c.player, 'holyShield')) holyShieldHit(c, u, { canCrit: true });
         shieldSpecMana(c, { free: true });
       }
     },
@@ -464,11 +469,12 @@ export function prepare(c: Combat): void {
   const mult = (id: string, n: number) => { c.mod.damageFor[id] = (c.mod.damageFor[id] ?? 1) * n; };
   for (const id of [...SEAL_SOURCES, ...JUDGEMENT_SOURCES]) mult(id, seals);
   mult('holyStrike', 1 + 0.2 * t.sacredArbiter);
-  c.mod.threatFor = { holyShield: D.holyShield.threat, holyStrike: 1 + 0.1 * t.ironCreed };   // Iron Creed 10 % a point since Oct 30
+  c.mod.threatFor = { holyShield: D.holyShield.threat, shieldswornStrike: D.holyShield.threat, holyStrike: 1 + 0.1 * t.ironCreed };   // Iron Creed 10 % a point since Oct 30
 
   c.registerSource('judgementOfRighteousness', 'Judgement of Righteousness', 'sealOfRighteousness');
   c.registerSource('judgementOfCommand', 'Judgement of Command', 'sealOfCommand');
   c.registerSource('judgementOfFury', 'Judgement of Fury', 'sealOfFury');
+  c.registerSource('shieldswornStrike', 'Holy Shield (Shieldsworn)', 'holyShield');
   c.trackedAuras.push('holyShield', 'righteousFury', 'vengeance');
   c.trackedTargetAuras.push('consecration', 'consecratedGround');
   if (c.spec.tank) righteousFury(c); // on before the pull

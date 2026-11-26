@@ -25,13 +25,14 @@ interface HunterState {
   focus: number;
   petSwing: { cancel: () => void } | null;
   petNext: number;
-  lastPetAction: number;
+  /** When the pet next decides what to cast. */
+  nextAutocast: number;
   biteReady: number;
 }
 const states = new WeakMap<Combat, HunterState>();
 export const state = (c: Combat): HunterState => {
   let s = states.get(c);
-  if (!s) states.set(c, (s = { allDamage: 1, focus: 100, petSwing: null, petNext: 0, lastPetAction: -Infinity, biteReady: 0 }));
+  if (!s) states.set(c, (s = { allDamage: 1, focus: 100, petSwing: null, petNext: 0, nextAutocast: 0, biteReady: 0 }));
   return s;
 };
 
@@ -50,7 +51,7 @@ const trapCost = (base: number) => (c: Combat) => Math.round(base * (1 - resourc
  */
 export function regen(c: Combat): number {
   const t = T(c);
-  const spirit = 6.25 + Number(c.options.spirit ?? D.spirit) / 8;
+  const spirit = 6.25 + Number(c.options.spirit ?? D.spirit) * c.spiritFactor() / 8;
   const mp5 = Number(c.options.mp5 ?? 0) / 5;
   if (c.t - c.lastSpend >= 5) return spirit + mp5;
   let share = c.pet.out ? 0.25 * t.bestialDiscipline : 0;
@@ -119,11 +120,14 @@ const needsPet = (c: Combat) => (c.pet.out ? null : 'You have no pet out (Lone W
 
 // -------------------------------------------------------------------- pet
 const petAp = (c: Combat) => D.pet.apBase + D.pet.apShare * Math.max(c.attackPower(), c.rangedAttackPower(null));
-const petSpeed = (c: Combat) => Number(c.options.petSpeed ?? 1.2);
-/** Your crit (gear, talents and buffs, minus the boss's suppression) plus Ferocity: pets inherit it since Oct 15. */
+/** A Raptor swings every 2 s; only a Cat carries Faster Attack, 1.2 s (WoWSims 4269136). */
+const petSpeed = (c: Combat) => Number(c.options.petSpeed ?? 2);
+const petName = (c: Combat) => (petSpeed(c) < 2 ? 'Cat' : 'Raptor');
+/**
+ * Your crit (gear, talents and buffs, minus the boss's suppression) plus Ferocity: pets inherit it since Oct 15,
+ * the white swing too (WoWSims 4269136).
+ */
 const petCrit = (c: Combat) => D.pet.baseCrit + c.critChance('petAttack') + 2 * T(c).ferocity;
-/** The white swing inherits none of your crit since 161a620: only Ferocity, against the boss's suppression. */
-const petWhiteCrit = (c: Combat) => Math.max(0, D.pet.baseCrit + 2 * T(c).ferocity - c.rules.critSuppression);
 const petMult = (c: Combat) => {
   const t = T(c);
   const wrath = c.aura(c.player, 'bestialWrath') ? D.bestialWrath.damage : 1;
@@ -139,7 +143,7 @@ function petAttack(c: Combat, u: Unit, source: string, base: number, white: bool
   if ((x -= missChance) < 0) outcome = 'miss';
   else if ((x -= c.rules.dodge) < 0) outcome = 'dodge';
   else if (white && (x -= c.rules.glanceChance) < 0) outcome = 'glance';
-  else if (intimidation || c.random() * 100 < (white ? petWhiteCrit(c) : petCrit(c))) outcome = 'crit';
+  else if (intimidation || c.random() * 100 < petCrit(c)) outcome = 'crit';
   if (intimidation && outcome === 'crit') { c.removeAura(c.player, 'intimidation'); c.count('intimidationCrits'); }
   let amount = 0;
   if (landed(outcome)) {
@@ -164,7 +168,10 @@ function petSwing(c: Combat): void {
   s.petSwing = c.schedule(s.petNext, () => petSwing(c));
 }
 
-/** The pet's mind, every 0.1 s: Focus, and once it reached its target, Bite on cooldown and Claw with the Focus there is. */
+/**
+ * The pet's mind, every 0.1 s: Focus, and once it reached its target, autocast. It decides in 0.8 s steps, two of them
+ * after a cast, and picks evenly among what it can cast: Bite off cooldown with its Focus, Claw with its Focus (WoWSims 4269136).
+ */
 function petThink(c: Combat): void {
   const s = state(c);
   const P = D.pet;
@@ -178,16 +185,19 @@ function petThink(c: Combat): void {
     return;
   }
   if (!s.petSwing) s.petSwing = c.schedule(Math.max(c.t, s.petNext), () => petSwing(c));
-  if (c.t - s.lastPetAction < P.actionInterval) return;
-  // Autocast never waits: a Bite short of Focus passes to Claw (WoWSims, from logs).
-  if (c.t >= s.biteReady && s.focus >= P.bite.focus) {
+  if (c.t < s.nextAutocast - 1e-6) return;
+  s.nextAutocast = c.t + P.autocastStep;
+  const ready: ('bite' | 'claw')[] = [];
+  if (c.t >= s.biteReady && s.focus >= P.bite.focus) ready.push('bite');
+  if (s.focus >= P.claw.focus) ready.push('claw');
+  if (!ready.length) return;
+  s.nextAutocast += P.autocastStep;
+  if (ready[Math.floor(c.random() * ready.length)] === 'bite') {
     s.focus -= P.bite.focus;
     s.biteReady = c.t + P.bite.cooldown;
-    s.lastPetAction = c.t;
     petAttack(c, u!, 'petBite', between(c, P.bite.min, P.bite.max), false);
-  } else if (s.focus >= P.claw.focus) {
+  } else {
     s.focus -= P.claw.focus;
-    s.lastPetAction = c.t;
     petAttack(c, u!, 'petClaw', between(c, P.claw.min, P.claw.max), false);
   }
 }
@@ -198,6 +208,7 @@ export const oldestHawkLeft = (c: Combat) => {
   const left = ['hawkA', 'hawkB'].map((id) => c.aura(c.player, id)).filter(Boolean).map((a) => a!.end - c.t);
   return left.length ? Math.min(...left) : 0;
 };
+/** A hawk's crit is the pet's: your whole crit plus Ferocity (WoWSims 4269136; it was half your crit). */
 const hawkCrit = (c: Combat) => D.summonHawk.critShare * c.critChance('petAttack') + 2 * T(c).ferocity;
 const hawkMult = (c: Combat) => (1 + 0.03 * T(c).unleashedFury) * (1 + 0.01 * T(c).focusedFire) * state(c).allDamage;
 /** The dive: it always lands. */
@@ -452,18 +463,26 @@ export const ABILITIES: Ability[] = [
     id: 'immolationTrap', name: 'Immolation Trap', icon: 'immolationTrap', gcd: D.gcd, target: 'self', animation: 'cast',
     cost: trapCost(D.immolationTrap.mana), cooldownGroup: 'fireTrap',
     cooldown: (c) => D.immolationTrap.cooldown * (1 - 0.2 * T(c).survivalistsDiscipline),
-    description: (c) => `A trap at your feet: an enemy on it burns for ${Math.round(D.immolationTrap.total * (1 + [0, 0.15, 0.3][T(c).cleverTraps]))} Fire damage over ${D.immolationTrap.ticks * D.immolationTrap.period} sec. Usable in combat in WoW Forever; the dummy has to be next to you.`,
+    description: (c) => `A trap at your feet: an enemy on it burns for ${Math.round(D.immolationTrap.total * (1 + [0, 0.15, 0.3][T(c).cleverTraps]))} Fire damage over ${D.immolationTrap.ticks * D.immolationTrap.period} sec. It arms about 1 sec after you place it, and you may walk away. Usable in combat in WoW Forever; the dummy has to be within ${D.immolationTrap.radius} yards when you place it.`,
     use: (c) => {
       const tr = D.immolationTrap;
       // Oct 15: + 10 % of your higher attack power (gs, provisional), fixed when you place it.
       const ap = tr.apShare * Math.max(c.attackPower(), c.rangedAttackPower(null));
       const tick = ((tr.total + ap) / tr.ticks) * (1 + [0, 0.15, 0.3][T(c).cleverTraps]);
-      for (const u of c.targets.filter((x) => x.health > 0 && c.inRange(x, 5))) {
-        c.applyAura(u, {
-          id: 'immolationTrap', name: 'Immolation Trap', icon: 'immolationTrap', duration: tr.ticks * tr.period, period: tr.period,
-          onTick: (cc) => cc.deal({ target: u, source: 'immolationTrap', outcome: 'hit', school: 'fire', amount: Math.round(tick * state(cc).allDamage * cc.auraProduct('damageDone')), white: false, periodic: true }),
-        });
-      }
+      // The trap lies where you stand and takes what is within its radius now; moving away later does not stop it.
+      const caught = c.targets.filter((x) => x.health > 0 && c.inRange(x, tr.radius));
+      if (!caught.length) return;
+      // It arms 0.8 s after placement and springs at a point even in the next 0.4 s, one trap in four a check later (WoWSims 4269136).
+      let delay = tr.arming + c.random() * tr.check;
+      if (c.random() < tr.lateCheck) delay += tr.check;
+      c.schedule(c.t + delay, () => {
+        for (const u of caught.filter((x) => x.health > 0)) {
+          c.applyAura(u, {
+            id: 'immolationTrap', name: 'Immolation Trap', icon: 'immolationTrap', duration: tr.ticks * tr.period, period: tr.period,
+            onTick: (cc) => cc.deal({ target: u, source: 'immolationTrap', outcome: 'hit', school: 'fire', amount: Math.round(tick * state(cc).allDamage * cc.auraProduct('damageDone')), white: false, periodic: true }),
+          });
+        }
+      });
     },
   },
   {
@@ -490,7 +509,7 @@ export function prepare(c: Combat): void {
   const b = build(c);
   const p = c.player;
   const s = state(c);
-  Object.assign(s, { focus: 100, petSwing: null, petNext: 0, lastPetAction: -Infinity, biteReady: 0 });
+  Object.assign(s, { focus: 100, petSwing: null, petNext: 0, nextAutocast: 0, biteReady: 0 });
   p.maxResource = Math.max(1, Number(c.options.mana ?? 4000));
   p.regenPerSecond = 0;
   c.manaLocked = !!c.options.lockMana;
@@ -528,7 +547,7 @@ export function prepare(c: Combat): void {
   }
 
   c.registerSource('autoShot', 'Auto Shot', 'autoShot');
-  c.registerSource('petMelee', 'Pet: Cat', 'petClaw');
+  c.registerSource('petMelee', `Pet: ${petName(c)}`, 'petClaw');
   c.registerSource('petClaw', 'Pet: Claw', 'petClaw');
   c.registerSource('petBite', 'Pet: Bite', 'petBite');
   c.registerSource('hawk', 'Hawks', 'summonHawk');
@@ -606,11 +625,11 @@ export function chances(c: Combat): { title: string; rows: [string, string][] }[
   ];
   if (c.pet.out) {
     groups.push({
-      title: 'Pet (Cat)',
+      title: `Pet (${petName(c)})`,
       rows: [
         ['Swing time / crit vs the boss', `${petSpeed(c).toFixed(1)} s / ${pct(petCrit(c))}`],
         ['Attack power (10% of yours + its own)', `${Math.round(petAp(c))}`],
-        ['Focus', '10 per second (cap 150): Bite on cooldown, Claw with spare Focus'],
+        ['Focus and autocast', '10 per second (cap 150); every 0.8 s, 1.6 s after a cast, it picks Bite or Claw at random among what it has the Focus and cooldown for'],
       ],
     });
   }

@@ -60,18 +60,20 @@ const KEYS = ['Digit1', 'Digit2', 'Digit3', 'Digit4', 'Digit5', 'Digit6', 'Digit
   'KeyR', 'KeyF', 'KeyG', 'KeyT', 'KeyZ', 'KeyX', 'KeyC', 'KeyV'];
 const bar = (ids: (string | null)[]): Binding[] => KEYS.map((key, i) => ({ id: ids[i] ?? null, key }));
 
+// Seal of Fury for the Unsealed Wrath twist with Seal of Righteousness (WoWSims 4269136).
 const RET_BAR = bar(['holyStrike', 'judgement', 'sealOfCommand', 'sealOfRighteousness', 'consecration', 'hammerOfWrath', 'exorcism', 'manaPotion',
-  'attack', 'layOnHands']);
+  'attack', 'layOnHands', 'sealOfFury']);
 const PROT_BAR = bar(['holyStrike', 'judgement', 'holyShield', 'consecration', 'sealOfRighteousness', 'sealOfFury', 'righteousFury', 'templarsBulwark',
   'attack', 'swiftJudgement', 'hammerOfWrath', 'layOnHands', 'exorcism', 'manaPotion']);
-const SHOCK_BAR = bar(['holyShock', 'holyStrike', 'judgement', 'sealOfRighteousness', 'divineFavor', 'consecration', 'exorcism', 'hammerOfWrath',
-  'attack', 'sealOfCommand', 'manaPotion', 'layOnHands']);
+const SHOCK_BAR = bar(['holyShock', 'holyStrike', 'judgement', 'sealOfCommand', 'divineFavor', 'consecration', 'exorcism', 'hammerOfWrath',
+  'attack', 'sealOfRighteousness', 'manaPotion', 'layOnHands']);
 
 const WS = 'wowsims/forever';
 /** A build with no equivalent in WoWSims Forever: it stays, for whoever practises it. */
 const COMMUNITY = 'community, from gunba/wow-forever-sim, re-spent for the Oct 30 trees';
 export const BUILDS: Build[] = [
-  { id: 'ret', spec: 'ret', name: 'Retribution (Unsealed Wrath)', talentString: '050250002-501-05233011201301351', source: WS, stats: RET_STATS, bar: RET_BAR, options: { ...gearOptions('paladin-ret') } },
+  // WoWSims 4269136: Reverence's 2 points go into Precision 3/3.
+  { id: 'ret', spec: 'ret', name: 'Retribution (Unsealed Wrath)', talentString: '050050002-503-05233011201301351', source: WS, stats: RET_STATS, bar: RET_BAR, options: { ...gearOptions('paladin-ret') } },
   { id: 'prot', spec: 'prot', name: 'Protection', talentString: '050050002-05302102213301531-502', source: WS, stats: PROT_STATS, bar: PROT_BAR, tank: true, options: { ...gearOptions('paladin-prot') } },
   { id: 'prot-shieldsworn', spec: 'prot', name: 'Protection (Shieldsworn), deeper', talentString: '-55302102513501531-0522', source: COMMUNITY, stats: GS_PROT_STATS, bar: PROT_BAR, tank: true, options: { mana: 4000, spirit: 100, mp5: 0 } },
   { id: 'shockadin', spec: 'shock', name: 'Shockadin', talentString: '05025210221001--0523330110130035', source: WS, stats: SHOCK_STATS, bar: SHOCK_BAR, options: { ...gearOptions('paladin-shock') } },

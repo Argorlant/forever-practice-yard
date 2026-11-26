@@ -1,10 +1,11 @@
 {
  "warrior-fury": {
   "stats": {
-   "attackPower": 786,
-   "crit": 17.5,
-   "hit": 8.9,
+   "attackPower": 808,
+   "crit": 17.7,
+   "hit": 7,
    "spellCrit": 9,
+   "expertise": 1,
    "mainHand": {
     "name": "Persuader",
     "type": "mace",
@@ -24,10 +25,10 @@
  },
  "warrior-arms": {
   "stats": {
-   "attackPower": 858,
-   "crit": 16.4,
-   "hit": 8,
-   "spellCrit": 9,
+   "attackPower": 846,
+   "crit": 16.7,
+   "hit": 6,
+   "spellCrit": 8,
    "mainHand": {
     "name": "Destiny",
     "type": "sword",
@@ -42,38 +43,84 @@
  },
  "warrior-prot": {
   "stats": {
-   "attackPower": 728,
-   "crit": 7.7,
-   "hit": 8,
+   "attackPower": 698,
+   "crit": 10.6,
+   "hit": 8.3,
    "spellCrit": 3,
-   "expertise": 1,
+   "expertise": 3.1,
    "mainHand": {
-    "name": "Annihilator",
-    "type": "axe",
-    "min": 69,
-    "max": 129,
+    "name": "Ironfoe",
+    "type": "mace",
+    "min": 73,
+    "max": 136,
     "speed": 2.4
    },
    "offHand": null,
    "shield": true,
    "tank": {
-    "health": 3349,
-    "armor": 5693,
-    "defense": 419.7,
-    "dodge": 9.4,
-    "parry": 9.8,
-    "block": 9.8,
-    "blockValue": 49
+    "health": 4599,
+    "armor": 6514,
+    "defense": 318,
+    "dodge": 9.3,
+    "parry": 5.7,
+    "block": 5.7,
+    "blockValue": 121
    }
+  },
+  "options": {}
+ },
+ "warrior-prot-offensive": {
+  "stats": {
+   "attackPower": 810,
+   "crit": 12,
+   "hit": 8,
+   "spellCrit": 6,
+   "expertise": 4.1,
+   "mainHand": {
+    "name": "Ironfoe",
+    "type": "mace",
+    "min": 73,
+    "max": 136,
+    "speed": 2.4
+   },
+   "offHand": null,
+   "shield": true,
+   "tank": {
+    "health": 3889,
+    "armor": 6017,
+    "defense": 300,
+    "dodge": 6,
+    "parry": 5,
+    "block": 5,
+    "blockValue": 92
+   }
+  },
+  "options": {}
+ },
+ "warrior-fury-2h": {
+  "stats": {
+   "attackPower": 848,
+   "crit": 16.9,
+   "hit": 6,
+   "spellCrit": 8,
+   "mainHand": {
+    "name": "Destiny",
+    "type": "sword",
+    "twoHand": true,
+    "min": 155,
+    "max": 233,
+    "speed": 3.6
+   },
+   "offHand": null
   },
   "options": {}
  },
  "rogue-combat": {
   "stats": {
-   "attackPower": 577,
+   "attackPower": 680,
    "crit": 18.7,
-   "hit": 9.2,
-   "spellCrit": 8,
+   "hit": 8.3,
+   "spellCrit": 7,
    "mainHand": {
     "name": "Teebu's Blazing Longsword",
     "type": "sword",
@@ -93,10 +140,10 @@
  },
  "rogue-backstab": {
   "stats": {
-   "attackPower": 580,
+   "attackPower": 683,
    "crit": 18.8,
-   "hit": 9.2,
-   "spellCrit": 8,
+   "hit": 8.3,
+   "spellCrit": 7,
    "expertise": 0.5,
    "mainHand": {
     "name": "Felstriker",
@@ -141,10 +188,10 @@
  },
  "rogue-hemo": {
   "stats": {
-   "attackPower": 580,
+   "attackPower": 683,
    "crit": 18.8,
-   "hit": 9.2,
-   "spellCrit": 8,
+   "hit": 8.3,
+   "spellCrit": 7,
    "expertise": 0.5,
    "mainHand": {
     "name": "Felstriker",
@@ -165,10 +212,10 @@
  },
  "hunter-ranged": {
   "stats": {
-   "attackPower": 751,
-   "crit": 13.8,
+   "attackPower": 738,
+   "crit": 12.9,
    "hit": 6,
-   "spellCrit": 11.5,
+   "spellCrit": 10.7,
    "mainHand": {
     "name": "Legionite Glaive",
     "type": "polearm",
@@ -178,40 +225,7 @@
     "speed": 3.2
    },
    "offHand": null,
-   "rangedAttackPower": 1114,
-   "ranged": {
-    "name": "Eaglehorn Long Bow",
-    "type": "bow",
-    "min": 40,
-    "max": 76,
-    "speed": 1.8
-   },
-   "ammoDps": 17.5,
-   "rangedHaste": 1.15
-  },
-  "options": {
-   "mana": 3165,
-   "spirit": 82,
-   "mp5": 2,
-   "revelation": 0
-  }
- },
- "hunter-weave": {
-  "stats": {
-   "attackPower": 745,
-   "crit": 12.6,
-   "hit": 5,
-   "spellCrit": 9.7,
-   "mainHand": {
-    "name": "Arcanite Reaper",
-    "type": "axe",
-    "twoHand": true,
-    "min": 153,
-    "max": 256,
-    "speed": 3.8
-   },
-   "offHand": null,
-   "rangedAttackPower": 1130,
+   "rangedAttackPower": 1098,
    "ranged": {
     "name": "Bloodseeker",
     "type": "crossbow",
@@ -229,19 +243,52 @@
    "revelation": 0
   }
  },
+ "hunter-weave": {
+  "stats": {
+   "attackPower": 696,
+   "crit": 12.4,
+   "hit": 5,
+   "spellCrit": 9.6,
+   "mainHand": {
+    "name": "The Blackrock Slicer",
+    "type": "axe",
+    "twoHand": true,
+    "min": 159,
+    "max": 239,
+    "speed": 4
+   },
+   "offHand": null,
+   "rangedAttackPower": 1070,
+   "ranged": {
+    "name": "Bloodseeker",
+    "type": "crossbow",
+    "min": 85,
+    "max": 128,
+    "speed": 3.3
+   },
+   "ammoDps": 17.5,
+   "rangedHaste": 1.15
+  },
+  "options": {
+   "mana": 3270,
+   "spirit": 77,
+   "mp5": 0,
+   "revelation": 0
+  }
+ },
  "hunter-melee": {
   "stats": {
-   "attackPower": 693,
-   "crit": 13.7,
+   "attackPower": 664,
+   "crit": 13.5,
    "hit": 3,
    "spellCrit": 12.7,
    "expertise": 0.5,
    "mainHand": {
-    "name": "Annihilator",
-    "type": "axe",
-    "min": 69,
-    "max": 129,
-    "speed": 2.4
+    "name": "Teebu's Blazing Longsword",
+    "type": "sword",
+    "min": 96,
+    "max": 178,
+    "speed": 2.9
    },
    "offHand": {
     "name": "Distracting Dagger",
@@ -250,7 +297,7 @@
     "max": 69,
     "speed": 1.3
    },
-   "rangedAttackPower": 998,
+   "rangedAttackPower": 954,
    "ranged": {
     "name": "Satyr's Bow",
     "type": "bow",
@@ -489,29 +536,30 @@
  "priest-shadow": {
   "stats": {
    "attackPower": 25,
-   "crit": 9.5,
-   "hit": 0,
-   "spellCrit": 8.1,
-   "spellPower": 202,
+   "crit": 10,
+   "hit": 4,
+   "spellCrit": 9,
+   "spellPower": 353,
    "spellPowerBySchool": {
     "frost": 40,
-    "shadow": 251
+    "shadow": 128
    },
    "mainHand": {
-    "name": "Verimonde's Last Resort",
-    "type": "dagger",
-    "min": 28,
-    "max": 53,
-    "speed": 1.4
+    "name": "Headmaster's Charge",
+    "type": "staff",
+    "twoHand": true,
+    "min": 100,
+    "max": 151,
+    "speed": 2.9
    },
    "offHand": null,
-   "health": 2317
+   "health": 2357
   },
   "options": {
-   "mana": 3571,
-   "spirit": 166,
+   "mana": 3991,
+   "spirit": 173,
    "mp5": 0,
-   "revelation": 1
+   "revelation": 0
   }
  },
  "priest-smite": {
@@ -544,57 +592,57 @@
  },
  "paladin-ret": {
   "stats": {
-   "attackPower": 832,
-   "crit": 17.2,
-   "hit": 7.6,
-   "spellCrit": 12.9,
-   "expertise": 1.1,
-   "spellPower": 8,
+   "attackPower": 642,
+   "crit": 12.8,
+   "hit": 6,
+   "spellCrit": 14.3,
+   "expertise": 2.1,
+   "spellPower": 173,
    "spellPowerBySchool": {
-    "shadow": 15
+    "holy": 20
    },
    "mainHand": {
-    "name": "Arcanite Reaper",
-    "type": "axe",
+    "name": "Destiny",
+    "type": "sword",
     "twoHand": true,
-    "min": 153,
-    "max": 256,
-    "speed": 3.8
+    "min": 155,
+    "max": 233,
+    "speed": 3.6
    },
    "offHand": null
   },
   "options": {
-   "mana": 2492,
+   "mana": 3722,
    "spirit": 86,
-   "mp5": 0,
+   "mp5": 12,
    "revelation": 0
   }
  },
  "paladin-shock": {
   "stats": {
-   "attackPower": 432,
-   "crit": 6.3,
-   "hit": 4.2,
-   "spellCrit": 8.8,
-   "expertise": 1.1,
-   "spellPower": 245,
+   "attackPower": 604,
+   "crit": 9.4,
+   "hit": 8,
+   "spellCrit": 11.4,
+   "expertise": 1,
+   "spellPower": 307,
    "spellPowerBySchool": {
-    "holy": 33
+    "holy": 20
    },
    "mainHand": {
-    "name": "Shin Blade",
+    "name": "Destiny",
     "type": "sword",
     "twoHand": true,
-    "min": 84,
-    "max": 127,
-    "speed": 2.2
+    "min": 155,
+    "max": 233,
+    "speed": 3.6
    },
    "offHand": null
   },
   "options": {
-   "mana": 4667,
-   "spirit": 151,
-   "mp5": 0,
+   "mana": 3842,
+   "spirit": 86,
+   "mp5": 12,
    "revelation": 0
   }
  },
@@ -633,86 +681,81 @@
  },
  "shaman-elemental": {
   "stats": {
-   "attackPower": 262,
-   "crit": 8.6,
+   "attackPower": 268,
+   "crit": 9.5,
    "hit": 7.8,
-   "spellCrit": 10.2,
-   "spellPower": 406,
+   "spellCrit": 11.4,
+   "spellPower": 460,
    "spellPowerBySchool": {
     "nature": 20
    },
    "mainHand": {
-    "name": "Mindfang",
-    "type": "dagger",
-    "min": 34,
-    "max": 64,
-    "speed": 1.7
+    "name": "Ironbark Staff",
+    "type": "staff",
+    "twoHand": true,
+    "min": 114,
+    "max": 172,
+    "speed": 3.4
    },
    "offHand": null,
-   "health": 3060
+   "health": 3160
   },
   "options": {
-   "mana": 4675,
+   "mana": 4855,
    "spirit": 123,
    "mp5": 8,
-   "revelation": 1
+   "revelation": 0
   }
  },
  "shaman-enhancement": {
   "stats": {
-   "attackPower": 316,
-   "crit": 8.8,
-   "hit": 5.9,
-   "spellCrit": 10.3,
-   "spellPower": 323,
-   "spellPowerBySchool": {
-    "arcane": 15,
-    "fire": 15,
-    "nature": 35
-   },
+   "attackPower": 512,
+   "crit": 12,
+   "hit": 6,
+   "spellCrit": 12.6,
+   "spellPower": 173,
    "mainHand": {
-    "name": "Stormcarver",
+    "name": "The Blackrock Slicer",
     "type": "axe",
     "twoHand": true,
-    "min": 155,
-    "max": 233,
-    "speed": 3.6
+    "min": 159,
+    "max": 239,
+    "speed": 4
    },
    "offHand": null,
-   "health": 2840
+   "health": 3190
   },
   "options": {
-   "mana": 4795,
-   "spirit": 117,
-   "mp5": 0,
+   "mana": 4210,
+   "spirit": 103,
+   "mp5": 10,
    "revelation": 0
   }
  },
  "druid-balance": {
   "stats": {
-   "attackPower": 104,
-   "crit": 6.2,
-   "hit": 1,
-   "spellCrit": 6.9,
-   "spellPower": 452,
+   "attackPower": 102,
+   "crit": 7.1,
+   "hit": 4,
+   "spellCrit": 9,
+   "spellPower": 426,
    "spellPowerBySchool": {
     "arcane": 20
    },
    "mainHand": {
-    "name": "Wisepaw Totem",
-    "type": "staff",
-    "twoHand": true,
-    "min": 94,
-    "max": 142,
-    "speed": 3.2
+    "name": "Hand of Edward the Odd",
+    "type": "mace",
+    "min": 33,
+    "max": 62,
+    "speed": 1.6
    },
    "offHand": null
   },
   "options": {
-   "mana": 3709,
-   "spirit": 131,
-   "mp5": 4,
-   "revelation": 0
+   "mana": 4744,
+   "spirit": 165,
+   "mp5": 0,
+   "revelation": 1
   }
  },
  "druid-cat": {

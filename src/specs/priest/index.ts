@@ -118,7 +118,10 @@ export const priestShadow: Spec = specFor('shadow', {
 });
 
 // ------------------------------------------------------------------- Smite
-/** WoWSims Forever's Smite list: Holy Fire, Holy Nova on Holy Purpose against three, Shadow Word: Pain, Penance, Smite. */
+/**
+ * WoWSims Forever's Smite list as it stood at 57df2a7, before WoWSims dropped the build: Holy Fire, Holy Nova on Holy
+ * Purpose against three, Shadow Word: Pain, Penance, Smite.
+ */
 function smiteSuggest(c: Combat): string | null {
   const t = c.target;
   if (!t || t.health <= 0) return null;
@@ -126,7 +129,7 @@ function smiteSuggest(c: Combat): string | null {
   const { p, ready, afford, mana, potion } = ctx(c);
   // Let Penance fire all three bolts.
   if (c.channeling?.id === 'penance') return null;
-  // WoWSims Forever's Smite list; Mind Blast only for the build made around it.
+  // WoWSims Forever's Smite list (57df2a7); Mind Blast only for the build made around it.
   if (tl.powerInfusion && p.inCombat && ready('powerInfusion')) return 'powerInfusion';
   if (!c.aura(t, 'holyFire') && afford('holyFire') && c.casting?.id !== 'holyFire') return 'holyFire';
   if (c.aura(p, 'holyPurpose') && tl.holyNova && c.targets.length >= 3 && c.inRange(t, D.holyNova.range)) return 'holyNova';

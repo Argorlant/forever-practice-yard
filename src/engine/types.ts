@@ -133,6 +133,10 @@ export interface Aura {
   manaPerSecond?: number;
   /** Multiplies mana regeneration, whichever pool mana is (Energized). */
   manaRegen?: number;
+  /** On the player: Spirit raised by this share (Dark Inspiration, 0.15); the strongest such aura counts. */
+  spiritPct?: number;
+  /** On the player: crit for your own direct spell hits and channel ticks, never a periodic aura's tick (Revelation). */
+  directSpellCrit?: number;
   /** On the player: Windfury Totem's strikes. */
   windfury?: boolean;
   /** On the player: extra spell power (Blood Fury). */
@@ -274,6 +278,8 @@ export interface Ability {
     onEnd?: (c: Combat, t: Unit | null) => void;
     tickAtStart?: boolean;
     hasted?: boolean;
+    /** Each tick is a spell of its own (Arcane Missiles, Penance), which rolls Revelation; other channels' ticks are periodic. */
+    spellTicks?: boolean;
   };
 }
 
